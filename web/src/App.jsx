@@ -171,7 +171,7 @@ function Shell() {
   return (
     <div className="app">
       <header className="topbar">
-        <NavLink to="/" end className="brand" title={t('Início')}><Logo /> StepClub</NavLink>
+        <NavLink to="/" end className="brand" title={t('Início')}><Logo /> <span className="brand-text">StepClub</span></NavLink>
         <StatusPicker />
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
           <Bell size={21} strokeWidth={2} />{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
