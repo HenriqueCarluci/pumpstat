@@ -26,7 +26,7 @@ export default function Rival() {
 
   useEffect(() => {
     if (version === VS) setP2(cur);
-    else if (!p2) fetchVersion(VS).then(setP2).catch((e) => setErr(tErr(e.message)));
+    else fetchVersion(VS).then(setP2).catch((e) => { if (!p2) setErr(tErr(e.message)); });
   }, [version, cur]); // eslint-disable-line
   useEffect(() => {
     rpc('players', { p_version: VS }).then(setPlayers).catch((e) => setErr(tErr(e.message)));

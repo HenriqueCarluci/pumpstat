@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { cachedVersion, fetchVersion, loadProgress } from '../lib/api.js';
+import { cachedVersion, fetchVersion, loadProgress, sessionVersion } from '../lib/api.js';
 import {
   chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, PATTERNS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
 } from '../lib/insights.js';
@@ -52,7 +52,8 @@ export default function Progress() {
     setRaw(null);
     Promise.all([
       loadProg(version), loadProg(otherV).catch(() => null),
-      Promise.resolve(cachedVersion(otherV)).then((d) => d || fetchVersion(otherV)).catch(() => null),
+      // a outra versão vem fresca (marcações de gimmick, tiers e votos mudam); o cache do aparelho só se a rede falhar
+      Promise.resolve(sessionVersion(otherV)).then((d) => d || fetchVersion(otherV)).catch(() => cachedVersion(otherV)),
     ]).then(([cur, oth, othData]) => { if (alive) setRaw({ cur, oth, othData }); }).catch((e) => alive && setErr(e.message));
     return () => { alive = false; };
   }, [version, otherV]);

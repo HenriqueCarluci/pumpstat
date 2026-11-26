@@ -37,6 +37,12 @@ export function cachedVersion(version) {
   return raw ? shape(raw) : null;
 }
 
+/** Dados de uma versão já buscados nesta sessão (nunca o cache antigo do aparelho). */
+export function sessionVersion(version) {
+  const raw = memo.get(version);
+  return raw ? shape(raw) : null;
+}
+
 export async function fetchVersion(version) {
   const [raw, community, fresh, ref] = await Promise.all([
     rpc('app_data', { p_version: version }),
