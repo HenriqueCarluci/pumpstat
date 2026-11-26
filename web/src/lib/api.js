@@ -69,9 +69,13 @@ function shape(raw) {
     charts.push(c);
     byId.set(c.id, c);
   }
-  for (const [chartId, avg, votes, tags, club] of raw.community || []) {
+  for (const [chartId, avg, votes, tags, club, special] of raw.community || []) {
     const c = byId.get(chartId);
-    if (c) c.community = { avg: avg == null ? null : Number(avg), votes, tags: tags || [], club: club == null ? null : Number(club) };
+    if (!c) continue;
+    c.community = { avg: avg == null ? null : Number(avg), votes, tags: tags || [], club: club == null ? null : Number(club) };
+    if (special && (special.gimmick || special.off)) {
+      c.special = { g: special.g || [], gimmick: !!special.gimmick, off: !!special.off, note: special.note || null, admin: !!special.admin };
+    }
   }
   for (const s of songs.values()) {
     s.charts.sort((a, b) => order(a) - order(b));

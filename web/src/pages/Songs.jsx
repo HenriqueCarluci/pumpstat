@@ -1,3 +1,4 @@
+import { hasGimmick, isSpecial } from '../lib/special.js';
 import { Fragment, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
@@ -27,6 +28,7 @@ export default function Songs() {
   const sort = params.get('o') || 'az';
   const minL = +(params.get('min') || 1);
   const maxL = +(params.get('max') || 28);
+  const spec = params.get('x') || 'all';
 
   const set = (k, v) => {
     const p = new URLSearchParams(params);
@@ -40,8 +42,9 @@ export default function Songs() {
     (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null
       : status === 'legacy' ? c.score == null && c.otherScore != null
         : c.score != null && !c.broken && c.plate !== 'PG')) &&
-    (!grade || (c.score != null && !c.broken && c.grade === grade)),
-  [mode, minL, maxL, status, grade]);
+    (!grade || (c.score != null && !c.broken && c.grade === grade)) &&
+    (spec === 'all' || (spec === 'esp' ? isSpecial(c) : spec === 'gim' ? hasGimmick(c) : !isSpecial(c))),
+  [mode, minL, maxL, status, grade, spec]);
 
   const list = useMemo(() => {
     const nq = norm(q);
@@ -64,6 +67,8 @@ export default function Songs() {
       <div className="filters">
         <Chips value={mode} onChange={(v) => set('m', v === 'all' ? '' : v)}
           options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double'], ...(isP2 ? [['HD', 'Half-Double']] : []), ['C', 'Co-op'], ...(isP2 ? [['rise', 'R!SE']] : [])]} />
+        <Chips value={spec} onChange={(v) => set('x', v === 'all' ? '' : v)}
+          options={[['all', t('Todos os steps')], ['esp', t('Especiais')], ['gim', t('Com gimmick')], ['normal', t('Sem especiais')]]} />
         <Chips value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
           options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['improve', t('Sem PG')],
             ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />

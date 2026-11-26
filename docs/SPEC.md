@@ -230,3 +230,8 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 ## Meu treino
 - `/treino` (atalho na Início; liga/desliga em Admin → Recursos → "Meu treino"). Botão "Treinar" em cada chart na página da música. Lista na conta (`training_charts`, 047, até 60), `my_training()` / `training_set(chart, on)`.
 - Análise (`lib/training.js` → `analyzeTraining`, recurso `training_analysis` no plano): chance de passar = taxa de clear do jogador no nível (com a distância do nível de conforto) + tier do chart + padrões do chart × pontos fortes/fracos + gimmick + quebras no chart. Mostra os motivos, "o que treinar antes" (charts 1–2 níveis abaixo com o padrão fraco, ou os mais fáceis do nível de baixo), resumo (mais perto, mais longe, foco de treino) e, para os já passados, quanto falta para a próxima nota.
+
+## Charts especiais (gimmick e fora da curva)
+- Fonte: `chart_flags` (048), marcado pelo admin em cada chart (tipos: velocidade, paradas, setas falsas, warp, visual, outro; "fora da curva"; observação), e votos da comunidade nas avaliações (tags `gimmick`, `g_speed`, `g_stop`, `g_fake`, `g_warp`, `g_visual`, `offcurve`). Com `community.special_min` votos (padrão 2) o chart entra. `community_charts` devolve o 6º campo `{g, gimmick, off, note, admin}` → `c.special`.
+- Tier: seção "Especiais" no fim do nível (fora do ranking normal), selo no canto da capa. Música: selos "Gimmick: tipos" e "Fora da curva". Lista de músicas: filtro Especiais / Com gimmick / Sem especiais.
+- Gimmick vira dimensão em pontos fortes e fracos (`DIMENSIONS`), entra no plano de treino e no Meu treino. A aba do Progresso passou a se chamar "Pontos fortes e fracos".

@@ -6,7 +6,8 @@ import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
 import { LegacyToggle } from './Song.jsx';
 import AdSlot from '../components/AdSlot.jsx';
-import { Vote } from '../components/Icons.jsx';
+import { Shuffle, Sparkles, Vote, Zap } from '../components/Icons.jsx';
+import { hasGimmick, isSpecial } from '../lib/special.js';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
@@ -41,9 +42,11 @@ export default function Tier() {
   }, [mode, level]);
 
   const charts = data.charts.filter((c) => c.mode === mode && c.level === level);
+  // charts com gimmick ou fora da curva ficam numa seção própria, fora do ranking normal
+  const specials = charts.filter(isSpecial).sort((a, b) => a.song.title.localeCompare(b.song.title));
   const groups = TIERS.map((x) => ({
     ...x,
-    charts: charts.filter((c) => chartTier(c) === x.id)
+    charts: charts.filter((c) => !isSpecial(c) && chartTier(c) === x.id)
       .sort((a, b) => (b.scoringLevel ?? 0) - (a.scoringLevel ?? 0) || a.song.title.localeCompare(b.song.title)),
   })).filter((g) => g.charts.length);
 
@@ -52,6 +55,27 @@ export default function Tier() {
   const best = [...clears].sort((a, b) => gradeRank(a.grade) - gradeRank(b.grade))[0];
   const legacyN = charts.filter((c) => legacy(c)).length;
   const hasLegacy = version === 'phoenix2' && charts.some((c) => c.score == null && c.otherScore != null);
+
+  const tile = (c) => { const lg = legacy(c); return (
+              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
+                title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
+                <div className="tile-art">
+                  <Jacket song={c.song} width="100%" />
+                  {c.score != null && (
+                    <div className={`tile-grade g-size-${prefs.tierGrade}`}><Grade grade={c.grade} broken={c.broken} size="md" /></div>
+                  )}
+                  {lg && (
+                    <div className={`tile-grade legacy g-size-${prefs.tierGrade}`}><Grade grade={lg.grade} size="md" /></div>
+                  )}
+                  {lg && <div className="tile-legacy" title={t('Legado Phoenix')}>P1</div>}
+                  {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
+                  {isSpecial(c) && <div className="tile-special" title={hasGimmick(c) ? t('Gimmick') : t('Fora da curva')}>{hasGimmick(c) ? <Zap size={12} /> : <Shuffle size={12} />}</div>}
+                </div>
+                <div className="tile-name">{c.song.title}</div>
+                {c.score != null && <div className="tile-score">{fmtScore(c.score)}</div>}
+                {lg && <div className="tile-score legacy">P1 · {fmtScore(lg.score)}</div>}
+              </Link>
+  ); };
 
   return (
     <div className="page">
@@ -86,28 +110,19 @@ export default function Tier() {
         <section key={g.id} className={`tier tier-${g.id}`}>
           <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
           <div className={`tier-grid size-${prefs.tierSize || 'md'}`}>
-            {g.charts.map((c) => { const lg = legacy(c); return (
-              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
-                title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
-                <div className="tile-art">
-                  <Jacket song={c.song} width="100%" />
-                  {c.score != null && (
-                    <div className={`tile-grade g-size-${prefs.tierGrade}`}><Grade grade={c.grade} broken={c.broken} size="md" /></div>
-                  )}
-                  {lg && (
-                    <div className={`tile-grade legacy g-size-${prefs.tierGrade}`}><Grade grade={lg.grade} size="md" /></div>
-                  )}
-                  {lg && <div className="tile-legacy" title={t('Legado Phoenix')}>P1</div>}
-                  {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
-                </div>
-                <div className="tile-name">{c.song.title}</div>
-                {c.score != null && <div className="tile-score">{fmtScore(c.score)}</div>}
-                {lg && <div className="tile-score legacy">P1 · {fmtScore(lg.score)}</div>}
-              </Link>
-            ); })}
+            {g.charts.map(tile)}
           </div>
         </section>
       ))}
+      {specials.length > 0 && (
+        <section className="tier tier-special">
+          <div className="tier-label"><b><Sparkles size={18} /></b><span>{t('Especiais')}</span><em>{specials.filter((c) => c.score != null && !c.broken).length}/{specials.length}</em></div>
+          <p className="muted small tier-special-note">{t('Gimmick ou steps muito fora da curva: não entram no ranking do nível porque a dificuldade depende de outra coisa.')}</p>
+          <div className={`tier-grid size-${prefs.tierSize || 'md'}`}>
+            {specials.map(tile)}
+          </div>
+        </section>
+      )}
       <AdSlot place="tier" />
       <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do PIU Stats.')}</p>
     </div>

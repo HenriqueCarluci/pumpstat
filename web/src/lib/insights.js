@@ -5,11 +5,12 @@
 // - user_plays: cada jogada registrada (o piugame mostra só as 50 últimas, então quanto mais sincroniza, mais histórico).
 // - user_scores/user_score_history: o recorde de cada chart. Recorde com stage break = nunca passou;
 //   recorde que mudou de quebrado para passou = houve ao menos uma quebra antes.
+import { hasGimmick } from './special.js';
 import { chartTier, pumbility } from './piu.js';
 
 export const PATTERNS = ['twist', 'drill', 'run', 'bracket', 'jump', 'jack', 'doublestep', 'footswitch'];
 // pseudo-padrões: velocidade (notas/s alta para o nível) e resistência (charts longos e constantes)
-export const DIMENSIONS = [...PATTERNS, 'speed', 'stamina'];
+export const DIMENSIONS = [...PATTERNS, 'speed', 'stamina', 'gimmick'];
 
 const DAY = 86400000;
 
@@ -194,11 +195,13 @@ export function badgeStyle(c) {
     for (const [dim, test] of BADGE_RULES) if (test(b)) pct[dim] = Math.min(80, (pct[dim] || 0) + 50);
   }
   for (const tg of c.community?.tags || []) { const d = TAG_TO_DIM[Array.isArray(tg) ? tg[0] : tg]; if (d) pct[d] = Math.max(pct[d] || 0, 50); }
+  if (hasGimmick(c)) pct.gimmick = 60;
   return Object.keys(pct).length ? pct : null;
 }
 export function styleOf(prog, c) {
   const st = prog.styles.get(c.id);
-  if (st) return st;
+  // gimmick vem da marcação (admin ou comunidade), não das anotações de pé
+  if (st) return hasGimmick(c) ? { ...st, pct: { ...st.pct, gimmick: 60 } } : st;
   const pct = badgeStyle(c);
   return pct ? { pct, nps: null, sustained: false, derived: true } : null;
 }

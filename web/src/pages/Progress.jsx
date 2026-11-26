@@ -17,7 +17,7 @@ import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components
 import { Chips } from './Songs.jsx';
 import { Check, Crown, Lock, Target } from '../components/Icons.jsx';
 
-export const DIM_LABEL = Object.fromEntries([...STYLE_KEYS.map((k) => [k.id, k.label]), ['speed', 'Velocidade'], ['stamina', 'Resistência']]);
+export const DIM_LABEL = Object.fromEntries([...STYLE_KEYS.map((k) => [k.id, k.label]), ['speed', 'Velocidade'], ['stamina', 'Resistência'], ['gimmick', 'Gimmick']]);
 export const DIM_TIP = {
   twist: 'Gire o quadril e mantenha o tronco de frente para a tela; comece pelos twists mais lentos.',
   drill: 'Relaxe o tornozelo e use o peso do corpo: o drill sai do quadril, não da perna inteira.',
@@ -29,6 +29,7 @@ export const DIM_TIP = {
   footswitch: 'Prepare a troca de pé com antecedência e troque deslizando, sem pular.',
   speed: 'Charts rápidos pedem leitura: aumente o speed e treine charts rápidos um nível abaixo.',
   stamina: 'Resistência: jogue sequências sem pausa, controle a respiração e use a barra quando cansar.',
+  gimmick: 'Gimmick pede leitura, não força: assista ao vídeo antes, decore os trechos de mudança de velocidade e paradas, e jogue com um speed confortável.',
 };
 const dimName = (p) => t(DIM_LABEL[p] || p);
 const fmtWeek = (ms) => new Date(ms).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' });
@@ -87,7 +88,7 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', t('Evolução')], ['top', t('Mais jogadas')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
+          options={[['evolucao', t('Evolução')], ['top', t('Mais jogadas')], ['fracos', t('Pontos fortes e fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
         {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}

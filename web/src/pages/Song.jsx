@@ -9,7 +9,8 @@ import { chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS }
 import { topStyles, useStyles, videoUrl } from '../lib/style.js';
 import { rpc } from '../lib/api.js';
 import StyleBars from '../components/StyleBars.jsx';
-import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
+import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
+import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronDown, ChevronUp, History, PencilLine, Play, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
@@ -167,6 +168,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
       <FriendScores list={friends} mine={c} />
 
       <div className="cc-meta">
+        <SpecialBadges chart={c} />
         {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
         {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
@@ -174,7 +176,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
           <span className="tag community" title={t('Tags marcadas pela comunidade do PIU Stats')}>
-            <Users size={12} /> {c.community.tags.map((x) => t(REVIEW_TAGS.find(([k]) => k === x)?.[1] || x)).join(' · ')}
+            <Users size={12} /> {c.community.tags.map((x) => t(reviewTagLabel(x))).join(' · ')}
           </span>
         )}
       </div>
@@ -205,6 +207,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         <button className="link" onClick={toggle}>{open ? t('Fechar') : t('Histórico')}</button>
       </div>
       {plan?.admin && <VideoAdmin vkey={`c:${c.id}`} />}
+      {plan?.admin && <SpecialAdmin chart={c} onSaved={onReviewed} />}
 
       {reviews && <div className="cc-hist"><ChartReviews chart={c} onSaved={onReviewed} /></div>}
       {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}

@@ -14,9 +14,15 @@ import TierVote from './TierVote.jsx';
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
   ['jack', 'Jack'], ['doublestep', 'Doublestep'], ['footswitch', 'Footswitch'], ['gimmick', 'Gimmick'],
-  ['stamina', 'Stamina'], ['hold', 'Hold'], ['tecnico', 'Técnico'],
+  ['stamina', 'Stamina'], ['hold', 'Hold'], ['tecnico', 'Técnico'], ['offcurve', 'Fora da curva'],
 ];
-const TAG_LABEL = Object.fromEntries(REVIEW_TAGS);
+/** Tipos de gimmick (aparecem quando a pessoa marca "Gimmick"). */
+export const GIMMICK_TAGS = [
+  ['g_speed', 'Mudança de velocidade'], ['g_stop', 'Paradas'], ['g_fake', 'Setas falsas'], ['g_warp', 'Warp (pulo no tempo)'],
+  ['g_visual', 'Efeito visual (setas somem ou piscam)'],
+];
+const TAG_LABEL = Object.fromEntries([...REVIEW_TAGS, ...GIMMICK_TAGS]);
+export const reviewTagLabel = (x) => TAG_LABEL[x] || x;
 const tierLabel = (v) => t(TIER_VOTES.find(([n]) => n === v)?.[1] || '');
 const avgLabel = (a) => (a == null ? null : t(a >= 1.5 ? 'Topo do nível' : a >= 0.5 ? 'Difícil' : a > -0.5 ? 'Médio' : a > -1.5 ? 'Fácil' : 'Muito fácil'));
 
@@ -41,7 +47,12 @@ export default function ChartReviews({ chart, onSaved }) {
   };
   useEffect(() => { load(); }, [chart.id]); // eslint-disable-line
 
-  const toggleTag = (tag) => setForm((f) => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter((x) => x !== tag) : [...f.tags, tag] }));
+  const toggleTag = (tag) => setForm((f) => {
+    const off = f.tags.includes(tag);
+    let tags = off ? f.tags.filter((x) => x !== tag) : [...f.tags, tag];
+    if (off && tag === 'gimmick') tags = tags.filter((x) => !x.startsWith('g_'));
+    return { ...f, tags };
+  });
   const save = async (clear = false) => {
     setBusy(true); setErr(''); setSaved(false);
     try {
@@ -91,6 +102,12 @@ export default function ChartReviews({ chart, onSaved }) {
           <div className="chips">
             {REVIEW_TAGS.map(([x, l]) => <button key={x} type="button" className={form.tags.includes(x) ? 'on' : ''} onClick={() => toggleTag(x)}>{t(l)}</button>)}
           </div>
+          {form.tags.includes('gimmick') && (
+            <div className="chips gimmick-types">
+              <small className="muted">{t('Qual gimmick?')}</small>
+              {GIMMICK_TAGS.map(([x, l]) => <button key={x} type="button" className={form.tags.includes(x) ? 'on' : ''} onClick={() => toggleTag(x)}>{t(l)}</button>)}
+            </div>
+          )}
           <textarea maxLength={500} rows={2} placeholder={t('Comentário (opcional): dica, parte difícil, como passar…')} value={form.comment}
             onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))} />
           <div className="rv-actions">

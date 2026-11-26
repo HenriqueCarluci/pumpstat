@@ -5,6 +5,7 @@ import {
   byPattern, chartAttempts, DIMENSIONS, levelStats, parseProgress, playerLevel, styleOf, weaknessSums, weaknesses,
 } from './insights.js';
 import { chartTier, nextGrade } from './piu.js';
+import { hasGimmick } from './special.js';
 
 let ids = null;            // Map(chartId -> addedAt ms)
 let loading = null;
@@ -106,7 +107,7 @@ export function analyzeTraining(raw, data, list, version) {
       } else if (w.index <= -4) reasons.push({ id: 'strong', tone: 'good', vars: { p } });
     }
     // 4. gimmick marcado pela comunidade
-    if ((c.community?.tags || []).some((x) => (Array.isArray(x) ? x[0] : x) === 'gimmick')) { chance -= 8; reasons.push({ id: 'gimmick', tone: 'bad' }); }
+    if (hasGimmick(c) && !tops.some(([p]) => p === 'gimmick')) { chance -= 8; reasons.push({ id: 'gimmick', tone: 'bad' }); }
     // 5. tentativas nesse chart
     if (item.fails > 0) { chance -= Math.min(16, item.fails * 4); reasons.push({ id: 'fails', tone: 'bad', vars: { n: item.fails } }); }
     if (!item.train.length && m && c.level > 2) {
