@@ -13,13 +13,15 @@ export function watchUpdates() {
   const mine = current();
   if (!mine) return;
   let pending = false;
+  // URL nova (com a versão) força o navegador a buscar o index.html atualizado
+  const go = () => window.location.replace(`${window.location.pathname}?v=${pending}${window.location.hash}`);
   const check = async () => {
     const l = await latest();
-    if (l && l !== mine) pending = true;
-    if (pending && (document.hidden || !document.hasFocus())) window.location.reload();
+    if (l && l !== mine) pending = l.replace(/^index-|\.js$/g, '');
+    if (pending && (document.hidden || !document.hasFocus())) go();
   };
-  const onVisible = () => { if (!document.hidden) { if (pending) window.location.reload(); else check(); } };
-  check().then(() => { if (pending) window.location.reload(); });
+  const onVisible = () => { if (!document.hidden) { if (pending) go(); else check(); } };
+  check().then(() => { if (pending) go(); });
   document.addEventListener('visibilitychange', onVisible);
   setInterval(check, 10 * 60 * 1000);
 }
