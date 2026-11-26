@@ -117,3 +117,19 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Ver notas exige amizade aprovada: `send_friend_request` → `respond_friend_request`. Se os dois pedirem, aceita automaticamente.
 - `players`, `compare_player`, `chart_ranking` e `user_titles` filtram por `are_friends(auth.uid(), outro)`.
 - O antigo "perfil público" foi removido da tela de Ajustes.
+
+## Notificações
+- Sino no topo com contador; tela `#/notificacoes` com filtros (Tudo, Amigos, Músicas novas).
+- Fontes (RPC `my_notifications`): recordes novos dos amigos (`user_score_history`, ignorando a 1ª sincronização), músicas novas no catálogo (criadas depois de `catalog_baseline`, últimos 30 dias), pedidos de amizade recebidos e aceitos.
+- Lidas: `mark_notifications_seen` ao sair da tela. O app consulta a cada 2 min com a aba aberta e pode mostrar aviso do sistema (Notification API) se o usuário permitir.
+- Catálogo: a API (`/api/catalog/tick`, chamada ao abrir o app, e a cada 6 h) reimporta o export do PIU Scores no máximo 1x a cada 20 h (`catalog_refresh_due`).
+- Backlog: push com o app fechado (Web Push/VAPID ou FCM no app Capacitor) e sincronização automática dos amigos com a sessão salva.
+
+## Recomendações (`#/recomendacoes`)
+- "Para jogar": charts ainda não jogados, nível até o máximo já passado + 1. Nota esperada = média da melhor metade das notas do jogador no mesmo modo/nível (±1 com ajuste), corrigida pela dificuldade do PIU Scores e limitada ao melhor do nível + 10 mil. Ganho = valor no PUMBILITY − piso do top 50.
+- "Melhorar recorde": próximo grade a até 30 mil pontos, ordenado por ganho/esforço.
+
+## Estilo do chart
+- `chart_styles` (por música + modo + nível): % das notas em twist, drill, corrida, bracket, pulo, jack, doublestep e footswitch, calculado das anotações de pé esquerdo/direito do piucenter.com (`scripts/chart-style.js`), mais NPS, ritmo e as 3 skills de destaque.
+- Cobertura: ~99% dos charts da Phoenix e ~81% da Phoenix 2 (charts novos da P2 ainda não estão no piucenter).
+- Link do YouTube na música e em cada chart (busca "pump it up <música> <S/D nível>").
