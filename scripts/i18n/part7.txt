@@ -510,3 +510,21 @@ Tier, votações e Especiais | Tier, votes and Specials | Tier, votaciones y Esp
 Desafios, missões e sequência | Challenges, missions and streak | Desafíos, misiones y racha | 챌린지, 미션, 연속 기록 | チャレンジ・ミッション・連続記録 | Défis, missions et série | Sfide, missioni e serie
 Lista do Meu treino | My training list | Lista de Mi entrenamiento | 내 연습 목록 | マイ練習のリスト | Liste Mon entraînement | Lista de Il mio allenamento
 Sincronização manual | Manual sync | Sincronización manual | 수동 동기화 | 手動同期 | Synchronisation manuelle | Sincronizzazione manuale
+Nenhuma tentativa registrada ainda. Jogue e sincronize para acompanhar a evolução. | No attempts recorded yet. Play and sync to follow your progress. | Aún no hay intentos registrados. Juega y sincroniza para seguir tu evolución. | 아직 기록된 시도가 없습니다. 플레이 후 동기화하면 성장을 볼 수 있습니다. | まだ挑戦の記録がありません。プレイして同期すると成長を追えます。 | Aucune tentative enregistrée. Jouez et synchronisez pour suivre votre progression. | Nessun tentativo registrato. Gioca e sincronizza per seguire i progressi.
+Últimas tentativas: verde passou, vermelho quebrou | Latest attempts: green cleared, red failed | Últimos intentos: verde pasó, rojo falló | 최근 시도: 초록은 클리어, 빨강은 실패 | 最近の挑戦: 緑はクリア、赤は失敗 | Dernières tentatives : vert réussi, rouge échoué | Ultimi tentativi: verde superato, rosso fallito
+Passou pela primeira vez em {d}, na tentativa {k}. | First cleared on {d}, on attempt {k}. | Pasaste por primera vez el {d}, en el intento {k}. | {d}에 {k}번째 시도로 첫 클리어. | {d}に{k}回目の挑戦で初クリア。 | Réussi pour la première fois le {d}, à la tentative {k}. | Superato per la prima volta il {d}, al tentativo {k}.
+Depois de entrar no treino! | After adding it to training! | ¡Después de entrar al entreno! | 연습에 넣은 뒤에! | 練習に入れた後で! | Après l'avoir ajouté à l'entraînement ! | Dopo averlo messo in allenamento!
+Desde que entrou no treino: {n} tentativas, {f} quebras. | Since added to training: {n} attempts, {f} fails. | Desde que entró al entreno: {n} intentos, {f} fallos. | 연습에 넣은 뒤: {n}번 시도, {f}번 실패. | 練習に入れてから: {n}回挑戦、{f}回失敗。 | Depuis l'ajout à l'entraînement : {n} tentatives, {f} échecs. | Da quando è in allenamento: {n} tentativi, {f} fallimenti.
+Esconder tentativas | Hide attempts | Ocultar intentos | 시도 숨기기 | 挑戦を隠す | Masquer les tentatives | Nascondi tentativi
+Ver todas as tentativas | See all attempts | Ver todos los intentos | 모든 시도 보기 | すべての挑戦を見る | Voir toutes les tentatives | Vedi tutti i tentativi
+{n} miss | {n} miss | {n} miss | {n} 미스 | {n}ミス | {n} miss | {n} miss
+antes do treino | before training | antes del entreno | 연습 전 | 練習前 | avant l'entraînement | prima dell'allenamento
+{n} tentativa | {n} attempt | {n} intento | {n}번 시도 | {n}回挑戦 | {n} tentative | {n} tentativo
+{n} tentativas | {n} attempts | {n} intentos | {n}번 시도 | {n}回挑戦 | {n} tentatives | {n} tentativi
+{n} quebra | {n} fail | {n} fallo | {n}번 실패 | {n}回失敗 | {n} échec | {n} fallimento
+{n} quebras | {n} fails | {n} fallos | {n}번 실패 | {n}回失敗 | {n} échecs | {n} fallimenti
+{n} passe | {n} clear | {n} pase | {n}번 클리어 | {n}回クリア | {n} réussite | {n} superamento
+{n} passes | {n} clears | {n} pases | {n}번 클리어 | {n}回クリア | {n} réussites | {n} superamenti
+Você passou {n} música do treino | You cleared {n} song from your training | Pasaste {n} canción del entreno | 연습 곡 {n}곡 클리어 | 練習の曲を{n}曲クリア | Vous avez passé {n} morceau de l'entraînement | Hai superato {n} brano dell'allenamento
+Você passou {n} músicas do treino | You cleared {n} songs from your training | Pasaste {n} canciones del entreno | 연습 곡 {n}곡 클리어 | 練習の曲を{n}曲クリア | Vous avez passé {n} morceaux de l'entraînement | Hai superato {n} brani dell'allenamento
+{n}ª tentativa | attempt #{n} | intento n.º {n} | {n}번째 시도 | {n}回目 | tentative n° {n} | tentativo n. {n}

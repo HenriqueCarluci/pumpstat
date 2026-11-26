@@ -62,6 +62,14 @@ export function analyzeTraining(raw, data, list, version) {
     const lvl = playerLevel(stats);
     ctx[m] = { stats, lvl, weak: weaknesses(weaknessSums(attempts, prog, m, lvl)) };
   }
+  // jogadas de cada chart, da mais antiga para a mais nova (para mostrar a evolução)
+  const playsBy = new Map();
+  for (const p of prog.plays) {
+    if (!list.has(p.chart.id)) continue;
+    if (!playsBy.has(p.chart.id)) playsBy.set(p.chart.id, []);
+    playsBy.get(p.chart.id).push({ at: p.at, score: p.score, grade: p.grade, broken: p.broken, miss: p.miss });
+  }
+  for (const arr of playsBy.values()) arr.sort((a, b) => a.at - b.at);
   const out = [];
   for (const [id, added] of list) {
     const c = data.byId.get(id);
@@ -71,7 +79,17 @@ export function analyzeTraining(raw, data, list, version) {
     const att = byId.get(id);
     const cleared = (c.score != null && !c.broken) || !!att?.cleared;
     const reasons = [];
-    const item = { chart: c, added, cleared, reasons, train: [], attempts: att?.attempts || 0, fails: att?.fails || 0 };
+    const history = playsBy.get(id) || [];
+    const since = history.filter((h) => h.at >= added);
+    const firstPass = history.find((h) => !h.broken);
+    const item = {
+      chart: c, added, cleared, reasons, train: [], attempts: att?.attempts || 0, fails: att?.fails || 0,
+      history, triesSince: since.length, failsSince: since.filter((h) => h.broken).length,
+      clearedAt: firstPass?.at || null,
+      // passou depois de colocar no treino (a conquista do treino)
+      clearedInTraining: !!firstPass && firstPass.at >= added,
+      last: history[history.length - 1] || null,
+    };
     if (cleared) {
       item.chance = 100;
       item.next = c.score != null ? nextGrade(version, c.score) : null;

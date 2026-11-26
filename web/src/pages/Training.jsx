@@ -5,11 +5,11 @@ import { loadProgress } from '../lib/api.js';
 import { entitlements, isOn } from '../lib/plans.js';
 import { analyzeTraining, chanceLabel, setTraining, useTraining } from '../lib/training.js';
 import { fmtScore } from '../lib/piu.js';
-import { t, tErr, tn } from '../lib/i18n.js';
+import { locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball, Grade, Jacket } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
 import { DIM_LABEL, DIM_TIP } from './Progress.jsx';
-import { Check, Dumbbell, Lock, Crown, Target, Trash2 } from '../components/Icons.jsx';
+import { Check, Dumbbell, Lock, Crown, Target, Trash2, Trophy } from '../components/Icons.jsx';
 
 const dimName = (p) => t(DIM_LABEL[p] || p);
 
@@ -27,6 +27,55 @@ function reasonText(r) {
     case 'fails': return tn(v.n, 'Quebrou {n} vez', 'Quebrou {n} vezes');
     default: return '';
   }
+}
+
+/** Tentativas no chart: passes e quebras em ordem, com a nota de cada uma, para ver a evolução. */
+export function Attempts({ x }) {
+  const [open, setOpen] = useState(false);
+  const h = x.history;
+  if (!h.length) return <p className="muted small ti-attempts-empty">{t('Nenhuma tentativa registrada ainda. Jogue e sincronize para acompanhar a evolução.')}</p>;
+  const passes = h.filter((a) => !a.broken).length;
+  const firstIdx = h.findIndex((a) => !a.broken);
+  const recent = h.slice(-16);
+  const scores = h.map((a) => a.score || 0);
+  const max = Math.max(...scores, 1), min = Math.min(...scores);
+  const W = 120, H = 28;
+  const pts = h.length > 1 ? h.map((a, i) => `${(i / (h.length - 1)) * W},${H - 2 - (((a.score || 0) - min) / Math.max(1, max - min)) * (H - 4)}`).join(' ') : null;
+  const fmt = (ts) => new Date(ts).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' });
+  return (
+    <div className="ti-attempts">
+      <div className="ti-att-head">
+        <span className="small">
+          {tn(h.length, '{n} tentativa', '{n} tentativas')} · <b className="bad">{tn(h.length - passes, '{n} quebra', '{n} quebras')}</b> · <b className="good">{tn(passes, '{n} passe', '{n} passes')}</b>
+        </span>
+        {pts && <svg className="ti-spark" width={W} height={H} viewBox={`0 0 ${W} ${H}`} aria-hidden="true"><polyline points={pts} fill="none" strokeWidth="2" /></svg>}
+      </div>
+      <div className="ti-dots" aria-label={t('Últimas tentativas: verde passou, vermelho quebrou')}>
+        {recent.map((a, i) => <span key={i} className={a.broken ? 'bad' : 'good'} title={`${fmt(a.at)} · ${fmtScore(a.score)}${a.broken ? ` · ${t('quebrou')}` : ''}`} />)}
+      </div>
+      {firstIdx >= 0 && (
+        <p className="small muted">
+          {t('Passou pela primeira vez em {d}, na tentativa {k}.', { d: fmt(h[firstIdx].at), k: firstIdx + 1 })}
+          {x.clearedInTraining && <b className="good"> {t('Depois de entrar no treino!')}</b>}
+        </p>
+      )}
+      {x.triesSince > 0 && !x.cleared && <p className="small muted">{t('Desde que entrou no treino: {n} tentativas, {f} quebras.', { n: x.triesSince, f: x.failsSince })}</p>}
+      <button type="button" className="link small" onClick={() => setOpen((o) => !o)}>{open ? t('Esconder tentativas') : t('Ver todas as tentativas')}</button>
+      {open && (
+        <ol className="ti-att-list">
+          {[...h].reverse().map((a, i) => (
+            <li key={i} className={a.broken ? 'bad' : 'good'}>
+              <span className="muted">{fmt(a.at)}</span>
+              <span className="sc">{fmtScore(a.score)}</span>
+              <Grade grade={a.grade} broken={a.broken} size="sm" />
+              {a.miss != null && <span className="muted">{t('{n} miss', { n: a.miss })}</span>}
+              {a.at < x.added && <span className="muted tiny">{t('antes do treino')}</span>}
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  );
 }
 
 /** Meu treino: os charts que a pessoa escolheu, com a chance de passar e o que treinar antes. */
@@ -52,6 +101,7 @@ export default function Training() {
     if (sort === 'chance') arr.sort((a, b) => (a.cleared - b.cleared) || b.chance - a.chance || a.chart.level - b.chart.level);
     if (sort === 'level') arr.sort((a, b) => a.chart.level - b.chart.level || b.chance - a.chance);
     if (sort === 'added') arr.sort((a, b) => b.added - a.added);
+    if (sort === 'tries') arr.sort((a, b) => b.history.length - a.history.length || b.chance - a.chance);
     return arr;
   }, [items, sort]);
 
@@ -62,6 +112,7 @@ export default function Training() {
   const hardest = [...open].sort((a, b) => a.chance - b.chance)[0];
   const focusCount = {};
   for (const x of open) if (x.focus) focusCount[x.focus] = (focusCount[x.focus] || 0) + 1;
+  const wins = (items || []).filter((x) => x.clearedInTraining).sort((a, b) => b.clearedAt - a.clearedAt);
   const focus = Object.entries(focusCount).sort((a, b) => b[1] - a[1])[0];
   const remove = async (id) => { setBusy(id); try { await setTraining(id, false); } catch (e) { setErr(tErr(e.message)); } finally { setBusy(0); } };
 
@@ -91,10 +142,23 @@ export default function Training() {
               {focus && <div className="ts-box"><small>{t('Foco de treino')}</small><span>{dimName(focus[0])}</span><b>{tn(focus[1], 'em {n} música', 'em {n} músicas')}</b></div>}
             </section>
           )}
+          {wins.length > 0 && (
+            <section className="card train-wins">
+              <h3 className="ic-row"><Trophy size={18} /> {tn(wins.length, 'Você passou {n} música do treino', 'Você passou {n} músicas do treino')}</h3>
+              <div className="ti-train-list">
+                {wins.map((x) => (
+                  <Link key={x.chart.id} to={`/musica/${x.chart.song.id}?c=${x.chart.id}`} className="ti-train-chip win">
+                    <Ball chart={x.chart} size="sm" /> {x.chart.song.title}
+                    <small className="muted">{new Date(x.clearedAt).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' })} · {tn(x.history.findIndex((a) => !a.broken) + 1, '{n}ª tentativa', '{n}ª tentativa')}</small>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
           {canAnalyze && focus && DIM_TIP[focus[0]] && <p className="muted small train-tip">{t(DIM_TIP[focus[0]])}</p>}
 
           <div className="filters">
-            <Chips value={sort} onChange={setSort} options={[['chance', t('Chance')], ['level', t('Nível')], ['added', t('Recentes')]]} />
+            <Chips value={sort} onChange={setSort} options={[['chance', t('Chance')], ['level', t('Nível')], ['tries', t('Tentativas')], ['added', t('Recentes')]]} />
             <span className="muted small">{tn(items.length, '{n} música', '{n} músicas')}</span>
           </div>
 
@@ -114,6 +178,7 @@ export default function Training() {
                   <button className="btn ghost icon" disabled={busy === x.chart.id} onClick={() => remove(x.chart.id)} title={t('Tirar do Meu treino')} aria-label={t('Tirar do Meu treino')}><Trash2 size={15} /></button>
                 </div>
 
+                <Attempts x={x} />
                 {x.cleared ? (
                   <p className="small ti-done"><Check size={14} /> {t('Já passou!')}
                     {x.next && <> {t('Faltam {n} pontos para {g}.', { n: fmtScore(x.next.need), g: x.next.grade })}</>}

@@ -1112,3 +1112,23 @@ a.q-city:hover { color: var(--text); }
   .pm-toggle { width: 34px; height: 30px; }
   .pm-cell input { width: 48px; padding: 6px 2px; }
 }
+
+/* Meu treino: tentativas e conquistas */
+.ti-attempts { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 12px; background: var(--bg2); }
+.ti-attempts p { margin: 0; }
+.ti-att-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.ti-attempts b.bad, .ti-att-list li.bad .sc { color: #ff9aa6; }
+.ti-attempts b.good, .ti-att-list li.good .sc { color: var(--neon); }
+.ti-spark polyline { stroke: var(--neon); }
+.ti-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+.ti-dots span { width: 12px; height: 12px; border-radius: 4px; }
+.ti-dots span.good { background: var(--neon); }
+.ti-dots span.bad { background: #ff4d5e; }
+.ti-att-list { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; max-height: 240px; overflow-y: auto; }
+.ti-att-list li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; flex-wrap: wrap; }
+.ti-att-list .sc { font: 700 13px var(--num); }
+.ti-attempts-empty { margin: 0; }
+.train-wins h3 { margin: 0 0 8px; color: var(--neon); }
+.ti-train-chip.win { border: 1px solid rgba(140, 255, 58, .4); }
+.ti-train-chip small { margin-left: 4px; }
+.ti-attempts .link { align-self: flex-start; }
