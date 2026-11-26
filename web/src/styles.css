@@ -991,7 +991,9 @@ a.q-city:hover { color: var(--text); }
 /* tamanho das capas no Tier: menor = mais músicas por linha */
 .tier-grid.size-sm { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 5px; }
 .tier-grid.size-sm .tile-name { font-size: 9.5px; padding: 3px 4px 0; }
-.tier-grid.size-sm .tile-score { font-size: 9.5px; padding: 0 4px 3px; }
+/* no tamanho P a pontuação em número sai: ocupava espaço e não dava para ler (a nota continua na capa) */
+.tier-grid.size-sm .tile-score { display: none; }
+.tier-grid.size-sm .tile-name { padding-bottom: 3px; }
 .tier-grid.size-sm .tile-grade .grade-img.md { height: 22px; }
 .tier-grid.size-sm .tile-grade.g-size-sm .grade-img.md { height: 14px; }
 .tier-grid.size-sm .tile-grade.g-size-lg .grade-img.md { height: 34px; }
@@ -1263,3 +1265,10 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .rec-wrap { border-radius: 12px; background: var(--card, rgba(255,255,255,.05)); }
 .rec-wrap .rec { background: transparent; }
 .rec-actions { display: flex; justify-content: flex-end; padding: 0 8px 8px; margin-top: -4px; }
+/* selos menores nas capas pequenas (P) */
+.tier-grid.size-sm .tile-new { font-size: 7.5px; padding: 0 3px; top: 2px; right: 2px; border-radius: 4px; }
+.tier-grid.size-sm .tile-train, .tier-grid.size-sm .tile-special { width: 15px; height: 15px; border-radius: 4px; }
+.tier-grid.size-sm .tile-train svg, .tier-grid.size-sm .tile-special svg { width: 10px; height: 10px; }
+.tier-grid.size-sm .tile-train { top: 2px; right: 2px; }
+.tier-grid.size-sm .tile-new ~ .tile-train { top: 16px; }
+.tier-grid.size-sm .tile-special { top: 2px; left: 2px; }
