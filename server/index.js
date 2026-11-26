@@ -5,6 +5,7 @@ import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
+import { resolveVideo } from './videos.js';
 import { refreshCatalog } from './catalog.js';
 
 const PORT = process.env.PORT || 10000;
@@ -181,6 +182,8 @@ async function readJson(req) {
   return raw ? JSON.parse(raw) : {};
 }
 
+const videoHits = new Map();
+
 const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin;
   const url = new URL(req.url, 'http://x');
@@ -189,6 +192,20 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
     // o app chama isto ao abrir; no máximo uma atualização do catálogo por dia
     if (url.pathname === '/api/catalog/tick') { catalogTick(); autoSyncTick(); return send(res, 202, { ok: true }, origin); }
+    // link do YouTube: abre direto o vídeo do chart (c) ou da música (s); público, para funcionar num link comum
+    const vm = url.pathname.match(/^\/api\/video\/([cs])\/(\d{1,9})$/);
+    if (req.method === 'GET' && vm) {
+      const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress;
+      const now = Date.now();
+      const hits = (videoHits.get(ip) || []).filter((x) => now - x < 60_000);
+      videoHits.set(ip, [...hits, now]);
+      let target = null;
+      if (hits.length < 40 && process.env.INGEST_KEY) {
+        target = await resolveVideo({ kind: vm[1], id: Number(vm[2]), rpc: rpcAsServer }).catch((e) => { console.log('video', e.message); return null; });
+      }
+      res.writeHead(302, { Location: target || 'https://www.youtube.com/results?search_query=pump+it+up', 'Cache-Control': 'no-store' });
+      return res.end();
+    }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
     if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);

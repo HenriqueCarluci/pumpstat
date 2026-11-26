@@ -1,6 +1,7 @@
 // Estilo dos charts: % das notas em cada padrão (calculado das anotações de pé do piucenter.com).
 import { useEffect, useState } from 'react';
 import { rpc } from './api.js';
+import { API_URL } from './config.js';
 
 export const STYLE_KEYS = [
   { id: 'twist', label: 'Twist', color: '#ff5d8f', tip: 'Pés cruzados ou de lado' },
@@ -56,6 +57,9 @@ export function useStyles(songIds) {
 /** Os padrões mais fortes do chart, para resumos curtos. */
 export const topStyles = (st, n = 3) => (st ? STYLE_KEYS.map((k) => ({ ...k, v: st.pct[k.id] }))
   .filter((k) => k.v >= 5).sort((a, b) => b.v - a.v).slice(0, n) : []);
+
+/** Link que abre direto o vídeo do chart ('c') ou da música ('s'); o servidor guarda o vídeo achado. */
+export const videoUrl = (kind, id) => `${API_URL}/api/video/${kind}/${id}`;
 
 export const youtubeUrl = (title, label) =>
   `https://www.youtube.com/results?search_query=${encodeURIComponent(`pump it up ${title} ${label || ''}`.trim())}`;

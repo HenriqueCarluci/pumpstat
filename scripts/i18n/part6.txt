@@ -87,3 +87,10 @@ Desafio | Challenge | Desafío | 도전 | 挑戦 | Défi | Sfida
 Nota (PUMBILITY) | Score (PUMBILITY) | Nota (PUMBILITY) | 점수 (PUMBILITY) | スコア (PUMBILITY) | Score (PUMBILITY) | Punteggio (PUMBILITY)
 Gráficos de evolução | Progress charts | Gráficos de evolución | 성장 그래프 | 推移グラフ | Graphiques d'évolution | Grafici di evoluzione
 Dicas com base nos seus passes e quebras | Tips based on your clears and breaks | Consejos basados en tus pases y quiebres | 클리어와 브레이크 기록 기반 팁 | クリアとブレイクに基づくアドバイス | Conseils basés sur vos validations et échecs | Consigli basati sui tuoi superamenti e fallimenti
+Cole um link do YouTube. | Paste a YouTube link. | Pega un enlace de YouTube. | 유튜브 링크를 붙여 넣으세요. | YouTube のリンクを貼ってください。 | Collez un lien YouTube. | Incolla un link di YouTube.
+Vídeo removido; o app vai buscar de novo. | Video removed; the app will search again. | Video quitado; la app buscará de nuevo. | 동영상을 삭제했습니다. 앱이 다시 찾습니다. | 動画を削除しました。アプリがもう一度探します。 | Vidéo supprimée ; l'appli va chercher à nouveau. | Video rimosso; l'app lo cercherà di nuovo.
+Vídeo salvo. | Video saved. | Video guardado. | 동영상을 저장했습니다. | 動画を保存しました。 | Vidéo enregistrée. | Video salvato.
+Corrigir vídeo | Fix video | Corregir video | 동영상 수정 | 動画を修正 | Corriger la vidéo | Correggi video
+Buscar de novo | Search again | Buscar de nuevo | 다시 찾기 | もう一度探す | Chercher à nouveau | Cerca di nuovo
+link do YouTube inválido | invalid YouTube link | enlace de YouTube no válido | 잘못된 유튜브 링크 | 無効な YouTube リンク | lien YouTube invalide | link di YouTube non valido
+chave de vídeo inválida | invalid video key | clave de video no válida | 잘못된 동영상 키 | 無効な動画キー | clé vidéo invalide | chiave video non valida
