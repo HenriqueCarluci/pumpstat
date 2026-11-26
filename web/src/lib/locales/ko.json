@@ -700,7 +700,7 @@
 "Padrão": "패턴",
 "Pagamento recebido. Seu plano aparece em instantes; se não aparecer, use \"Restaurar compras\" em Minha assinatura.": "결제가 완료되었습니다. 곧 요금제가 표시됩니다. 안 보이면 내 구독에서 \"구매 복원\"을 쓰세요.",
 "Para atualizar, conecte sua conta da Pump uma vez em": "업데이트하려면 펌프 계정을 한 번 연결하세요:",
-"Para cada padrão, pegamos os charts perto do seu nível em que ele se destaca e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio.": "패턴마다 내 레벨 근처에서 그 패턴이 두드러진 차트를 골라, 같은 난이도(레벨 + 티어)의 차트에서 평소 성적과 비교합니다: 브레이크가 얼마나 더(또는 덜) 나는지, 점수를 얼마나 얻거나 잃는지. 차트가 적으면 결과가 중간에 가깝게 나옵니다.",
+"Para cada padrão, pegamos os charts que você jogou perto do seu nível e que têm mais desse padrão do que 3 em cada 4 charts do jogo, e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio; com menos de 3, o padrão não aparece.": "패턴마다 내 레벨 근처에서 플레이한 차트 중 그 패턴이 게임 전체 차트 4개 중 3개보다 많은 차트를 골라, 같은 난이도(레벨 + 티어)의 차트에서 평소 성적과 비교합니다: 브레이크가 얼마나 더(또는 덜) 나는지, 점수를 얼마나 얻거나 잃는지. 차트가 적으면 결과가 중간에 가깝고, 3개 미만이면 표시되지 않습니다.",
 "Para chegar lá, passe antes:": "그 전에 클리어할 곡:",
 "Para conferir como fica antes de ligar para todos.": "모두에게 켜기 전에 확인하기 위한 옵션입니다.",
 "Para entrar na fila (e para voltar de \"ausente\") é preciso fazer check-in no local: o app confere a sua localização.": "대기열에 들어가거나 \"자리 비움\"에서 돌아오려면 현장에서 체크인해야 합니다: 앱이 위치를 확인합니다.",

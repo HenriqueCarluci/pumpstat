@@ -221,7 +221,7 @@ function Weak({ r, mode, hasOther, otherName }) {
       <section className="card">
         <h3>{t('Pontos fracos e fortes por padrão')}</h3>
         <p className="muted small">
-          {t('Para cada padrão, pegamos os charts perto do seu nível em que ele se destaca e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio.')}
+          {t('Para cada padrão, pegamos os charts que você jogou perto do seu nível e que têm mais desse padrão do que 3 em cada 4 charts do jogo, e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio; com menos de 3, o padrão não aparece.')}
           {hasOther && <> {t('Usa também o seu histórico da {v}, porque padrão é habilidade sua, não da versão.', { v: otherName })}</>}
         </p>
         {!list.length && <p className="empty">{t('Ainda não há tentativas suficientes perto do seu nível com estilo conhecido. Continue jogando e sincronizando.')}</p>}

@@ -125,14 +125,19 @@ export function effLevel(c) {
   return c.level + (n == null ? 0 : n / 6);
 }
 
-/** Corte de "carregado no padrão" por padrão, dentro da zona: quartil de cima (com um mínimo para padrões raros). */
-function heavyCuts(zone, prog) {
-  const cuts = {};
-  for (const p of DIMENSIONS) {
-    const vals = zone.map((r) => styleOf(prog, r.chart).pct[p] || 0).sort((x, y) => x - y);
-    cuts[p] = Math.max(p === 'run' ? 0 : 3, vals[Math.floor(vals.length * 0.75)] || 0) + 1e-9;
-  }
-  return cuts;
+// Corte de "carregado no padrão": o quartil de cima do catálogo inteiro (piucenter, % das notas), por modo e faixa de nível.
+// É fixo pelo catálogo, não pelos charts que a pessoa jogou: quem foge de corrida quase não tem charts acima do corte,
+// e aí corrida fica sem dado em vez de virar o padrão "de sempre".
+//            twist drill  run  bracket jump jack  dstep fswitch
+const CUT = {
+  S: [[18.0, 7.8, 65.3, 3, 18.9, 8.4, 3, 3], [19.4, 11.6, 68.1, 7.4, 17.3, 6.8, 3.9, 3], [16.4, 13.8, 65.4, 18.5, 20.6, 5.7, 4.4, 3]],
+  D: [[26.6, 4.2, 65.9, 3, 20.2, 8.7, 3, 3], [26.7, 8.4, 71.1, 5.2, 18.0, 6.4, 3.3, 3], [23.6, 11.0, 68.1, 20.7, 20.1, 5.3, 4.8, 3]],
+};
+export function isHeavy(st, c, p) {
+  const v = st.pct[p] || 0;
+  if (st.derived || !PATTERNS.includes(p)) return v >= 50; // padrões do PIU Scores/comunidade e velocidade/resistência/gimmick
+  const row = (CUT[c.mode] || CUT.S)[c.level <= 17 ? 0 : c.level <= 21 ? 1 : 2];
+  return v >= row[PATTERNS.indexOf(p)];
 }
 
 /**
@@ -183,11 +188,10 @@ export function weaknessSums(attempts, prog, mode, lvl) {
   const zone = attempts.filter((r) => r.chart.mode === mode && r.chart.level >= lo && r.chart.level <= hi && styleOf(prog, r.chart));
   if (zone.length < 6) return sums;
   const model = fitPlayer(zone, lvl.ceiling);
-  const cuts = heavyCuts(zone, prog);
   for (const p of DIMENSIONS) {
     const t = { W: 0, O: 0, E: 0, N: 0, S: 0, SN: 0 };
     for (const r of zone) {
-      if ((styleOf(prog, r.chart).pct[p] || 0) < cuts[p] || !r.attempts) continue;
+      if (!r.attempts || !isHeavy(styleOf(prog, r.chart), r.chart, p)) continue;
       const w = Math.min(r.attempts, 4);
       t.W += w; t.O += w * (r.fails / r.attempts); t.E += w * model.fail(r.chart); t.N++;
       if (model.hasScore && r.cleared && r.chart.score != null) { t.S += r.chart.score - model.score(r.chart); t.SN++; }
@@ -222,7 +226,7 @@ export function weaknesses(...sumsList) {
 const TAG_TO_DIM = { twist: 'twist', drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', doublestep: 'doublestep',
   footswitch: 'footswitch', stamina: 'stamina', speed: 'speed', gimmick: null };
 const BADGE_RULES = [
-  ['twist', (b) => /twist/.test(b) && !/without twist/.test(b)], ['drill', (b) => /drill/.test(b)], ['run', (b) => /\brun|stair/.test(b)],
+  ['twist', (b) => /twist/.test(b) && !/without twist/.test(b)], ['drill', (b) => /drill/.test(b)], ['run', (b) => /^runs?$/.test(b.trim())],
   ['bracket', (b) => /bracket/.test(b)], ['jump', (b) => /jump/.test(b)], ['jack', (b) => /jack/.test(b)],
   ['doublestep', (b) => /double ?step/.test(b)], ['footswitch', (b) => /footswitch/.test(b)],
   ['stamina', (b) => /sustain|stamina/.test(b)], ['speed', (b) => /burst/.test(b)],
@@ -231,7 +235,7 @@ export function badgeStyle(c) {
   const pct = {};
   for (const raw of c.skills || []) {
     const b = String(raw).toLowerCase();
-    for (const [dim, test] of BADGE_RULES) if (test(b)) pct[dim] = Math.min(80, (pct[dim] || 0) + 50);
+    for (const [dim, test] of BADGE_RULES) if (test(b)) pct[dim] = 50;
   }
   for (const tg of c.community?.tags || []) { const d = TAG_TO_DIM[Array.isArray(tg) ? tg[0] : tg]; if (d) pct[d] = Math.max(pct[d] || 0, 50); }
   if (hasGimmick(c)) pct.gimmick = 60;

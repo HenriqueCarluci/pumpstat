@@ -700,7 +700,7 @@
 "Padrão": "パターン",
 "Pagamento recebido. Seu plano aparece em instantes; se não aparecer, use \"Restaurar compras\" em Minha assinatura.": "支払いを受け付けました。まもなくプランが反映されます。反映されない場合はマイサブスクの「購入を復元」を。",
 "Para atualizar, conecte sua conta da Pump uma vez em": "更新するには、一度 Pump アカウントを連携してください:",
-"Para cada padrão, pegamos os charts perto do seu nível em que ele se destaca e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio.": "パターンごとに、自分のレベル付近でそのパターンが目立つ譜面を選び、同じ難しさ(レベル + ティア)の譜面でのいつもの結果と比べます: ブレイクがどれだけ多い(少ない)か、スコアをどれだけ得る・失うか。譜面が少ないと結果は中央寄りになります。",
+"Para cada padrão, pegamos os charts que você jogou perto do seu nível e que têm mais desse padrão do que 3 em cada 4 charts do jogo, e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio; com menos de 3, o padrão não aparece.": "パターンごとに、自分のレベル付近で遊んだ譜面のうち、そのパターンがゲーム全体の4譜面中3譜面より多いものを選び、同じ難しさ(レベル + ティア)の譜面でのいつもの結果と比べます: ブレイクがどれだけ多い(少ない)か、スコアをどれだけ得る・失うか。譜面が少ないと結果は中央寄りになり、3譜面未満なら表示しません。",
 "Para chegar lá, passe antes:": "その前にクリアしたい曲:",
 "Para conferir como fica antes de ligar para todos.": "全員に公開する前に見た目を確認するためです。",
 "Para entrar na fila (e para voltar de \"ausente\") é preciso fazer check-in no local: o app confere a sua localização.": "列に並ぶとき(と「離席」から戻るとき)は現地でのチェックインが必要です: アプリが位置を確認します。",
