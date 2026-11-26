@@ -608,3 +608,28 @@ Desenvolvido por | Developed by | Desarrollado por | 개발 | 開発 | Développ
 Dia | Day | Día | 일 | 日 | Jour | Giorno
 Semana | Week | Semana | 주 | 週 | Semaine | Settimana
 Mês | Month | Mes | 월 | 月 | Mois | Mese
+Entrar no servidor | Join the server | Entrar al servidor | 서버 참여 | サーバーに参加 | Rejoindre le serveur | Entra nel server
+Redes do time | Team socials | Redes del equipo | 팀 SNS | チームのSNS | Réseaux de l'équipe | Social della squadra
+A imagem é pequena demais. Use pelo menos 64 × 64 pixels. | The image is too small. Use at least 64 × 64 pixels. | La imagen es demasiado pequeña. Usa al menos 64 × 64 píxeles. | 이미지가 너무 작습니다. 64 × 64 픽셀 이상을 사용하세요. | 画像が小さすぎます。64 × 64 ピクセル以上にしてください。 | L'image est trop petite. Utilisez au moins 64 × 64 pixels. | L'immagine è troppo piccola. Usa almeno 64 × 64 pixel.
+Não deu para ler essa imagem. Tente um PNG ou JPG. | Couldn't read this image. Try a PNG or JPG. | No se pudo leer esta imagen. Prueba con un PNG o JPG. | 이미지를 읽을 수 없습니다. PNG 또는 JPG를 사용해 보세요. | この画像を読み込めませんでした。PNG か JPG をお試しください。 | Impossible de lire cette image. Essayez un PNG ou un JPG. | Impossibile leggere questa immagine. Prova un PNG o JPG.
+Não deu para enviar o logo. Tente de novo. | Couldn't upload the logo. Try again. | No se pudo subir el logo. Inténtalo de nuevo. | 로고를 업로드할 수 없습니다. 다시 시도하세요. | ロゴをアップロードできませんでした。もう一度お試しください。 | Impossible d'envoyer le logo. Réessayez. | Impossibile caricare il logo. Riprova.
+Escolha uma imagem (PNG, JPG ou WEBP). | Choose an image (PNG, JPG or WEBP). | Elige una imagen (PNG, JPG o WEBP). | 이미지를 선택하세요 (PNG, JPG, WEBP). | 画像を選んでください（PNG・JPG・WEBP）。 | Choisissez une image (PNG, JPG ou WEBP). | Scegli un'immagine (PNG, JPG o WEBP).
+A imagem passa de 10 MB. | The image is over 10 MB. | La imagen supera los 10 MB. | 이미지가 10MB를 넘습니다. | 画像が 10 MB を超えています。 | L'image dépasse 10 Mo. | L'immagine supera i 10 MB.
+Escolher logo do time | Choose team logo | Elegir logo del equipo | 팀 로고 선택 | チームロゴを選ぶ | Choisir le logo de l'équipe | Scegli il logo della squadra
+Logo | Logo | Logo | 로고 | ロゴ | Logo | Logo
+Tirar logo | Remove logo | Quitar logo | 로고 제거 | ロゴを外す | Retirer le logo | Rimuovi logo
+Logo opcional: PNG, JPG ou WEBP. Cortamos no centro em quadrado. | Optional logo: PNG, JPG or WEBP. We crop the center to a square. | Logo opcional: PNG, JPG o WEBP. Recortamos el centro en un cuadrado. | 로고(선택): PNG, JPG, WEBP. 가운데를 정사각형으로 자릅니다. | ロゴ（任意）：PNG・JPG・WEBP。中央を正方形に切り抜きます。 | Logo facultatif : PNG, JPG ou WEBP. Nous recadrons le centre en carré. | Logo facoltativo: PNG, JPG o WEBP. Ritagliamo il centro in un quadrato.
+ex.: LBD | e.g. LBD | ej.: LBD | 예: LBD | 例：LBD | ex. : LBD | es.: LBD
++ Outras redes (TikTok, YouTube, Twitch, X, Discord) | + Other socials (TikTok, YouTube, Twitch, X, Discord) | + Otras redes (TikTok, YouTube, Twitch, X, Discord) | + 다른 SNS (TikTok, YouTube, Twitch, X, Discord) | + ほかのSNS（TikTok・YouTube・Twitch・X・Discord） | + Autres réseaux (TikTok, YouTube, Twitch, X, Discord) | + Altri social (TikTok, YouTube, Twitch, X, Discord)
+Sobre o time | About the team | Sobre el equipo | 팀 소개 | チームについて | À propos de l'équipe | Sulla squadra
+Onde vocês jogam, há quanto tempo, quem pode entrar… | Where you play, for how long, who can join… | Dónde juegan, desde cuándo, quién puede entrar… | 어디서, 얼마나 오래 플레이하는지, 누가 가입할 수 있는지… | どこで、どのくらい遊んでいるか、誰が入れるか… | Où vous jouez, depuis quand, qui peut rejoindre… | Dove giocate, da quanto, chi può entrare…
+Contato para o admin (opcional) | Contact for the admin (optional) | Contacto para el admin (opcional) | 관리자 연락처 (선택) | 管理者への連絡先（任意） | Contact pour l'admin (facultatif) | Contatto per l'admin (facoltativo)
+WhatsApp ou e-mail | WhatsApp or email | WhatsApp o correo | WhatsApp 또는 이메일 | WhatsApp またはメール | WhatsApp ou e-mail | WhatsApp o email
+O admin recebe o pedido e confere. Quando aprovar, você entra no time automaticamente. | The admin receives and reviews the request. Once approved, you join the team automatically. | El admin recibe y revisa la solicitud. Al aprobarla, entras al equipo automáticamente. | 관리자가 요청을 받아 확인합니다. 승인되면 자동으로 팀에 들어갑니다. | 管理者が申請を受け取って確認します。承認されると自動でチームに入ります。 | L'admin reçoit et vérifie la demande. Une fois approuvée, vous rejoignez l'équipe automatiquement. | L'admin riceve e verifica la richiesta. Una volta approvata, entri automaticamente nella squadra.
+Logo do time | Team logo | Logo del equipo | 팀 로고 | チームロゴ | Logo de l'équipe | Logo della squadra
+Sem logo | No logo | Sin logo | 로고 없음 | ロゴなし | Pas de logo | Nessun logo
+Contato | Contact | Contacto | 연락처 | 連絡先 | Contact | Contatto
+Tirar o logo | Remove the logo | Quitar el logo | 로고 제거 | ロゴを外す | Retirer le logo | Rimuovi il logo
+Convite do Discord inválido: cole o link discord.gg/... | Invalid Discord invite: paste the discord.gg/... link | Invitación de Discord inválida: pega el enlace discord.gg/... | 잘못된 Discord 초대: discord.gg/... 링크를 붙여 넣으세요 | Discord の招待が無効です：discord.gg/... のリンクを貼ってください | Invitation Discord invalide : collez le lien discord.gg/... | Invito Discord non valido: incolla il link discord.gg/...
+O nome do time precisa ter de 2 a 40 letras. | The team name must have 2 to 40 characters. | El nombre del equipo debe tener de 2 a 40 caracteres. | 팀 이름은 2~40자여야 합니다. | チーム名は 2〜40 文字にしてください。 | Le nom de l'équipe doit compter de 2 à 40 caractères. | Il nome della squadra deve avere da 2 a 40 caratteri.
+Envie o logo pelo próprio formulário. | Upload the logo through the form itself. | Sube el logo desde el propio formulario. | 로고는 양식에서 직접 업로드하세요. | ロゴはフォームからアップロードしてください。 | Envoyez le logo via le formulaire. | Carica il logo dal modulo stesso.

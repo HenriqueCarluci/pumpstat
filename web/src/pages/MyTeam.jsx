@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { isOn } from '../lib/plans.js';
 import { TeamLogo } from '../lib/teams.jsx';
+import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 import { Flag, useCountries } from '../lib/country.jsx';
 import { fmtNum, locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball } from '../components/ui.jsx';
@@ -65,8 +66,8 @@ export default function MyTeam() {
           <div className="mt-hero-tags">
             <span className="tag"><Users size={12} /> {tn(members.length, '{n} participante', '{n} participantes')}</span>
             {online.length > 0 && <span className="tag on"><span className="dot-on" /> {tn(online.length, '{n} online agora', '{n} online agora')}</span>}
-            {tm.instagram && <a className="tag" href={`https://instagram.com/${tm.instagram}`} target="_blank" rel="noopener noreferrer">Instagram @{tm.instagram}</a>}
           </div>
+          <TeamSocialLinks team={tm} />
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 // Só para desenvolvimento: renderiza a página da música com dados de exemplo (não entra no build).
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import TeamPicker from './components/TeamPicker.jsx';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import MyTeam from './pages/MyTeam.jsx';
@@ -37,9 +38,10 @@ const FAKE = {
       series: [0, 1, 2, 3, 4, 5, 6].map((i) => [st + i * 86400, [12, 20, 8, 30, 25, 14, 7][i], [4, 6, 2, 12, 9, 7, 5][i]]),
       top: [{ chart_id: 5769, song_id: 242, title: 'Gargoyle', mode: 'D', level: 20, plays: 9, passes: 6, players: 3 }, { chart_id: 4864, song_id: 242, title: 'Gargoyle', mode: 'D', level: 23, plays: 6, passes: 1, players: 2 }],
       members: [{ id: 'amigo', nickname: 'PUMPKING', plays: 70, passes: 58, new_clears: 9, max_d: 23, max_s: 24 }, { id: 'eu', nickname: 'HENRIQUE', plays: 51, passes: 33, new_clears: 8, max_d: 21, max_s: 20 }, { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME', plays: 0, passes: 0, new_clears: 0, max_d: null, max_s: null }] }; })(),
+  list_teams: { teams: [], mine: null, pending: null },
   my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
   countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: { eu: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' }, amigo: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' } },
-  my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua' },
+  my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua', socials: { tiktok: 'team.laqua', discord: 'abcXYZ' } },
     week: { plays: 132, passes: 97, active: 4 },
     members: [
       { id: 'amigo', me: false, friend: true, nickname: 'PUMPKING', title: 'Twist Master', pumbility: 16565.7, max_s: 22, max_d: 24, clears: 812, online: true, joined: '2026-10-01' },
@@ -77,6 +79,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

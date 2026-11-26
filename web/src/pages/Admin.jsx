@@ -11,6 +11,7 @@ import { PLAN_LABEL } from '../lib/plans.js';
 import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
+import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -496,6 +497,10 @@ function InactiveVenues() {
 function TeamReview({ x, onDone }) {
   const [f, setF] = useState({ name: x.name, tag: x.tag || '', note: '' });
   const [err, setErr] = useState('');
+  const dropLogo = async () => {
+    setErr('');
+    try { await rpc('admin_set_team_media', { p_id: x.id, p_logo: null, p_instagram: x.instagram, p_socials: x.socials || {} }); onDone(); } catch (e) { setErr(tErr(e.message)); }
+  };
   const review = async (approve) => {
     setErr('');
     try { await rpc('admin_review_team', { p_id: x.id, p_approve: approve, p_name: f.name, p_tag: f.tag, p_note: f.note }); onDone(); } catch (e) { setErr(tErr(e.message)); }
@@ -503,6 +508,16 @@ function TeamReview({ x, onDone }) {
   return (
     <div className="card review-card">
       <div className="small muted">{t('Pedido de {who} · {when}', { who: x.nickname || t('Jogador'), when: timeAgo(x.created_at) })}{x.city ? ` · ${x.city}` : ''}</div>
+      <div className="tq-review">
+        {x.logo_url ? <a href={x.logo_url} target="_blank" rel="noopener noreferrer"><img className="tq-review-logo" src={x.logo_url} alt={t('Logo do time')} /></a>
+          : <span className="tq-review-logo ph muted tiny">{t('Sem logo')}</span>}
+        <div className="tq-review-info">
+          <TeamSocialLinks team={x} />
+          {x.about && <p className="small">{x.about}</p>}
+          {x.contact && <p className="small muted">{t('Contato')}: {x.contact}</p>}
+          {x.logo_url && <button className="link muted small" onClick={dropLogo}>{t('Tirar o logo')}</button>}
+        </div>
+      </div>
       <div className="team-form">
         <div className="row2">
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder={t('Nome do time')} />

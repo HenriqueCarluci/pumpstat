@@ -308,6 +308,39 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { emailed: ok }, origin);
     }
 
+    // pedido de time novo: avisa o admin por e-mail com o logo e as redes (o pedido já está salvo e aparece no painel)
+    if (req.method === 'POST' && url.pathname === '/api/team-request') {
+      const hook = process.env.FEEDBACK_WEBHOOK;
+      if (!hook) return send(res, 202, { emailed: false }, origin);
+      const { id } = await readJson(req);
+      const tr = await rpcAsUser(token, 'team_request_mail', { p_id: Number(id) || 0 }).catch(() => null);
+      if (!tr) return send(res, 200, { emailed: false }, origin);
+      const soc = tr.socials && typeof tr.socials === 'object' ? tr.socials : {};
+      const links = {
+        tiktok: (h) => `https://tiktok.com/@${h}`, youtube: (h) => `https://youtube.com/@${h}`, twitch: (h) => `https://twitch.tv/${h}`,
+        x: (h) => `https://x.com/${h}`, discord: (h) => `https://discord.gg/${h}`,
+      };
+      const redes = Object.entries(links).filter(([k]) => soc[k]).map(([k, f]) => f(String(soc[k]))).join('\n') || '—';
+      const r = await fetch(hook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: 'https://stepclub.onrender.com', Referer: 'https://stepclub.onrender.com/' },
+        body: JSON.stringify({
+          _token: process.env.FEEDBACK_TOKEN || '',
+          _subject: `PIU Stats · Pedido de time: ${String(tr.name || '').slice(0, 40)}`, _template: 'table', _captcha: 'false',
+          _replyto: String(user.email || ''),
+          Tipo: 'Pedido de time', Time: String(tr.name || ''), Sigla: tr.tag || '—', Cidade: tr.city || '—',
+          Logo: tr.logo || 'sem logo',
+          Instagram: tr.instagram ? `https://instagram.com/${tr.instagram}` : '—', 'Outras redes': redes,
+          'Sobre o time': String(tr.about || '—').slice(0, 500), Contato: String(tr.contact || '—').slice(0, 120),
+          'Pedido por': tr.nickname || '—', Conta: user.email || user.id, 'ID do pedido': Number(tr.id) || '—',
+          Aprovar: 'https://stepclub.onrender.com/#/admin?tab=approvals',
+          ...(tr.logo ? { _attachments: [{ name: `logo-${Number(tr.id) || 'time'}.${String(tr.logo).split('.').pop()}`, url: tr.logo }] } : {}),
+        }),
+      }).catch(() => null);
+      const body = r && r.ok ? await r.json().catch(() => ({})) : null;
+      return send(res, 200, { emailed: !!body && body.ok !== false }, origin);
+    }
+
     const m = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)$/);
     if (req.method === 'GET' && m) {
       const job = jobs.get(m[1]);
