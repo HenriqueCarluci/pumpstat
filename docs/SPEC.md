@@ -75,9 +75,37 @@ Igual ao site da Phoenix 2: fundo grafite `#1a1b1e`, cartões com a capa da mús
 fontes **Pretendard** (texto) e **Oxanium** (números), bolinhas de nível, grades e plates com as imagens oficiais
 carregadas de `piugame.com/l_img/p2/…`, acento verde-neon do logo.
 
-## 6. Próximos passos
+## 6. Backlog
 
 1. Embrulhar com Capacitor e trocar o bookmarklet por um WebView do piugame.com com script injetado.
 2. Votação própria de tier e notas pessoais por chart.
 3. Metas (ex.: “SSS em todos os D20”) e notificações quando um recorde melhora.
 4. Gráfico da evolução de cada chart usando `best_score_history`.
+5. **Fila do fliperama** (detalhada abaixo).
+
+### 6.1 Fila do fliperama
+
+Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da comunidade para organizar a vez na máquina.
+
+**Como a referência funciona (analisado em 25/11/2026)**
+- Tela inicial escolhe a cidade (Natal, Fortaleza, São Paulo, Porto Alegre, Recife) e depois o fliperama (ex.: Pátio Paulista).
+- Na fila: lista de quem está esperando, campo "seu nome" + botão **Entrar na fila**, botão **Passar a vez** e contador "N na fila".
+- Regras: respeitar a ordem; marcar **Ausente** ao sair (a caminho, banheiro); ausente e fora do local por 1 h sai da fila;
+  fila parada por 2 h é zerada (só aquela fila); quem não está no local e não marcou ausente recebe aviso.
+- Sem login: qualquer um digita um nome.
+
+**Como fica no PumpStat**
+
+| Item | Proposta |
+|---|---|
+| Locais | Tabelas `arcades` (cidade, nome, nº de máquinas/cabines, coordenadas) e lista por cidade, com favorito do fliperama habitual |
+| Entrar na fila | Logado: entra com o nick e o avatar do piugame já sincronizados; sem login: só nome (igual à referência) |
+| Estados | `esperando`, `jogando`, `ausente` (com horário), `saiu`; tabela `queue_entries` + `queue_events` para histórico |
+| Passar a vez | Quem está jogando vai para o fim ou sai; o próximo vira `jogando` e recebe notificação ("é a sua vez") |
+| Tempo real | Supabase Realtime na tabela da fila: todo mundo no fliperama vê a mesma lista ao vivo |
+| Regras automáticas | `pg_cron` a cada 5 min: remove ausentes há mais de 1 h e zera filas sem movimento há 2 h |
+| Presença | Opcional: geolocalização para avisar quem entrou na fila mas não está no local |
+| Estimativa de espera | Posição × tempo médio por crédito (calculado pelos registros de `passar a vez` daquele local) |
+| Integração com scores | Ao sair de `jogando`, o app sugere sincronizar e mostra os recordes da sessão |
+| Moderação | Dono do local (ou admin) pode remover alguém, reordenar e zerar a fila; limite de entradas por pessoa |
+| Segurança | RLS: leitura pública da fila; escrita via RPCs (`join_queue`, `pass_turn`, `set_away`, `leave_queue`) com limite de frequência por aparelho/usuário |
