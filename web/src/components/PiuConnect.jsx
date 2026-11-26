@@ -66,11 +66,11 @@ export default function PiuConnect({ onDone, compact }) {
       </div>
       {method === 'sso' ? (
         <div className="sso-steps">
-          <p className="small">Se você entra no piugame.com com <b>Google</b> (ou outra rede social do AM.PASS), o login precisa acontecer no seu navegador. Então o PumpStat lê os dados direto da página oficial:</p>
+          <p className="small">Se você entra no piugame.com com <b>Google</b> (ou outra rede social do AM.PASS), o login precisa acontecer no seu navegador. Então o StepClub lê os dados direto da página oficial:</p>
           <ol className="steps small">
             <li>Arraste o botão abaixo para a barra de favoritos (no celular: copie o código e salve como favorito).</li>
             <li>Abra <a href="https://piugame.com/my_page/my_best_score.php" target="_blank" rel="noreferrer">piugame.com</a> e entre com o Google.</li>
-            <li>Clique no favorito <b>PumpStat Sync</b>. Para a Phoenix, repita em <a href="https://phoenix.piugame.com/my_page/my_best_score.php" target="_blank" rel="noreferrer">phoenix.piugame.com</a>.</li>
+            <li>Clique no favorito <b>StepClub Sync</b>. Para a Phoenix, repita em <a href="https://phoenix.piugame.com/my_page/my_best_score.php" target="_blank" rel="noreferrer">phoenix.piugame.com</a>.</li>
           </ol>
           <SyncBookmarklet syncKey={ingestKey} />
           <button type="button" className="btn ghost wide" onClick={() => onDone?.()}>Já sincronizei, atualizar</button>

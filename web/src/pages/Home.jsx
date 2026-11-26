@@ -44,7 +44,7 @@ export default function Home() {
     return (
       <div className="page">
         <section className="card hero-connect">
-          <div className="login-brand"><span className="logo">▲</span> PumpStat</div>
+          <div className="login-brand"><span className="logo">▲</span> StepClub</div>
           <p className="center">Conecte sua conta da Pump It Up para trazer seus recordes da Phoenix 2 e da Phoenix.</p>
         </section>
         <section className="card"><PiuConnect onDone={() => reload()} /></section>

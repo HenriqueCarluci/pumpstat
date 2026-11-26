@@ -18,9 +18,9 @@ export default function Settings() {
       <section className="card">
         <h3>Capas das músicas</h3>
         <p className="muted small">No piugame.com, logado, clique neste favorito para buscar as capas oficiais (ranking "Over Lv.20").
-          Para músicas novas e o catálogo de charts, clique no <b>PumpStat Sync</b> em{' '}
+          Para músicas novas e o catálogo de charts, clique no <b>StepClub Sync</b> em{' '}
           <a href="https://piuscores.arroweclip.se" target="_blank" rel="noreferrer">piuscores.arroweclip.se</a>.</p>
-        <SyncBookmarklet syncKey={ingestKey} mode="jackets" label="▲ PumpStat Capas" alt />
+        <SyncBookmarklet syncKey={ingestKey} mode="jackets" label="▲ StepClub Capas" alt />
       </section>
 
       <section className="card">

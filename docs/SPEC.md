@@ -1,6 +1,8 @@
-# PumpStat — especificação do MVP
+# StepClub — especificação do MVP
 
-Tracker pessoal de Pump It Up no estilo do ArcadeStat (PumpStat), para **Phoenix 2** com os recordes da **Phoenix**.
+> Nome do app: **StepClub** (antes PumpStat). Também será o app do clube de Pump It Up que o Henrique vai abrir na Liberdade (SP).
+
+Tracker pessoal de Pump It Up no estilo do ArcadeStat (StepClub), para **Phoenix 2** com os recordes da **Phoenix**.
 É um site com cara de app (PWA), pensado para ser embrulhado num WebView (Capacitor) depois.
 
 ## 1. Referência: o que o ArcadeStat faz
@@ -20,7 +22,7 @@ Tracker pessoal de Pump It Up no estilo do ArcadeStat (PumpStat), para **Phoenix
 
 ```
 piugame.com / phoenix.piugame.com (logado)
-   └─ favorito "PumpStat Sync" → carrega /collector.js do PumpStat
+   └─ favorito "StepClub Sync" → carrega /collector.js do StepClub
         ├─ lê /my_page/pumbility.php        (perfil, PUMBILITY oficial)
         ├─ lê /my_page/my_best_score.php     (todas as páginas, 250 ms entre elas)
         ├─ lê /my_page/recently_played.php   (últimas 50, com julgamentos)
@@ -94,7 +96,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
   fila parada por 2 h é zerada (só aquela fila); quem não está no local e não marcou ausente recebe aviso.
 - Sem login: qualquer um digita um nome.
 
-**Como fica no PumpStat**
+**Como fica no StepClub**
 
 | Item | Proposta |
 |---|---|

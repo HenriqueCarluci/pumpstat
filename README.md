@@ -1,4 +1,6 @@
-# PumpStat
+# StepClub
+
+App do clube de Pump It Up da Liberdade (São Paulo): recordes de cada jogador, tier lists e, em breve, fila das máquinas.
 
 Tracker pessoal de **Pump It Up Phoenix 2** (com os recordes da **Phoenix**), no estilo do ArcadeStat.
 Site com cara de app (PWA), pronto para virar app com WebView/Capacitor.
@@ -20,9 +22,9 @@ Variáveis opcionais (`.env`): `VITE_SUPABASE_URL`, `VITE_SUPABASE_KEY` (chave p
 
 ## Sincronizar
 
-1. Abra o app → **Ajustes**, cole a chave de sincronização e arraste o favorito **PumpStat Sync**.
+1. Abra o app → **Ajustes**, cole a chave de sincronização e arraste o favorito **StepClub Sync**.
 2. Logado em `piugame.com` (Phoenix 2) ou `phoenix.piugame.com` (Phoenix), clique no favorito.
-3. Para capas, use o favorito **PumpStat Capas** no piugame.com. Para atualizar o catálogo, clique no **PumpStat Sync** em `piuscores.arroweclip.se`.
+3. Para capas, use o favorito **StepClub Capas** no piugame.com. Para atualizar o catálogo, clique no **StepClub Sync** em `piuscores.arroweclip.se`.
 
 ## Créditos
 

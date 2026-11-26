@@ -8,7 +8,7 @@ export function bookmarkletCode(key, mode = 'sync') {
 }
 
 /** Botão arrastável para a barra de favoritos + "copiar código" (celular). */
-export default function SyncBookmarklet({ syncKey, mode = 'sync', label = '▲ PumpStat Sync', alt }) {
+export default function SyncBookmarklet({ syncKey, mode = 'sync', label = '▲ StepClub Sync', alt }) {
   const ref = useRef(null);
   const [copied, setCopied] = useState(false);
   useEffect(() => {

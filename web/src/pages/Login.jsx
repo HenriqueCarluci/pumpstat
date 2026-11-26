@@ -29,8 +29,8 @@ export default function Login({ notice }) {
   return (
     <div className="login">
       <div className="login-card">
-        <div className="login-brand"><span className="logo">▲</span> PumpStat</div>
-        <p className="muted center">Seus recordes de Pump It Up Phoenix 2 e Phoenix.</p>
+        <div className="login-brand"><span className="logo">▲</span> StepClub</div>
+        <p className="muted center">Seus recordes de Pump It Up e o clube num lugar só.</p>
         <form onSubmit={submit}>
           <label className="field">E-mail
             <input type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />

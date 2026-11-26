@@ -1,6 +1,6 @@
 {
-  "name": "PumpStat",
-  "short_name": "PumpStat",
+  "name": "StepClub",
+  "short_name": "StepClub",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#141518",

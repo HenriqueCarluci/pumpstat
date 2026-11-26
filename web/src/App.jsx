@@ -101,7 +101,7 @@ function Shell() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand"><span className="logo">▲</span> PumpStat</div>
+        <div className="brand"><span className="logo">▲</span> StepClub</div>
         <div className="seg" role="tablist" aria-label="Versão">
           {Object.values(VERSIONS).map((v) => (
             <button key={v.id} className={v.id === version ? 'on' : ''} onClick={() => setVersion(v.id)}>{v.name}</button>

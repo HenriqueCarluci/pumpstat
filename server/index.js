@@ -1,4 +1,4 @@
-// PumpStat API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
+// StepClub API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
 // usando o token do próprio usuário (RPC ingest_me). A senha da Pump nunca é gravada.
 import http from 'node:http';
 import { randomUUID } from 'node:crypto';
@@ -9,7 +9,7 @@ import { piuLogin, PiuSession, switchSite } from './piu-session.js';
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_8_e3UpVPrgDdQbNlFitBvw_9uSoJG_t';
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://pumpstat.onrender.com,http://localhost:5173').split(',');
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://stepclub.onrender.com,https://pumpstat.onrender.com,http://localhost:5173').split(',');
 const SITES = { phoenix2: 'https://piugame.com', phoenix: 'https://phoenix.piugame.com' };
 const PAGE_DELAY_MS = 250;
 
@@ -115,33 +115,9 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
-    // Diagnóstico temporário: testa o fluxo de login com credenciais FALSAS (verifica a mensagem de erro)
-    if (req.method === 'POST' && url.pathname === '/debug/login-fake') {
-      try { await piuLogin('pumpstat-teste-inexistente@example.com', 'senha-errada-123'); return send(res, 200, { unexpected: 'logou?' }, origin); }
-      catch (e) { return send(res, 200, { error: e.message }, origin); }
-    }
-    // Diagnóstico temporário: estrutura pública da página de login (sem credenciais)
-    if (url.pathname === '/debug/login-page') {
-      const base = SITES[url.searchParams.get('v') || 'phoenix2'];
-      const s = new PiuSession(base);
-      const hops = [];
-      const orig = s.store.bind(s);
-      s.store = (u, r) => { hops.push({ url: u, status: r.status, location: r.headers.get('location') }); orig(u, r); };
-      const page = await s.get(url.searchParams.get('path') || '/login.php');
-      const doc = parseHtml(page.html);
-      const forms = [...doc.querySelectorAll('form')].map((f) => ({
-        id: f.getAttribute('id'), action: f.getAttribute('action'), method: f.getAttribute('method'),
-        inputs: [...f.querySelectorAll('input,select,button')].map((i) => `${i.getAttribute('name') || i.getAttribute('id') || i.tagName}:${i.getAttribute('type') || ''}${i.getAttribute('type') === 'hidden' ? '=' + (i.getAttribute('value') || '').slice(0, 60) : ''}`),
-      }));
-      const scripts = [...doc.querySelectorAll('script')].map((x) => x.getAttribute('src') || x.textContent)
-        .flatMap((t) => (t.match(/[^\n]{0,120}(login|ajax|\.post\(|fetch\(|AM_PASS|sns)[^\n]{0,220}/gi) || []))
-        .filter((t) => !/\\u[0-9a-f]{4}/i.test(t)).slice(0, 40);
-      return send(res, 200, { final: page.url, status: page.status, hops, cookies: [...s.cookies].map(([h, j]) => [h, [...j.keys()]]), forms, scripts }, origin);
-    }
-
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
-    if (!user?.id) return send(res, 401, { error: 'Faça login no PumpStat.' }, origin);
+    if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
       const { login, password, versions } = await readJson(req);
@@ -171,4 +147,4 @@ const server = http.createServer(async (req, res) => {
 // limpa jobs antigos
 setInterval(() => { const lim = Date.now() - 30 * 60_000; for (const [id, j] of jobs) if (j.state !== 'running' && j.at < lim) jobs.delete(id); }, 60_000).unref();
 
-server.listen(PORT, () => console.log(`PumpStat API na porta ${PORT}`));
+server.listen(PORT, () => console.log(`StepClub API na porta ${PORT}`));
