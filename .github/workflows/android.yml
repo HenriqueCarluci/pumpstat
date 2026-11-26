@@ -64,6 +64,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: stepclub-${{ github.run_number }}-aab
+          name: piu-stats-${{ github.run_number }}-aab
           path: android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
