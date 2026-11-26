@@ -40,6 +40,9 @@ export default function App() {
   const [recovery, setRecovery] = useState(fromUrl?.type === 'recovery');
 
   useEffect(() => onSession((s) => { setSession(s); if (!s) { setIngestKey(''); clearCache(); } }), []);
+  // sem login, trocar de #/ para #/fila precisa redesenhar (a fila é pública)
+  const [, setHash] = useState(window.location.hash);
+  useEffect(() => { const f = () => setHash(window.location.hash); window.addEventListener('hashchange', f); return () => window.removeEventListener('hashchange', f); }, []);
 
   useEffect(() => {
     if (!session) return;
