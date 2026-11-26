@@ -35,7 +35,7 @@ export default function Settings() {
 
       {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
 
-      <section className="card plan-card">
+      {(ent.showPlans || plan?.admin) && <section className="card plan-card">
         <div className="row-between">
           <h3 className="ic-row">{plan?.plan && plan.plan !== 'free' ? <><Crown size={18} /> PIU Stats {PLAN_LABEL[plan.plan]}</> : t('Plano grátis')}</h3>
           {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
@@ -47,8 +47,13 @@ export default function Settings() {
                 : plan.expires_at ? t('Ativo até {d}.', { d: fmtDate(plan.expires_at) }) : t('Assinatura ativa.'))
             : t('Os recursos do PIU Stats+ chegam em breve.')}
         </p>
-        {ent.showPlans && <Link className="btn ghost" to="/planos"><Crown size={15} /> {t('Ver planos')}</Link>}
-      </section>
+        {ent.showPlans && (
+          <div className="bm-row">
+            <Link className="btn ghost" to="/assinatura"><Crown size={15} /> {t('Minha assinatura')}</Link>
+            <Link className="btn ghost" to="/planos">{t('Ver planos')}</Link>
+          </div>
+        )}
+      </section>}
 
       <section className="card">
         <h3>{t('Idioma')}</h3>

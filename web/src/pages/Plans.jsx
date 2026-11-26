@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { locale, t } from '../lib/i18n.js';
+import { purchase, salesState, storeUrl, yearlySaving } from '../lib/billing.js';
+import { locale, t, tErr } from '../lib/i18n.js';
 import { entitlements, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
 import { Check, Crown, X } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
@@ -14,11 +16,24 @@ export default function Plans() {
   const cfgAds = !!ent.config?.ads?.enabled;
   const [region, setRegion] = useState(priceRegion);
   const [yearly, setYearly] = useState(false);
+  const [busy, setBusy] = useState('');
+  const [err, setErr] = useState('');
   if (!ent.showPlans) return <div className="page"><p className="empty">{t('Os planos ainda não estão disponíveis.')}</p></div>;
   const cfg = ent.config;
   const prices = cfg.prices?.[region] || cfg.prices?.WORLD || {};
   const need = (f) => cfg.features?.[f] || 'free';
   const lim = (p, k) => cfg.limits?.[p]?.[k];
+  const sales = salesState(cfg);
+  const save = Math.max(yearlySaving(prices, 'plus') || 0, yearlySaving(prices, 'pro') || 0);
+  const buy = async (p) => {
+    setErr(''); setBusy(p);
+    try { await purchase(cfg, p, yearly ? 'year' : 'month'); } catch (e) { setErr(tErr(e.message)); } finally { setBusy(''); }
+  };
+  const action = (p) => {
+    if (sales === 'ready') return <button className="btn" disabled={!!busy} onClick={() => buy(p)}>{busy === p ? t('Abrindo…') : t('Assinar')}</button>;
+    if (sales === 'web') return <a className="btn ghost" href={storeUrl()} target="_blank" rel="noreferrer">{t('Assinar pelo app Android')}</a>;
+    return <button className="btn" disabled title={t('Em breve nas lojas')}>{t('Em breve')}</button>;
+  };
   const price = (p) => (p === 'free' ? t('Grátis') : fmtPrice(prices[yearly ? `${p}_year` : p], prices.currency || 'USD', locale()));
 
   return (
@@ -31,15 +46,16 @@ export default function Plans() {
         <div className="admin-preview small"><span className="muted">{t('Admin: ver o preço de outra região')}</span>
           <Chips value={region} onChange={setRegion} options={REGIONS.map(([k, l]) => [k, t(l)])} /></div>
       )}
-      <Chips value={yearly ? 'y' : 'm'} onChange={(v) => setYearly(v === 'y')} options={[['m', t('Mensal')], ['y', t('Anual (−33%)')]]} />
+      <Chips value={yearly ? 'y' : 'm'} onChange={(v) => setYearly(v === 'y')} options={[['m', t('Mensal')], ['y', save ? t('Anual (economize {p}%)', { p: save }) : t('Anual')]]} />
 
       <div className="plan-cols">
         {PLAN_ORDER.map((p) => (
           <div key={p} className={`plan-col ${p} ${ent.plan === p ? 'current' : ''}`}>
             <div className="plan-name">{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</div>
             <div className="plan-price">{price(p)}{p !== 'free' && <small>/{yearly ? t('ano') : t('mês')}</small>}</div>
-            {ent.plan === p ? <span className="tag">{t('Seu plano')}</span>
-              : p !== 'free' && <button className="btn" disabled title={t('Em breve nas lojas')}>{t('Em breve')}</button>}
+            {yearly && p !== 'free' && yearlySaving(prices, p) && <small className="plan-save">{t('{v} por mês', { v: fmtPrice(prices[`${p}_year`] / 12, prices.currency || 'USD', locale()) })} · −{yearlySaving(prices, p)}%</small>}
+            {ent.plan === p ? <Link className="tag" to="/assinatura">{t('Seu plano')}</Link>
+              : p !== 'free' && action(p)}
             <ul>
               {cfgAds && (
                 <li className={p === 'free' ? 'off' : ''}>{p === 'free' ? <X size={14} /> : <Check size={14} />} {t('Sem anúncios')}</li>
@@ -60,7 +76,9 @@ export default function Plans() {
           </div>
         ))}
       </div>
-      <p className="muted tiny">{t('Quem assinar no começo mantém o preço enquanto não cancelar. Pagamento pelas lojas (Google Play e App Store).')}</p>
+      {err && <div className="form-err">{err}</div>}
+      <p className="muted tiny">{t('Renovação automática; cancele quando quiser pela Google Play e o plano vale até o fim do período pago. Quem assinar no começo mantém o preço enquanto não cancelar.')}</p>
+      <p className="small center"><Link to="/assinatura">{t('Minha assinatura')}</Link></p>
     </div>
   );
 }

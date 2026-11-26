@@ -29,6 +29,7 @@ import FriendOnlineToast from './components/FriendOnlineToast.jsx';
 import StatusPicker from './components/StatusPicker.jsx';
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
+import Subscription from './pages/Subscription.jsx';
 import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
@@ -217,6 +218,7 @@ function Shell() {
             <Route path="/online" element={<Online />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/planos" element={<Plans />} />
+            <Route path="/assinatura" element={<Subscription />} />
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />

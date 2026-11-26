@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ProposalCard } from '../components/TierVote.jsx';
 import { useData } from '../App.jsx';
+import { DEFAULT_PRODUCTS } from '../lib/billing.js';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
@@ -240,6 +241,20 @@ function PlansConfig() {
         <span><b>{t('Mostrar a tela de planos para todos')}</b><br /><small className="muted">{t('Desligado: só administradores veem a prévia em Ajustes → Ver planos.')}</small></span></label>
       <label className="check"><input type="checkbox" checked={!!cfg.enforce} onChange={(e) => set((c) => { c.enforce = e.target.checked; })} />
         <span><b>{t('Cobrança ativa (aplicar limites e recursos pagos)')}</b><br /><small className="muted">{t('Desligado: todo mundo tem tudo liberado, como na fase de desenvolvimento. Administradores nunca têm limites.')}</small></span></label>
+
+      <label className="check"><input type="checkbox" checked={!!cfg.sales?.enabled} onChange={(e) => set((c) => { c.sales = { ...(c.sales || {}), enabled: e.target.checked }; })} />
+        <span><b>{t('Venda de assinaturas ligada (botão Assinar)')}</b><br /><small className="muted">{t('Desligado: os planos aparecem com "Em breve". Ligue só depois de criar as assinaturas no Play Console.')}</small></span></label>
+
+      <h3>{t('Produtos na Google Play')}</h3>
+      <p className="muted small">{t('Uma assinatura por plano no Play Console, cada uma com dois planos básicos (mensal e anual). Use os mesmos IDs daqui.')}</p>
+      <div className="cfg-grid products">
+        {[['plus', t('Assinatura do Plus')], ['pro', t('Assinatura do Pro')], ['month', t('Plano básico mensal')], ['year', t('Plano básico anual')]].map(([k, label]) => (
+          <FragmentRow key={k} label={label}>
+            <input type="text" maxLength={60} value={cfg.sales?.products?.[k] ?? DEFAULT_PRODUCTS[k]}
+              onChange={(e) => set((c) => { c.sales = { ...(c.sales || {}) }; c.sales.products = { ...(c.sales.products || {}), [k]: e.target.value.trim() }; })} />
+          </FragmentRow>
+        ))}
+      </div>
 
       <h3>{t('Teste grátis no cadastro')}</h3>
       <div className="cfg-row">
