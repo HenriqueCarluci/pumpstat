@@ -199,7 +199,7 @@ function ShareDonuts({ share }) {
   return (
     <section className="card">
       <h3>{t('Onde você passa e onde você quebra')}</h3>
-      <p className="muted small">{t('Cada chart conta no padrão que mais pesa nele. Um padrão com fatia maior nas quebras do que nos passes é um ponto fraco; o contrário, um ponto forte.')}</p>
+      <p className="muted small">{t('Cada chart conta no padrão que mais se destaca nele (acima do normal para charts do seu nível), e uma música repetida pesa no máximo 4 jogadas. Este gráfico não desconta a dificuldade; o diagnóstico abaixo, sim.')}</p>
       <div className="donut-pair">
         <div><h4 className="center">{t('Passes')}</h4><Donut slices={pass} label={t('Passes')} center={[fmtNum(n(pass)), t('passes')]} /></div>
         <div><h4 className="center">{t('Quebras')}</h4>{fail.length ? <Donut slices={fail} label={t('Quebras')} center={[fmtNum(n(fail)), t('quebras')]} /> : <p className="muted small center">{t('Nenhuma quebra registrada perto do seu nível.')}</p>}</div>
@@ -221,7 +221,7 @@ function Weak({ r, mode, hasOther, otherName }) {
       <section className="card">
         <h3>{t('Pontos fracos e fortes por padrão')}</h3>
         <p className="muted small">
-          {t('Comparamos os charts com muito de cada padrão com o resto, perto do seu nível, descontando a dificuldade do nível: quanto você quebra a mais (ou a menos) e quanto perde de nota.')}
+          {t('Para cada padrão, pegamos os charts perto do seu nível em que ele se destaca e comparamos com o que você costuma fazer em charts igualmente difíceis (nível + tier): quanto quebra a mais (ou a menos) e quanto ganha ou perde de nota. Com poucos charts, o resultado fica mais perto do meio.')}
           {hasOther && <> {t('Usa também o seu histórico da {v}, porque padrão é habilidade sua, não da versão.', { v: otherName })}</>}
         </p>
         {!list.length && <p className="empty">{t('Ainda não há tentativas suficientes perto do seu nível com estilo conhecido. Continue jogando e sincronizando.')}</p>}
@@ -229,7 +229,7 @@ function Weak({ r, mode, hasOther, otherName }) {
           {list.map((w) => {
             const weak = w.index > 0;
             return (
-              <div key={w.id} className={`weak-row ${w.confidence}`}>
+              <div key={w.id} className={`weak-row ${w.confidence}${w.neutral ? ' neutral' : ''}`}>
                 <div className="weak-name"><b>{dimName(w.id)}</b>
                   <small className="muted">{w.confidence === 'high' ? t('bastante dado') : w.confidence === 'mid' ? t('dado médio') : t('pouco dado')} · {tn(w.charts, '{n} chart', '{n} charts')}</small>
                 </div>
@@ -238,18 +238,19 @@ function Weak({ r, mode, hasOther, otherName }) {
                   <span className={`fill ${weak ? 'weak' : 'strong'}`} style={{ width: `${(Math.abs(w.index) / maxAbs) * 50}%`, [weak ? 'left' : 'right']: '50%' }} />
                 </div>
                 <div className="weak-txt small">
+                  {w.neutral && <b>{t('Dentro do esperado')} · </b>}
                   {t('Quebra {f}% (esperado {e}%)', { f: Math.round(w.failRate * 100), e: Math.round(w.expected * 100) })}
                   {w.scoreGap != null && Math.abs(w.scoreGap) >= 3000 && <> · {w.scoreGap < 0
-                    ? t('{g} mil pontos abaixo da sua média', { g: Math.round(-w.scoreGap / 1000) })
-                    : t('{g} mil pontos acima da sua média', { g: Math.round(w.scoreGap / 1000) })}</>}
+                    ? t('{g} mil pontos abaixo do esperado', { g: Math.round(-w.scoreGap / 1000) })
+                    : t('{g} mil pontos acima do esperado', { g: Math.round(w.scoreGap / 1000) })}</>}
                 </div>
               </div>
             );
           })}
         </div>
-        <div className="weak-legend small muted"><span><i className="weak" /> {t('mais fraco')}</span><span><i className="strong" /> {t('mais forte')}</span></div>
+        <div className="weak-legend small muted"><span><i className="weak" /> {t('mais fraco')}</span><span><i className="neutral" /> {t('dentro do esperado')}</span><span><i className="strong" /> {t('mais forte')}</span></div>
       </section>
-      {list[0] && list[0].index > 0 && (
+      {list[0] && list[0].index > 0 && !list[0].neutral && (
         <section className="card">
           <h3>{t('Como treinar {p}', { p: dimName(list[0].id) })}</h3>
           <p>{t(DIM_TIP[list[0].id])}</p>

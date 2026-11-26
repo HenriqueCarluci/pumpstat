@@ -708,6 +708,8 @@ a.q-city:hover { color: var(--text); }
 .weak-bar .fill { position: absolute; top: 0; bottom: 0; border-radius: 5px; }
 .weak-bar .fill.weak, .weak-legend i.weak { background: #d9772e; }
 .weak-bar .fill.strong, .weak-legend i.strong { background: #3d8fe6; }
+.weak-row.neutral .weak-bar .fill, .weak-legend i.neutral { background: #6b6f78; }
+.weak-legend { flex-wrap: wrap; }
 .weak-txt { grid-column: 2; color: var(--muted); }
 .weak-legend { display: flex; gap: 14px; margin-top: 10px; }
 .weak-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: -1px; }

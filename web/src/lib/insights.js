@@ -6,7 +6,7 @@
 // - user_scores/user_score_history: o recorde de cada chart. Recorde com stage break = nunca passou;
 //   recorde que mudou de quebrado para passou = houve ao menos uma quebra antes.
 import { hasGimmick } from './special.js';
-import { chartTier, pumbility } from './piu.js';
+import { chartTier, pumbility, TIER_NUM } from './piu.js';
 
 export const PATTERNS = ['twist', 'drill', 'run', 'bracket', 'jump', 'jack', 'doublestep', 'footswitch'];
 // pseudo-padrões: velocidade (notas/s alta para o nível) e resistência (charts longos e constantes)
@@ -116,64 +116,103 @@ export function playerLevel(stats) {
 }
 
 const median = (a) => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
+const sig = (x) => 1 / (1 + Math.exp(-x));
+const logit = (p) => Math.log(p / (1 - p));
+
+/** Dificuldade efetiva do chart: o nível mais a faixa do tier (Topo ≈ +0,5 nível, Fundo ≈ -0,5). */
+export function effLevel(c) {
+  const n = TIER_NUM[chartTier(c)];
+  return c.level + (n == null ? 0 : n / 6);
+}
+
+/** Corte de "carregado no padrão" por padrão, dentro da zona: quartil de cima (com um mínimo para padrões raros). */
+function heavyCuts(zone, prog) {
+  const cuts = {};
+  for (const p of DIMENSIONS) {
+    const vals = zone.map((r) => styleOf(prog, r.chart).pct[p] || 0).sort((x, y) => x - y);
+    cuts[p] = Math.max(p === 'run' ? 0 : 3, vals[Math.floor(vals.length * 0.75)] || 0) + 1e-9;
+  }
+  return cuts;
+}
 
 /**
- * Somas para pontos fracos e fortes por padrão numa versão, cruzando o estilo de cada chart com as quebras e as notas.
- * Cada chart é comparado com o esperado para o nível dele (a média do próprio jogador naquele nível e versão).
+ * Modelo do jogador na zona: chance de quebrar e nota esperada em função da dificuldade efetiva (nível + tier).
+ * Regressão logística com 2 parâmetros (com um empurrão leve para valores razoáveis) e reta para a nota.
+ */
+function fitPlayer(zone, ceiling) {
+  const pts = zone.map((r) => ({ x: effLevel(r.chart) - ceiling, w: Math.min(r.attempts, 4), y: r.attempts ? r.fails / r.attempts : 0 }))
+    .filter((p) => p.w > 0);
+  const W = pts.reduce((a, p) => a + p.w, 0) || 1;
+  const base = Math.min(0.95, Math.max(0.05, pts.reduce((a, p) => a + p.w * p.y, 0) / W));
+  let A = logit(base), B = 1.2;
+  for (let it = 0; it < 25; it++) {
+    // Newton com prior: A ~ N(logit(base), 2²), B ~ N(1.2, 0.8²)
+    let gA = -(A - logit(base)) / 4, gB = -(B - 1.2) / 0.64, hAA = -1 / 4, hBB = -1 / 0.64, hAB = 0;
+    for (const p of pts) {
+      const q = sig(A + B * p.x), d = p.w * (p.y - q), v = p.w * q * (1 - q);
+      gA += d; gB += d * p.x; hAA -= v; hBB -= v * p.x * p.x; hAB -= v * p.x;
+    }
+    const det = hAA * hBB - hAB * hAB;
+    if (!det) break;
+    const dA = (hBB * gA - hAB * gB) / det, dB = (hAA * gB - hAB * gA) / det;
+    A -= dA; B -= dB;
+    if (Math.abs(dA) + Math.abs(dB) < 1e-6) break;
+  }
+  B = Math.max(0, B);
+  const sc = zone.filter((r) => r.cleared && r.chart.score != null).map((r) => ({ x: effLevel(r.chart) - ceiling, y: r.chart.score }));
+  let c0 = median(sc.map((p) => p.y)), c1 = -25000;
+  if (sc.length >= 5) {
+    const mx = sc.reduce((a, p) => a + p.x, 0) / sc.length, my = sc.reduce((a, p) => a + p.y, 0) / sc.length;
+    const sxx = sc.reduce((a, p) => a + (p.x - mx) ** 2, 0), sxy = sc.reduce((a, p) => a + (p.x - mx) * (p.y - my), 0);
+    c1 = sxx > 0.5 ? Math.min(0, sxy / sxx) : -25000;
+    c0 = my - c1 * mx;
+  }
+  return { fail: (c) => sig(A + B * (effLevel(c) - ceiling)), score: (c) => c0 + c1 * (effLevel(c) - ceiling), hasScore: sc.length >= 5 };
+}
+
+/**
+ * Somas para pontos fracos e fortes por padrão numa versão.
+ * Cada chart é comparado com o que o modelo do próprio jogador espera para a dificuldade dele (nível + tier do ArcadeStat),
+ * então um padrão só aparece como fraco se você quebra mais (ou tira menos nota) do que nos outros charts igualmente difíceis.
+ * Cada chart pesa no máximo 4 tentativas, para uma música repetida muitas vezes não dominar o resultado.
  */
 export function weaknessSums(attempts, prog, mode, lvl) {
   const sums = new Map();
   if (!lvl) return sums;
   const lo = lvl.ceiling - 4, hi = lvl.ceiling + 1;
   const zone = attempts.filter((r) => r.chart.mode === mode && r.chart.level >= lo && r.chart.level <= hi && styleOf(prog, r.chart));
-  if (zone.length < 4) return sums;
-  const tot = zone.reduce((a, r) => ({ a: a.a + r.attempts, f: a.f + r.fails }), { a: 0, f: 0 });
-  const zoneRate = tot.a ? tot.f / tot.a : 0;
-  const adj = (c) => (c.scoringLevel != null && Math.abs(c.scoringLevel - c.level) <= 1.5 ? c.scoringLevel - c.level : 0);
-  const byL = new Map();
-  for (const r of zone) {
-    const s = byL.get(r.chart.level) || { a: 0, f: 0, scores: [] };
-    s.a += r.attempts; s.f += r.fails;
-    if (r.cleared && r.chart.score != null) s.scores.push(r.chart.score + adj(r.chart) * 15000);
-    byL.set(r.chart.level, s);
-  }
-  const failExp = (L) => { const s = byL.get(L); return (s.f + 2 * zoneRate) / (s.a + 2); };
-  const scoreMean = new Map([...byL].map(([L, s]) => [L, s.scores.length >= 3 ? median(s.scores) : null]));
-
-  // Para cada padrão: charts "carregados" nele contra o resto, sempre descontando o esperado pelo nível.
-  // Carregado = pelo menos 20% das notas e no terço de cima da sua zona (corrida aparece em quase todo chart).
+  if (zone.length < 6) return sums;
+  const model = fitPlayer(zone, lvl.ceiling);
+  const cuts = heavyCuts(zone, prog);
   for (const p of DIMENSIONS) {
-    const vals = zone.map((r) => styleOf(prog, r.chart).pct[p] || 0).sort((x, y) => x - y);
-    const cut = Math.max(20, vals[Math.floor(vals.length * 0.67)] || 0);
-    const t = { hA: 0, hF: 0, hE: 0, hN: 0, hS: 0, hSN: 0, rA: 0, rF: 0, rE: 0, rS: 0, rSN: 0 };
+    const t = { W: 0, O: 0, E: 0, N: 0, S: 0, SN: 0 };
     for (const r of zone) {
-      const heavy = (styleOf(prog, r.chart).pct[p] || 0) >= cut;
-      const e = r.attempts * failExp(r.chart.level);
-      const mean = scoreMean.get(r.chart.level);
-      const sg = r.cleared && r.chart.score != null && mean != null ? r.chart.score + adj(r.chart) * 15000 - mean : null;
-      if (heavy) { t.hA += r.attempts; t.hF += r.fails; t.hE += e; t.hN++; if (sg != null) { t.hS += sg; t.hSN++; } }
-      else { t.rA += r.attempts; t.rF += r.fails; t.rE += e; if (sg != null) { t.rS += sg; t.rSN++; } }
+      if ((styleOf(prog, r.chart).pct[p] || 0) < cuts[p] || !r.attempts) continue;
+      const w = Math.min(r.attempts, 4);
+      t.W += w; t.O += w * (r.fails / r.attempts); t.E += w * model.fail(r.chart); t.N++;
+      if (model.hasScore && r.cleared && r.chart.score != null) { t.S += r.chart.score - model.score(r.chart); t.SN++; }
     }
-    if (t.hN > 0) sums.set(p, t);
+    if (t.N > 0) sums.set(p, t);
   }
   return sums;
 }
 
-/** Junta as somas de uma ou mais versões e calcula o índice de cada padrão (maior = mais fraco). */
+/** Junta as somas de uma ou mais versões e calcula o índice de cada padrão (maior = mais fraco; perto de 0 = dentro do esperado). */
 export function weaknesses(...sumsList) {
   return DIMENSIONS.map((p) => {
-    const t = { hA: 0, hF: 0, hE: 0, hN: 0, hS: 0, hSN: 0, rA: 0, rF: 0, rE: 0, rS: 0, rSN: 0 };
+    const t = { W: 0, O: 0, E: 0, N: 0, S: 0, SN: 0 };
     for (const sums of sumsList) { const x = sums.get(p); if (x) for (const k in t) t[k] += x[k]; }
-    if (t.hN < 2 || !t.hA) return null;
-    // quebras a mais (ou a menos) nos charts carregados no padrão, comparado ao resto
-    const excess = (t.hF - t.hE) / t.hA - (t.rA ? (t.rF - t.rE) / t.rA : 0);
-    // nota média acima/abaixo da sua média no nível, comparado ao resto
-    const scoreGap = t.hSN >= 2 ? t.hS / t.hSN - (t.rSN ? t.rS / t.rSN : 0) : null;
+    if (t.N < 3 || !t.W) return null;
+    // quebras a mais (ou a menos) do que o esperado, com encolhimento para amostras pequenas (6 tentativas "neutras")
+    const excess = (t.O - t.E) / (t.W + 6);
+    // nota acima/abaixo do esperado para a dificuldade, também encolhida
+    const scoreGap = t.SN >= 2 ? (t.S / t.SN) * (t.SN / (t.SN + 3)) : null;
     const index = excess * 100 + (scoreGap != null ? (-scoreGap / 1000) * 0.6 : 0);
     return {
-      id: p, index, excess, scoreGap, evidence: t.hN,
-      failRate: t.hF / t.hA, expected: t.hE / t.hA, restRate: t.rA ? t.rF / t.rA : null,
-      attempts: t.hA, charts: t.hN, confidence: t.hN >= 8 ? 'high' : t.hN >= 4 ? 'mid' : 'low',
+      id: p, index, excess, scoreGap, evidence: t.N,
+      failRate: t.O / t.W, expected: t.E / t.W,
+      attempts: t.W, charts: t.N, confidence: t.N >= 10 ? 'high' : t.N >= 5 ? 'mid' : 'low',
+      neutral: Math.abs(index) < 5,
     };
   }).filter(Boolean).sort((a, b) => b.index - a.index);
 }
@@ -314,7 +353,7 @@ export function trainingPlan(version, data, prog, attempts, mode, lvl, weak, rec
   const cleared = new Set(attempts.filter((x) => x.cleared).map((x) => x.chart.id));
   const of = (lo, hi) => data.charts.filter((c) => c.mode === mode && c.level >= lo && c.level <= hi);
   const order = { fundo: 0, baixo: 1, medio_baixo: 2, medio: 3, unknown: 3.5, medio_alto: 4, alto: 5, topo: 6 };
-  const weakP = (weak.find((w) => w.index >= 6 && w.confidence !== 'low') || weak.find((w) => w.index > 0))?.id || null;
+  const weakP = (weak.find((w) => w.index >= 6 && w.confidence !== 'low') || weak.find((w) => !w.neutral && w.index > 0))?.id || null;
 
   const warm = of(lvl.comfort - 3, lvl.comfort - 2).filter((c) => cleared.has(c.id));
   const focus = weakP ? of(lvl.comfort - 2, lvl.comfort).filter((c) => (styleOf(prog, c)?.pct[weakP] || 0) >= 20)
@@ -388,25 +427,36 @@ export function playsPerWeek(prog, mode) {
 }
 
 // ---------- composição por padrão (gráficos de setor) ----------
-/** Padrão principal de um chart (o de maior % entre os 8 padrões), ou null sem estilo. */
-export function mainPattern(prog, c) {
+/**
+ * Padrão que mais se destaca no chart: o de maior % acima da média da zona (corrida aparece em quase todo chart,
+ * então "maior %" daria corrida para quase tudo). Sem destaque claro, null.
+ */
+export function mainPattern(prog, c, mean) {
   const st = styleOf(prog, c);
   if (!st) return null;
   let best = null, v = 0;
-  for (const p of PATTERNS) if ((st.pct[p] || 0) > v) { v = st.pct[p]; best = p; }
-  return v >= 10 ? best : null;
+  for (const p of PATTERNS) {
+    const x = st.pct[p] || 0;
+    const lift = mean ? x / Math.max(mean[p] || 0, 2) : x;
+    if (x >= 5 && lift > v) { v = lift; best = p; }
+  }
+  return mean ? (v >= 1.3 ? best : null) : best;
 }
 
-/** Passes e quebras perto do nível do jogador, agrupados pelo padrão principal de cada chart. */
+/** Passes e quebras perto do nível do jogador, agrupados pelo padrão que mais se destaca em cada chart (cada chart pesa no máximo 4). */
 export function patternShare(attempts, prog, mode, lvl) {
   const pass = {}, fail = {};
   if (!lvl) return { pass, fail };
-  for (const r of attempts) {
-    if (r.chart.mode !== mode || r.chart.level < lvl.ceiling - 4 || r.chart.level > lvl.ceiling + 1) continue;
-    const p = mainPattern(prog, r.chart);
-    if (!p) continue;
-    if (r.passes) pass[p] = (pass[p] || 0) + r.passes;
-    if (r.fails) fail[p] = (fail[p] || 0) + r.fails;
+  const zone = attempts.filter((r) => r.chart.mode === mode && r.chart.level >= lvl.ceiling - 4 && r.chart.level <= lvl.ceiling + 1 && styleOf(prog, r.chart));
+  const mean = {};
+  for (const p of PATTERNS) mean[p] = zone.reduce((a, r) => a + (styleOf(prog, r.chart).pct[p] || 0), 0) / (zone.length || 1);
+  for (const r of zone) {
+    const p = mainPattern(prog, r.chart, mean);
+    if (!p || !r.attempts) continue;
+    const k = Math.min(r.attempts, 4) / r.attempts;
+    if (r.passes) pass[p] = (pass[p] || 0) + r.passes * k;
+    if (r.fails) fail[p] = (fail[p] || 0) + r.fails * k;
   }
+  for (const o of [pass, fail]) for (const p in o) o[p] = Math.round(o[p]);
   return { pass, fail };
 }

@@ -89,7 +89,7 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   if (logo) { ctx.save(); rr(ctx, M, 56, 84, 84, 22); ctx.clip(); ctx.drawImage(logo, M, 56, 84, 84); ctx.restore(); }
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = NEON; ctx.font = `800 24px ${SANS}`;
-  ctx.fillText(t('Meu dia de jogo').toUpperCase(), M + 104, 88);
+  ctx.fillText(t('Dia de jogo').toUpperCase(), M + 104, 88);
   ctx.fillStyle = TXT; ctx.font = `800 44px ${SANS}`;
   ctx.fillText(fit(ctx, nickname || 'PIU Stats', W - M * 2 - 104 - 300), M + 104, 136);
   ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `600 24px ${SANS}`;

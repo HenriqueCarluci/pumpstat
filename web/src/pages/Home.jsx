@@ -79,7 +79,7 @@ export default function Home() {
         {isOn(plan, 'challenges') && <Link to="/desafios" className="ql"><Trophy size={16} /> {t('Desafios')}</Link>}
         {isOn(plan, 'training') && <Link to="/treino" className="ql"><Dumbbell size={16} /> {t('Meu treino')}</Link>}
         {isOn(plan, 'teams') && <Link to="/time" className="ql"><Shield size={16} /> {t('Meu Time')}</Link>}
-        {isOn(plan, 'day_report') && <Link to="/dia" className="ql"><CalendarCheck size={16} /> {t('Meu dia de jogo')}</Link>}
+        {isOn(plan, 'day_report') && <Link to="/dia" className="ql"><CalendarCheck size={16} /> {t('Dia de jogo')}</Link>}
         <Link to="/progresso" className="ql"><TrendingUp size={16} /> {t('Progresso')}</Link>
         <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
         <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>

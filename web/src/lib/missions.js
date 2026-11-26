@@ -36,7 +36,7 @@ export function weeklyMissions({ prog, attempts, mode, lvl, weak, ws = weekStart
     if (inWeek(h.at) && !h.broken && prev != null && h.score > prev) improved.add(h.chart.id);
   }
 
-  const weakP = (weak || []).find((w) => w.index >= 6 && w.confidence !== 'low')?.id || (weak || []).find((w) => w.index > 0)?.id || null;
+  const weakP = (weak || []).find((w) => w.index >= 6 && w.confidence !== 'low')?.id || (weak || []).find((w) => !w.neutral && w.index > 0)?.id || null;
   const weakPlays = weakP ? plays.filter((p) => p.chart.mode === mode && (styleOf(prog, p.chart)?.pct[weakP] || 0) >= 20).length : 0;
 
   const list = [

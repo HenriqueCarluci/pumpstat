@@ -22,7 +22,7 @@ function RefreshRecent() {
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
       {res && <small className="muted">{res.new_plays ? tn(res.new_plays, '{n} jogada nova', '{n} jogadas novas') : t('Nenhuma jogada nova.')}{res.new_bests ? ` · ${tn(res.new_bests, '{n} recorde novo', '{n} recordes novos')}` : ''}</small>}
-      {res && res.new_plays > 0 && <Link className="link small ic-row" to="/dia"><CalendarCheck size={14} /> {t('Ver meu dia de jogo')}</Link>}
+      {res && res.new_plays > 0 && <Link className="link small ic-row" to="/dia"><CalendarCheck size={14} /> {t('Ver o relatório do dia')}</Link>}
       {err && <div className="form-err">{err}</div>}
       {needLogin && <p className="small">{t('Para atualizar, conecte sua conta da Pump uma vez em')} <Link to="/ajustes">{t('Ajustes')}</Link>.</p>}
     </div>

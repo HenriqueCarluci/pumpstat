@@ -141,7 +141,7 @@ export default function DayReport() {
   const head = (
     <>
       <div className="row-between dr-top">
-        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Meu dia de jogo')}</h2>
+        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Dia de jogo')}</h2>
         {syncBtn}
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
