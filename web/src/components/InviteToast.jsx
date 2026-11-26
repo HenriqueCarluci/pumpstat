@@ -37,7 +37,8 @@ export default function InviteToast() {
     presence.refresh();
   };
 
-  if (!enabled) return null;
+  // ocupado: nada pula na tela (os convites continuam nas notificações)
+  if (!enabled || presence.status === 'busy') return null;
   if (invite && invite.kind === 'message') {
     return (
       <div className="toast invite">

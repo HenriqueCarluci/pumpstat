@@ -17,7 +17,7 @@ export function rememberVenue(slug) {
 }
 
 export function usePresence(enabled) {
-  const [state, setState] = useState({ online: 0, invites: [], replies: [], mode: 'all' });
+  const [state, setState] = useState({ online: 0, invites: [], replies: [], mode: 'all', status: 'online' });
   const busy = useRef(false);
   const beat = useCallback(async () => {
     if (!enabled || busy.current || document.hidden) return;

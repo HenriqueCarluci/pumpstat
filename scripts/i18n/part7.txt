@@ -339,3 +339,13 @@ Tire S ou melhor em 15 jogadas. Escolha charts do seu nível de conforto. | Get 
 Gamificação | Gamification | Gamificación | 게임화 | ゲーミフィケーション | Gamification | Gamification
 Social | Social | Social | 소셜 | ソーシャル | Social | Social
 Comunidade | Community | Comunidad | 커뮤니티 | コミュニティ | Communauté | Comunità
+Seu status: {s} | Your status: {s} | Tu estado: {s} | 내 상태: {s} | ステータス: {s} | Votre statut : {s} | Il tuo stato: {s}
+Seu status | Your status | Tu estado | 내 상태 | ステータス | Votre statut | Il tuo stato
+Ausente | Away | Ausente | 자리 비움 | 退席中 | Absent | Assente
+Ocupado | Busy | Ocupado | 다른 용무 중 | 取り込み中 | Occupé | Occupato
+Aparecer offline | Appear offline | Aparecer desconectado | 오프라인으로 표시 | オフラインで表示 | Apparaître hors ligne | Mostrati offline
+Todo mundo vê você online | Everyone sees you online | Todos te ven en línea | 모두에게 온라인으로 보입니다 | 全員にオンラインと表示されます | Tout le monde vous voit en ligne | Tutti ti vedono online
+Aparece online, mas avisa que você não está olhando | Shows you online, but lets people know you're not looking | Apareces en línea, pero avisa que no estás mirando | 온라인으로 보이지만 자리에 없음을 알립니다 | オンライン表示のまま、見ていないことを知らせます | Vous apparaissez en ligne, mais signale que vous ne regardez pas | Appari online, ma avvisa che non stai guardando
+Não recebe convites para jogar nem avisos na tela | No play invites or pop-ups on screen | No recibes invitaciones para jugar ni avisos en pantalla | 플레이 초대와 화면 알림을 받지 않습니다 | プレイ招待や画面通知を受け取りません | Pas d'invitations à jouer ni d'alertes à l'écran | Niente inviti a giocare né avvisi sullo schermo
+Ninguém vê você online e você não recebe convites | Nobody sees you online and you get no invites | Nadie te ve en línea y no recibes invitaciones | 아무도 온라인으로 보지 못하고 초대도 받지 않습니다 | 誰にもオンライン表示されず招待も届きません | Personne ne vous voit en ligne et vous ne recevez pas d'invitations | Nessuno ti vede online e non ricevi inviti
+essa pessoa está ocupada agora. Mande uma mensagem ou tente mais tarde | this person is busy right now. Send a message or try later | esta persona está ocupada ahora. Envía un mensaje o intenta más tarde | 지금 다른 용무 중입니다. 메시지를 보내거나 나중에 다시 시도하세요 | 現在取り込み中です。メッセージを送るか後で試してください | cette personne est occupée. Envoyez un message ou réessayez plus tard | questa persona è occupata ora. Manda un messaggio o riprova più tardi

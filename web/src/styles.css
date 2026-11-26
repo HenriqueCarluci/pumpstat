@@ -906,3 +906,25 @@ a.q-city:hover { color: var(--text); }
 .ch-winners { display: grid; gap: 4px; margin: 6px 0; }
 .ch-winner { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
 .toggle-row small.up { color: #3ee06f; }
+
+/* status (estilo MSN) */
+.st-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; flex: none; box-sizing: border-box; }
+.st-online { background: #3ee06f; }
+.st-away { background: #ffc83d; }
+.st-busy { background: #ff5a5a; }
+.st-invisible, .st-offline { background: transparent; border: 2px solid #8a8f9c; }
+.status-picker { position: relative; display: inline-flex; }
+.status-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.04); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.status-btn .st-dot { width: 12px; height: 12px; }
+.status-menu { position: absolute; top: calc(100% + 6px); right: 0; z-index: 80; width: 270px; padding: 6px; border-radius: 12px; background: #1d2230;
+  border: 1px solid rgba(255,255,255,.14); box-shadow: 0 12px 30px rgba(0,0,0,.45); display: grid; gap: 2px; }
+.status-menu-h { font-size: 12px; color: var(--muted); padding: 4px 8px; }
+.status-menu button { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 8px; border-radius: 8px; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.status-menu button:hover, .status-menu button.on { background: rgba(255,255,255,.06); }
+.status-menu button span { flex: 1; display: grid; }
+.status-menu button small { color: var(--muted); font-size: 11.5px; }
+.online-av .av-dot { position: absolute; right: -2px; bottom: -2px; width: 12px; height: 12px; border: 2px solid var(--panel); }
+.online-av .av-dot.st-invisible { border-color: #8a8f9c; }
+.st-label.st-away { color: #ffc83d; } .st-label.st-busy { color: #ff5a5a; }
+.topbar .status-picker { margin-left: auto; }
+.topbar .status-picker + .bell { margin-left: 12px; }

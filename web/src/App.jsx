@@ -26,6 +26,7 @@ import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
 import FriendOnlineToast from './components/FriendOnlineToast.jsx';
+import StatusPicker from './components/StatusPicker.jsx';
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Privacy from './pages/Privacy.jsx';
@@ -171,6 +172,7 @@ function Shell() {
     <div className="app">
       <header className="topbar">
         <NavLink to="/" end className="brand" title={t('Início')}><Logo /> StepClub</NavLink>
+        <StatusPicker />
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
           <Bell size={21} strokeWidth={2} />{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
         </NavLink>

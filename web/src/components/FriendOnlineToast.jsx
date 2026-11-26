@@ -37,7 +37,7 @@ export default function FriendOnlineToast() {
     if (known.current === null) { known.current = now; return; }
     const fresh = list.filter((f) => !known.current.has(f.id));
     known.current = now;
-    if (!enabled || prefs.friendOnline === false || document.hidden) return;
+    if (!enabled || prefs.friendOnline === false || document.hidden || presence.status === 'busy') return;
     const seen = lastAlert();
     const show = fresh.filter((f) => !seen[f.id] || Date.now() - seen[f.id] > COOLDOWN_MS).slice(0, 3);
     if (!show.length) return;
