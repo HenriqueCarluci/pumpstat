@@ -12,8 +12,8 @@ export default function Tier() {
   const [prefs] = usePrefs();
   const [params, setParams] = useSearchParams();
   const mode = params.get('m') || 'D';
-  const levels = useMemo(() => [...new Set(data.charts.filter((c) => c.mode === mode).map((c) => c.level))].sort((a, b) => b - a), [data, mode]);
-  const level = +(params.get('l') || (mode === 'C' ? levels[levels.length - 1] : 20));
+  const levels = useMemo(() => [...new Set(data.charts.filter((c) => c.mode === mode).map((c) => c.level))].sort((a, b) => a - b), [data, mode]);
+  const level = +(params.get('l') || (mode === 'C' ? levels[0] : 20));
   const set = (k, v) => { const p = new URLSearchParams(params); p.set(k, v); setParams(p, { replace: true }); };
 
   const charts = data.charts.filter((c) => c.mode === mode && c.level === level);
