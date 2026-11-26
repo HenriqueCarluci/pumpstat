@@ -38,7 +38,7 @@ import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } f
 import Challenges from './pages/Challenges.jsx';
 import DeleteInfo from './pages/DeleteInfo.jsx';
 
-const DataCtx = createContext(null);
+export const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
 
 function readVersion() {

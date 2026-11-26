@@ -12,7 +12,7 @@ import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
 import { t } from '../lib/i18n.js';
-import { ChevronDown, ChevronUp, History, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { ChevronDown, ChevronUp, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -59,6 +59,9 @@ export default function Song() {
       </section>
 
       {hasLegacy && <LegacyToggle />}
+      {song.charts.some((c) => c.skills.length > 0) && song.charts.every((c) => !styleOf(c)) && (
+        <p className="muted tiny song-note">{t('Música nova: a análise detalhada de estilo ainda não saiu; os padrões vêm do PIU Scores e já contam nos seus pontos fracos.')}</p>
+      )}
 
       {groups.map(([label, charts]) => (
         <section key={label}>
@@ -188,7 +191,6 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         </button>
       )}
       {style && showStyle && <StyleBars style={style} locked={!ent.can('style_full')} />}
-      {!style && c.skills.length > 0 && <p className="muted tiny">{t('Música nova: a análise detalhada de estilo ainda não saiu; os padrões acima vêm do PIU Scores e já contam nos seus pontos fracos.')}</p>}
 
       {showOther && (
         <div className={`cc-other ${legacyMode ? 'legacy' : ''}`}>
@@ -197,14 +199,16 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         </div>
       )}
 
+      {c.achievedAt && <div className="cc-date muted">{t('Recorde em {d}', { d: fmtDate(c.achievedAt) })}</div>}
       <div className="cc-actions">
-        {c.achievedAt && <span className="muted">{t('Recorde em {d}', { d: fmtDate(c.achievedAt) })}</span>}
-        <span className="spacer" />
-        <TrainingToggle chart={c} />
-        <a href={yt} target="_blank" rel="noreferrer" className="link ic-row"><Play size={13} fill="currentColor" /> YouTube</a>
-        <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? t('Fechar') : `${t('Avaliar')}${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
-        <button className="link" onClick={() => setRank((r) => !r)}>{rank ? t('Fechar') : t('Ranking')}</button>
-        <button className="link" onClick={toggle}>{open ? t('Fechar') : t('Histórico')}</button>
+        <TrainingToggle chart={c} action />
+        <a href={yt} target="_blank" rel="noreferrer" className="cc-act yt"><Play size={16} fill="currentColor" /><span>YouTube</span></a>
+        <button type="button" className={`cc-act ${reviews ? 'on' : ''}`} onClick={() => setReviews((r) => !r)} aria-expanded={reviews}>
+          <Star size={16} /><span>{t('Avaliar')}</span>
+          {c.community?.votes > 0 && <em className="cc-count" aria-label={t('{n} avaliações', { n: c.community.votes })}>{c.community.votes}</em>}
+        </button>
+        <button type="button" className={`cc-act ${rank ? 'on' : ''}`} onClick={() => setRank((r) => !r)} aria-expanded={rank}><Trophy size={16} /><span>{t('Ranking')}</span></button>
+        <button type="button" className={`cc-act ${open ? 'on' : ''}`} onClick={toggle} aria-expanded={open}><History size={16} /><span>{t('Histórico')}</span></button>
       </div>
       {plan?.admin && <VideoAdmin vkey={`c:${c.id}`} />}
       {plan?.admin && <SpecialAdmin chart={c} onSaved={onReviewed} />}

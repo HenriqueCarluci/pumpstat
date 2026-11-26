@@ -6,7 +6,7 @@ import { t, tErr } from '../lib/i18n.js';
 import { BookmarkCheck, BookmarkPlus } from './Icons.jsx';
 
 /** Botão "Treinar": põe ou tira o chart do Meu treino. */
-export default function TrainingToggle({ chart, compact = false }) {
+export default function TrainingToggle({ chart, compact = false, action = false }) {
   const { plan } = useData();
   const list = useTraining();
   const [busy, setBusy] = useState(false);
@@ -16,6 +16,14 @@ export default function TrainingToggle({ chart, compact = false }) {
     setBusy(true);
     try { await setTraining(chart.id, !on); } catch (e) { window.alert(tErr(e.message)); } finally { setBusy(false); }
   };
+  if (action) {
+    return (
+      <button type="button" className={`cc-act train ${on ? 'on' : ''}`} disabled={busy || !list} onClick={flip} aria-pressed={on}
+        title={on ? t('Tirar do Meu treino') : t('Adicionar ao Meu treino')}>
+        {on ? <BookmarkCheck size={16} /> : <BookmarkPlus size={16} />}<span>{on ? t('No treino') : t('Treinar')}</span>
+      </button>
+    );
+  }
   return (
     <button type="button" className={`btn ghost train-toggle ${on ? 'on' : ''} ${compact ? 'compact' : ''}`} disabled={busy || !list} onClick={flip}
       title={on ? t('Tirar do Meu treino') : t('Adicionar ao Meu treino')} aria-pressed={on}>

@@ -192,8 +192,12 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .song-hero .tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
 .hero-jacket { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
 @media (max-width: 520px) {
-  .song-hero { flex-direction: column; align-items: stretch; }
-  .song-hero .hero-jacket { width: 100% !important; }
+  /* capa menor ao lado do título: libera a tela para os charts */
+  .song-hero { align-items: flex-start; gap: 12px; }
+  .song-hero > div { min-width: 0; flex: 1; }
+  .song-hero .hero-jacket { width: 112px !important; flex: none; border-radius: 12px; }
+  .song-hero h1 { font-size: 20px; margin: 0 0 2px; overflow-wrap: anywhere; }
+  .song-hero .btn.yt { padding: 7px 12px; font-size: 13px; }
 }
 .group-h { margin: 6px 0 8px; }
 .group-h::first-letter { text-transform: uppercase; }
@@ -209,7 +213,26 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .cc-other { margin-top: 10px; font-size: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: #cfd1d8; }
 .cc-other b { font-family: var(--num); }
 .up { color: var(--neon); font: 700 12px var(--num); } .down { color: #ff8a96; font: 700 12px var(--num); }
-.cc-actions { display: flex; align-items: center; gap: 14px; margin-top: 10px; font-size: 12px; }
+/* rodapé do chart: data do recorde + 5 ações do mesmo tamanho (no celular, ícone em cima do texto) */
+.cc-date { font-size: 12px; margin-top: 10px; }
+.cc-actions { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.cc-act { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 48px; padding: 6px 2px;
+  border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: var(--text);
+  font-family: inherit; font-size: 11.5px; font-weight: 600; line-height: 1.15;
+  text-decoration: none; cursor: pointer; text-align: center; min-width: 0; }
+.cc-act { position: relative; }
+.cc-count { position: absolute; top: 3px; right: 4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--neon); color: #0b0c0e; font: 800 10px/16px var(--num); font-style: normal; }
+.cc-act span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-act svg { color: var(--neon); }
+.cc-act.yt svg { color: #ff4d4d; }
+.cc-act:hover { border-color: rgba(140, 255, 58, .45); }
+.cc-act.on { border-color: rgba(140, 255, 58, .6); background: rgba(140, 255, 58, .1); color: var(--neon); }
+.cc-act:disabled { opacity: .6; }
+@media (min-width: 760px) {
+  .cc-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; }
+  .cc-act { flex-direction: row; min-height: 36px; padding: 6px 12px; gap: 6px; font-size: 12.5px; }
+}
+.song-note { margin: 4px 0 10px; }
 .cc-hist { margin-top: 10px; border-top: 1px solid var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
 .hrow { display: flex; align-items: center; gap: 10px; font-size: 12.5px; flex-wrap: wrap; }
 .hrow .sc { font: 700 13px var(--num); }
@@ -625,7 +648,7 @@ a.q-city:hover { color: var(--text); }
 .auto-sync .check { display: flex; gap: 10px; align-items: flex-start; }
 
 /* Recordes legados da Phoenix mostrados na Phoenix 2 */
-.chip-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 16px; border: 1px dashed var(--line); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; }
+.chip-toggle { width: fit-content; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 16px; border: 1px dashed var(--line); background: transparent; color: var(--muted); font-size: 13px; cursor: pointer; }
 .chip-toggle.on { border-color: #9aa3b5; color: var(--text, #fff); background: rgba(154, 163, 181, 0.12); }
 .pip.legacy { opacity: 0.55; border-style: dashed; background: transparent !important; color: #c9ced8 !important; box-shadow: none !important; }
 .legacy-note { font-size: 12px; }
