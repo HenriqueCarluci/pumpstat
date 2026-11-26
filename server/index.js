@@ -181,9 +181,18 @@ async function proxyImage(raw) {
   const key = u.toString();
   let hit = imgCache.get(key);
   if (!hit) {
-    const r = await fetch(key, { headers: { 'User-Agent': 'Mozilla/5.0 PIU Stats' } }).catch(() => null);
+    const r = await fetch(key, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36',
+        Accept: 'image/avif,image/webp,image/png,image/*,*/*;q=0.8',
+        Referer: `${u.protocol}//${u.hostname}/`,
+      },
+    }).catch((e) => { console.warn('img fetch', key, e?.cause?.code || e?.message); return null; });
     const type = r?.headers.get('content-type') || '';
-    if (!r || !r.ok || !/^image\//.test(type)) return [502, { 'Content-Type': 'text/plain' }, 'imagem indisponível'];
+    if (!r || !r.ok || !/^image\//.test(type)) {
+      if (r) console.warn('img fail', key, r.status, type);
+      return [502, { 'Content-Type': 'text/plain' }, 'imagem indisponível'];
+    }
     const buf = Buffer.from(await r.arrayBuffer());
     if (buf.length > 3_000_000) return [413, { 'Content-Type': 'text/plain' }, 'imagem grande demais'];
     hit = { type, buf };
