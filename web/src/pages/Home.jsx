@@ -9,7 +9,7 @@ import { isOn } from '../lib/plans.js';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronDown, ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp, Dumbbell, Shield } from '../components/Icons.jsx';
+import { ChevronDown, ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp, Dumbbell, Shield, CalendarCheck } from '../components/Icons.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 
 export default function Home() {
@@ -79,6 +79,7 @@ export default function Home() {
         {isOn(plan, 'challenges') && <Link to="/desafios" className="ql"><Trophy size={16} /> {t('Desafios')}</Link>}
         {isOn(plan, 'training') && <Link to="/treino" className="ql"><Dumbbell size={16} /> {t('Meu treino')}</Link>}
         {isOn(plan, 'teams') && <Link to="/time" className="ql"><Shield size={16} /> {t('Meu Time')}</Link>}
+        {isOn(plan, 'day_report') && <Link to="/dia" className="ql"><CalendarCheck size={16} /> {t('Dia de jogo')}</Link>}
         <Link to="/progresso" className="ql"><TrendingUp size={16} /> {t('Progresso')}</Link>
         <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
         <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>

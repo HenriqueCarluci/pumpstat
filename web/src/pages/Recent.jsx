@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { ScoreCard, timeAgo } from '../components/ui.jsx';
-import { locale, t, tMsg, tn } from '../lib/i18n.js';
+import { t, tMsg, tn } from '../lib/i18n.js';
+import { isOn } from '../lib/plans.js';
+import { dayLabelOf } from '../lib/dayImage.js';
 import { useSyncJob } from '../components/PiuConnect.jsx';
-import { RefreshCw } from '../components/Icons.jsx';
+import { CalendarCheck, RefreshCw } from '../components/Icons.jsx';
 
 /** Atualização rápida: busca só as jogadas recentes da versão aberta (sem reler todos os recordes). */
 function RefreshRecent() {
@@ -20,29 +22,40 @@ function RefreshRecent() {
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
       {res && <small className="muted">{res.new_plays ? tn(res.new_plays, '{n} jogada nova', '{n} jogadas novas') : t('Nenhuma jogada nova.')}{res.new_bests ? ` · ${tn(res.new_bests, '{n} recorde novo', '{n} recordes novos')}` : ''}</small>}
+      {res && res.new_plays > 0 && <Link className="link small ic-row" to="/dia"><CalendarCheck size={14} /> {t('Ver o relatório do dia')}</Link>}
       {err && <div className="form-err">{err}</div>}
       {needLogin && <p className="small">{t('Para atualizar, conecte sua conta da Pump uma vez em')} <Link to="/ajustes">{t('Ajustes')}</Link>.</p>}
     </div>
   );
 }
 
+/** Dia de jogo (5h às 5h no horário de São Paulo), igual ao do banco. */
+function playDay(at) {
+  const d = new Date(new Date(at).getTime() - 5 * 3600_000);
+  return d.toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
+}
+
 export default function Recent() {
-  const { data } = useData();
+  const { data, plan } = useData();
   if (!data.plays.length) {
     return <div className="page"><RefreshRecent /><p className="empty">{t('Nenhuma jogada registrada ainda. Sincronize em Ajustes.')}</p></div>;
   }
   const byDay = new Map();
   for (const p of data.plays) {
-    const day = new Date(p.playedAt).toLocaleDateString(locale(), { weekday: 'long', day: '2-digit', month: 'long' });
-    if (!byDay.has(day)) byDay.set(day, []);
-    byDay.get(day).push(p);
+    const key = playDay(p.playedAt);
+    if (!byDay.has(key)) byDay.set(key, []);
+    byDay.get(key).push(p);
   }
+  const showReport = isOn(plan, 'day_report');
   return (
     <div className="page">
       <RefreshRecent />
       {[...byDay.entries()].map(([day, plays]) => (
         <section key={day}>
-          <h3 className="group-h">{day} <span className="muted">· {tn(plays.length, '{n} jogada', '{n} jogadas')}</span></h3>
+          <h3 className="group-h row-between">
+            <span>{dayLabelOf(day, { weekday: 'long', day: '2-digit', month: 'long' })} <span className="muted">· {tn(plays.length, '{n} jogada', '{n} jogadas')}</span></span>
+            {showReport && <Link className="link small ic-row" to={`/dia/${day}`}><CalendarCheck size={14} /> {t('Relatório do dia')}</Link>}
+          </h3>
           <div className="cards">
             {plays.map((p, i) => (
               <ScoreCard key={i} chart={p.chart} score={p.score} grade={p.grade} plate={p.plate} broken={p.broken}

@@ -2,6 +2,7 @@
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import TeamPicker from './components/TeamPicker.jsx';
+import DayReport from './pages/DayReport.jsx';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import MyTeam from './pages/MyTeam.jsx';
@@ -38,6 +39,14 @@ const FAKE = {
       series: [0, 1, 2, 3, 4, 5, 6].map((i) => [st + i * 86400, [12, 20, 8, 30, 25, 14, 7][i], [4, 6, 2, 12, 9, 7, 5][i]]),
       top: [{ chart_id: 5769, song_id: 242, title: 'Gargoyle', mode: 'D', level: 20, plays: 9, passes: 6, players: 3 }, { chart_id: 4864, song_id: 242, title: 'Gargoyle', mode: 'D', level: 23, plays: 6, passes: 1, players: 2 }],
       members: [{ id: 'amigo', nickname: 'PUMPKING', plays: 70, passes: 58, new_clears: 9, max_d: 23, max_s: 24 }, { id: 'eu', nickname: 'HENRIQUE', plays: 51, passes: 33, new_clears: 8, max_d: 21, max_s: 20 }, { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME', plays: 0, passes: 0, new_clears: 0, max_d: null, max_s: null }] }; })(),
+  my_day_report: (() => { const s0 = 1795710000; return { day: '2026-11-25', start: s0, end: s0 + 86400,
+    charts: [[4864, 4, 1, 912300, 'AA', 'RG', null, null, null, 6, 880100], [5137, 2, 1, 991200, 'SSS+', 'MG', 985000, 'SS+', 'TG', 3, null],
+      [5769, 3, 3, 975500, 'S+', 'TG', 961200, 'AAA+', 'TG', 5, null], [6270, 3, 0, null, null, null, null, null, null, 4, 902000], [7487, 1, 1, 990100, 'SSS', 'MG', 992311, 'SSS', 'MG', 2, null]],
+    plays: [[7487, s0 + 3600, 990100, 'SSS', 'MG', false, 1100, 60, 3, 0, 2], [5769, s0 + 3900, 961000, 'AAA+', 'TG', false, 980, 160, 20, 4, 25], [5769, s0 + 4200, 975500, 'S+', 'TG', false, 1050, 120, 10, 2, 7],
+      [6270, s0 + 4500, 902000, 'AA', null, true, 800, 200, 30, 10, 15], [4864, s0 + 4800, 880100, 'A+', null, true, 900, 300, 40, 20, 40], [4864, s0 + 5100, 912300, 'AA', 'RG', false, 1000, 220, 30, 10, 40],
+      [5137, s0 + 5400, 991200, 'SSS+', 'MG', false, 1250, 40, 5, 1, 4], [5769, s0 + 5700, 970000, 'S', 'TG', false, 1000, 150, 20, 4, 15], [6270, s0 + 6000, 850000, 'A', null, true, 700, 250, 50, 20, 35], [6270, s0 + 6300, 870000, 'A+', null, true, 750, 230, 40, 15, 20], [4864, s0 + 6600, 800000, 'A', null, true, 800, 300, 60, 30, 70], [4864, s0 + 6900, 0, null, null, true, 400, 100, 20, 10, 90], [5137, s0 + 7200, 985000, 'SS+', 'TG', true, 1200, 80, 10, 3, 10]],
+    prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
+    days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
   list_teams: { teams: [], mine: null, pending: null },
   my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
   countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: { eu: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' }, amigo: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' } },
@@ -79,6 +88,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

@@ -633,3 +633,44 @@ Tirar o logo | Remove the logo | Quitar el logo | 로고 제거 | ロゴを外�
 Convite do Discord inválido: cole o link discord.gg/... | Invalid Discord invite: paste the discord.gg/... link | Invitación de Discord inválida: pega el enlace discord.gg/... | 잘못된 Discord 초대: discord.gg/... 링크를 붙여 넣으세요 | Discord の招待が無効です：discord.gg/... のリンクを貼ってください | Invitation Discord invalide : collez le lien discord.gg/... | Invito Discord non valido: incolla il link discord.gg/...
 O nome do time precisa ter de 2 a 40 letras. | The team name must have 2 to 40 characters. | El nombre del equipo debe tener de 2 a 40 caracteres. | 팀 이름은 2~40자여야 합니다. | チーム名は 2〜40 文字にしてください。 | Le nom de l'équipe doit compter de 2 à 40 caractères. | Il nome della squadra deve avere da 2 a 40 caratteri.
 Envie o logo pelo próprio formulário. | Upload the logo through the form itself. | Sube el logo desde el propio formulario. | 로고는 양식에서 직접 업로드하세요. | ロゴはフォームからアップロードしてください。 | Envoyez le logo via le formulaire. | Carica il logo dal modulo stesso.
+Primeiros passes | First clears | Primeros pases | 첫 클리어 | 初クリア | Premières réussites | Primi passaggi
+Recordes | Records | Récords | 기록 | 自己ベスト | Records | Record
+Acerto | Accuracy | Precisión | 정확도 | 精度 | Précision | Precisione
+Nível médio | Average level | Nivel medio | 평균 레벨 | 平均レベル | Niveau moyen | Livello medio
+Recordes do dia | Today's records | Récords del día | 오늘의 기록 | この日の自己ベスト | Records du jour | Record del giorno
+Melhores passes do dia | Best clears of the day | Mejores pases del día | 오늘의 베스트 클리어 | この日のベストクリア | Meilleures réussites du jour | Migliori passaggi del giorno
+Primeiro passe | First clear | Primer pase | 첫 클리어 | 初クリア | Première réussite | Primo passaggio
+Nenhum passe neste dia. Bora treinar! | No clears this day. Time to practice! | Ningún pase este día. ¡A entrenar! | 이 날은 클리어가 없어요. 연습하러 가요! | この日はクリアなし。練習しよう！ | Aucune réussite ce jour-là. On s'entraîne ! | Nessun passaggio oggi. Si allena!
+Gerado com PIU Stats | Made with PIU Stats | Hecho con PIU Stats | PIU Stats로 생성 | PIU Stats で作成 | Créé avec PIU Stats | Creato con PIU Stats
+Compartilhar | Share | Compartir | 공유 | 共有 | Partager | Condividi
+Imagem baixada. | Image downloaded. | Imagen descargada. | 이미지를 저장했어요. | 画像を保存しました。 | Image téléchargée. | Immagine scaricata.
+Imagem do dia | Day image | Imagen del día | 오늘의 이미지 | この日の画像 | Image du jour | Immagine del giorno
+Baixar | Download | Descargar | 다운로드 | ダウンロード | Télécharger | Scarica
+Sincronizar o dia | Sync the day | Sincronizar el día | 오늘 동기화 | この日を同期 | Synchroniser la journée | Sincronizza la giornata
+Dia de jogo | Play day | Día de juego | 플레이 데이 | プレイ日 | Journée de jeu | Giornata di gioco
+Nenhuma jogada registrada ainda. Sincronize depois de jogar para ver o relatório do dia. | No plays recorded yet. Sync after playing to see the day report. | Aún no hay jugadas. Sincroniza después de jugar para ver el informe del día. | 아직 기록된 플레이가 없어요. 플레이 후 동기화하면 오늘의 리포트를 볼 수 있어요. | まだプレイ記録がありません。プレイ後に同期すると日次レポートが見られます。 | Aucune partie enregistrée. Synchronisez après avoir joué pour voir le bilan du jour. | Nessuna partita registrata. Sincronizza dopo aver giocato per vedere il resoconto del giorno.
+Dia anterior | Previous day | Día anterior | 이전 날 | 前の日 | Jour précédent | Giorno precedente
+Próximo dia | Next day | Día siguiente | 다음 날 | 次の日 | Jour suivant | Giorno successivo
+Setas: comparação com o dia de jogo anterior ({day}). | Arrows: compared with the previous play day ({day}). | Flechas: comparación con el día de juego anterior ({day}). | 화살표: 이전 플레이 데이({day})와 비교. | 矢印：前回のプレイ日（{day}）との比較。 | Flèches : comparaison avec la journée de jeu précédente ({day}). | Frecce: confronto con la giornata di gioco precedente ({day}).
+Gerando… | Creating… | Generando… | 만드는 중… | 作成中… | Création… | Creazione…
+Gerar imagem para postar | Create image to post | Crear imagen para publicar | 포스팅용 이미지 만들기 | 投稿用の画像を作る | Créer une image à publier | Crea immagine da pubblicare
+Passou depois de {n} tentativas antes de hoje | Cleared after {n} earlier attempts | Lo pasaste tras {n} intentos anteriores | 이전 {n}번 시도 끝에 클리어 | 以前の {n} 回の挑戦を経てクリア | Réussi après {n} essais précédents | Passato dopo {n} tentativi precedenti
+Recordes batidos | Records broken | Récords superados | 갱신한 기록 | 更新した自己ベスト | Records battus | Record battuti
+Charts que você tentou e ainda não passou. Coloque no Meu treino para acompanhar. | Charts you tried and haven't cleared yet. Add them to My training to follow them. | Charts que intentaste y aún no pasaste. Añádelos a Mi entrenamiento para seguirlos. | 시도했지만 아직 클리어하지 못한 채보예요. 내 연습에 추가해서 관리하세요. | 挑戦してまだクリアしていない譜面です。マイ練習に追加して追いかけよう。 | Charts tentés et pas encore réussis. Ajoutez-les à Mon entraînement pour les suivre. | Chart provati e non ancora passati. Aggiungili a Il mio allenamento per seguirli.
+melhor {s} | best {s} | mejor {s} | 최고 {s} | 最高 {s} | meilleur {s} | migliore {s}
+Por nível | By level | Por nivel | 레벨별 | レベル別 | Par niveau | Per livello
+{p} de {n} passaram | {p} of {n} cleared | {p} de {n} pasados | {n}개 중 {p}개 클리어 | {n} 回中 {p} 回クリア | {p} sur {n} réussis | {p} su {n} passati
+Meu dia de Pump It Up · PIU Stats | My Pump It Up day · PIU Stats | Mi día de Pump It Up · PIU Stats | 나의 펌프 잇 업 하루 · PIU Stats | 私の Pump It Up の一日 · PIU Stats | Ma journée Pump It Up · PIU Stats | La mia giornata di Pump It Up · PIU Stats
+{n} min | {n} min | {n} min | {n}분 | {n} 分 | {n} min | {n} min
+{n} misses | {n} misses | {n} misses | 미스 {n} | ミス {n} | {n} miss | {n} miss
+{n} tentativa hoje | {n} attempt today | {n} intento hoy | 오늘 {n}번 시도 | 今日 {n} 回挑戦 | {n} essai aujourd'hui | {n} tentativo oggi
+{n} tentativas hoje | {n} attempts today | {n} intentos hoy | 오늘 {n}번 시도 | 今日 {n} 回挑戦 | {n} essais aujourd'hui | {n} tentativi oggi
+{n} no total | {n} in total | {n} en total | 총 {n}번 | 合計 {n} 回 | {n} au total | {n} in totale
+{n} jogada no dia | {n} play this day | {n} jugada en el día | 이 날 {n}번 플레이 | この日 {n} プレイ | {n} partie ce jour-là | {n} partita nella giornata
+{n} jogadas no dia | {n} plays this day | {n} jugadas en el día | 이 날 {n}번 플레이 | この日 {n} プレイ | {n} parties ce jour-là | {n} partite nella giornata
+Ver o relatório do dia | See the day report | Ver el informe del día | 오늘의 리포트 보기 | 日次レポートを見る | Voir le bilan du jour | Vedi il resoconto del giorno
+Relatório do dia | Day report | Informe del día | 일일 리포트 | 日次レポート | Bilan du jour | Resoconto del giorno
+Relatório do dia de jogo | Play day report | Informe del día de juego | 플레이 데이 리포트 | プレイ日レポート | Bilan de la journée de jeu | Resoconto della giornata di gioco
+Relatório do dia e imagem para postar | Day report and image to post | Informe del día e imagen para publicar | 일일 리포트와 포스팅 이미지 | 日次レポートと投稿用画像 | Bilan du jour et image à publier | Resoconto del giorno e immagine da pubblicare
+Não deu para compartilhar. | Couldn't share. | No se pudo compartir. | 공유할 수 없어요. | 共有できませんでした。 | Impossible de partager. | Impossibile condividere.
+antes {s} | before {s} | antes {s} | 이전 {s} | 以前 {s} | avant {s} | prima {s}

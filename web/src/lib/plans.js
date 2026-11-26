@@ -24,7 +24,7 @@ export const FEATURE_DEFAULTS = {
   weakness: 'pro', training_analysis: 'plus', training_plan: 'pro', rival: 'plus', auto_sync: 'pro', push: 'pro', export: 'plus',
 };
 /** Recursos sempre grátis (só para mostrar na matriz). */
-export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Tier, votações e Especiais', 'Desafios, missões e sequência', 'Mais jogadas', 'Lista do Meu treino', 'Sincronização manual'];
+export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Tier, votações e Especiais', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar', 'Lista do Meu treino', 'Sincronização manual'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
   { id: 'recommendations', label: 'Recomendações visíveis' },
@@ -36,6 +36,7 @@ export const TOGGLES = [
   { id: 'missions', label: 'Missões da semana', group: 'Gamificação' },
   { id: 'streak', label: 'Sequência de semanas', group: 'Gamificação' },
   { id: 'week_summary', label: 'Resumo da semana passada', group: 'Gamificação' },
+  { id: 'day_report', label: 'Relatório do dia de jogo', group: 'Gamificação' },
   { id: 'challenges', label: 'Desafios do mês', group: 'Gamificação' },
   { id: 'rival', label: 'Rival', group: 'Social' },
   { id: 'friend_online', label: 'Aviso de amigo online', group: 'Social' },

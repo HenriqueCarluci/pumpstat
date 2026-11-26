@@ -11,9 +11,12 @@ values ('team-logos', 'team-logos', true, 524288, array['image/png', 'image/jpeg
 on conflict (id) do update set public = true, file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
 
 -- cada pessoa só envia arquivos para a própria pasta (team-logos/<id da conta>/...); leitura é pelo link público
-drop policy if exists "team logos: upload na própria pasta" on storage.objects;
-create policy "team logos: upload na própria pasta" on storage.objects for insert to authenticated
-  with check (bucket_id = 'team-logos' and (storage.foldername(name))[1] = auth.uid()::text);
+do $$ begin
+  if not exists (select 1 from pg_policies where schemaname = 'storage' and tablename = 'objects' and policyname = 'team logos: upload na própria pasta') then
+    create policy "team logos: upload na própria pasta" on storage.objects for insert to authenticated
+      with check (bucket_id = 'team-logos' and (storage.foldername(name))[1] = auth.uid()::text);
+  end if;
+end $$;
 
 -- nome de usuário de uma rede do time (Discord aceita o convite: discord.gg/xxxx)
 create or replace function public.team_social_handle(p text, p_net text)

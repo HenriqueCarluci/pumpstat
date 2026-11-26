@@ -32,6 +32,7 @@ import Plans from './pages/Plans.jsx';
 import Subscription from './pages/Subscription.jsx';
 import Training from './pages/Training.jsx';
 import MyTeam from './pages/MyTeam.jsx';
+import DayReport from './pages/DayReport.jsx';
 import Tour from './components/Tour.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
@@ -232,6 +233,8 @@ function Shell() {
             <Route path="/assinatura" element={<Subscription />} />
             <Route path="/treino" element={<Training />} />
             <Route path="/time" element={<MyTeam />} />
+            <Route path="/dia" element={<DayReport />} />
+            <Route path="/dia/:day" element={<DayReport />} />
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />
