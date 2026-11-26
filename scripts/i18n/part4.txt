@@ -95,3 +95,17 @@ Charts que você passou com {g} | Charts you cleared with {g} | Charts que pasas
 {n} chart | {n} chart | {n} chart | 채보 {n}개 | {n}譜面 | {n} chart | {n} chart
 {n} charts | {n} charts | {n} charts | 채보 {n}개 | {n}譜面 | {n} charts | {n} chart
 Limpar | Clear | Limpiar | 지우기 | クリア | Effacer | Cancella
+online agora | online now | en línea ahora | 지금 온라인 | オンライン中 | en ligne | online ora
+offline | offline | desconectado | 오프라인 | オフライン | hors ligne | offline
+Nenhuma mensagem ainda. Diga oi ou chame para um x1! | No messages yet. Say hi or challenge them to a 1v1! | Aún no hay mensajes. ¡Saluda o invita a un x1! | 아직 메시지가 없습니다. 인사하거나 1:1을 신청해 보세요! | まだメッセージはありません。挨拶するかタイマンに誘ってみよう! | Pas encore de messages. Dites bonjour ou lancez un 1v1 ! | Ancora nessun messaggio. Saluta o sfida a un 1v1!
+Convite para jogar | Invite to play | Invitación a jugar | 플레이 초대 | プレイの誘い | Invitation à jouer | Invito a giocare
+aceito | accepted | aceptada | 수락됨 | 承諾 | acceptée | accettato
+recusado | declined | rechazada | 거절됨 | 辞退 | refusée | rifiutato
+Escreva uma mensagem… | Write a message… | Escribe un mensaje… | 메시지를 입력… | メッセージを入力… | Écrivez un message… | Scrivi un messaggio…
+Chamar para x1 | Challenge to a 1v1 | Invitar a un x1 | 1:1 신청 | タイマンに誘う | Défier en 1v1 | Sfida a un 1v1
+Se estiver offline, a pessoa vê quando abrir o app (convites valem por 2 h). | If they're offline, they'll see it when they open the app (invites last 2 h). | Si está desconectado, lo verá al abrir la app (las invitaciones duran 2 h). | 오프라인이면 앱을 열 때 확인합니다 (초대는 2시간 유효). | オフラインの場合はアプリを開いたときに届きます (誘いは2時間有効)。 | S'il est hors ligne, il le verra en ouvrant l'app (les invitations durent 2 h). | Se è offline, lo vedrà quando apre l'app (gli inviti valgono 2 h).
+Responder | Reply | Responder | 답장 | 返信 | Répondre | Rispondi
+só dá para mandar mensagem para amigos | you can only message friends | solo puedes enviar mensajes a amigos | 친구에게만 메시지를 보낼 수 있습니다 | メッセージはフレンドにだけ送れます | vous ne pouvez écrire qu'à vos amis | puoi scrivere solo agli amici
+escreva uma mensagem | write a message | escribe un mensaje | 메시지를 입력하세요 | メッセージを入力してください | écrivez un message | scrivi un messaggio
+espere alguns segundos antes de mandar outra | wait a few seconds before sending another | espera unos segundos antes de enviar otro | 몇 초 후에 다시 보내세요 | 数秒待ってから送ってください | attendez quelques secondes avant d'en envoyer un autre | aspetta qualche secondo prima di inviarne un altro
+Para entrar na fila, permita o acesso à localização. | To join the queue, allow location access. | Para entrar en la fila, permite el acceso a la ubicación. | 대기열에 들어가려면 위치 접근을 허용하세요. | 列に並ぶには位置情報へのアクセスを許可してください。 | Pour rejoindre la file, autorisez l'accès à la position. | Per entrare in coda, consenti l'accesso alla posizione.

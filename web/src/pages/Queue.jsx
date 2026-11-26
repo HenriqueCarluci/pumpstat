@@ -11,7 +11,9 @@ const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
 const rememberEntry = (machine, id) => { try { localStorage.setItem(MY_ENTRIES, JSON.stringify({ ...myEntryIds(), [machine]: id })); } catch { /* ignore */ } };
 
-const needsCheckin = (v) => !!(v.venue.require_checkin && v.venue.latitude != null);
+// entrar na fila (e voltar de ausente) sempre pede a localização; o raio só é conferido onde o local tem coordenadas
+const needsCheckin = () => true;
+const hasRadius = (v) => v.venue.latitude != null;
 const mins = (iso) => Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
 const EVENT_PT = { join: 'entrou', pass: 'passou a vez', leave: 'saiu', away: 'ficou ausente', back: 'voltou', remove: 'foi removido', reset: 'fila zerada', expire: 'saiu (ausente 1 h)' };
 const evText = (k) => (EVENT_PT[k] ? t(EVENT_PT[k]) : k);
@@ -66,7 +68,7 @@ export default function Queue() {
               📍 {venue.venue.address}
             </a>
           )}
-          {needsCheckin(venue) && <div className="q-geo small">{t('Check-in por localização: só entra na fila quem estiver a até {n} m.', { n: venue.venue.radius_m })}</div>}
+          <div className="q-geo small">{hasRadius(venue) ? t('Check-in por localização: só entra na fila quem estiver a até {n} m.', { n: venue.venue.radius_m }) : t('Para entrar na fila, permita o acesso à localização.')}</div>
         </div>
         <div className="q-head-actions">
           <Link className="btn ghost" to={`/fila/${slug}/tv`}>{t('Modo TV')}</Link>
@@ -111,7 +113,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
   const join = (e) => {
     e.preventDefault();
     try { localStorage.setItem('stepclub:queue-name', name); } catch { /* ignore */ }
-    act(async () => { const id = await joinQueue(machine.id, name, checkin && !isAdmin); rememberEntry(machine.id, id); });
+    act(async () => { const id = await joinQueue(machine.id, name, checkin); rememberEntry(machine.id, id); });
   };
 
   return (
@@ -155,7 +157,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
                 : <>{t('Sua posição na fila: {n}', { n: myPos + 1 })}{waitMin != null ? ` · ${t('espera ~{n} min', { n: waitMin })}` : ''}</>}
           </div>
           <div className="bm-row">
-            <button className="btn ghost" disabled={busy} onClick={() => act(() => (mine.status === 'away' ? backFromAway(mine.id, checkin && !isAdmin) : setAway(mine.id, true)))}>
+            <button className="btn ghost" disabled={busy} onClick={() => act(() => (mine.status === 'away' ? backFromAway(mine.id, checkin) : setAway(mine.id, true)))}>
               {mine.status === 'away' ? t('Voltei') : t('Estou ausente')}
             </button>
             <button className="btn ghost" disabled={busy} onClick={() => act(() => leaveQueue(mine.id))}>{t('Sair da fila')}</button>
