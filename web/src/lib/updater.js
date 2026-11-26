@@ -14,7 +14,11 @@ export function watchUpdates() {
   if (!mine) return;
   let pending = false;
   // URL nova (com a versão) força o navegador a buscar o index.html atualizado
-  const go = () => window.location.replace(`${window.location.pathname}?v=${pending}${window.location.hash}`);
+  const go = () => {
+    // no máximo uma tentativa por versão (evita ficar recarregando se o servidor ainda não trocou)
+    try { if (sessionStorage.getItem('stepclub:upd') === pending) return; sessionStorage.setItem('stepclub:upd', pending); } catch { /* ignora */ }
+    window.location.replace(`${window.location.pathname}?v=${pending}${window.location.hash}`);
+  };
   const check = async () => {
     const l = await latest();
     if (l && l !== mine) pending = l.replace(/^index-|\.js$/g, '');
