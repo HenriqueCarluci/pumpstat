@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { canAlert } from '../lib/notify.js';
@@ -9,6 +10,7 @@ const who = (p) => p.nickname || p.title || t('Um jogador');
 /** Aviso flutuante quando alguém te chama para jogar (e quando respondem ao seu convite). */
 export default function InviteToast() {
   const { presence } = useData();
+  const navigate = useNavigate();
   const [hidden, setHidden] = useState(() => new Set());
   const alerted = useRef(new Set());
   const invite = presence.invites.find((i) => !hidden.has(`i${i.invite}`));
@@ -20,7 +22,7 @@ export default function InviteToast() {
       if (alerted.current.has(i.invite)) continue;
       alerted.current.add(i.invite);
       if (canAlert() && Notification.permission === 'granted' && document.hidden) {
-        try { new Notification('StepClub', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
+        try { new Notification('StepClub', { body: `${i.kind === 'message' ? '💬' : '🎮'} ${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
       }
     }
   }, [presence.invites]);
@@ -32,6 +34,18 @@ export default function InviteToast() {
     presence.refresh();
   };
 
+  if (invite && invite.kind === 'message') {
+    return (
+      <div className="toast invite">
+        <div className="toast-h">💬 {who(invite)}</div>
+        <div className="toast-msg">{invite.message}</div>
+        <div className="bm-row">
+          <button className="btn" onClick={() => { respond(invite, true); navigate(`/jogador/${invite.id}`); }}>{t('Responder')}</button>
+          <button className="btn ghost" onClick={() => respond(invite, true)}>OK</button>
+        </div>
+      </div>
+    );
+  }
   if (invite) {
     return (
       <div className="toast invite">

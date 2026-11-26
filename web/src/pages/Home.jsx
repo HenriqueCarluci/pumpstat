@@ -25,7 +25,7 @@ export default function Home() {
     const out = [];
     const pool = data.charts.filter((c) => c.mode === mode);
     const max = Math.max(10, ...pool.map((c) => c.level));
-    for (let lv = max; lv >= 1; lv--) {
+    for (let lv = 1; lv <= max; lv++) {
       const cs = pool.filter((c) => c.level === lv);
       if (!cs.length) continue;
       const cl = cs.filter((c) => c.score != null && !c.broken);

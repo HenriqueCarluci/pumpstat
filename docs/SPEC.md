@@ -149,3 +149,10 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Lista (`online_players`): nick, avatar, título, PUMBILITY (Phoenix 2) e maior single/double passado (sem stage break), para todos. Sugestão de x1 por PUMBILITY parecido (±500 = bom x1, ±1500 = nível parecido), sem revelar o número.
 - Convite (`send_invite`) com mensagem rápida ou texto (até 140 caracteres). Limites: 1 convite por pessoa a cada 10 min e 10 por hora. O convidado vê um aviso na hora (e notificação do sistema se permitido) e responde "Bora!" ou "Agora não"; quem chamou recebe a resposta.
 - Visibilidade: todos, só amigos ou ninguém (`set_presence_mode`).
+
+## Minichat entre amigos
+- Na página do amigo (`#/jogador/:id`): conversa (`chat_with`, atualiza a cada 5 s), status online e botão "Chamar para x1".
+- Mensagens só entre amigos, até 140 caracteres; lidas ganham ✓✓. Chegam como aviso em qualquer tela (Responder / OK); valem 7 dias para quem estiver offline. Convite de x1 para amigo offline vale 2 h.
+
+## Fila
+- Entrar e voltar de "ausente" sempre pedem a localização, inclusive para administradores. O raio só é conferido onde o local tem coordenadas.

@@ -1,0 +1,8 @@
+-- 027: minichat entre amigos e convite para x1 na página do amigo; fila sempre pede localização.
+-- Aplicada via MCP. Resumo do que mudou:
+--   play_invites.kind ('invite' | 'message')
+--   send_invite(p_user uuid, p_message text, p_kind text): mensagem só entre amigos; convite para amigo offline vale 2 h
+--   heartbeat(p_venue): devolve mensagens não lidas (7 dias) e convites pendentes (2 h)
+--   chat_with(p_user uuid): últimas 50 mensagens/convites com um amigo
+--   is_online(p_user uuid)
+--   q_check_location: localização obrigatória sempre (inclusive admin); raio conferido onde o local tem coordenadas

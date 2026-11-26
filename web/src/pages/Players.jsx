@@ -6,6 +6,7 @@ import { rpc } from '../lib/api.js';
 import { fmtScore, pbTier, VERSIONS } from '../lib/piu.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
+import MiniChat from '../components/MiniChat.jsx';
 
 function Avatar({ p, size = 44 }) {
   return (
@@ -183,6 +184,7 @@ export function ComparePlayer() {
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
         <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><span className="big down">{losses}</span></div>
       </section>
+      <MiniChat user={id} name={other?.nickname} />
       <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />
       <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
       <div className="cmp-list">

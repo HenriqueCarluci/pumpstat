@@ -77,7 +77,7 @@ function PublicQueue() {
         <Route path="*" element={
           <div className="app">
             <header className="topbar">
-              <div className="brand"><span className="logo">▲</span> StepClub</div>
+              <a href="#/fila" className="brand"><span className="logo">▲</span> StepClub</a>
               <a className="btn ghost" href="#/">{t('Entrar')}</a>
             </header>
             <main className="content">
@@ -155,7 +155,7 @@ function Shell() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand"><span className="logo">▲</span> StepClub</div>
+        <NavLink to="/" end className="brand" title={t('Início')}><span className="logo">▲</span> StepClub</NavLink>
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
           🔔{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
         </NavLink>
