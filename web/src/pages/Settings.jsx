@@ -3,7 +3,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { usePrefs } from '../lib/prefs.js';
 import { Chips } from './Songs.jsx';
-import PiuConnect from '../components/PiuConnect.jsx';
+import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { timeAgo } from '../components/ui.jsx';
 import { signOut } from '../lib/auth.js';
 import { VERSIONS } from '../lib/piu.js';
@@ -20,7 +20,11 @@ export default function Settings() {
       <section className="card">
         <h3>Sincronizar com a Pump It Up</h3>
         <p className="muted small">Última sincronização da {VERSIONS[version].name}: {timeAgo(data.lastSync)}</p>
-        <PiuConnect compact onDone={() => reload()} />
+        <QuickSync onDone={() => reload()} />
+        <details className="other-login">
+          <summary className="small">Entrar com outra conta AM.PASS</summary>
+          <PiuConnect compact onDone={() => reload()} />
+        </details>
       </section>
 
       <section className="card">

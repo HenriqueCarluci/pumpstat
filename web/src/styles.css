@@ -431,3 +431,5 @@ a.q-city:hover { color: var(--text); }
 .cr-score { font-family: var(--num); text-align: right; }
 .switch-row { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; margin-top: 8px; }
 .switch-row input { accent-color: var(--neon); margin-top: 3px; }
+.other-login { margin-top: 10px; }
+.other-login summary { cursor: pointer; color: var(--muted); margin-bottom: 8px; }

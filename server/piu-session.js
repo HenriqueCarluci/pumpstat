@@ -104,6 +104,19 @@ export class PiuSession {
   }
 
   get(path) { return this.request(path); }
+
+  toJSON() { return { base: this.base, cookies: [...this.cookies].map(([h, jar]) => [h, [...jar]]) }; }
+  static fromJSON(o) {
+    const s = new PiuSession(o.base || 'https://piugame.com');
+    for (const [h, entries] of o.cookies || []) s.cookies.set(h, new Map(entries));
+    return s;
+  }
+}
+
+/** Confere se a sessão ainda está logada no site atual. */
+export async function isSessionAlive(s) {
+  const check = await s.get('/my_page/play_data.php');
+  return isLoggedIn(check);
 }
 
 /** Segue redirecionamentos feitos por JavaScript/meta (páginas do gnuboard usam location.replace). */

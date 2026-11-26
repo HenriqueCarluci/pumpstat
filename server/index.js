@@ -1,10 +1,10 @@
 // StepClub API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
 // usando o token do próprio usuário (RPC ingest_me). A senha da Pump nunca é gravada.
 import http from 'node:http';
-import { randomUUID } from 'node:crypto';
+import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:crypto';
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
-import { piuLogin, PiuSession, switchSite } from './piu-session.js';
+import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
 
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
@@ -12,6 +12,21 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_8_e3UpVPrgDdQbN
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://stepclub.onrender.com,https://pumpstat.onrender.com,http://localhost:5173').split(',');
 const SITES = { phoenix2: 'https://piugame.com', phoenix: 'https://phoenix.piugame.com' };
 const PAGE_DELAY_MS = 250;
+// chave para criptografar a sessão do piugame guardada no Supabase (nunca a senha)
+const SESSION_KEY = process.env.SESSION_SECRET ? Buffer.from(process.env.SESSION_SECRET, 'base64') : null;
+
+function seal(obj) {
+  const iv = randomBytes(12);
+  const c = createCipheriv('aes-256-gcm', SESSION_KEY, iv);
+  const enc = Buffer.concat([c.update(JSON.stringify(obj), 'utf8'), c.final()]);
+  return Buffer.concat([iv, c.getAuthTag(), enc]).toString('base64');
+}
+function unseal(b64) {
+  const buf = Buffer.from(b64, 'base64');
+  const d = createDecipheriv('aes-256-gcm', SESSION_KEY, buf.subarray(0, 12));
+  d.setAuthTag(buf.subarray(12, 28));
+  return JSON.parse(Buffer.concat([d.update(buf.subarray(28)), d.final()]).toString('utf8'));
+}
 
 const jobs = new Map(); // jobId -> { userId, state, message, progress, results, error, at }
 const attempts = new Map(); // userId -> [timestamps]
@@ -82,10 +97,21 @@ async function scrapeVersion(session, version, job) {
   return { ...toPayload(version, profile, bests, plays), titles };
 }
 
-async function runJob(job, { login, password, versions, token }) {
+async function runJob(job, { login, password, versions, token, saved }) {
   try {
-    job.message = 'Entrando no piugame.com…';
-    const session = await piuLogin(login, password);
+    let session;
+    if (saved) {
+      job.message = 'Usando a sessão salva do piugame…';
+      session = PiuSession.fromJSON(saved);
+      session.base = SITES.phoenix2;
+      if (!(await isSessionAlive(session))) {
+        job.needLogin = true;
+        throw new Error('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.');
+      }
+    } else {
+      job.message = 'Entrando no piugame.com…';
+      session = await piuLogin(login, password);
+    }
     for (const version of versions) {
       const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
       job.message = `${label}: abrindo a sessão…`;
@@ -96,6 +122,9 @@ async function runJob(job, { login, password, versions, token }) {
       job.results[version] = { ...(await ingestMe(token, scores)), bests: payload.bests.length, plays: payload.plays.length };
       if (titles.length) job.results[version].titles = await rpcAsUser(token, 'ingest_titles_me', { p_version: version, p_titles: titles });
       job.progress = Object.keys(job.results).length / versions.length;
+    }
+    if (SESSION_KEY) {
+      try { session.base = SITES.phoenix2; await rpcAsUser(token, 'save_piu_session', { p_blob: seal(session.toJSON()) }); } catch { /* opcional */ }
     }
     job.state = 'done';
     job.message = 'Pronto!';
@@ -137,8 +166,16 @@ const server = http.createServer(async (req, res) => {
     if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
-      const { login, password, versions } = await readJson(req);
-      if (!login || !password) return send(res, 400, { error: 'Informe o login e a senha da Pump It Up.' }, origin);
+      const { login, password, versions, useSaved } = await readJson(req);
+      let saved = null;
+      if (useSaved) {
+        if (!SESSION_KEY) return send(res, 400, { error: 'Sincronização rápida indisponível.', needLogin: true }, origin);
+        try {
+          const blob = await rpcAsUser(token, 'my_piu_session', {});
+          if (blob) saved = unseal(blob);
+        } catch { /* sem sessão */ }
+        if (!saved) return send(res, 401, { error: 'Entre com a sua conta AM.PASS uma vez para ativar a sincronização rápida.', needLogin: true }, origin);
+      } else if (!login || !password) return send(res, 400, { error: 'Informe o login e a senha da Pump It Up.' }, origin);
       const vs = (Array.isArray(versions) && versions.length ? versions : ['phoenix2', 'phoenix']).filter((v) => SITES[v]);
       // limites: 1 sincronização a cada 2 min por conta e no máximo 5 tentativas por 15 min (evita bloquear a conta AM.PASS)
       const now = Date.now();
@@ -151,7 +188,7 @@ const server = http.createServer(async (req, res) => {
       if (running) return send(res, 409, { error: 'Já existe uma sincronização em andamento.', jobId: running.id }, origin);
       const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now() };
       jobs.set(job.id, job);
-      runJob(job, { login: String(login).trim(), password: String(password), versions: vs, token });
+      runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved });
       return send(res, 202, { jobId: job.id }, origin);
     }
 
