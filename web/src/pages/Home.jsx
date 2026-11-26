@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import PiuConnect from '../components/PiuConnect.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
-import { fmtScore, GRADE_ORDER, gradeTier, pumbility, VERSIONS } from '../lib/piu.js';
+import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 
 export default function Home() {
   const { data, version, reload } = useData();
@@ -63,14 +63,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="card pumb">
-        <div className="pumb-main">
-          <div className="l">PUMBILITY</div>
-          <div className="v">{p?.pumbility != null ? Number(p.pumbility).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '—'}</div>
-          <div className="s">oficial · estimado {stats.pb.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-        </div>
-        <Spark points={data.pumbilityHistory} />
-      </section>
+      <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
+
+      <div className="quick-links">
+        <Link to="/titulos" className="ql">🏷️ Títulos</Link>
+        <Link to="/jogadores" className="ql">👥 Jogadores</Link>
+        <Link to="/recentes" className="ql">↻ Recentes</Link>
+      </div>
 
       <section className="stats">
         <Stat label="Charts jogados" value={stats.played.length} sub={`de ${data.charts.length}`} />
@@ -156,4 +155,64 @@ function Spark({ points }) {
   const w = 120; const h = 40;
   const d = vals.map((v, i) => `${i ? 'L' : 'M'}${(i / (vals.length - 1)) * w},${h - ((v - min) / (max - min || 1)) * (h - 4) - 2}`).join(' ');
   return <svg className="spark" viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-label="Evolução do PUMBILITY"><path d={d} /></svg>;
+}
+
+function TierCard({ version, points, estimated, history, charts }) {
+  const fmt = (n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const ideas = useMemo(() => pumbilitySuggestions(version, charts), [version, charts]);
+  if (version !== 'phoenix2') {
+    return (
+      <section className="card pumb">
+        <div className="pumb-main">
+          <div className="l">PUMBILITY</div>
+          <div className="v">{fmt(points)}</div>
+          <div className="s">Phoenix · estimado {fmt(estimated)}</div>
+        </div>
+        <Spark points={history} />
+      </section>
+    );
+  }
+  const t = pbTier(points);
+  return (
+    <section className="card pumb tier-card">
+      <div className="tier-top">
+        {t.icon ? <img className="tier-icon" src={t.icon} alt="" referrerPolicy="no-referrer" /> : <div className="tier-icon none">PB</div>}
+        <div className="pumb-main">
+          <div className="l">PUMBILITY · {t.name}{t.lv ? ` LV.${t.lv}` : ''}</div>
+          <div className="v">{fmt(points)}</div>
+          <div className="s">estimado {fmt(estimated)}</div>
+        </div>
+        <Spark points={history} />
+      </div>
+      {t.nextLabel && (
+        <>
+          <div className="tier-bar"><i style={{ width: `${Math.min(100, t.progress * 100)}%` }} /></div>
+          <div className="tier-next small">
+            Faltam <b>{fmt(t.toNextLv)}</b> para <b>{t.nextLabel}</b>
+            {t.nextTier && t.toNextTier !== t.toNextLv && <> · <b>{fmt(t.toNextTier)}</b> para <b>{t.nextTier.name}</b></>}
+          </div>
+        </>
+      )}
+      {ideas.length > 0 && (
+        <div className="ideas">
+          <div className="ideas-h">Como subir</div>
+          {ideas.map((i, k) => (
+            i.kind === 'grade' ? (
+              <Link key={k} to={`/musica/${i.chart.song.id}`} className="idea">
+                <Ball chart={i.chart} size="sm" />
+                <span className="t">{i.chart.song.title}<small>+{fmtScore(i.need)} pontos para <b>{i.grade}</b></small></span>
+                <span className="gain">+{i.gain.toFixed(1)}</span>
+              </Link>
+            ) : (
+              <Link key={k} to={`/tier?m=${i.mode}&l=${i.level}`} className="idea">
+                <Ball chart={{ mode: i.mode, level: i.level }} size="sm" />
+                <span className="t">Um {chartLabel({ mode: i.mode, level: i.level })} novo com {i.grade}<small>entra no top 50</small></span>
+                <span className="gain">+{i.gain.toFixed(1)}</span>
+              </Link>
+            )
+          ))}
+        </div>
+      )}
+    </section>
+  );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
 import { chartLabel, chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
@@ -43,6 +44,7 @@ export default function Song() {
 function ChartCard({ chart: c, version, other }) {
   const [hist, setHist] = useState(null);
   const [open, setOpen] = useState(false);
+  const [rank, setRank] = useState(false);
   const rating = chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, c.broken);
   const nxt = c.score != null && !c.broken ? nextGrade(version, c.score) : null;
   const tier = TIERS.find((t) => t.id === chartTier(c));
@@ -90,9 +92,11 @@ function ChartCard({ chart: c, version, other }) {
         {c.achievedAt && <span className="muted">Recorde em {fmtDate(c.achievedAt)}</span>}
         <span className="spacer" />
         <a href={yt} target="_blank" rel="noreferrer" className="link">Vídeo ▸</a>
+        <button className="link" onClick={() => setRank((r) => !r)}>{rank ? 'Fechar' : 'Ranking'}</button>
         <button className="link" onClick={toggle}>{open ? 'Fechar' : 'Histórico'}</button>
       </div>
 
+      {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}
       {open && (
         <div className="cc-hist">
           {!hist && <p className="muted">Carregando…</p>}

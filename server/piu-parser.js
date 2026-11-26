@@ -91,3 +91,21 @@ export function toPayload(version, profile, bests, plays) {
 }
 
 export const isLoginPage = (doc, url) => /login\.php/.test(url || '') || !!doc.querySelector('input[type="password"]');
+
+/** Lista de títulos (/my_page/title.php): nome, se tem, cor (colN), condição e progresso "[ 5 / 100 ]". */
+export function parseTitles(doc) {
+  return [...doc.querySelectorAll('.data_titleList2 > li')].map((li) => {
+    const nameEl = li.querySelector('.txt_w .t1');
+    const color = ((nameEl?.getAttribute('class') || '').match(/col(\d+)/) || [])[1];
+    const extra = [...li.querySelectorAll('.txt_w2 .t3 .txt')].map((e) => text(e));
+    const prog = extra.map((t) => t.match(/\[\s*([\d,.]+)\s*\/\s*([\d,.]+)\s*\]/)).find(Boolean);
+    return {
+      name: li.getAttribute('data-name') || text(nameEl),
+      owned: li.classList.contains('have'),
+      color: color != null ? +color : null,
+      condition: extra.find((t) => !/^\[\s*[\d,.]+\s*\/\s*[\d,.]+\s*\]$/.test(t)) || null,
+      cur: prog ? parseFloat(prog[1].replace(/,/g, '')) : null,
+      target: prog ? parseFloat(prog[2].replace(/,/g, '')) : null,
+    };
+  }).filter((t) => t.name);
+}

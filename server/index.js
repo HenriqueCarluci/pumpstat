@@ -3,7 +3,7 @@
 import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { DOMParser } from 'linkedom';
-import { lastPage, parseProfile, parseRow, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
+import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { piuLogin, PiuSession, switchSite } from './piu-session.js';
 
 const PORT = process.env.PORT || 10000;
@@ -29,6 +29,17 @@ async function ingestMe(token, payload) {
     method: 'POST',
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ p_payload: payload, p_source: 'server' }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.message || `Supabase ${res.status}`);
+  return body;
+}
+
+async function rpcAsUser(token, fn, args) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(args),
   });
   const body = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(body.message || `Supabase ${res.status}`);
@@ -65,7 +76,10 @@ async function scrapeVersion(session, version, job) {
 
   job.message = `${label}: jogadas recentes…`;
   const plays = rowsOf(await get('/my_page/recently_played.php')).map(parseRow).filter(Boolean);
-  return toPayload(version, profile, bests, plays);
+  job.message = `${label}: títulos…`;
+  let titles = [];
+  try { titles = parseTitles(await get('/my_page/title.php')); } catch { /* títulos são opcionais */ }
+  return { ...toPayload(version, profile, bests, plays), titles };
 }
 
 async function runJob(job, { login, password, versions, token }) {
@@ -78,7 +92,9 @@ async function runJob(job, { login, password, versions, token }) {
       await switchSite(session, SITES[version]);
       const payload = await scrapeVersion(session, version, job);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
-      job.results[version] = { ...(await ingestMe(token, payload)), bests: payload.bests.length, plays: payload.plays.length };
+      const { titles, ...scores } = payload;
+      job.results[version] = { ...(await ingestMe(token, scores)), bests: payload.bests.length, plays: payload.plays.length };
+      if (titles.length) job.results[version].titles = await rpcAsUser(token, 'ingest_titles_me', { p_version: version, p_titles: titles });
       job.progress = Object.keys(job.results).length / versions.length;
     }
     job.state = 'done';

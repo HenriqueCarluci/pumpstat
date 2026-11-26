@@ -51,13 +51,13 @@ export default function Tier() {
             {g.charts.map((c) => (
               <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
-                <Jacket song={c.song} width="100%" />
-                {c.score != null && (
-                  <div className="tile-res">
-                    <Grade grade={c.grade} broken={c.broken} size="xs" />
-                    <Plate plate={c.plate} size="xs" />
-                  </div>
-                )}
+                <div className="tile-art">
+                  <Jacket song={c.song} width="100%" />
+                  {c.score != null && (
+                    <div className="tile-grade"><Grade grade={c.grade} broken={c.broken} size="md" /></div>
+                  )}
+                  {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
+                </div>
                 <div className="tile-name">{c.song.title}</div>
                 {c.score != null && <div className="tile-score">{fmtScore(c.score)}</div>}
               </Link>

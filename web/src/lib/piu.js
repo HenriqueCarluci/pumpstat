@@ -103,3 +103,75 @@ export const DIFF_PT = {
 
 export const fmtScore = (n) => (n == null ? '—' : n.toLocaleString('pt-BR'));
 export const chartLabel = (c) => (c.mode === 'C' ? `CO-OP x${c.level}` : `${c.mode}${c.level}`);
+
+// ---------- faixas de PUMBILITY da Phoenix 2 ----------
+// Corte de cada faixa; cada uma tem 5 LVs (500 pts em BRONZE/SILVER, 200 pts nas demais).
+export const PB_TIERS = [
+  { name: 'BRONZE', min: 10000, step: 500 },
+  { name: 'SILVER', min: 12500, step: 500 },
+  { name: 'GOLD', min: 15000, step: 200 },
+  { name: 'PLATINUM', min: 16000, step: 200 },
+  { name: 'DIAMOND', min: 17000, step: 200 },
+  { name: 'RED BERYL', min: 18000, step: 200 },
+  { name: 'ALEXANDRITE', min: 19000, step: 200 },
+  { name: 'ABYSS ABSOLUTE', min: 20000, step: 200 },
+];
+
+/** Faixa atual, LV, ícone oficial e quanto falta para o próximo LV e a próxima faixa. */
+export function pbTier(points) {
+  const p = Number(points) || 0;
+  let i = -1;
+  PB_TIERS.forEach((t, k) => { if (p >= t.min) i = k; });
+  if (i < 0) {
+    return { name: 'SEM FAIXA', lv: 0, icon: null, nextLabel: 'BRONZE LV.1', nextLvAt: 10000, toNextLv: 10000 - p, nextTier: PB_TIERS[0], toNextTier: 10000 - p, progress: p / 10000 };
+  }
+  const t = PB_TIERS[i];
+  const lv = Math.min(5, Math.floor((p - t.min) / t.step) + 1);
+  const isLast = i === PB_TIERS.length - 1 && lv === 5;
+  const nextLvAt = lv < 5 ? t.min + lv * t.step : (PB_TIERS[i + 1]?.min ?? null);
+  const lvStart = t.min + (lv - 1) * t.step;
+  const nextTier = PB_TIERS[i + 1] || null;
+  return {
+    name: t.name, lv,
+    icon: `https://piugame.com/l_img/pumbility/pumbility_${i * 5 + lv}.png`,
+    nextLabel: isLast ? null : lv < 5 ? `${t.name} LV.${lv + 1}` : `${nextTier.name} LV.1`,
+    nextLvAt, toNextLv: nextLvAt != null ? Math.max(0, nextLvAt - p) : 0,
+    nextTier, toNextTier: nextTier ? Math.max(0, nextTier.min - p) : 0,
+    progress: nextLvAt != null ? (p - lvStart) / (nextLvAt - lvStart) : 1,
+  };
+}
+
+/** Melhores jeitos de subir o PUMBILITY: subir grade em charts jogados ou entrar com charts novos. */
+export function pumbilitySuggestions(version, charts, limit = 6) {
+  const pb = pumbility(version, charts);
+  const inTop = new Set(pb.top.map((r) => r.chart.id));
+  const floor = pb.top.length >= 50 ? pb.floor : 0;
+  const ideas = [];
+  for (const c of charts) {
+    if ((c.mode !== 'S' && c.mode !== 'D') || c.level < 10) continue;
+    const cur = c.score != null && !c.broken ? chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, false) : 0;
+    const base = inTop.has(c.id) ? cur : floor;
+    if (c.score != null && !c.broken) {
+      const nxt = nextGrade(version, c.score);
+      if (!nxt) continue;
+      const val = chartRating(version, c.mode, c.level, nxt.min, nxt.grade, c.plate, false);
+      const gain = val - base;
+      if (gain > 0.5) ideas.push({ chart: c, kind: 'grade', grade: nxt.grade, need: nxt.need, gain });
+    }
+  }
+  // charts novos: o nível típico do top 50 com grade S
+  const lvls = pb.top.map((r) => r.chart.mode === 'S' ? r.chart.level + 1 : r.chart.level).sort((a, b) => a - b);
+  const typical = lvls.length ? lvls[Math.floor(lvls.length / 2)] : 15;
+  for (const [mode, lv] of [['D', typical], ['D', typical + 1], ['S', typical - 1], ['S', typical]]) {
+    const val = chartRating(version, mode, lv, 970000, 'S', null, false);
+    const gain = val - floor;
+    if (gain > 0.5) ideas.push({ kind: 'new', mode, level: lv, grade: 'S', gain });
+  }
+  return ideas.sort((a, b) => b.gain - a.gain).slice(0, limit);
+}
+
+export const TITLE_COLORS = [
+  'linear-gradient(0deg,#fff,#cfd3da)', 'linear-gradient(0deg,#d79867,#63452e)', 'linear-gradient(0deg,#e4f5f8,#727878)',
+  'linear-gradient(0deg,#fbf52d,#c28f26)', 'linear-gradient(0deg,#d7ffff,#6da3ef)', 'linear-gradient(0deg,#00a2ff,#004372)',
+  'linear-gradient(0deg,#ff0000,#690000)', 'linear-gradient(0deg,#ca39ff,#591872)', 'linear-gradient(0deg,#5a5a5a,#2a2c2c)',
+];
