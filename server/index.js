@@ -4,7 +4,7 @@ import http from 'node:http';
 import { randomUUID } from 'node:crypto';
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
-import { piuLogin, PiuSession } from './piu-session.js';
+import { piuLogin, PiuSession, switchSite } from './piu-session.js';
 
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
@@ -69,10 +69,12 @@ async function scrapeVersion(session, version, job) {
 
 async function runJob(job, { login, password, versions, token }) {
   try {
+    job.message = 'Entrando no piugame.com…';
+    const session = await piuLogin(login, password);
     for (const version of versions) {
       const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
-      job.message = `${label}: entrando no site…`;
-      const session = await piuLogin(SITES[version], login, password);
+      job.message = `${label}: abrindo a sessão…`;
+      await switchSite(session, SITES[version]);
       const payload = await scrapeVersion(session, version, job);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
       job.results[version] = { ...(await ingestMe(token, payload)), bests: payload.bests.length, plays: payload.plays.length };
@@ -165,4 +167,3 @@ const server = http.createServer(async (req, res) => {
 setInterval(() => { const lim = Date.now() - 30 * 60_000; for (const [id, j] of jobs) if (j.state !== 'running' && j.at < lim) jobs.delete(id); }, 60_000).unref();
 
 server.listen(PORT, () => console.log(`PumpStat API na porta ${PORT}`));
-export { PiuSession };

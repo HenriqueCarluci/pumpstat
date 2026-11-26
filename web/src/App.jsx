@@ -35,7 +35,7 @@ export default function App() {
     return () => { alive = false; };
   }, [session]);
 
-  if (!session) return <Login />;
+  if (!session) return <Login notice={fromUrl?.error ? `Não foi possível entrar: ${fromUrl.error}` : ''} />;
   return (
     <>
       {recovery && <NewPassword onDone={() => setRecovery(false)} />}

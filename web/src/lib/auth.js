@@ -27,13 +27,17 @@ async function call(path, body) {
   return data;
 }
 
+function emailFromJwt(t) {
+  try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).email; } catch { return null; }
+}
+
 function store(data) {
   if (!data.access_token) return null;
   const s = {
     access_token: data.access_token,
     refresh_token: data.refresh_token,
     expires_at: data.expires_at || Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
-    email: data.user?.email,
+    email: data.user?.email || data.email || emailFromJwt(data.access_token),
   };
   save(s);
   return s;
@@ -48,6 +52,12 @@ export async function signUp(email, password) {
   const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
   const data = await call(`signup?redirect_to=${redirect}`, { email, password });
   return store(data);
+}
+
+/** Login com Google (mesmo fluxo do Fênix Analyzer: Supabase OAuth). Volta com #access_token na URL. */
+export function signInWithGoogle() {
+  const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
+  window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`;
 }
 
 export async function resetPassword(email) {
@@ -81,9 +91,15 @@ export async function accessToken() {
 /** Sessão vinda do link de confirmação/recuperação (#access_token=... na URL). */
 export function sessionFromUrl() {
   const h = window.location.hash;
+  if (h.includes('error_description=')) {
+    const e = new URLSearchParams(h.replace(/^#\/?/, '')).get('error_description');
+    window.history.replaceState(null, '', window.location.pathname + '#/');
+    return { error: e };
+  }
   if (!h.includes('access_token=')) return null;
   const p = new URLSearchParams(h.replace(/^#\/?/, ''));
   const s = store({
+    email: emailFromJwt(p.get('access_token')),
     access_token: p.get('access_token'),
     refresh_token: p.get('refresh_token'),
     expires_in: +(p.get('expires_in') || 3600),

@@ -106,20 +106,57 @@ export class PiuSession {
   get(path) { return this.request(path); }
 }
 
+/** Segue redirecionamentos feitos por JavaScript/meta (páginas do gnuboard usam location.replace). */
+function scriptRedirect(html) {
+  const m = html.match(/location\.(?:replace|href)\s*(?:\(|=)\s*['"]([^'"]+)['"]/i)
+    || html.match(/http-equiv=["']?refresh["']?[^>]*url=([^"'>\s]+)/i);
+  return m ? m[1].replace(/&amp;/g, '&') : null;
+}
+const alertText = (html) => {
+  const m = html.match(/alert\(\s*["']((?:[^"'\\]|\\.)+)["']\s*\)/);
+  if (!m) return null;
+  try { return JSON.parse(`"${m[1].replace(/"/g, '\\"')}"`).replace(/\\n/g, ' '); } catch { return m[1]; }
+};
+
+const isLoggedIn = (page) => !/login\.php/.test(page.url) && !/name=["']mb_password["']/.test(page.html);
+
 /**
- * Faz login no site da versão (piugame.com ou phoenix.piugame.com) e devolve a sessão pronta.
- * O fluxo exato do AM.PASS é preenchido em LOGIN_FLOW depois de observado no navegador.
+ * Login AM.PASS (ID/e-mail e senha) pelo formulário do piugame.com.
+ * O piugame passa pelo SSO do AM.PASS (api.am-pass.net/sso) e o mesmo login vale para phoenix.piugame.com.
  */
-export async function piuLogin(base, login, password) {
-  const s = new PiuSession(base);
-  await LOGIN_FLOW(s, login, password);
-  const check = await s.get('/my_page/play_data.php');
-  if (/login\.php/.test(check.url) || /type=["']password["']/i.test(check.html)) {
-    throw new Error('Login ou senha da Pump It Up incorretos (ou login do exterior bloqueado no AM.PASS).');
+export async function piuLogin(login, password) {
+  const s = new PiuSession('https://piugame.com');
+  const page = await s.get('/login.php');
+  if (!isLoggedIn(page) || /login_fs/.test(page.html)) {
+    const form = page.html.match(/<form[^>]*id=["']login_fs["'][\s\S]*?<\/form>/i)?.[0] || '';
+    const action = form.match(/action=["']([^"']+)["']/i)?.[1] || '/bbs/login_check.php';
+    const hidden = {};
+    for (const m of form.matchAll(/<input[^>]*type=["']hidden["'][^>]*>/gi)) {
+      const name = m[0].match(/name=["']([^"']+)["']/i)?.[1];
+      if (name) hidden[name] = (m[0].match(/value=["']([^"']*)["']/i)?.[1] || '');
+    }
+    let r = await s.request(action, { method: 'POST', form: { ...hidden, url: hidden.url || 'https://piugame.com/my_page/play_data.php', mb_id: login, mb_password: password } });
+    for (let i = 0; i < 5; i++) {
+      const next = scriptRedirect(r.html);
+      if (!next) break;
+      r = await s.get(next);
+    }
+    const check = await s.get('/my_page/play_data.php');
+    if (!isLoggedIn(check)) {
+      const msg = alertText(r.html);
+      throw new Error(msg ? `piugame: ${msg}` : 'Login ou senha da Pump It Up incorretos (ou login do exterior bloqueado no AM.PASS).');
+    }
   }
   return s;
 }
 
-// Preenchido após observar a requisição real de login (ver docs/SPEC.md).
-let LOGIN_FLOW = async () => { throw new Error('Login no piugame ainda não configurado.'); };
-export function setLoginFlow(fn) { LOGIN_FLOW = fn; }
+/** Usa a mesma sessão AM.PASS em outro site (ex.: phoenix.piugame.com), passando pelo SSO. */
+export async function switchSite(s, base) {
+  s.base = base;
+  let check = await s.get('/my_page/play_data.php');
+  if (isLoggedIn(check)) return s;
+  await s.get('/login.php');                     // dispara o SSO com os cookies do AM.PASS
+  check = await s.get('/my_page/play_data.php');
+  if (!isLoggedIn(check)) throw new Error(`Não foi possível abrir a sessão em ${new URL(base).hostname}.`);
+  return s;
+}
