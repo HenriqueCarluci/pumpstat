@@ -115,6 +115,11 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
+    // Diagnóstico temporário: testa o fluxo de login com credenciais FALSAS (verifica a mensagem de erro)
+    if (req.method === 'POST' && url.pathname === '/debug/login-fake') {
+      try { await piuLogin('pumpstat-teste-inexistente@example.com', 'senha-errada-123'); return send(res, 200, { unexpected: 'logou?' }, origin); }
+      catch (e) { return send(res, 200, { error: e.message }, origin); }
+    }
     // Diagnóstico temporário: estrutura pública da página de login (sem credenciais)
     if (url.pathname === '/debug/login-page') {
       const base = SITES[url.searchParams.get('v') || 'phoenix2'];
