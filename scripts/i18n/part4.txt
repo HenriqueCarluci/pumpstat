@@ -90,3 +90,8 @@ Login ou senha da Pump It Up incorretos (ou login do exterior bloqueado no AM.PA
 Maior nível já passado | Highest level cleared | Nivel más alto superado | 클리어한 최고 레벨 | クリアした最高レベル | Plus haut niveau passé | Livello più alto superato
 Maior passado | Highest cleared | Más alto superado | 최고 클리어 | 最高クリア | Plus haut passé | Più alto superato
 O PUMBILITY só aparece entre amigos. | PUMBILITY is only shown between friends. | El PUMBILITY solo aparece entre amigos. | PUMBILITY는 친구끼리만 보입니다. | PUMBILITY はフレンド同士だけに表示されます。 | Le PUMBILITY n'apparaît qu'entre amis. | Il PUMBILITY è visibile solo tra amici.
+Ver músicas com {g} | See songs with {g} | Ver canciones con {g} | {g} 곡 보기 | {g} の曲を見る | Voir les morceaux en {g} | Vedi i brani con {g}
+Charts que você passou com {g} | Charts you cleared with {g} | Charts que pasaste con {g} | {g}(으)로 클리어한 채보 | {g} でクリアした譜面 | Charts passés en {g} | Chart superati con {g}
+{n} chart | {n} chart | {n} chart | 채보 {n}개 | {n}譜面 | {n} chart | {n} chart
+{n} charts | {n} charts | {n} charts | 채보 {n}개 | {n}譜面 | {n} charts | {n} chart
+Limpar | Clear | Limpiar | 지우기 | クリア | Effacer | Cancella

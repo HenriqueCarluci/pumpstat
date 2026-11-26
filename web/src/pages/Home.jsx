@@ -84,11 +84,11 @@ export default function Home() {
         <h3>{t('Grades')}</h3>
         <div className="gradebars">
           {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
-            <div key={g} className="gb">
+            <Link key={g} to={`/musicas?g=${encodeURIComponent(g)}&o=best`} className="gb" title={t('Ver músicas com {g}', { g })}>
               <span className="gb-l"><Grade grade={g} size="sm" /></span>
               <span className="gb-bar"><i className={`g-${gradeTier(g)}`} style={{ width: `${(stats.grades[g] / maxGrade) * 100}%` }} /></span>
-              <span className="gb-n">{stats.grades[g]}</span>
-            </div>
+              <span className="gb-n">{stats.grades[g]} ›</span>
+            </Link>
           ))}
           {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
         </div>

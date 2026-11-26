@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { SongRow } from '../components/ui.jsx';
 import { locale, t, tn } from '../lib/i18n.js';
+import { Grade } from '../components/ui.jsx';
 
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]/gu, '');
 
@@ -12,6 +13,7 @@ export default function Songs() {
   const q = params.get('q') || '';
   const mode = params.get('m') || 'all';
   const status = params.get('s') || 'all';
+  const grade = params.get('g') || '';
   const sort = params.get('o') || 'az';
   const minL = +(params.get('min') || 1);
   const maxL = +(params.get('max') || 28);
@@ -25,8 +27,9 @@ export default function Songs() {
   const chartFilter = useMemo(() => (c) =>
     (mode === 'all' || c.mode === mode) &&
     (c.mode === 'C' || (c.level >= minL && c.level <= maxL)) &&
-    (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null : c.score != null && !c.broken && c.plate !== 'PG')),
-  [mode, minL, maxL, status]);
+    (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null : c.score != null && !c.broken && c.plate !== 'PG')) &&
+    (!grade || (c.score != null && !c.broken && c.grade === grade)),
+  [mode, minL, maxL, status, grade]);
 
   const list = useMemo(() => {
     const nq = norm(q);
@@ -69,6 +72,13 @@ export default function Songs() {
           </select>
         </div>
       </div>
+      {grade && (
+        <div className="grade-filter">
+          <Grade grade={grade} size="sm" />
+          <span>{t('Charts que você passou com {g}', { g: grade })} · {tn(list.reduce((n, s) => n + s.charts.filter(chartFilter).length, 0), '{n} chart', '{n} charts')}</span>
+          <button className="link" onClick={() => set('g', '')}>✕ {t('Limpar')}</button>
+        </div>
+      )}
       <div className="count muted">{tn(list.length, '{n} música', '{n} músicas')}</div>
       <div className="songlist">
         {list.slice(0, 400).map((s) => <SongRow key={s.id} song={s} filter={chartFilter} />)}
