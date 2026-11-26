@@ -1,3 +1,4 @@
+import { SocialsEditor } from '../components/Socials.jsx';
 import { useData } from '../App.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { Chips } from './Songs.jsx';
@@ -34,6 +35,7 @@ export default function Settings() {
       </section>
 
       {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
+      <SocialsEditor />
 
       {(ent.showPlans || plan?.admin) && <section className="card plan-card">
         <div className="row-between">

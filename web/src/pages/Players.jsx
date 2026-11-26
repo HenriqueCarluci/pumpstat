@@ -1,3 +1,4 @@
+import { SocialLinks } from '../components/Socials.jsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { TeamTag, useTeams } from '../lib/teams.jsx';
@@ -216,6 +217,7 @@ export function ComparePlayer() {
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
         <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><TeamTag team={teamOf(id)} /><span className="big down">{losses}</span></div>
       </section>
+      <SocialLinks userId={id} />
       <MiniChat user={id} name={other?.nickname} />
       <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />
       <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />

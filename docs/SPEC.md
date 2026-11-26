@@ -235,3 +235,8 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Fonte: `chart_flags` (048), marcado pelo admin em cada chart (tipos: velocidade, paradas, setas falsas, warp, visual, outro; "fora da curva"; observação), e votos da comunidade nas avaliações (tags `gimmick`, `g_speed`, `g_stop`, `g_fake`, `g_warp`, `g_visual`, `offcurve`). Com `community.special_min` votos (padrão 2) o chart entra. `community_charts` devolve o 6º campo `{g, gimmick, off, note, admin}` → `c.special`.
 - Tier: seção "Especiais" no fim do nível (fora do ranking normal), selo no canto da capa. Música: selos "Gimmick: tipos" e "Fora da curva". Lista de músicas: filtro Especiais / Com gimmick / Sem especiais.
 - Gimmick vira dimensão em pontos fortes e fracos (`DIMENSIONS`), entra no plano de treino e no Meu treino. A aba do Progresso passou a se chamar "Pontos fortes e fracos".
+
+## Redes sociais no perfil
+- Ajustes → "Redes sociais": Instagram, Twitch, YouTube, TikTok, X e Discord (só o nome de usuário; aceita colar o link). "Quem pode ver": só amigos (padrão), todos ou ninguém.
+- `user_socials` (050), `my_socials()`, `set_socials(p)` (normaliza e valida o nome), `socials_of(user)` (respeita visibilidade, amizade e bloqueio).
+- No perfil do jogador (/jogador/:id) aparecem como botões que abrem a rede; Discord copia o usuário.

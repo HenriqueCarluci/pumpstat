@@ -528,3 +528,10 @@ antes do treino | before training | antes del entreno | 연습 전 | 練習前 |
 Você passou {n} música do treino | You cleared {n} song from your training | Pasaste {n} canción del entreno | 연습 곡 {n}곡 클리어 | 練習の曲を{n}曲クリア | Vous avez passé {n} morceau de l'entraînement | Hai superato {n} brano dell'allenamento
 Você passou {n} músicas do treino | You cleared {n} songs from your training | Pasaste {n} canciones del entreno | 연습 곡 {n}곡 클리어 | 練習の曲を{n}曲クリア | Vous avez passé {n} morceaux de l'entraînement | Hai superato {n} brani dell'allenamento
 {n}ª tentativa | attempt #{n} | intento n.º {n} | {n}번째 시도 | {n}回目 | tentative n° {n} | tentativo n. {n}
+Redes sociais | Social media | Redes sociales | 소셜 미디어 | SNS | Réseaux sociaux | Social
+Copiar usuário do Discord | Copy Discord username | Copiar usuario de Discord | 디스코드 사용자명 복사 | Discordのユーザー名をコピー | Copier le pseudo Discord | Copia l'utente Discord
+Opcional. Seus amigos podem entrar no seu perfil e te seguir. Coloque só o nome de usuário (ou cole o link). | Optional. Your friends can open your profile and follow you. Enter just the username (or paste the link). | Opcional. Tus amigos pueden entrar a tu perfil y seguirte. Pon solo el usuario (o pega el enlace). | 선택 사항. 친구가 프로필에서 팔로우할 수 있습니다. 사용자명만 입력하거나 링크를 붙여넣으세요. | 任意。フレンドがプロフィールからフォローできます。ユーザー名だけ(またはリンクを貼り付け)。 | Facultatif. Vos amis peuvent ouvrir votre profil et vous suivre. Indiquez juste le pseudo (ou collez le lien). | Facoltativo. I tuoi amici possono aprire il profilo e seguirti. Inserisci solo il nome utente (o incolla il link).
+Quem pode ver | Who can see | Quién puede ver | 공개 범위 | 公開範囲 | Qui peut voir | Chi può vedere
+Só meus amigos | Only my friends | Solo mis amigos | 친구만 | フレンドのみ | Seulement mes amis | Solo i miei amici
+Todos os jogadores | All players | Todos los jugadores | 모든 플레이어 | 全プレイヤー | Tous les joueurs | Tutti i giocatori
+Ninguém (esconder) | Nobody (hide) | Nadie (ocultar) | 아무도 (숨김) | 非公開 | Personne (masquer) | Nessuno (nascondi)

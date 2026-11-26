@@ -1132,3 +1132,15 @@ a.q-city:hover { color: var(--text); }
 .ti-train-chip.win { border: 1px solid rgba(140, 255, 58, .4); }
 .ti-train-chip small { margin-left: 4px; }
 .ti-attempts .link { align-self: flex-start; }
+
+/* Redes sociais no perfil */
+.socials { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.social { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--panel2); color: var(--text); text-decoration: none; font-size: 13px; cursor: pointer; max-width: 100%; }
+.social b { font-weight: 800; }
+.social span { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+.social:hover { border-color: rgba(140, 255, 58, .5); }
+.social.instagram b { color: #ff7ab8; } .social.twitch b { color: #b493ff; } .social.youtube b { color: #ff5f5f; }
+.social.tiktok b { color: #6ff0e8; } .social.x b { color: #e8e8e8; } .social.discord b { color: #8ea1ff; }
+.se-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin: 8px 0; }
+.socials-edit select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); }
