@@ -139,11 +139,14 @@ export function weaknessSums(attempts, prog, mode, lvl) {
   const failExp = (L) => { const s = byL.get(L); return (s.f + 2 * zoneRate) / (s.a + 2); };
   const scoreMean = new Map([...byL].map(([L, s]) => [L, s.scores.length >= 3 ? median(s.scores) : null]));
 
-  // Para cada padrão: charts "carregados" nele (>= 20% das notas) contra o resto, sempre descontando o esperado pelo nível.
+  // Para cada padrão: charts "carregados" nele contra o resto, sempre descontando o esperado pelo nível.
+  // Carregado = pelo menos 20% das notas e no terço de cima da sua zona (corrida aparece em quase todo chart).
   for (const p of DIMENSIONS) {
+    const vals = zone.map((r) => styleOf(prog, r.chart).pct[p] || 0).sort((x, y) => x - y);
+    const cut = Math.max(20, vals[Math.floor(vals.length * 0.67)] || 0);
     const t = { hA: 0, hF: 0, hE: 0, hN: 0, hS: 0, hSN: 0, rA: 0, rF: 0, rE: 0, rS: 0, rSN: 0 };
     for (const r of zone) {
-      const heavy = (styleOf(prog, r.chart).pct[p] || 0) >= 20;
+      const heavy = (styleOf(prog, r.chart).pct[p] || 0) >= cut;
       const e = r.attempts * failExp(r.chart.level);
       const mean = scoreMean.get(r.chart.level);
       const sg = r.cleared && r.chart.score != null && mean != null ? r.chart.score + adj(r.chart) * 15000 - mean : null;
