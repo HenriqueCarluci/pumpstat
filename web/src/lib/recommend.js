@@ -33,7 +33,12 @@ export function recommendations(version, charts) {
 
   // mais alto nível que o jogador já passou, por modo
   const maxLv = { S: 0, D: 0 };
-  for (const c of played) maxLv[c.mode] = Math.max(maxLv[c.mode], c.level);
+  const bestAt = new Map();
+  for (const c of played) {
+    maxLv[c.mode] = Math.max(maxLv[c.mode], c.level);
+    const k = `${c.mode}${c.level}`;
+    bestAt.set(k, Math.max(bestAt.get(k) ?? 0, c.score));
+  }
 
   const fresh = [];
   for (const c of charts) {
@@ -42,7 +47,9 @@ export function recommendations(version, charts) {
     const base = sample(c.mode, c.level);
     if (!base) continue;
     const diff = c.scoringLevel != null && Math.abs(c.scoringLevel - c.level) <= 1.5 ? c.scoringLevel - c.level : 0;
-    const expected = Math.min(1000000, Math.round(base.score - diff * 20000));
+    // ajuste moderado pela dificuldade e nunca acima do melhor que o jogador já tirou no nível + 1%
+    const cap = Math.min(1000000, (bestAt.get(`${c.mode}${c.level}`) ?? bestAt.get(`${c.mode}${c.level - 1}`) ?? base.score) + 10000);
+    const expected = Math.round(Math.min(cap, base.score - Math.max(-1, Math.min(1, diff)) * 12000));
     if (expected < 800000) continue;
     const grade = gradeFor(version, expected);
     const value = chartRating(version, c.mode, c.level, expected, grade, null, false);
