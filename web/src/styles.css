@@ -1170,3 +1170,26 @@ a.q-city:hover { color: var(--text); }
 .mc-form .btn { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; border-radius: 12px; }
 .mc-x1 { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 @media (max-width: 380px) { .mc-form .btn span { display: none; } .mc-form .btn { padding: 0 14px; } }
+
+/* Tier: segurar a música abre o menu rápido */
+.tile { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; transition: transform .18s ease; }
+.tile img { -webkit-user-drag: none; pointer-events: none; }
+.tile.pressing { transform: scale(.94); }
+.tile-train { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center;
+  background: rgba(14, 15, 18, .85); color: var(--neon); border: 1px solid rgba(140, 255, 58, .55); }
+.tile-new ~ .tile-train { top: 24px; }
+.tier-hint { margin: 2px 0 8px; }
+.qs-backdrop { position: fixed; inset: 0; z-index: 70; background: rgba(0, 0, 0, .55); display: flex; align-items: flex-end; justify-content: center; animation: qs-fade .15s ease; }
+.qs-sheet { width: min(520px, 100%); background: var(--panel); border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0;
+  padding: 8px 16px calc(16px + var(--safe-b)); display: flex; flex-direction: column; gap: 12px; animation: qs-up .2s ease; }
+.qs-grip { width: 40px; height: 4px; border-radius: 2px; background: var(--line); align-self: center; }
+.qs-head { display: flex; align-items: center; gap: 12px; }
+.qs-info { flex: 1; min-width: 0; }
+.qs-info b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qs-sub { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+.qs-main { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; }
+.qs-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.qs-row .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; text-decoration: none; }
+.qs-msg { margin: -4px 0 0; color: var(--neon); }
+@keyframes qs-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes qs-fade { from { opacity: 0; } to { opacity: 1; } }

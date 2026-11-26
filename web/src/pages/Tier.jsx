@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
@@ -6,11 +6,13 @@ import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
 import { LegacyToggle } from './Song.jsx';
 import AdSlot from '../components/AdSlot.jsx';
-import { Shuffle, Sparkles, Vote, Zap } from '../components/Icons.jsx';
+import { BookmarkCheck, Shuffle, Sparkles, Vote, Zap } from '../components/Icons.jsx';
 import { hasGimmick, isSpecial } from '../lib/special.js';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
+import { ChartQuickSheet, useLongPress } from '../components/ChartQuickSheet.jsx';
+import { useTraining } from '../lib/training.js';
 
 export default function Tier() {
   const { data, version, plan } = useData();
@@ -58,8 +60,12 @@ export default function Tier() {
   const legacyN = charts.filter((c) => legacy(c)).length;
   const hasLegacy = version === 'phoenix2' && charts.some((c) => c.score == null && c.otherScore != null);
 
+  const [quick, setQuick] = useState(null);
+  const hold = useLongPress(setQuick);
+  const training = useTraining();
   const tile = (c) => { const lg = legacy(c); return (
-              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
+              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} {...hold.bind(c.id, c)} draggable={false}
+                className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''} ${hold.pressed === c.id ? 'pressing' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
                 <div className="tile-art">
                   <Jacket song={c.song} width="100%" />
@@ -72,6 +78,7 @@ export default function Tier() {
                   {lg && <div className="tile-legacy" title={t('Legado Phoenix')}>P1</div>}
                   {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
                   {c.song.isNew && <div className="tile-new">NEW</div>}
+                  {training?.has(c.id) && <div className="tile-train" title={t('No Meu treino')}><BookmarkCheck size={12} /></div>}
                   {isSpecial(c) && <div className="tile-special" title={hasGimmick(c) ? t('Gimmick') : t('Fora da curva')}>{hasGimmick(c) ? <Zap size={12} /> : <Shuffle size={12} />}</div>}
                 </div>
                 <div className="tile-name">{c.song.title}</div>
@@ -123,6 +130,8 @@ export default function Tier() {
           </div>
         </section>
       ))}
+      <ChartQuickSheet chart={quick} onClose={() => setQuick(null)} />
+      {isOn(plan, 'training') && <p className="muted tiny tier-hint">{t('Dica: segure uma música para colocar no Meu treino.')}</p>}
       {onlyNew && !charts.length && <p className="empty">{t('Nenhuma música nova neste nível.')}</p>}
 
       {specials.length > 0 && (

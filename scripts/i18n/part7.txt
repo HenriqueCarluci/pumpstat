@@ -540,3 +540,8 @@ A bandeira aparece ao lado do seu nick para os outros jogadores. Opcional. | The
 Não mostrar | Don't show | No mostrar | 표시 안 함 | 表示しない | Ne pas afficher | Non mostrare
 país inválido | invalid country | país inválido | 잘못된 국가 | 無効な国 | pays invalide | paese non valido
 Mensagem | Message | Mensaje | 메시지 | メッセージ | Message | Messaggio
+Tirado do Meu treino. | Removed from My training. | Quitado de Mi entrenamiento. | 내 연습에서 뺐습니다. | マイ練習から外しました。 | Retiré de Mon entraînement. | Tolto da Il mio allenamento.
+Adicionado ao Meu treino! | Added to My training! | ¡Añadido a Mi entrenamiento! | 내 연습에 추가했습니다! | マイ練習に追加しました! | Ajouté à Mon entraînement ! | Aggiunto a Il mio allenamento!
+Abrir música | Open song | Abrir canción | 곡 열기 | 曲を開く | Ouvrir le morceau | Apri brano
+No Meu treino | In My training | En Mi entrenamiento | 내 연습에 있음 | マイ練習に登録済み | Dans Mon entraînement | In Il mio allenamento
+Dica: segure uma música para colocar no Meu treino. | Tip: press and hold a song to add it to My training. | Consejo: mantén presionada una canción para añadirla a Mi entrenamiento. | 팁: 곡을 길게 누르면 내 연습에 추가할 수 있어요. | ヒント: 曲を長押しするとマイ練習に追加できます。 | Astuce : maintenez un morceau appuyé pour l'ajouter à Mon entraînement. | Suggerimento: tieni premuto un brano per aggiungerlo a Il mio allenamento.
