@@ -252,3 +252,5 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Tutorial guiado
 - No primeiro acesso (por aparelho) pergunta se quer o tour; em Ajustes → "Ver tutorial". `lib/tour.js` (passos; os de recursos desligados são pulados) e `components/Tour.jsx` (cartão acima da barra de baixo, navega pelas telas).
+- Relatório do time (Meu Time): `team_report(version, period day|week|month, offset)` (054), com navegação para períodos anteriores. Totais (jogadas, passes, taxa, clears novos, jogando, músicas, nível médio, maior passe) com variação contra o período anterior de mesmo tamanho, atividade (passou x quebrou por hora/dia), músicas mais jogadas pelo time e tabela por participante (só contagens, nunca notas).
+- Assinatura no fim de Ajustes: "PIU Stats · Desenvolvido por Carluci".

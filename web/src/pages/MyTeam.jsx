@@ -8,6 +8,7 @@ import { Flag, useCountries } from '../lib/country.jsx';
 import { fmtNum, locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
+import TeamReport from '../components/TeamReport.jsx';
 import { Avatar } from './Players.jsx';
 import { Crown, Shield, Trophy, Users } from '../components/Icons.jsx';
 
@@ -109,6 +110,8 @@ export default function MyTeam() {
           );
         })}
       </ol>
+      <TeamReport />
+
       <p className="muted tiny">{t('Maior nível passado sem quebrar, na versão atual. Toque num amigo para comparar as notas.')}
         {' '}{t('No time desde {d}.', { d: new Date(members.find((m) => m.me)?.joined || Date.now()).toLocaleDateString(locale(), { day: '2-digit', month: 'short', year: 'numeric' }) })}</p>
       {plan?.admin && <p className="muted tiny"><Crown size={12} /> {t('Times e participantes são gerenciados em Administração.')}</p>}

@@ -7,7 +7,7 @@ import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { Link } from 'react-router-dom';
-import { Crown, Lock, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
+import { Crown, Heart, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
 import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
@@ -126,6 +126,14 @@ export default function Settings() {
           {t('Imagens de capa, grades, plates e bolinhas: © Andamiro, carregadas direto do piugame.com.')}{' '}
           {t('Projeto independente, sem vínculo com a Andamiro.')}</p>
       </section>
+
+      <footer className="signature">
+        <Logo size={22} />
+        <div>
+          <b>PIU Stats</b>
+          <span>{t('Desenvolvido por')} <b className="sig-name">Carluci</b> <Heart size={12} className="sig-heart" aria-hidden="true" /></span>
+        </div>
+      </footer>
     </div>
   );
 }

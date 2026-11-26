@@ -30,6 +30,13 @@ const FAKE = {
       mk(4, true, 'invite', 'Bora um x1?', 'accepted'), mk(5, false, 'message', 'fechou', 'accepted'), mk(6, true, 'message', 'https://www.youtube.com/watch?v=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'pending')]; })(),
   is_online: true, compare_player: [[4864, 900000, 'AA', 'FG', false, 950000, 'AAA', 'TG', false], [5769, 961200, 'AAA+', 'TG', false, 940000, 'AA+', 'FG', false]],
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null }], socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
+  team_report: (() => { const st = Math.floor(new Date('2026-11-23T03:00:00Z').getTime() / 1000);
+    return { period: 'week', offset: 0, start: '2026-11-23T03:00:00Z', end: '2026-11-30T03:00:00Z',
+      totals: { plays: 161, passes: 116, active: 5, songs: 107, avg_level: 19.7, max_d: 23, max_s: 24, new_clears: 22 },
+      prev: { plays: 115, passes: 91, active: 3, new_clears: 18 },
+      series: [0, 1, 2, 3, 4, 5, 6].map((i) => [st + i * 86400, [12, 20, 8, 30, 25, 14, 7][i], [4, 6, 2, 12, 9, 7, 5][i]]),
+      top: [{ chart_id: 5769, song_id: 242, title: 'Gargoyle', mode: 'D', level: 20, plays: 9, passes: 6, players: 3 }, { chart_id: 4864, song_id: 242, title: 'Gargoyle', mode: 'D', level: 23, plays: 6, passes: 1, players: 2 }],
+      members: [{ id: 'amigo', nickname: 'PUMPKING', plays: 70, passes: 58, new_clears: 9, max_d: 23, max_s: 24 }, { id: 'eu', nickname: 'HENRIQUE', plays: 51, passes: 33, new_clears: 8, max_d: 21, max_s: 20 }, { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME', plays: 0, passes: 0, new_clears: 0, max_d: null, max_s: null }] }; })(),
   my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
   countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: { eu: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' }, amigo: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' } },
   my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua' },

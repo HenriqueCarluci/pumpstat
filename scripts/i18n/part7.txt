@@ -583,3 +583,28 @@ Entre na fila da máquina pelo celular, veja quem está jogando e seja avisado q
 Idioma, país, redes sociais, time e aparência. Para ver este tutorial de novo, é só tocar em "Ver tutorial" aqui. | Language, country, social media, team and appearance. To see this tutorial again, just tap "See tutorial" here. | Idioma, país, redes sociales, equipo y apariencia. Para ver este tutorial de nuevo, toca "Ver tutorial" aquí. | 언어, 국가, 소셜, 팀, 화면 설정. 이 튜토리얼은 여기서 "튜토리얼 보기"로 다시 볼 수 있어요. | 言語、国、SNS、チーム、表示。このチュートリアルはここの「チュートリアルを見る」でもう一度見られます。 | Langue, pays, réseaux sociaux, équipe et apparence. Pour revoir ce tutoriel, touchez « Voir le tutoriel » ici. | Lingua, paese, social, squadra e aspetto. Per rivedere questo tutorial, tocca "Vedi tutorial" qui.
 Este chart já está no Meu treino | This chart is already in My training | Este chart ya está en Mi entrenamiento | 이 차트는 이미 내 연습에 있어요 | この譜面はすでにマイ練習にあります | Ce chart est déjà dans Mon entraînement | Questo chart è già in Il mio allenamento
 Já no Meu treino | Already in My training | Ya en Mi entrenamiento | 이미 내 연습에 있음 | マイ練習に登録済み | Déjà dans Mon entraînement | Già in Il mio allenamento
+novo | new | nuevo | 신규 | 新規 | nouveau | nuovo
+Relatório do time | Team report | Informe del equipo | 팀 리포트 | チームレポート | Rapport de l'équipe | Report della squadra
+Período anterior | Previous period | Período anterior | 이전 기간 | 前の期間 | Période précédente | Periodo precedente
+atual | current | actual | 현재 | 現在 | actuel | attuale
+Próximo período | Next period | Siguiente período | 다음 기간 | 次の期間 | Période suivante | Periodo successivo
+Taxa de passe | Clear rate | Tasa de pase | 클리어율 | クリア率 | Taux de réussite | Percentuale superati
+antes {n}% | before {n}% | antes {n}% | 이전 {n}% | 前回{n}% | avant {n} % | prima {n}%
+Clears novos | New clears | Clears nuevos | 신규 클리어 | 新規クリア | Nouvelles réussites | Nuovi clear
+Jogando | Playing | Jugando | 플레이 중 | プレイ中 | Actifs | Attivi
+Músicas diferentes | Different songs | Canciones distintas | 서로 다른 곡 | 異なる曲 | Morceaux différents | Brani diversi
+Nível médio jogado | Average level played | Nivel medio jugado | 평균 플레이 레벨 | 平均プレイレベル | Niveau moyen joué | Livello medio giocato
+Maior passe | Highest clear | Mayor pase | 최고 클리어 | 最高クリア | Plus haut passé | Livello più alto superato
+Atividade | Activity | Actividad | 활동 | アクティビティ | Activité | Attività
+Mais jogadas pelo time | Most played by the team | Más jugadas por el equipo | 팀이 많이 플레이한 곡 | チームがよくプレイした曲 | Les plus jouées par l'équipe | Le più giocate dalla squadra
+{n}× · {p} passes · {k} jogadores | {n}× · {p} clears · {k} players | {n}× · {p} pases · {k} jugadores | {n}회 · 클리어 {p} · {k}명 | {n}回 · クリア{p} · {k}人 | {n}× · {p} réussites · {k} joueurs | {n}× · {p} superati · {k} giocatori
+Por participante | By member | Por miembro | 멤버별 | メンバー別 | Par membre | Per membro
+Passe | Clear | Pase | 클리어 | クリア | Réussite | Superati
+Novos | New | Nuevos | 신규 | 新規 | Nouveaux | Nuovi
+Maior | Top | Mayor | 최고 | 最高 | Max | Max
+Clear novo = passou pela primeira vez no período. Comparação com o período anterior de mesmo tamanho. Conta só as jogadas sincronizadas. | New clear = cleared for the first time in the period. Compared with the previous period of the same length. Only synced plays count. | Clear nuevo = pasó por primera vez en el período. Comparación con el período anterior del mismo tamaño. Cuenta solo las partidas sincronizadas. | 신규 클리어 = 기간 중 처음 클리어. 같은 길이의 이전 기간과 비교합니다. 동기화된 플레이만 셉니다. | 新規クリア = 期間内に初めてクリア。同じ長さの前の期間と比較。同期したプレイのみ集計。 | Nouvelle réussite = passé pour la première fois sur la période. Comparé à la période précédente de même durée. Seules les parties synchronisées comptent. | Nuovo clear = superato per la prima volta nel periodo. Confronto con il periodo precedente di uguale durata. Contano solo le partite sincronizzate.
+Ninguém do time jogou (ou sincronizou) neste período. | Nobody on the team played (or synced) in this period. | Nadie del equipo jugó (o sincronizó) en este período. | 이 기간에 플레이(또는 동기화)한 팀원이 없어요. | この期間にプレイ(または同期)したメンバーはいません。 | Personne de l'équipe n'a joué (ou synchronisé) sur cette période. | Nessuno della squadra ha giocato (o sincronizzato) in questo periodo.
+Desenvolvido por | Developed by | Desarrollado por | 개발 | 開発 | Développé par | Sviluppato da
+Dia | Day | Día | 일 | 日 | Jour | Giorno
+Semana | Week | Semana | 주 | 週 | Semaine | Settimana
+Mês | Month | Mes | 월 | 月 | Mois | Mese

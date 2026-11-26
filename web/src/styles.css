@@ -1276,3 +1276,42 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .vs-side { min-width: 0; }
 .vs-side .vs-nick { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; justify-content: center; }
 .vs-you { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; }
+
+/* Meu Time: relatório */
+.team-report { display: flex; flex-direction: column; gap: 10px; }
+.team-report h3, .team-report h4 { margin: 0; }
+.team-report h4 { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 6px; }
+.tr-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.tr-nav { display: flex; align-items: center; gap: 6px; }
+.tr-range { font-weight: 700; font-size: 13.5px; min-width: 120px; text-align: center; text-transform: capitalize; }
+.tr-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 640px) { .tr-kpis { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.tr-kpi { background: var(--bg2); border-radius: 12px; padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tr-kpi small { color: var(--muted); font-size: 11.5px; }
+.tr-kpi b { font: 800 19px var(--num); }
+.tr-kpi .tr-max { font-size: 16px; }
+.delta { font: 700 11.5px var(--num); color: var(--muted); }
+.delta.up { color: var(--neon); } .delta.down { color: #ff8a96; }
+.tr-top { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; }
+.tr-top a { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 8px; align-items: center; padding: 6px 8px; border-radius: 10px; background: var(--bg2); color: inherit; text-decoration: none; }
+.tr-top a > :first-child { grid-row: span 2; }
+.tr-title { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tr-table { display: flex; flex-direction: column; gap: 4px; }
+.tr-row { display: grid; grid-template-columns: minmax(0, 1fr) 54px 50px 44px 64px; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 10px; background: var(--bg2); font-size: 13px; text-align: center; }
+.tr-row.head { background: transparent; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; padding-top: 0; padding-bottom: 0; }
+.tr-row.idle { opacity: .5; }
+.tr-row .good { color: var(--neon); font-weight: 800; }
+.tr-player { display: flex; align-items: center; gap: 6px; min-width: 0; text-align: left; }
+.tr-player b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tr-row > span:first-child { text-align: left; }
+@media (max-width: 400px) { .tr-row { grid-template-columns: minmax(0, 1fr) 44px 42px 36px 52px; font-size: 12px; } }
+
+/* Assinatura em Ajustes */
+.signature { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 18px 0 8px; color: var(--muted); font-size: 12.5px; }
+.signature > div { display: flex; flex-direction: column; line-height: 1.3; }
+.signature b { color: var(--text); }
+.signature .sig-name { color: var(--neon); }
+.sig-heart { color: #ff5d8f; fill: #ff5d8f; vertical-align: -1px; }
+.tr-row.head { font-size: 9.5px; letter-spacing: 0; }
+.tr-row.head span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 400px) { .tr-row { grid-template-columns: minmax(0, 1fr) 48px 42px 38px 54px; } }
