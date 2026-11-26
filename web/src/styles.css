@@ -286,3 +286,7 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .sso-steps { display: flex; flex-direction: column; gap: 10px; }
 .sso-steps .steps { margin: 0; }
 .sso-steps a { color: var(--neon); }
+.piu-head { display: flex; align-items: center; gap: 12px; }
+.piu-head img { width: 64px; height: auto; flex: none; }
+.piu-connect .help a, .settings .small a { color: var(--neon); }
+.link.small { font-size: 12.5px; align-self: center; }
