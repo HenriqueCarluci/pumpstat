@@ -42,7 +42,9 @@ export default function Settings() {
         </div>
         <p className="muted small">
           {plan?.plan && plan.plan !== 'free'
-            ? (plan.source === 'lifetime' ? t('Acesso vitalício.') : plan.expires_at ? t('Ativo até {d}.', { d: fmtDate(plan.expires_at) }) : t('Assinatura ativa.'))
+            ? (plan.source === 'lifetime' ? t('Acesso vitalício.')
+              : plan.source === 'trial' ? t('Teste grátis até {d}. Depois sua conta volta para o plano grátis, sem cobrança.', { d: fmtDate(plan.expires_at) })
+                : plan.expires_at ? t('Ativo até {d}.', { d: fmtDate(plan.expires_at) }) : t('Assinatura ativa.'))
             : t('Os recursos do StepClub+ chegam em breve.')}
         </p>
         {ent.showPlans && <Link className="btn ghost" to="/planos"><Crown size={15} /> {t('Ver planos')}</Link>}

@@ -82,6 +82,7 @@ function UserRow({ u, open, onToggle, onChange }) {
   const planText = !plus ? t('Grátis')
     : u.plan_source === 'lifetime' ? `${PLAN_LABEL[u.plan]} · ${t('vitalício')}`
       : u.plan_source === 'store' ? `${PLAN_LABEL[u.plan]} · ${t('loja')}`
+        : u.plan_source === 'trial' ? `${PLAN_LABEL[u.plan]} · ${t('teste até {d}', { d: fmtDate(u.plan_expires) })}`
         : `${PLAN_LABEL[u.plan]} · ${t('até {d}', { d: fmtDate(u.plan_expires) })}`;
   return (
     <div className={`admin-user ${u.banned ? 'banned' : ''}`}>
@@ -236,6 +237,19 @@ function PlansConfig() {
         <span><b>{t('Mostrar a tela de planos para todos')}</b><br /><small className="muted">{t('Desligado: só administradores veem a prévia em Ajustes → Ver planos.')}</small></span></label>
       <label className="check"><input type="checkbox" checked={!!cfg.enforce} onChange={(e) => set((c) => { c.enforce = e.target.checked; })} />
         <span><b>{t('Cobrança ativa (aplicar limites e recursos pagos)')}</b><br /><small className="muted">{t('Desligado: todo mundo tem tudo liberado, como na fase de desenvolvimento. Administradores nunca têm limites.')}</small></span></label>
+
+      <h3>{t('Teste grátis no cadastro')}</h3>
+      <div className="cfg-row">
+        <span>{t('Toda conta nova ganha')}</span>
+        <select value={cfg.trial_plan || 'plus'} onChange={(e) => set((c) => { c.trial_plan = e.target.value; })}>
+          {['plus', 'pro'].map((p) => <option key={p} value={p}>{PLAN_LABEL[p]}</option>)}
+        </select>
+        <span>{t('por')}</span>
+        <input type="number" min="0" max="365" style={{ width: 72 }} value={cfg.trial_days ?? 15}
+          onChange={(e) => set((c) => { c.trial_days = Math.max(0, Math.min(365, parseInt(e.target.value, 10) || 0)); })} />
+        <span>{t('dias')}</span>
+      </div>
+      <p className="muted small">{t('Depois volta sozinha para o plano grátis. Coloque 0 dias para desligar. Cada e-mail ganha o teste uma vez só.')}</p>
 
       <h3>{t('Plano mínimo de cada recurso')}</h3>
       {FEATURES.map((f) => (
