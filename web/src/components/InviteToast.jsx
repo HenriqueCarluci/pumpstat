@@ -4,7 +4,7 @@ import { rpc } from '../lib/api.js';
 import { canAlert } from '../lib/notify.js';
 import { t } from '../lib/i18n.js';
 
-const who = (p) => (p.friend && p.nickname ? p.nickname : p.title || t('Um jogador'));
+const who = (p) => p.nickname || p.title || t('Um jogador');
 
 /** Aviso flutuante quando alguém te chama para jogar (e quando respondem ao seu convite). */
 export default function InviteToast() {

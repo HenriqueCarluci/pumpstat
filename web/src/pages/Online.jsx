@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { QUICK_MESSAGES } from '../lib/presence.js';
+import { Ball } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
@@ -58,7 +59,7 @@ export default function Online() {
           <div className="online-list">{list.map((p) => <OnlineRow key={p.id} p={p} open={open === p.id} onToggle={() => setOpen(open === p.id ? null : p.id)} onSent={load} />)}</div>
         </section>
       )}
-      <p className="muted tiny">{t('Para quem não é seu amigo, aparece só o título. Nick, avatar e PUMBILITY só entre amigos.')}{' '}<Link to="/jogadores">{t('Amigos')} ▸</Link></p>
+      <p className="muted tiny">{t('O PUMBILITY só aparece entre amigos.')}{' '}<Link to="/jogadores">{t('Amigos')} ▸</Link></p>
     </div>
   );
 }
@@ -78,12 +79,19 @@ function OnlineRow({ p, open, onToggle, onSent }) {
     <div className="online-row">
       <div className="online-main">
         <span className="q-avatar online-av">
-          {p.friend && p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : '🎮'}
+          {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : '🎮'}
           <i className="dot-on" />
         </span>
         <div className="online-info">
-          <div className="online-title">{p.title || t('Jogador')}</div>
-          {p.friend && p.nickname && <small>{p.nickname}{p.pumbility != null ? ` · ${fmtNum(Math.round(p.pumbility))} PB` : ''}</small>}
+          <div className="online-nick"><b>{p.nickname || t('Jogador')}</b>{p.pumbility != null && <small> · {fmtNum(Math.round(p.pumbility))} PB</small>}</div>
+          {p.title && <div className="online-title">{p.title}</div>}
+          {(p.max?.S || p.max?.D) && (
+            <div className="online-max" title={t('Maior nível já passado')}>
+              <span className="muted small">{t('Maior passado')}{p.max.version === 'phoenix' ? ' (Phoenix)' : ''}:</span>
+              {p.max.S && <Ball chart={{ mode: 'S', level: p.max.S }} size="sm" />}
+              {p.max.D && <Ball chart={{ mode: 'D', level: p.max.D }} size="sm" />}
+            </div>
+          )}
           <div className="online-tags">
             {match && <span className={`tag ${match[1]}`}>{t(match[0])}</span>}
             {p.same_venue ? <span className="tag here">📍 {t('No mesmo fliperama')}</span> : p.venue && <span className="tag">📍 {p.venue}</span>}

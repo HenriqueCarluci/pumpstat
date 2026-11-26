@@ -515,3 +515,6 @@ a.q-city:hover { color: var(--text); }
 .toast.declined { cursor: pointer; }
 .toast-h { font-weight: 700; }
 .toast-msg { font-size: 15px; }
+.online-nick b { font-size: 15px; }
+.online-title { font-size: 12px; opacity: .85; font-weight: 600; }
+.online-max { display: flex; align-items: center; gap: 6px; margin-top: 4px; }

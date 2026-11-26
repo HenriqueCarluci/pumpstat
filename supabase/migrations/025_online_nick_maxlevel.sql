@@ -1,0 +1,2 @@
+-- 025: online mostra nick e avatar para todos e o maior single/double passado (sem stage break).
+-- (aplicada via MCP; ver presence_card, max_cleared e online_players no banco)
