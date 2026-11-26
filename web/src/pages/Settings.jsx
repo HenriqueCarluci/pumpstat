@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import { useData } from '../App.jsx';
-import { rpc } from '../lib/api.js';
 import { usePrefs } from '../lib/prefs.js';
 import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
@@ -10,10 +8,7 @@ import { VERSIONS } from '../lib/piu.js';
 
 export default function Settings() {
   const { data, version, reload, session } = useData();
-  const [isPublic, setIsPublic] = useState(null);
   const [prefs, setPrefs] = usePrefs();
-  useEffect(() => { rpc('players', { p_version: version }).then((ps) => setIsPublic(ps.find((p) => p.me)?.public ?? true)).catch(() => {}); }, [version]);
-  const togglePublic = async () => { const v = !isPublic; setIsPublic(v); try { await rpc('set_public', { p_public: v }); } catch { setIsPublic(!v); } };
 
   return (
     <div className="page settings">
@@ -37,12 +32,6 @@ export default function Settings() {
       <section className="card">
         <h3>Conta StepClub</h3>
         <p className="muted">Conectado como <b>{session.email}</b></p>
-        {isPublic != null && (
-          <label className="switch-row">
-            <input type="checkbox" checked={isPublic} onChange={togglePublic} />
-            <span>Mostrar meu perfil e minhas notas para os outros jogadores do StepClub (ranking e comparação)</span>
-          </label>
-        )}
         <div className="bm-row">
           <button className="btn ghost" onClick={() => reload()}>Recarregar dados</button>
           <button className="btn ghost" onClick={signOut}>Sair</button>

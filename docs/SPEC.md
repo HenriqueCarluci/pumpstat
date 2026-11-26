@@ -111,3 +111,9 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 | Integração com scores | Ao sair de `jogando`, o app sugere sincronizar e mostra os recordes da sessão |
 | Moderação | Dono do local (ou admin) pode remover alguém, reordenar e zerar a fila; limite de entradas por pessoa |
 | Segurança | RLS: leitura pública da fila; escrita via RPCs (`join_queue`, `pass_turn`, `set_away`, `leave_queue`) com limite de frequência por aparelho/usuário |
+
+## Amigos (privacidade das notas)
+- Outros jogadores só são encontrados pela busca de nickname (`search_players`), que devolve nick, título e avatar, sem notas.
+- Ver notas exige amizade aprovada: `send_friend_request` → `respond_friend_request`. Se os dois pedirem, aceita automaticamente.
+- `players`, `compare_player`, `chart_ranking` e `user_titles` filtram por `are_friends(auth.uid(), outro)`.
+- O antigo "perfil público" foi removido da tela de Ajustes.

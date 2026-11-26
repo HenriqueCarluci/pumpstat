@@ -14,40 +14,124 @@ function Avatar({ p, size = 44 }) {
   );
 }
 
-/** Jogadores do StepClub que compartilham os dados, ordenados por PUMBILITY. */
+/** Amigos (notas visíveis só depois da aprovação), busca por nickname e solicitações. */
 export default function Players() {
   const { version } = useData();
+  const [tab, setTab] = useState('friends');
   const [list, setList] = useState(null);
+  const [reqs, setReqs] = useState({ incoming: [], outgoing: [] });
   const [err, setErr] = useState('');
-  useEffect(() => { setList(null); rpc('players', { p_version: version }).then(setList).catch((e) => setErr(e.message)); }, [version]);
+  const load = () => {
+    rpc('players', { p_version: version }).then(setList).catch((e) => setErr(e.message));
+    rpc('friend_requests').then(setReqs).catch(() => {});
+  };
+  useEffect(() => { setList(null); load(); }, [version]); // eslint-disable-line
 
-  if (err) return <div className="page"><p className="empty">{err}</p></div>;
-  if (!list) return <div className="page"><p className="empty">Carregando jogadores…</p></div>;
+  const respond = async (id, accept) => { await rpc('respond_friend_request', { p_user: id, p_accept: accept }); load(); };
+  const cancel = async (id) => { await rpc('remove_friend', { p_user: id }); load(); };
+
   return (
     <div className="page">
-      <h3>Jogadores do StepClub · {VERSIONS[version].name}</h3>
-      {list.length <= 1 && <p className="muted small">Por enquanto só você. Quando outros jogadores conectarem a conta da Pump, eles aparecem aqui.</p>}
-      <div className="players">
-        {list.map((p, i) => {
-          const t = version === 'phoenix2' ? pbTier(p.pumbility) : null;
-          return (
-            <Link key={p.id} to={p.me ? '/' : `/jogador/${p.id}`} className={`player ${p.me ? 'me' : ''}`}>
-              <span className="rank">{i + 1}</span>
+      <Chips value={tab} onChange={setTab} options={[
+        ['friends', 'Amigos'], ['search', 'Buscar'],
+        ['requests', `Solicitações${reqs.incoming.length ? ` (${reqs.incoming.length})` : ''}`],
+      ]} />
+      {err && <div className="form-err">{err}</div>}
+
+      {tab === 'friends' && (
+        !list ? <p className="empty">Carregando…</p> : (
+          <>
+            {list.length <= 1 && <p className="muted small">Você ainda não tem amigos no StepClub. Busque pelo nickname da Pump e mande uma solicitação: as notas só aparecem depois que a pessoa aprovar.</p>}
+            <div className="players">
+              {list.map((p, i) => {
+                const t = version === 'phoenix2' ? pbTier(p.pumbility) : null;
+                return (
+                  <Link key={p.id} to={p.me ? '/' : `/jogador/${p.id}`} className={`player ${p.me ? 'me' : ''}`}>
+                    <span className="rank">{i + 1}</span>
+                    <Avatar p={p} />
+                    <span className="pinfo">
+                      <span className="ptitle">{p.title}</span>
+                      <b>{p.nickname || 'Jogador'}</b>{p.me && <span className="tag">você</span>}
+                      <small className="muted">{p.bests} recordes</small>
+                    </span>
+                    <span className="ppb">
+                      {t?.icon && <img src={t.icon} alt="" referrerPolicy="no-referrer" />}
+                      <b>{p.pumbility != null ? Math.round(p.pumbility).toLocaleString('pt-BR') : '—'}</b>
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </>
+        )
+      )}
+
+      {tab === 'search' && <SearchPlayers onChange={load} />}
+
+      {tab === 'requests' && (
+        <div className="players">
+          <h3>Recebidas</h3>
+          {!reqs.incoming.length && <p className="muted small">Nenhuma solicitação pendente.</p>}
+          {reqs.incoming.map((p) => (
+            <div key={p.id} className="player req">
               <Avatar p={p} />
-              <span className="pinfo">
-                <span className="ptitle">{p.title}</span>
-                <b>{p.nickname || 'Jogador'}</b>{p.me && <span className="tag">você</span>}
-                <small className="muted">{p.bests} recordes</small>
+              <span className="pinfo"><span className="ptitle">{p.title}</span><b>{p.nickname}</b><small className="muted">quer ver suas notas e mostrar as dele</small></span>
+              <span className="req-actions">
+                <button className="btn" onClick={() => respond(p.id, true)}>Aceitar</button>
+                <button className="btn ghost" onClick={() => respond(p.id, false)}>Recusar</button>
               </span>
-              <span className="ppb">
-                {t?.icon && <img src={t.icon} alt="" referrerPolicy="no-referrer" />}
-                <b>{p.pumbility != null ? Math.round(p.pumbility).toLocaleString('pt-BR') : '—'}</b>
-              </span>
-            </Link>
-          );
-        })}
-      </div>
+            </div>
+          ))}
+          <h3>Enviadas</h3>
+          {!reqs.outgoing.length && <p className="muted small">Nenhuma solicitação aguardando resposta.</p>}
+          {reqs.outgoing.map((p) => (
+            <div key={p.id} className="player req">
+              <Avatar p={p} />
+              <span className="pinfo"><span className="ptitle">{p.title}</span><b>{p.nickname}</b><small className="muted">aguardando aprovação</small></span>
+              <span className="req-actions"><button className="btn ghost" onClick={() => cancel(p.id)}>Cancelar</button></span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
+  );
+}
+
+function SearchPlayers({ onChange }) {
+  const [q, setQ] = useState('');
+  const [res, setRes] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const search = async (e) => {
+    e?.preventDefault();
+    if (q.trim().length < 2) return;
+    setBusy(true);
+    try { setRes(await rpc('search_players', { p_query: q.trim() })); } catch { setRes([]); }
+    setBusy(false);
+  };
+  const add = async (p) => { await rpc('send_friend_request', { p_user: p.id }); await search(); onChange(); };
+  const LABEL = { friends: 'Amigos ✓', pending_out: 'Solicitação enviada', pending_in: 'Aceitar solicitação' };
+  return (
+    <>
+      <form className="q-join" onSubmit={search}>
+        <input placeholder="Nickname da Pump (ex.: CARLUCI)" value={q} onChange={(e) => setQ(e.target.value)} />
+        <button className="btn" disabled={busy}>Buscar</button>
+      </form>
+      <p className="muted small">A busca mostra só nick, título e avatar. As notas aparecem depois que a pessoa aprovar.</p>
+      {res && !res.length && <p className="muted">Ninguém encontrado. A pessoa precisa ter conectado a conta da Pump no StepClub.</p>}
+      <div className="players">
+        {(res || []).map((p) => (
+          <div key={p.id} className="player req">
+            <Avatar p={p} />
+            <span className="pinfo"><span className="ptitle">{p.title}</span><b>{p.nickname}</b></span>
+            <span className="req-actions">
+              {p.relation === 'none' || p.relation === 'pending_in'
+                ? <button className="btn" onClick={() => add(p)}>{p.relation === 'pending_in' ? 'Aceitar' : 'Adicionar'}</button>
+                : <span className="tag">{LABEL[p.relation]}</span>}
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -72,7 +156,7 @@ export function ComparePlayer() {
     chart: data.byId.get(chartId), me: { score: ms, grade: mg, plate: mp, broken: mb }, them: { score: os, grade: og, plate: op, broken: ob },
   })).filter((x) => x.chart && (mode === 'all' || x.chart.mode === mode)), [rows, data, mode]);
 
-  if (err) return <div className="page"><p className="empty">{err}</p></div>;
+  if (err) return <div className="page"><p className="empty">{err}</p><Link to="/jogadores" className="btn ghost">Ver amigos e solicitações</Link></div>;
   if (!rows) return <div className="page"><p className="empty">Carregando comparação…</p></div>;
 
   const both = items.filter((x) => x.me.score != null && x.them.score != null);
@@ -114,7 +198,7 @@ export function ChartRanking({ chartId }) {
   const [list, setList] = useState(null);
   useEffect(() => { rpc('chart_ranking', { p_chart_id: chartId }).then(setList).catch(() => setList([])); }, [chartId]);
   if (!list) return <p className="muted small">Carregando ranking…</p>;
-  if (!list.length) return <p className="muted small">Ninguém do StepClub registrou este chart ainda.</p>;
+  if (list.length <= 1) return <p className="muted small">{list.length ? 'Só você entre seus amigos registrou este chart.' : 'Nenhum amigo registrou este chart ainda.'} Adicione amigos em Jogadores.</p>;
   return (
     <div className="chart-rank">
       {list.map((r, i) => (

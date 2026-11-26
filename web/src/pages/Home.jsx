@@ -67,7 +67,7 @@ export default function Home() {
 
       <div className="quick-links">
         <Link to="/titulos" className="ql">🏷️ Títulos</Link>
-        <Link to="/jogadores" className="ql">👥 Jogadores</Link>
+        <Link to="/jogadores" className="ql">👥 Amigos</Link>
         <Link to="/recentes" className="ql">↻ Recentes</Link>
       </div>
 

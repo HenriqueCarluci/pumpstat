@@ -433,3 +433,6 @@ a.q-city:hover { color: var(--text); }
 .switch-row input { accent-color: var(--neon); margin-top: 3px; }
 .other-login { margin-top: 10px; }
 .other-login summary { cursor: pointer; color: var(--muted); margin-bottom: 8px; }
+.player.req { grid-template-columns: 44px 1fr auto; }
+.req-actions { display: flex; gap: 6px; }
+.players h3 { margin-top: 8px; }
