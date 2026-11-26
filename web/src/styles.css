@@ -1149,3 +1149,24 @@ a.q-city:hover { color: var(--text); }
 .flag { display: inline-block; vertical-align: -2px; border-radius: 3px; object-fit: cover; margin-right: 6px; box-shadow: 0 0 0 1px rgba(255,255,255,.15); flex: none; }
 .vs-nick { display: inline-flex; align-items: center; }
 .country-pick select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); max-width: 100%; }
+
+/* Chat com amigo (layout revisto para o celular) */
+.minichat { gap: 10px; }
+.mc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.mc-head h3 { margin: 0; min-width: 0; }
+.mc-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-status { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); padding: 3px 10px; border-radius: 999px; background: var(--panel2); }
+.mc-status.on { color: var(--neon); }
+.mc-list { max-height: min(52vh, 420px); min-height: 140px; gap: 8px; padding: 10px; border-radius: 14px; background: var(--bg2); overscroll-behavior: contain; }
+.mc-msg { max-width: 84%; padding: 8px 12px; border-radius: 14px 14px 14px 4px; background: var(--panel2); line-height: 1.35; overflow-wrap: anywhere; display: flex; flex-direction: column; gap: 2px; }
+.mc-msg.mine { border-radius: 14px 14px 4px 14px; background: rgba(140, 255, 58, .14); border: 1px solid rgba(140, 255, 58, .28); }
+.mc-msg.invite { border: 1px solid rgba(255, 93, 143, .7); background: rgba(255, 93, 143, .1); }
+.mc-invite { font-size: 13px; color: #ff9cbc; }
+.mc-msg small { align-self: flex-end; margin-top: 2px; }
+.mc-form { grid-template-columns: 1fr auto; align-items: stretch; }
+.mc-form input { min-width: 0; min-height: 44px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg2); color: var(--text);
+  font-size: 16px; outline: none; }
+.mc-form input:focus { border-color: var(--neon); }
+.mc-form .btn { min-height: 44px; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; border-radius: 12px; }
+.mc-x1 { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+@media (max-width: 380px) { .mc-form .btn span { display: none; } .mc-form .btn { padding: 0 14px; } }
