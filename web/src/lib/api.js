@@ -97,3 +97,14 @@ function shape(raw) {
 const order = (c) => ({ S: 0, D: 1000, HD: 2000, C: 3000 })[c.mode] + c.level;
 
 export const chartHistory = (chartId) => rpc('chart_history', { p_chart_id: chartId });
+
+// dados do Progresso (jogadas, recordes e estilos), guardados na memória durante a sessão
+// (`stamp` = horário do último sync: mudou, busca de novo)
+const progCache = new Map();
+export function loadProgress(version, stamp = null) {
+  const hit = progCache.get(version);
+  if (hit && (stamp == null || hit.stamp === stamp)) return hit.p;
+  const p = rpc('my_progress', { p_version: version }).catch((e) => { progCache.delete(version); throw e; });
+  progCache.set(version, { p, stamp });
+  return p;
+}

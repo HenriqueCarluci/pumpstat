@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { cachedVersion, fetchVersion, rpc } from '../lib/api.js';
+import { cachedVersion, fetchVersion, loadProgress } from '../lib/api.js';
 import {
   chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, PATTERNS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
 } from '../lib/insights.js';
@@ -33,11 +33,7 @@ const dimName = (p) => t(DIM_LABEL[p] || p);
 const fmtWeek = (ms) => new Date(ms).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' });
 const fmtMonth = (ms) => new Date(ms).toLocaleDateString(locale(), { day: '2-digit', month: 'short' });
 
-const progCache = new Map();
-const loadProg = (v) => {
-  if (!progCache.has(v)) progCache.set(v, rpc('my_progress', { p_version: v }).catch((e) => { progCache.delete(v); throw e; }));
-  return progCache.get(v);
-};
+const loadProg = (v) => loadProgress(v);
 
 export default function Progress() {
   const { data, version, plan } = useData();
