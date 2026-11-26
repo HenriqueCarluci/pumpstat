@@ -27,9 +27,12 @@ piugame.com / phoenix.piugame.com (logado)
         └─ POST Supabase rpc/ingest(chave, payload)
 Supabase (Postgres)
    ├─ tabelas: songs, charts, best_scores, best_score_history, plays, player_snapshots, sync_runs
-   ├─ RLS: leitura pública; escrita só pelas funções SECURITY DEFINER que exigem a chave
-   └─ RPCs: ingest, import_catalog, set_jackets, app_data, chart_history
+   ├─ RLS: catálogo (songs, charts) público; scores, jogadas e perfil só para o dono logado
+   ├─ escrita só pelas funções SECURITY DEFINER que exigem a chave de sincronização
+   └─ RPCs: ingest, import_catalog, set_jackets, fill_jackets, app_data, chart_history, claim_owner, my_ingest_key
 Render (static site) → React + Vite, HashRouter, PWA
+   ├─ login com e-mail e senha (Supabase Auth); o primeiro usuário vira o dono (claim_owner)
+   ├─ a chave de sincronização vem da conta (my_ingest_key) e já sai embutida no favorito
    └─ chama rpc/app_data uma vez por versão e filtra tudo no aparelho (cache local)
 ```
 
@@ -54,7 +57,8 @@ próprio usuário, a senha nunca sai do navegador e as requisições saem do IP 
 | Paginação | `.board_paging button[onclick*=page=]` | idem |
 | Perfil | `.in_profile .profile_name .t1` (título), `.t2` (nick), `.pumbility_total_wrap` | idem |
 
-Capas de todas as músicas: modo "capas" do coletor varre `/leaderboard/over_ranking.php` (131 páginas).
+Capas: modo "capas" do coletor varre `/leaderboard/over_ranking.php` (131 páginas, imagens oficiais).
+Músicas sem chart ≥ 20 recebem a capa do PIU Scores quando o favorito roda em piuscores.arroweclip.se (que também atualiza o catálogo).
 
 ## 4. Regras do jogo usadas
 
