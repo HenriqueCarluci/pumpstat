@@ -1,7 +1,8 @@
 # Gera o pacote do app para a Google Play (.aab assinado com a chave de upload).
 # Rode em Actions → "Android (Play Store)" → Run workflow, ou crie uma tag v1.0.0.
 # Segredos necessários (Settings → Secrets and variables → Actions):
-#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD
+#   ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD (obrigatórios).
+#   ANDROID_KEY_ALIAS (padrão: upload) e ANDROID_KEY_PASSWORD (padrão: a mesma senha do keystore) são opcionais.
 name: Android (Play Store)
 
 on:
@@ -52,8 +53,8 @@ jobs:
         working-directory: android
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'upload' }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD }}
           VERSION_CODE: ${{ github.run_number }}
           VERSION_NAME: ${{ github.event.inputs.version_name || github.ref_name }}
         run: |
