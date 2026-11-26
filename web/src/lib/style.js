@@ -58,8 +58,12 @@ export function useStyles(songIds) {
 export const topStyles = (st, n = 3) => (st ? STYLE_KEYS.map((k) => ({ ...k, v: st.pct[k.id] }))
   .filter((k) => k.v >= 5).sort((a, b) => b.v - a.v).slice(0, n) : []);
 
-/** Link que abre direto o vídeo do chart ('c') ou da música ('s'); o servidor guarda o vídeo achado. */
-export const videoUrl = (kind, id) => `${API_URL}/api/video/${kind}/${id}`;
+/**
+ * Link que abre direto o vídeo do chart ('c') ou da música ('s'); o servidor guarda o vídeo achado.
+ * Sem vídeo achado, o servidor abre a busca do YouTube (q é a mesma busca de antes, usada se algo falhar).
+ */
+export const videoUrl = (kind, id, title, label) =>
+  `${API_URL}/api/video/${kind}/${id}?q=${encodeURIComponent(`pump it up ${title || ''} ${label || ''}`.replace(/\s+/g, ' ').trim())}`;
 
 export const youtubeUrl = (title, label) =>
   `https://www.youtube.com/results?search_query=${encodeURIComponent(`pump it up ${title} ${label || ''}`.trim())}`;

@@ -5,7 +5,7 @@ import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
-import { resolveVideo } from './videos.js';
+import { resolveVideo, searchUrl } from './videos.js';
 import { refreshCatalog } from './catalog.js';
 
 const PORT = process.env.PORT || 10000;
@@ -203,7 +203,9 @@ const server = http.createServer(async (req, res) => {
       if (hits.length < 40 && process.env.INGEST_KEY) {
         target = await resolveVideo({ kind: vm[1], id: Number(vm[2]), rpc: rpcAsServer }).catch((e) => { console.log('video', e.message); return null; });
       }
-      res.writeHead(302, { Location: target || 'https://www.youtube.com/results?search_query=pump+it+up', 'Cache-Control': 'no-store' });
+      // se algo falhar, abre a mesma busca que o app montou (q)
+      const q = (url.searchParams.get('q') || 'pump it up').slice(0, 120);
+      res.writeHead(302, { Location: target || searchUrl(q), 'Cache-Control': 'no-store' });
       return res.end();
     }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');

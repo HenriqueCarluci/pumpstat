@@ -40,7 +40,7 @@ export default function Song() {
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
           </div>
-          <a className="btn yt" href={videoUrl('s', song.id)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
+          <a className="btn yt" href={videoUrl('s', song.id, song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
           {plan?.admin && <VideoAdmin vkey={`s:${song.id}`} />}
         </div>
       </section>
@@ -107,7 +107,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
   const rating = chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, c.broken);
   const nxt = c.score != null && !c.broken ? nextGrade(version, c.score) : null;
   const tier = TIERS.find((x) => x.id === chartTier(c));
-  const yt = videoUrl('c', c.id);
+  const yt = videoUrl('c', c.id, c.song.title, `${c.mode}${c.level}`);
 
   const toggle = async () => {
     setOpen((o) => !o);

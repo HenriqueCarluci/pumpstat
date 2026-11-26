@@ -12,7 +12,8 @@ let used = 0;
 const inflight = new Map();
 
 export function videoQuery(info) {
-  return info.mode ? `pump it up ${info.title} ${info.mode}${info.level}` : `pump it up ${info.title}${info.artist ? ` ${info.artist}` : ''}`;
+  // mesma busca que o app usava antes: "pump it up <música> <S21>" (ou só a música)
+  return info.mode ? `pump it up ${info.title} ${info.mode}${info.level}` : `pump it up ${info.title}`;
 }
 
 /** Escolhe o melhor resultado: título da música no vídeo e, para chart, o nível certo (S21, Single 21, D 21...). */
@@ -34,6 +35,8 @@ export function pickVideo(items, info) {
   }
   return null;
 }
+
+export { searchUrl };
 
 export async function resolveVideo({ kind, id, rpc, log = console.log }) {
   const info = await rpc('video_lookup', { p_kind: kind, p_id: id });
