@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
-import { isOn } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
+import { Locked } from './Progress.jsx';
 import { TeamLogo } from '../lib/teams.jsx';
 import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 import { Flag, useCountries } from '../lib/country.jsx';
@@ -111,7 +112,7 @@ export default function MyTeam() {
           );
         })}
       </ol>
-      <TeamReport />
+      {isOn(plan, 'team_report') && (entitlements(plan).can('team_report') ? <TeamReport /> : <Locked />)}
 
       <p className="muted tiny">{t('Maior nível passado sem quebrar, na versão atual. Toque num amigo para comparar as notas.')}
         {' '}{t('No time desde {d}.', { d: new Date(members.find((m) => m.me)?.joined || Date.now()).toLocaleDateString(locale(), { day: '2-digit', month: 'short', year: 'numeric' }) })}</p>

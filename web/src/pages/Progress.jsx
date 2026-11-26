@@ -104,7 +104,7 @@ export default function Progress() {
   );
 }
 
-function Locked() {
+export function Locked() {
   return (
     <section className="card locked-card">
       <Lock size={20} />

@@ -14,6 +14,7 @@ export const FEATURES = [
   { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar', group: 'Treino' },
   { id: 'training_plan', label: 'Plano de treino semanal e metas', group: 'Treino' },
   { id: 'rival', label: 'Rival: comparação completa com um amigo', group: 'Social' },
+  { id: 'team_report', label: 'Relatório do time por dia, semana e mês', group: 'Social' },
   { id: 'auto_sync', label: 'Sincronização automática', group: 'Sincronização' },
   { id: 'push', label: 'Notificação com o app fechado', soon: true, group: 'Sincronização' },
   { id: 'export', label: 'Exportar tier e cards em imagem', soon: true, group: 'Social' },
@@ -21,10 +22,12 @@ export const FEATURES = [
 /** Plano mínimo de cada recurso quando o admin ainda não configurou (a base da revisão dos planos). */
 export const FEATURE_DEFAULTS = {
   no_ads: 'plus', recommendations_all: 'plus', history_full: 'plus', style_full: 'plus', evolution_chart: 'plus', tips: 'plus',
-  weakness: 'pro', training_analysis: 'plus', training_plan: 'pro', rival: 'plus', auto_sync: 'pro', push: 'pro', export: 'plus',
+  weakness: 'pro', training_analysis: 'plus', training_plan: 'pro', rival: 'plus', team_report: 'plus', auto_sync: 'pro', push: 'pro', export: 'plus',
 };
 /** Recursos sempre grátis (só para mostrar na matriz). */
-export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Tier, votações e Especiais', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar', 'Lista do Meu treino', 'Sincronização manual'];
+export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
+  'Tier (Especiais e New Tunes) e votações', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar',
+  'Lista do Meu treino com tentativas e passes', 'Sincronização manual'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
   { id: 'recommendations', label: 'Recomendações visíveis' },
@@ -42,6 +45,7 @@ export const TOGGLES = [
   { id: 'friend_online', label: 'Aviso de amigo online', group: 'Social' },
   { id: 'online', label: 'Online agora e convites para jogar', group: 'Social' },
   { id: 'teams', label: 'Times', group: 'Social' },
+  { id: 'team_report', label: 'Relatório do time', group: 'Social' },
   { id: 'tier_votes', label: 'Votação de tier', group: 'Comunidade' },
   { id: 'venue_requests', label: 'Cadastro e exclusão de fliperama pelos membros', group: 'Comunidade' },
   { id: 'training', label: 'Meu treino', group: 'Treino' },

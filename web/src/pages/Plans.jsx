@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { purchase, salesState, storeUrl, waitForPlan, yearlySaving } from '../lib/billing.js';
 import { locale, t, tErr } from '../lib/i18n.js';
-import { entitlements, FEATURE_DEFAULTS, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
+import { ALWAYS_FREE, entitlements, FEATURE_DEFAULTS, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
 import { Check, Crown, X } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 
@@ -43,7 +43,7 @@ export default function Plans() {
     <div className="page plans">
       {!cfg.show_plans && <div className="banner">{t('Prévia: só administradores veem esta tela enquanto os planos estão em desenvolvimento.')}</div>}
       <h2 className="ic-row"><Crown size={20} /> {t('Planos do PIU Stats')}</h2>
-      <p className="muted small">{t('Fila, amigos, chat e sincronização continuam grátis para todos. Os planos liberam análises e recursos extras.')}</p>
+      <p className="muted small">{t('O básico continua grátis para todos (lista no fim da página). Os planos liberam análises e recursos extras.')}</p>
       {/* só o preço da região de quem vê; o admin pode conferir as outras */}
       {plan?.admin && (
         <div className="admin-preview small"><span className="muted">{t('Admin: ver o preço de outra região')}</span>
@@ -76,6 +76,10 @@ export default function Plans() {
           </div>
         ))}
       </div>
+      <section className="card plan-free">
+        <h3 className="ic-row"><Check size={16} /> {t('Grátis para todos')}</h3>
+        <ul>{ALWAYS_FREE.map((x) => <li key={x}>{t(x)}</li>)}</ul>
+      </section>
       {err && <div className="form-err">{err}</div>}
       <p className="muted tiny">{t('Renovação automática; cancele quando quiser pela Google Play e o plano vale até o fim do período pago. Quem assinar no começo mantém o preço enquanto não cancelar.')}</p>
       <p className="small center"><Link to="/assinatura">{t('Minha assinatura')}</Link></p>

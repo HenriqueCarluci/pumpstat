@@ -1379,3 +1379,5 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .dr-preview { width: 100%; max-width: 380px; align-self: center; border-radius: 14px; border: 1px solid var(--line); }
 .dr-sheet .qs-row .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .group-h.row-between { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.plan-free ul { margin: 6px 0 0; padding-left: 18px; columns: 2 220px; column-gap: 18px; }
+.plan-free li { font-size: 13px; margin: 3px 0; break-inside: avoid; }
