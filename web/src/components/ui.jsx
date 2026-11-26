@@ -7,6 +7,8 @@ const IMG = 'https://piugame.com/l_img/p2';
 const GRADE_CODE = { 'SSS+': 'sss_p', SSS: 'sss', 'SS+': 'ss_p', SS: 'ss', 'S+': 's_p', S: 's', 'AAA+': 'aaa_p', AAA: 'aaa',
   'AA+': 'aa_p', AA: 'aa', 'A+': 'a_p', A: 'a', B: 'b', C: 'c', D: 'd', F: 'f' };
 const imgProps = { alt: '', loading: 'lazy', referrerPolicy: 'no-referrer', draggable: false };
+export const gradeImgUrl = (grade, broken) => (grade ? `${IMG}/grade/${(broken ? 'x_' : '') + (GRADE_CODE[grade] || grade.toLowerCase())}.png` : null);
+export const plateImgUrl = (plate) => (plate ? `${IMG}/plate/${plate.toLowerCase()}.png` : null);
 
 /** Bolinha de nível no estilo do jogo (single vermelho, double verde, half-double azul, co-op amarelo). */
 export function Ball({ chart, size = 'md' }) {

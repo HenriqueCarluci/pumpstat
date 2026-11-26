@@ -78,40 +78,49 @@ export function pumbility(version, charts) {
   return { total: round2(top.reduce((s, r) => s + r.value, 0)), top, floor: top.length === 50 ? top[49].value : 0 };
 }
 
-// ---------- tiers de dificuldade (dados do PIU Scores) ----------
+// ---------- tiers de dificuldade: 7 faixas (padrão do ArcadeStat) ----------
+// Base: faixa importada do ArcadeStat (c.ref). Sem ela, a dificuldade do PIU Scores. Por cima, os votos da
+// comunidade (a base pesa como 3 votos) e, acima de tudo, o tier do clube definido pelo admin.
 export const TIERS = [
-  { id: 'top', label: 'Topo do nível', short: '+++' },
-  { id: 'high', label: 'Difícil', short: '++' },
-  { id: 'mid', label: 'Médio', short: '=' },
-  { id: 'low', label: 'Fácil', short: '−' },
-  { id: 'bottom', label: 'Muito fácil', short: '−−' },
-  { id: 'unknown', label: 'Sem dados', short: '?' },
+  { id: 'topo', label: 'Topo', short: 'T', n: 3 },
+  { id: 'alto', label: 'Alto', short: 'A', n: 2 },
+  { id: 'medio_alto', label: 'Médio-Alto', short: 'M+', n: 1 },
+  { id: 'medio', label: 'Médio', short: 'M', n: 0 },
+  { id: 'medio_baixo', label: 'Médio-Baixo', short: 'M−', n: -1 },
+  { id: 'baixo', label: 'Baixo', short: 'B', n: -2 },
+  { id: 'fundo', label: 'Fundo', short: 'F', n: -3 },
+  { id: 'unknown', label: 'Sem classificação', short: '?' },
 ];
-const LABEL_TIER = { VeryHard: 'top', Hard: 'high', Underrated: 'high', Medium: 'mid', Easy: 'low', Overrated: 'low', VeryEasy: 'bottom' };
+export const TIER_NUM = Object.fromEntries(TIERS.filter((x) => x.n != null).map((x) => [x.id, x.n]));
+const NUM_TIER = Object.fromEntries(TIERS.filter((x) => x.n != null).map((x) => [x.n, x.id]));
+export const tierFromNum = (v) => NUM_TIER[Math.max(-3, Math.min(3, Math.round(v)))];
+/** Faixa importada do ArcadeStat: -3..3, 9 = Unique, 8 = sem classificação. */
+export const REF_UNIQUE = 9;
+const LABEL_TIER = { VeryHard: 'topo', Hard: 'alto', Underrated: 'alto', Medium: 'medio', Easy: 'baixo', Overrated: 'baixo', VeryEasy: 'fundo' };
 
-const TIER_NUM = { top: 2, high: 1, mid: 0, low: -1, bottom: -2 };
-/** Tier do chart: dados do PIU Scores misturados com os votos da comunidade do PIU Stats
- *  (o PIU Scores pesa como 3 votos; sem dados dele, vale só a comunidade). */
 export function chartTier(c) {
-  const base = baseTier(c);
   const cm = c.community;
-  // tier do clube (definido pelo admin) vale acima de tudo
-  if (cm?.club != null) return ['bottom', 'low', 'mid', 'high', 'top'][cm.club + 2];
+  if (cm?.club != null) return tierFromNum(cm.club);
+  const base = baseTier(c);
   if (!cm || !cm.votes || cm.avg == null) return base;
   const v = base in TIER_NUM ? (TIER_NUM[base] * 3 + cm.avg * cm.votes) / (3 + cm.votes) : cm.avg;
-  return v >= 1.5 ? 'top' : v >= 0.5 ? 'high' : v > -0.5 ? 'mid' : v > -1.5 ? 'low' : 'bottom';
+  return tierFromNum(v);
 }
-export const TIER_VOTES = [[2, 'Topo do nível'], [1, 'Difícil'], [0, 'Médio'], [-1, 'Fácil'], [-2, 'Muito fácil']];
+export const TIER_VOTES = TIERS.filter((x) => x.n != null).map((x) => [x.n, x.label]);
 
 function baseTier(c) {
+  if (c.ref != null && c.ref >= -3 && c.ref <= 3) return NUM_TIER[c.ref];
+  if (c.ref === 8) return 'unknown';
   if (c.scoringLevel != null && c.mode !== 'C') {
     const d = c.scoringLevel - c.level;
     if (Math.abs(d) <= 1.5) {
-      if (d >= 0.6) return 'top';
-      if (d >= 0.2) return 'high';
-      if (d > -0.2) return 'mid';
-      if (d > -0.6) return 'low';
-      return 'bottom';
+      if (d >= 0.7) return 'topo';
+      if (d >= 0.4) return 'alto';
+      if (d >= 0.15) return 'medio_alto';
+      if (d > -0.15) return 'medio';
+      if (d > -0.4) return 'medio_baixo';
+      if (d > -0.7) return 'baixo';
+      return 'fundo';
     }
   }
   return LABEL_TIER[c.scoreDifficulty] || LABEL_TIER[c.passDifficulty] || 'unknown';

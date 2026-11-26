@@ -32,6 +32,12 @@ export function buildDay(raw, byId) {
   })).filter((p) => p.chart);
 
   const passes = plays.filter((p) => !p.broken);
+  const bestPlay = new Map();
+  for (const p of plays) {
+    const b = bestPlay.get(p.chart.id);
+    if (!b || (!p.broken && (b.broken || p.score > b.score)) || (p.broken && b.broken && p.score > b.score)) bestPlay.set(p.chart.id, p);
+  }
+  for (const r of rows) r.best = bestPlay.get(r.chart.id) || null;
   const sd = (p) => p.chart.mode === 'S' || p.chart.mode === 'D';
   const maxOf = (mode) => Math.max(0, ...passes.filter((p) => p.chart.mode === mode).map((p) => p.chart.level)) || null;
   const judged = plays.filter((p) => p.perfect != null);

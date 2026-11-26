@@ -2,12 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { buildDay, highlights, loadDayReport } from '../lib/dayReport.js';
+import { Chips } from './Songs.jsx';
 import { dayLabelOf, downloadImage, drawDayImage, shareImage } from '../lib/dayImage.js';
 import { fmtNum, locale, t, tErr, tMsg, tn } from '../lib/i18n.js';
 import { isOn } from '../lib/plans.js';
 import { VERSIONS } from '../lib/piu.js';
 import { isNative } from '../lib/native.js';
-import { Ball, Grade } from '../components/ui.jsx';
+import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { useSyncJob } from '../components/PiuConnect.jsx';
 import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { CalendarCheck, ChevronLeft, ChevronRight, Flame, RefreshCw, Send, Sparkles, Target, TrendingUp, X } from '../components/Icons.jsx';
@@ -45,11 +46,40 @@ function Row({ r, right, sub, train }) {
   );
 }
 
+const JUDG = [['perfect', 'PERFECT', 'j1'], ['great', 'GREAT', 'j2'], ['good', 'GOOD', 'j3'], ['bad', 'BAD', 'j4'], ['miss', 'MISS', 'j5']];
+/** PERFECT / GREAT / GOOD / BAD / MISS: barra proporcional e os números. */
+function Judgments({ p }) {
+  if (!p || p.perfect == null) return null;
+  const tot = JUDG.reduce((a, [k]) => a + (p[k] || 0), 0) || 1;
+  return (
+    <div className="dr-judg">
+      <div className="dr-judg-bar">{JUDG.map(([k, , c]) => <i key={k} className={c} style={{ width: `${((p[k] || 0) / tot) * 100}%` }} />)}</div>
+      <div className="dr-judg-n">{JUDG.map(([k, l, c]) => <span key={k} className={c}><small>{l}</small>{fmtNum(p[k] || 0)}</span>)}</div>
+    </div>
+  );
+}
+
+/** Destaque do dia: capa grande, nível, score, grade/plate e os julgamentos da melhor jogada. */
+function Highlight({ r }) {
+  const tag = r.kind === 'clear' ? t('Primeiro passe') : r.kind === 'pb' ? `+${fmtNum(r.delta)}${r.gradeUp ? ` · ${r.prevGrade} → ${r.grade}` : ''}` : (r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'));
+  return (
+    <Link className="dr-hl" to={`/musica/${r.chart.song.id}`}>
+      <div className="dr-hl-jk"><Jacket song={r.chart.song} width={132} /><span className="dr-hl-ball"><Ball chart={r.chart} size="sm" /></span></div>
+      <div className="dr-hl-info">
+        <b>{r.chart.song.title}</b>
+        <span className={`dr-hl-tag ${r.kind}`}>{tag}</span>
+        <div className="dr-hl-score"><span>{fmtNum(r.score)}</span><Grade grade={r.grade} size="sm" />{r.plate && <Plate plate={r.plate} size="sm" />}</div>
+        <Judgments p={r.best} />
+      </div>
+    </Link>
+  );
+}
+
 /** Imagem pronta: prévia e botões de compartilhar/baixar. */
-function ImageSheet({ blob, filename, text, onClose }) {
-  const [url] = useState(() => URL.createObjectURL(blob));
+function ImageSheet({ blob, filename, text, onClose, format, onFormat, busy }) {
+  const [url, setUrl] = useState(null);
   const [msg, setMsg] = useState('');
-  useEffect(() => () => URL.revokeObjectURL(url), [url]);
+  useEffect(() => { const u = URL.createObjectURL(blob); setUrl(u); return () => URL.revokeObjectURL(u); }, [blob]);
   const share = async () => {
     setMsg('');
     try {
@@ -61,7 +91,8 @@ function ImageSheet({ blob, filename, text, onClose }) {
     <div className="qs-backdrop" onClick={onClose} role="presentation">
       <div className="qs-sheet dr-sheet" role="dialog" aria-modal="true" aria-label={t('Imagem do dia')} onClick={(e) => e.stopPropagation()}>
         <div className="qs-grip" aria-hidden="true" />
-        <img className="dr-preview" src={url} alt={t('Imagem do dia')} />
+        <Chips value={format} onChange={onFormat} options={[['feed', t('Feed (4:5)')], ['story', t('Stories (9:16)')]]} />
+        {url && <img className={`dr-preview ${busy ? 'busy' : ''}`} src={url} alt={t('Imagem do dia')} />}
         <div className="qs-row">
           <button type="button" className="btn" onClick={share}><Send size={15} /> {t('Compartilhar')}</button>
           {isNative
@@ -84,6 +115,7 @@ export default function DayReport() {
   const [stamp, setStamp] = useState(0);
   const [img, setImg] = useState(null);
   const [making, setMaking] = useState(false);
+  const [format, setFormat] = useState('feed');
   const { job, err: syncErr, needLogin, start, running } = useSyncJob(() => { reload(); setStamp((s) => s + 1); });
 
   useEffect(() => {
@@ -109,7 +141,7 @@ export default function DayReport() {
   const head = (
     <>
       <div className="row-between dr-top">
-        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Dia de jogo')}</h2>
+        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Meu dia de jogo')}</h2>
         {syncBtn}
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
@@ -128,12 +160,12 @@ export default function DayReport() {
   const span = tt.first && tt.last ? Math.round((tt.last - tt.first) / 60) : null;
   const longLabel = dayLabelOf(rep.day, { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
 
-  const makeImage = async () => {
-    setMaking(true);
+  const makeImage = async (fmt = format) => {
+    setMaking(true); setFormat(fmt);
     try {
       const blob = await drawDayImage({
-        rep, nickname: data.profile?.nickname, versionName: VERSIONS[version]?.name || version,
-        dayLabel: dayLabelOf(rep.day, { day: '2-digit', month: 'short', year: 'numeric' }), list: highlights(rep),
+        rep, nickname: data.profile?.nickname, versionName: VERSIONS[version]?.name || version, format: fmt,
+        dayLabel: dayLabelOf(rep.day, { day: '2-digit', month: 'short', year: 'numeric' }), list: highlights(rep, 7),
       });
       setImg(blob);
     } catch (e) { setErr(tErr(e.message)); }
@@ -167,7 +199,14 @@ export default function DayReport() {
       </section>
       {pv && <p className="muted tiny dr-vs">{t('Setas: comparação com o dia de jogo anterior ({day}).', { day: dayLabelOf(pv.day) })}</p>}
 
-      <button className="btn wide dr-share" disabled={making} onClick={makeImage}>
+      {(() => { const hl = highlights(rep, 3); return hl.length > 0 && (
+        <section className="card dr-hls">
+          <h3 className="ic-row"><Sparkles size={18} /> {hl.some((r) => r.kind !== 'pass') ? t('Destaques do dia') : t('Melhores passes do dia')}</h3>
+          {hl.map((r) => <Highlight key={r.chart.id} r={r} />)}
+        </section>
+      ); })()}
+
+      <button className="btn wide dr-share" disabled={making} onClick={() => makeImage()}>
         <Sparkles size={16} /> {making ? t('Gerando…') : t('Gerar imagem para postar')}
       </button>
 
@@ -236,7 +275,8 @@ export default function DayReport() {
         </div>
       </section>
 
-      {img && <ImageSheet blob={img} filename={`piu-stats-${rep.day}.png`} text={t('Meu dia de Pump It Up · PIU Stats')} onClose={() => setImg(null)} />}
+      {img && <ImageSheet blob={img} filename={`piu-stats-${rep.day}-${format}.png`} text={t('Meu dia de Pump It Up · PIU Stats')} onClose={() => setImg(null)}
+        format={format} busy={making} onFormat={(f) => makeImage(f)} />}
     </div>
   );
 }

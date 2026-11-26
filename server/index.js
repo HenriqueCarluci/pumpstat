@@ -170,6 +170,29 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
   }
 }
 
+
+// ---------- repasse de imagens (capas) ----------
+const IMG_HOSTS = new Set(['piugame.com', 'phoenix.piugame.com', 'www.piugame.com', 'piuimages.arroweclip.se']);
+const imgCache = new Map(); // url -> { type, buf, at }
+async function proxyImage(raw) {
+  let u;
+  try { u = new URL(String(raw || '')); } catch { return [400, { 'Content-Type': 'text/plain' }, 'url inválida']; }
+  if (u.protocol !== 'https:' || !IMG_HOSTS.has(u.hostname)) return [403, { 'Content-Type': 'text/plain' }, 'host não permitido'];
+  const key = u.toString();
+  let hit = imgCache.get(key);
+  if (!hit) {
+    const r = await fetch(key, { headers: { 'User-Agent': 'Mozilla/5.0 PIU Stats' } }).catch(() => null);
+    const type = r?.headers.get('content-type') || '';
+    if (!r || !r.ok || !/^image\//.test(type)) return [502, { 'Content-Type': 'text/plain' }, 'imagem indisponível'];
+    const buf = Buffer.from(await r.arrayBuffer());
+    if (buf.length > 3_000_000) return [413, { 'Content-Type': 'text/plain' }, 'imagem grande demais'];
+    hit = { type, buf };
+    imgCache.set(key, hit);
+    if (imgCache.size > 600) imgCache.delete(imgCache.keys().next().value);
+  }
+  return [200, { 'Content-Type': hit.type, 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=604800, immutable', 'Cross-Origin-Resource-Policy': 'cross-origin' }, hit.buf];
+}
+
 // ---------- HTTP ----------
 function send(res, status, body, origin) {
   const headers = { 'Content-Type': 'application/json', Vary: 'Origin' };
@@ -244,6 +267,12 @@ const server = http.createServer(async (req, res) => {
       const q = (url.searchParams.get('q') || 'pump it up').slice(0, 120);
       res.writeHead(302, { Location: target || searchUrl(q), 'Cache-Control': 'no-store' });
       return res.end();
+    }
+    // capas e grades da Pump para o app desenhar no canvas (imagem do dia): só destes servidores, com CORS liberado
+    if (req.method === 'GET' && url.pathname === '/api/img') {
+      const [code, headers, body] = await proxyImage(url.searchParams.get('u'));
+      res.writeHead(code, headers);
+      return res.end(body);
     }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;

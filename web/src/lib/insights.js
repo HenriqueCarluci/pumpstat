@@ -280,7 +280,7 @@ export function tips(data, prog, attempts, mode, lvl, weak) {
 /** Charts mais fáceis (pelo tier) do nível que o jogador ainda não passou. */
 function easiest(data, attempts, mode, level, n) {
   const done = new Set(attempts.filter((r) => r.cleared).map((r) => r.chart.id));
-  const order = { bottom: 0, low: 1, mid: 2, unknown: 3, high: 4, top: 5 };
+  const order = { fundo: 0, baixo: 1, medio_baixo: 2, medio: 3, unknown: 3.5, medio_alto: 4, alto: 5, topo: 6 };
   return data.charts.filter((c) => c.mode === mode && c.level === level && !done.has(c.id))
     .sort((a, b) => order[chartTier(a)] - order[chartTier(b)] || (a.scoringLevel ?? 99) - (b.scoringLevel ?? 99)).slice(0, n);
 }
@@ -313,7 +313,7 @@ export function trainingPlan(version, data, prog, attempts, mode, lvl, weak, rec
   const used = new Set();
   const cleared = new Set(attempts.filter((x) => x.cleared).map((x) => x.chart.id));
   const of = (lo, hi) => data.charts.filter((c) => c.mode === mode && c.level >= lo && c.level <= hi);
-  const order = { bottom: 0, low: 1, mid: 2, unknown: 3, high: 4, top: 5 };
+  const order = { fundo: 0, baixo: 1, medio_baixo: 2, medio: 3, unknown: 3.5, medio_alto: 4, alto: 5, topo: 6 };
   const weakP = (weak.find((w) => w.index >= 6 && w.confidence !== 'low') || weak.find((w) => w.index > 0))?.id || null;
 
   const warm = of(lvl.comfort - 3, lvl.comfort - 2).filter((c) => cleared.has(c.id));

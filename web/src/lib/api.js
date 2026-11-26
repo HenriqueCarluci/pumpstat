@@ -38,13 +38,15 @@ export function cachedVersion(version) {
 }
 
 export async function fetchVersion(version) {
-  const [raw, community, fresh] = await Promise.all([
+  const [raw, community, fresh, ref] = await Promise.all([
     rpc('app_data', { p_version: version }),
     rpc('community_charts', { p_version: version }).catch(() => []),
     rpc('new_songs', { p_version: version }).catch(() => []),
+    rpc('chart_ref_tiers', { p_version: version }).catch(() => []),
   ]);
   raw.community = community;
   raw.new_songs = fresh;
+  raw.ref = ref;
   memo.set(version, raw);
   store(CACHE_PREFIX + version, raw);
   return shape(raw);
@@ -79,6 +81,8 @@ function shape(raw) {
       c.special = { g: special.g || [], gimmick: !!special.gimmick, off: !!special.off, note: special.note || null, admin: !!special.admin };
     }
   }
+  // faixa de tier de referência (ArcadeStat)
+  for (const [chartId, band] of raw.ref || []) { const c = byId.get(chartId); if (c) c.ref = band; }
   // músicas novas da versão (não estavam na anterior)
   for (const id of raw.new_songs || []) { const s = songs.get(id); if (s) s.isNew = true; }
   for (const s of songs.values()) {

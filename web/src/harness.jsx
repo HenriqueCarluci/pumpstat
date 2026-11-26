@@ -82,6 +82,7 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
     special: id === 4864 ? { g: ['speed', 'stop'], gimmick: true, off: false, note: null, admin: true } : undefined };
 });
 song.charts = charts;
+charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; });
 const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
 const plan = { plan: 'plus', admin: new URLSearchParams(location.search).has('admin'), config: { toggles: {} } };
 const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { list: [] }, presence: {} };

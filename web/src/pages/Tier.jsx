@@ -144,7 +144,7 @@ export default function Tier() {
         </section>
       )}
       <AdSlot place="tier" />
-      <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do PIU Stats.')}</p>
+      <p className="muted small center">{t('Faixas no padrão do ArcadeStat, ajustadas pelos votos da comunidade e pelo tier do clube no PIU Stats.')}</p>
     </div>
   );
 }

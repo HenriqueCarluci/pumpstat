@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { rpc } from '../lib/api.js';
-import { chartTier, TIER_VOTES } from '../lib/piu.js';
+import { chartTier, TIER_NUM, TIER_VOTES } from '../lib/piu.js';
 import { t, tErr, tn } from '../lib/i18n.js';
 import { useData } from '../App.jsx';
 import { Ball, Jacket } from './ui.jsx';
 import { Check, Clock, ShieldCheck, ThumbsDown, ThumbsUp, Vote } from './Icons.jsx';
 
-const TIER_NUM = { top: 2, high: 1, mid: 0, low: -1, bottom: -2 };
 export const tierName = (v) => t((TIER_VOTES.find(([n]) => n === Number(v)) || [, '?'])[1]);
 const hoursLeft = (iso) => Math.max(0, Math.round((Date.parse(iso) - Date.now()) / 3600000));
 

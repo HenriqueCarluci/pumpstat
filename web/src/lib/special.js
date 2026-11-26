@@ -11,4 +11,6 @@ export const GIMMICKS = [
 export const GIMMICK_LABEL = Object.fromEntries(GIMMICKS);
 export const hasGimmick = (c) => !!c?.special?.gimmick;
 export const isOffCurve = (c) => !!c?.special?.off;
-export const isSpecial = (c) => hasGimmick(c) || isOffCurve(c);
+/** Unique: marcado pela comunidade/admin (gimmick ou fora da curva) ou na faixa Unique do ArcadeStat. */
+export const isUnique = (c) => c?.ref === 9;
+export const isSpecial = (c) => hasGimmick(c) || isOffCurve(c) || isUnique(c);

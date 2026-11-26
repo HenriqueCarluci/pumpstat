@@ -687,3 +687,22 @@ Tier (Unique e New Tunes) e votações | Tier (Unique and New Tunes) and votes |
 Lista do Meu treino com tentativas e passes | My training list with attempts and clears | Lista de Mi entrenamiento con intentos y pases | 시도와 클리어가 있는 내 연습 목록 | 挑戦とクリアつきのマイ練習リスト | Liste Mon entraînement avec essais et réussites | Lista Il mio allenamento con tentativi e passaggi
 Sem Unique | Without Unique | Sin Unique | Unique 제외 | Unique 以外 | Sans Unique | Senza Unique
 Charts Unique: gimmick ou steps muito fora da curva. Não entram no ranking do nível porque a dificuldade depende de outra coisa. | Unique charts: gimmicks or steps far off the curve. They stay out of the level ranking because their difficulty depends on something else. | Charts Unique: gimmick o steps muy fuera de la curva. No entran en el ranking del nivel porque la dificultad depende de otra cosa. | Unique 채보: 기믹이나 레벨에 비해 매우 특이한 스텝. 난이도가 다른 요소에 달려 있어 레벨 순위에서 제외됩니다. | Unique 譜面：ギミックやレベルから大きく外れた譜面。難しさが別の要素で決まるため、レベル内ランキングには入りません。 | Charts Unique : gimmicks ou pas très hors norme. Ils restent hors du classement du niveau car leur difficulté dépend d'autre chose. | Chart Unique: gimmick o step molto fuori scala. Restano fuori dalla classifica del livello perché la difficoltà dipende da altro.
+Meu dia de jogo | My play day | Mi día de juego | 나의 플레이 데이 | マイプレイ日 | Ma journée de jeu | La mia giornata di gioco
+Tempo | Time | Tiempo | 시간 | 時間 | Temps | Tempo
+Feed (4:5) | Feed (4:5) | Feed (4:5) | 피드 (4:5) | フィード (4:5) | Fil (4:5) | Feed (4:5)
+Stories (9:16) | Stories (9:16) | Historias (9:16) | 스토리 (9:16) | ストーリーズ (9:16) | Stories (9:16) | Storie (9:16)
+Destaques do dia | Highlights of the day | Destacados del día | 오늘의 하이라이트 | この日のハイライト | Temps forts du jour | Momenti migliori del giorno
+Ver meu dia de jogo | See my play day | Ver mi día de juego | 나의 플레이 데이 보기 | マイプレイ日を見る | Voir ma journée de jeu | Vedi la mia giornata di gioco
+Faixas no padrão do ArcadeStat, ajustadas pelos votos da comunidade e pelo tier do clube no PIU Stats. | Tiers follow the ArcadeStat bands, adjusted by community votes and the club tier on PIU Stats. | Franjas con el patrón de ArcadeStat, ajustadas por los votos de la comunidad y el tier del club en PIU Stats. | ArcadeStat 기준의 티어에 PIU Stats 커뮤니티 투표와 클럽 티어를 반영했습니다. | ArcadeStat 基準のティアを、PIU Stats のコミュニティ投票とクラブティアで調整しています。 | Paliers au format ArcadeStat, ajustés par les votes de la communauté et le tier du club sur PIU Stats. | Fasce secondo ArcadeStat, corrette dai voti della community e dal tier del club su PIU Stats.
+Topo | Top | Tope | 최상 | 最上 | Sommet | Vertice
+Alto | High | Alto | 상 | 上 | Haut | Alto
+Médio-Alto | Mid-High | Medio-Alto | 중상 | 中上 | Moyen-Haut | Medio-Alto
+Médio-Baixo | Mid-Low | Medio-Bajo | 중하 | 中下 | Moyen-Bas | Medio-Basso
+Baixo | Low | Bajo | 하 | 下 | Bas | Basso
+Fundo | Bottom | Fondo | 최하 | 最下 | Fond | Fondo
+Sem classificação | Unrated | Sin clasificar | 미분류 | 未分類 | Non classé | Non classificato
+topo | top | tope | 최상 | 最上 | sommet | vertice
+alto | high | alto | 상 | 上 | haut | alto
+medio | mid | medio | 중 | 中 | moyen | medio
+baixo | low | bajo | 하 | 下 | bas | basso
+fundo | bottom | fondo | 최하 | 最下 | fond | fondo

@@ -37,7 +37,7 @@ export function useTraining() {
   return list;
 }
 
-const TIER_ADJ = { bottom: 15, low: 7, mid: 0, unknown: 0, high: -8, top: -15 };
+const TIER_ADJ = { fundo: 15, baixo: 10, medio_baixo: 5, medio: 0, unknown: 0, medio_alto: -4, alto: -9, topo: -15 };
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
 /** Chance estimada só pela distância do nível do jogador. */
@@ -109,8 +109,8 @@ export function analyzeTraining(raw, data, list, version) {
     // 2. tier do chart dentro do nível
     const tier = chartTier(c);
     chance += TIER_ADJ[tier] || 0;
-    if (tier === 'bottom' || tier === 'low') reasons.push({ id: 'easy', tone: 'good' });
-    if (tier === 'high' || tier === 'top') reasons.push({ id: 'hard', tone: 'bad' });
+    if (tier === 'fundo' || tier === 'baixo' || tier === 'medio_baixo') reasons.push({ id: 'easy', tone: 'good' });
+    if (tier === 'alto' || tier === 'topo' || tier === 'medio_alto') reasons.push({ id: 'hard', tone: 'bad' });
     // 3. padrões do chart x pontos fortes e fracos
     const style = styleOf(prog, c);
     const tops = style ? DIMENSIONS.map((p) => [p, style.pct[p] || 0]).filter(([, v]) => v >= 20).sort((a, b) => b[1] - a[1]).slice(0, 2) : [];
