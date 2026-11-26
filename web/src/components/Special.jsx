@@ -4,7 +4,7 @@ import { GIMMICK_LABEL, GIMMICKS, hasGimmick, isOffCurve } from '../lib/special.
 import { t, tErr } from '../lib/i18n.js';
 import { Check, Zap, Shuffle } from './Icons.jsx';
 
-/** Selos de chart especial: gimmick (com os tipos) e fora da curva. */
+/** Selos de chart Unique: gimmick (com os tipos) e fora da curva. */
 export function SpecialBadges({ chart: c, compact = false }) {
   if (!hasGimmick(c) && !isOffCurve(c)) return null;
   const types = (c.special.g || []).map((g) => t(GIMMICK_LABEL[g] || g));
@@ -45,7 +45,7 @@ export function SpecialAdmin({ chart: c, onSaved }) {
         <button className="btn" type="button" onClick={save}>{t('Salvar')}</button>
         {msg && <span className="muted small ic-row">{msg === t('Salvo') && <Check size={14} />} {msg}</span>}
       </div>
-      <p className="muted tiny">{t('A marcação do admin vale na hora. A comunidade também marca nas avaliações: com 2 votos o chart entra nos Especiais.')}</p>
+      <p className="muted tiny">{t('A marcação do admin vale na hora. A comunidade também marca nas avaliações: com 2 votos o chart entra em Unique.')}</p>
     </details>
   );
 }

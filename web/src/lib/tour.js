@@ -33,8 +33,8 @@ export const syncTourSeen = (seen) => {
 export const TOUR_STEPS = [
   { route: '/', icon: 'home', title: 'Início', text: 'Aqui fica o resumo: seus recordes, as missões da semana, os desafios e os atalhos. Os quadros recolhem para a tela não ficar comprida.' },
   { route: '/ajustes', icon: 'sync', title: 'Sincronizar suas notas', text: 'Conecte sua conta da Pump (AM.PASS) e sincronize depois de jogar. O site da Pump guarda só as 50 últimas jogadas, então sincronizar sempre deixa sua evolução completa.' },
-  { route: '/musicas', icon: 'music', title: 'Músicas', text: 'Busque qualquer música e filtre por modo, nível, notas e especiais. Dentro da música você vê cada chart, avalia, abre o vídeo e vê o ranking dos amigos.' },
-  { route: '/tier', icon: 'tier', title: 'Tier', text: 'Os charts de cada nível, do mais difícil ao mais fácil. Segure uma capa para colocar no Meu treino. Gimmick e charts fora da curva ficam em Especiais, e dá para ver só as músicas novas.' },
+  { route: '/musicas', icon: 'music', title: 'Músicas', text: 'Busque qualquer música e filtre por modo, nível, notas e Unique. Dentro da música você vê cada chart, avalia, abre o vídeo e vê o ranking dos amigos.' },
+  { route: '/tier', icon: 'tier', title: 'Tier', text: 'Os charts de cada nível, do mais difícil ao mais fácil. Segure uma capa para colocar no Meu treino. Gimmick e charts fora da curva ficam em Unique, e dá para ver só as músicas novas.' },
   { route: '/treino', icon: 'training', toggle: 'training', title: 'Meu treino', text: 'Sua lista de músicas para passar: a chance de cada uma, o que treinar antes e todas as suas tentativas, para ver a evolução.' },
   { route: '/progresso', icon: 'progress', title: 'Progresso', text: 'Evolução, músicas mais jogadas, pontos fortes e fracos por padrão, dicas e o plano de treino da semana.' },
   { route: '/jogadores', icon: 'friends', title: 'Amigos', text: 'Adicione amigos pelo nick da Pump, compare as notas, converse e chame para um x1.' },

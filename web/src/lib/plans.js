@@ -26,7 +26,7 @@ export const FEATURE_DEFAULTS = {
 };
 /** Recursos sempre grátis (só para mostrar na matriz). */
 export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
-  'Tier (Especiais e New Tunes) e votações', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar',
+  'Tier (Unique e New Tunes) e votações', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar',
   'Lista do Meu treino com tentativas e passes', 'Sincronização manual'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },

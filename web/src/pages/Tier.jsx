@@ -136,8 +136,8 @@ export default function Tier() {
 
       {specials.length > 0 && (
         <section className="tier tier-special">
-          <div className="tier-label"><b><Sparkles size={18} /></b><span>{t('Especiais')}</span><em>{specials.filter((c) => c.score != null && !c.broken).length}/{specials.length}</em></div>
-          <p className="muted small tier-special-note">{t('Gimmick ou steps muito fora da curva: não entram no ranking do nível porque a dificuldade depende de outra coisa.')}</p>
+          <div className="tier-label"><b>U</b><span>Unique</span><em>{specials.filter((c) => c.score != null && !c.broken).length}/{specials.length}</em></div>
+          <p className="muted small tier-special-note">{t('Charts Unique: gimmick ou steps muito fora da curva. Não entram no ranking do nível porque a dificuldade depende de outra coisa.')}</p>
           <div className={`tier-grid size-${prefs.tierSize || 'md'}`}>
             {specials.map(tile)}
           </div>

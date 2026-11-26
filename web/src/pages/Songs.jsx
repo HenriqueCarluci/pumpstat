@@ -68,7 +68,7 @@ export default function Songs() {
         <Chips value={mode} onChange={(v) => set('m', v === 'all' ? '' : v)}
           options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double'], ...(isP2 ? [['HD', 'Half-Double']] : []), ['C', 'Co-op'], ...(isP2 ? [['rise', 'R!SE']] : [])]} />
         <Chips value={spec} onChange={(v) => set('x', v === 'all' ? '' : v)}
-          options={[['all', t('Todos os steps')], ['esp', t('Especiais')], ['gim', t('Com gimmick')], ['normal', t('Sem especiais')]]} />
+          options={[['all', t('Todos os steps')], ['esp', 'Unique'], ['gim', t('Com gimmick')], ['normal', t('Sem Unique')]]} />
         <Chips value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
           options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['improve', t('Sem PG')],
             ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />
