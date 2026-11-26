@@ -4,19 +4,27 @@ export const PLAN_ORDER = ['free', 'plus', 'pro'];
 export const PLAN_LABEL = { free: 'Grátis', plus: 'Plus', pro: 'Pro' };
 
 export const FEATURES = [
-  { id: 'recommendations_all', label: 'Todas as recomendações para subir PUMBILITY' },
-  { id: 'history_full', label: 'Histórico completo de notas' },
-  { id: 'style_full', label: 'Estilo do chart completo (% por padrão)' },
-  { id: 'evolution_chart', label: 'Gráficos de evolução' },
-  { id: 'tips', label: 'Dicas com base nos seus passes e quebras' },
-  { id: 'export', label: 'Exportar tier e cards em imagem', soon: true },
-  { id: 'auto_sync', label: 'Sincronização automática' },
-  { id: 'push', label: 'Notificação com o app fechado', soon: true },
-  { id: 'training_plan', label: 'Plano de treino semanal e metas' },
-  { id: 'rival', label: 'Rival: comparação completa com um amigo' },
-  { id: 'weakness', label: 'Pontos fracos por padrão' },
-  { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar' },
+  { id: 'no_ads', label: 'Sem anúncios', group: 'Geral' },
+  { id: 'recommendations_all', label: 'Todas as recomendações para subir PUMBILITY', group: 'Análises' },
+  { id: 'history_full', label: 'Histórico completo de notas', group: 'Análises' },
+  { id: 'style_full', label: 'Estilo do chart completo (% por padrão)', group: 'Análises' },
+  { id: 'evolution_chart', label: 'Gráficos de evolução', group: 'Análises' },
+  { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises' },
+  { id: 'weakness', label: 'Pontos fortes e fracos por padrão', group: 'Análises' },
+  { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar', group: 'Treino' },
+  { id: 'training_plan', label: 'Plano de treino semanal e metas', group: 'Treino' },
+  { id: 'rival', label: 'Rival: comparação completa com um amigo', group: 'Social' },
+  { id: 'auto_sync', label: 'Sincronização automática', group: 'Sincronização' },
+  { id: 'push', label: 'Notificação com o app fechado', soon: true, group: 'Sincronização' },
+  { id: 'export', label: 'Exportar tier e cards em imagem', soon: true, group: 'Social' },
 ];
+/** Plano mínimo de cada recurso quando o admin ainda não configurou (a base da revisão dos planos). */
+export const FEATURE_DEFAULTS = {
+  no_ads: 'plus', recommendations_all: 'plus', history_full: 'plus', style_full: 'plus', evolution_chart: 'plus', tips: 'plus',
+  weakness: 'pro', training_analysis: 'plus', training_plan: 'pro', rival: 'plus', auto_sync: 'pro', push: 'pro', export: 'plus',
+};
+/** Recursos sempre grátis (só para mostrar na matriz). */
+export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Tier, votações e Especiais', 'Desafios, missões e sequência', 'Mais jogadas', 'Lista do Meu treino', 'Sincronização manual'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
   { id: 'recommendations', label: 'Recomendações visíveis' },
@@ -39,7 +47,7 @@ export const TOGGLES = [
 ];
 export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
 
-const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
+export const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 
 /** O que o usuário pode usar, a partir de my_plan(). */
 export function entitlements(plan) {
@@ -48,7 +56,7 @@ export function entitlements(plan) {
   const mine = plan?.plan || 'free';
   const can = (feature) => {
     if (!enforce || plan?.admin) return true;
-    const need = cfg.features?.[feature] || 'free';
+    const need = cfg.features?.[feature] || FEATURE_DEFAULTS[feature] || 'free';
     return rank(mine) >= rank(need);
   };
   // limite numérico do plano (null = sem limite)

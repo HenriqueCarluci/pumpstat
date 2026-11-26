@@ -7,7 +7,8 @@ import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck, X } from '../components/Icons.jsx';
-import { FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER } from '../lib/plans.js';
+import { PLAN_LABEL } from '../lib/plans.js';
+import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
 
@@ -277,29 +278,8 @@ function PlansConfig() {
       </div>
       <p className="muted small">{t('Depois volta sozinha para o plano grátis. Coloque 0 dias para desligar. Cada e-mail ganha o teste uma vez só.')}</p>
 
-      <h3>{t('Plano mínimo de cada recurso')}</h3>
-      {FEATURES.map((f) => (
-        <div key={f.id} className="cfg-row">
-          <span>{t(f.label)}{f.soon && <em className="soon"> · {t('em breve')}</em>}</span>
-          <select value={cfg.features?.[f.id] || 'free'} onChange={(e) => set((c) => { c.features = { ...(c.features || {}), [f.id]: e.target.value }; })}>
-            {PLAN_ORDER.map((p) => <option key={p} value={p}>{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</option>)}
-          </select>
-        </div>
-      ))}
-
-      <h3>{t('Limites por plano')}</h3>
-      <p className="muted small">{t('Deixe em branco para sem limite.')}</p>
-      <div className="cfg-grid">
-        <span />{PLAN_ORDER.map((p) => <b key={p}>{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</b>)}
-        {LIMITS.map((l) => (
-          <FragmentRow key={l.id} label={t(l.label)}>
-            {PLAN_ORDER.map((p) => (
-              <input key={p} type="number" min="0" value={cfg.limits?.[p]?.[l.id] ?? ''}
-                onChange={(e) => set((c) => { c.limits = c.limits || {}; c.limits[p] = { ...(c.limits[p] || {}) }; if (e.target.value === '') delete c.limits[p][l.id]; else c.limits[p][l.id] = Number(e.target.value); })} />
-            ))}
-          </FragmentRow>
-        ))}
-      </div>
+      <h3>{t('Recursos por plano')}</h3>
+      <PlanMatrix cfg={cfg} set={set} />
 
       <h3>{t('Preços por região')}</h3>
       <div className="cfg-grid prices">

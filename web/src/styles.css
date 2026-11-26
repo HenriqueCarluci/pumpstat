@@ -1094,3 +1094,21 @@ a.q-city:hover { color: var(--text); }
 .tag.new { background: var(--neon); color: #0b0c0e; border-color: transparent; font-weight: 800; }
 .new-toggle.on { border-color: rgba(140, 255, 58, .6); color: var(--neon); background: rgba(140, 255, 58, .1); border-style: solid; }
 .tile-legacy ~ .tile-special { top: 26px; }
+
+/* Admin: matriz de recursos por plano */
+.pm-wrap { overflow-x: auto; }
+.plan-matrix { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px; min-width: 420px; }
+.plan-matrix th { text-align: center; font: 800 13px var(--num); padding: 8px 6px; position: sticky; top: 0; background: var(--panel); }
+.plan-matrix th:first-child { text-align: left; }
+.plan-matrix td { padding: 6px; border-top: 1px solid var(--line); vertical-align: middle; }
+.plan-matrix .pm-group td { font: 800 11px var(--num); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 14px; border-top: 0; }
+.pm-cell { text-align: center; width: 70px; }
+.pm-toggle { width: 36px; height: 32px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg2); color: var(--muted); display: inline-grid; place-items: center; cursor: pointer; }
+.pm-toggle.on { background: rgba(140, 255, 58, .14); border-color: rgba(140, 255, 58, .55); color: var(--neon); }
+.pm-cell input { width: 64px; text-align: center; }
+@media (max-width: 520px) {
+  .plan-matrix { min-width: 0; font-size: 13px; }
+  .pm-cell { width: 50px; padding: 5px 2px; }
+  .pm-toggle { width: 34px; height: 30px; }
+  .pm-cell input { width: 48px; padding: 6px 2px; }
+}

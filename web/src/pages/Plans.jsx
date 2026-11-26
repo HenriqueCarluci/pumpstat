@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { purchase, salesState, storeUrl, waitForPlan, yearlySaving } from '../lib/billing.js';
 import { locale, t, tErr } from '../lib/i18n.js';
-import { entitlements, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
+import { entitlements, FEATURE_DEFAULTS, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
 import { Check, Crown, X } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 
@@ -21,7 +21,7 @@ export default function Plans() {
   if (!ent.showPlans) return <div className="page"><p className="empty">{t('Os planos ainda não estão disponíveis.')}</p></div>;
   const cfg = ent.config;
   const prices = cfg.prices?.[region] || cfg.prices?.WORLD || {};
-  const need = (f) => cfg.features?.[f] || 'free';
+  const need = (f) => cfg.features?.[f] || FEATURE_DEFAULTS[f] || 'free';
   const lim = (p, k) => cfg.limits?.[p]?.[k];
   const sales = salesState(cfg);
   const save = Math.max(yearlySaving(prices, 'plus') || 0, yearlySaving(prices, 'pro') || 0);
@@ -60,14 +60,11 @@ export default function Plans() {
             {ent.plan === p ? <Link className="tag" to="/assinatura">{t('Seu plano')}</Link>
               : p !== 'free' && action(p)}
             <ul>
-              {cfgAds && (
-                <li className={p === 'free' ? 'off' : ''}>{p === 'free' ? <X size={14} /> : <Check size={14} />} {t('Sem anúncios')}</li>
-              )}
               {LIMITS.map((l) => {
                 const v = lim(p, l.id);
                 return <li key={l.id}><Check size={14} /> {t(l.label)}: <b>{v == null || v === '' ? t('sem limite') : v}</b></li>;
               })}
-              {FEATURES.map((f) => {
+              {FEATURES.filter((f) => f.id !== 'no_ads' || cfgAds).map((f) => {
                 const ok = PLAN_ORDER.indexOf(p) >= PLAN_ORDER.indexOf(need(f.id));
                 return (
                   <li key={f.id} className={ok ? '' : 'off'}>

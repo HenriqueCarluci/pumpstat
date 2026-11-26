@@ -4,10 +4,14 @@
 import { rpc } from './api.js';
 import { isNative } from './native.js';
 
+import { FEATURE_DEFAULTS, rank } from './plans.js';
+
 export function adsConfig(plan) {
   const ads = plan?.config?.ads || {};
   const mine = plan?.plan || 'free';
-  const show = !!ads.enabled && mine === 'free' && (!plan?.admin || !!ads.show_admin);
+  // "Sem anúncios" é um recurso da matriz de planos (padrão: a partir do Plus)
+  const need = plan?.config?.features?.no_ads || FEATURE_DEFAULTS.no_ads;
+  const show = !!ads.enabled && rank(mine) < rank(need) && (!plan?.admin || !!ads.show_admin);
   return { ...ads, show, everyN: Math.max(4, Number(ads.every_n) || 12) };
 }
 

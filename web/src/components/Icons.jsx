@@ -4,7 +4,7 @@ export {
   MapPin, MessageCircle, Music2, PencilLine, Play, RefreshCw, Settings as SettingsIcon, SkipForward, Swords, Tag,
   Target, ArrowUpToLine, Users, X, LayoutGrid, History, Radio, LifeBuoy, Crown, ShieldCheck, ShieldOff, UserX, UserCheck,
   Flag, Ban, Trash2, Lock, TrendingUp, Plus, ThumbsUp, ThumbsDown, Vote, Clock, Flame, Trophy, CalendarCheck, Gift, ToggleRight,
-  Dumbbell, BookmarkPlus, BookmarkCheck, Zap, Shuffle, Sparkles, Star,
+  Dumbbell, BookmarkPlus, BookmarkCheck, Zap, Shuffle, Sparkles, Star, Minus,
 } from 'lucide-react';
 
 /** Marca do PIU Stats: a seta do pad (estilo LX) em verde, sobre o fundo escuro. */

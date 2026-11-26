@@ -494,3 +494,19 @@ Música nova: a análise detalhada de estilo ainda não saiu; os padrões vêm d
 {n} avaliações | {n} reviews | {n} reseñas | 평가 {n}개 | 評価{n}件 | {n} avis | {n} recensioni
 Só músicas novas | New songs only | Solo canciones nuevas | 신곡만 | 新曲のみ | Nouveaux morceaux seulement | Solo brani nuovi
 Nenhuma música nova neste nível. | No new songs at this level. | No hay canciones nuevas en este nivel. | 이 레벨에는 신곡이 없습니다. | このレベルに新曲はありません。 | Aucun nouveau morceau à ce niveau. | Nessun brano nuovo a questo livello.
+Recursos por plano | Features by plan | Funciones por plan | 요금제별 기능 | プラン別の機能 | Fonctions par offre | Funzioni per piano
+Recurso | Feature | Función | 기능 | 機能 | Fonction | Funzione
+Limites (em branco = sem limite) | Limits (blank = unlimited) | Límites (vacío = sin límite) | 제한 (비워두면 무제한) | 上限(空欄=無制限) | Limites (vide = illimité) | Limiti (vuoto = illimitato)
+Sempre grátis | Always free | Siempre gratis | 항상 무료 | 常に無料 | Toujours gratuit | Sempre gratis
+Toque numa coluna para o recurso valer a partir daquele plano. Tocar de novo no menor plano marcado tira esse plano. Salve no fim da página. | Tap a column to make the feature available from that plan up. Tapping the lowest checked plan again removes it. Save at the bottom of the page. | Toca una columna para que la función valga desde ese plan. Tocar de nuevo el plan más bajo marcado lo quita. Guarda al final de la página. | 열을 누르면 그 요금제부터 기능이 적용됩니다. 체크된 가장 낮은 요금제를 다시 누르면 빠집니다. 페이지 아래에서 저장하세요. | 列をタップするとそのプラン以上で使えるようになります。チェック済みの一番下のプランをもう一度タップすると外れます。ページ下部で保存。 | Touchez une colonne pour que la fonction vaille à partir de cette offre. Toucher à nouveau l'offre cochée la plus basse la retire. Enregistrez en bas de la page. | Tocca una colonna perché la funzione valga da quel piano in su. Toccare di nuovo il piano più basso spuntato lo toglie. Salva in fondo alla pagina.
+Pontos fortes e fracos por padrão | Strengths and weaknesses by pattern | Puntos fuertes y débiles por patrón | 패턴별 강점과 약점 | パターン別の得意と苦手 | Points forts et faibles par pattern | Punti forti e deboli per pattern
+Geral | General | General | 일반 | 一般 | Général | Generale
+Análises | Analysis | Análisis | 분석 | 分析 | Analyses | Analisi
+Treino | Training | Entrenamiento | 연습 | 練習 | Entraînement | Allenamento
+Sincronização | Sync | Sincronización | 동기화 | 同期 | Synchronisation | Sincronizzazione
+Fila dos fliperamas | Arcade queues | Filas de las recreativas | 오락실 대기열 | ゲーセンの列 | Files des salles | Code delle sale giochi
+Amigos, chat e online | Friends, chat and online | Amigos, chat y en línea | 친구, 채팅, 온라인 | フレンド・チャット・オンライン | Amis, chat et en ligne | Amici, chat e online
+Tier, votações e Especiais | Tier, votes and Specials | Tier, votaciones y Especiales | 티어, 투표, 스페셜 | ティア・投票・スペシャル | Tier, votes et Spéciaux | Tier, votazioni e Speciali
+Desafios, missões e sequência | Challenges, missions and streak | Desafíos, misiones y racha | 챌린지, 미션, 연속 기록 | チャレンジ・ミッション・連続記録 | Défis, missions et série | Sfide, missioni e serie
+Lista do Meu treino | My training list | Lista de Mi entrenamiento | 내 연습 목록 | マイ練習のリスト | Liste Mon entraînement | Lista de Il mio allenamento
+Sincronização manual | Manual sync | Sincronización manual | 수동 동기화 | 手動同期 | Synchronisation manuelle | Sincronizzazione manuale

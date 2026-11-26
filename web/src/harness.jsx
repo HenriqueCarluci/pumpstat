@@ -4,6 +4,9 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import Tier from './pages/Tier.jsx';
+import { useState } from 'react';
+import { PlanMatrix } from './pages/AdminExtra.jsx';
+function M() { const [cfg, setCfg] = useState({ features: { weakness: 'pro' }, limits: { free: { friends: 15, recommendations: 5, history_months: 3 }, plus: { friends: 50 } } }); const set = (fn) => setCfg((c) => { const n = structuredClone(c); fn(n); return n; }); return <div className="page"><PlanMatrix cfg={cfg} set={set} /></div>; }
 import './styles.css';
 
 const song = { id: 242, title: 'Gargoyle', artist: 'Sanxion7', bpm: '150', songType: 'Arcade', jacket: 'https://piugame.com/data/song_img2/618150bb862eb2a3177d94ac387aae60.png', rise: false, isNew: true, charts: [] };
@@ -26,6 +29,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

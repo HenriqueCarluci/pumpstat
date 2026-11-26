@@ -2,10 +2,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
-import { TOGGLES } from '../lib/plans.js';
+import { ALWAYS_FREE, FEATURE_DEFAULTS, FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER, rank, TOGGLES } from '../lib/plans.js';
 import { CHALLENGE_KINDS, goalText, PRIZE_MODES, prizeText, TEMPLATES } from '../lib/challenges.js';
 import { locale, t, tErr, tn } from '../lib/i18n.js';
-import { Check, Gift, Trophy } from '../components/Icons.jsx';
+import { Check, Gift, Minus, Trophy } from '../components/Icons.jsx';
 
 // ---------- liga/desliga ----------
 export function FeatureToggles() {
@@ -227,3 +227,72 @@ function AdminChallenge({ c, onEdit, onChange }) {
     </section>
   );
 }
+
+/**
+ * Matriz de recursos por plano. Cada recurso vale "a partir de" um plano (o servidor confere assim):
+ * marcar o Plus marca o Pro também; tocar no menor plano marcado tira esse plano.
+ * Os limites (amigos, recomendações, histórico) ficam nas últimas linhas; em branco = sem limite.
+ */
+export function PlanMatrix({ cfg, set }) {
+  const need = (id) => cfg.features?.[id] || FEATURE_DEFAULTS[id] || 'free';
+  const groups = [...new Set(FEATURES.map((f) => f.group))];
+  const click = (id, p) => set((c) => {
+    const cur = c.features?.[id] || FEATURE_DEFAULTS[id] || 'free';
+    let next = p;
+    // tocou no menor plano já marcado: sobe um plano (o Pro fica sempre marcado)
+    if (p === cur) next = PLAN_ORDER[Math.min(PLAN_ORDER.length - 1, rank(p) + 1)];
+    c.features = { ...(c.features || {}), [id]: next };
+  });
+  const lim = (p, k) => cfg.limits?.[p]?.[k] ?? '';
+  const setLim = (p, k, v) => set((c) => {
+    c.limits = c.limits || {}; c.limits[p] = { ...(c.limits[p] || {}) };
+    if (v === '') delete c.limits[p][k]; else c.limits[p][k] = Math.max(0, Number(v));
+  });
+  const head = (p) => (p === 'free' ? t('Grátis') : PLAN_LABEL[p]);
+  return (
+    <div className="pm-wrap">
+      <table className="plan-matrix">
+        <thead><tr><th>{t('Recurso')}</th>{PLAN_ORDER.map((p) => <th key={p}>{head(p)}</th>)}</tr></thead>
+        <tbody>
+          {groups.map((g) => (
+            <FragmentRows key={g}>
+              <tr className="pm-group"><td colSpan={PLAN_ORDER.length + 1}>{t(g)}</td></tr>
+              {FEATURES.filter((f) => f.group === g).map((f) => (
+                <tr key={f.id}>
+                  <td>{t(f.label)}{f.soon && <em className="soon"> · {t('em breve')}</em>}</td>
+                  {PLAN_ORDER.map((p) => {
+                    const on = rank(p) >= rank(need(f.id));
+                    return (
+                      <td key={p} className="pm-cell">
+                        <button type="button" className={`pm-toggle ${on ? 'on' : ''}`} onClick={() => click(f.id, p)}
+                          aria-pressed={on} aria-label={`${t(f.label)}: ${head(p)}`}>
+                          {on ? <Check size={15} /> : <Minus size={15} />}
+                        </button>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </FragmentRows>
+          ))}
+          <tr className="pm-group"><td colSpan={PLAN_ORDER.length + 1}>{t('Limites (em branco = sem limite)')}</td></tr>
+          {LIMITS.map((l) => (
+            <tr key={l.id}>
+              <td>{t(l.label)}</td>
+              {PLAN_ORDER.map((p) => (
+                <td key={p} className="pm-cell">
+                  <input type="number" min="0" inputMode="numeric" value={lim(p, l.id)} placeholder="∞" aria-label={`${t(l.label)}: ${head(p)}`}
+                    onChange={(e) => setLim(p, l.id, e.target.value)} />
+                </td>
+              ))}
+            </tr>
+          ))}
+          <tr className="pm-group"><td colSpan={PLAN_ORDER.length + 1}>{t('Sempre grátis')}</td></tr>
+          <tr><td colSpan={PLAN_ORDER.length + 1} className="muted small">{ALWAYS_FREE.map((x) => t(x)).join(' · ')}</td></tr>
+        </tbody>
+      </table>
+      <p className="muted small">{t('Toque numa coluna para o recurso valer a partir daquele plano. Tocar de novo no menor plano marcado tira esse plano. Salve no fim da página.')}</p>
+    </div>
+  );
+}
+const FragmentRows = ({ children }) => children;
