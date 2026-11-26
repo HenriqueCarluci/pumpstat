@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
@@ -17,10 +17,28 @@ export default function Tier() {
   const sizeLabel = { sm: t('Capas pequenas'), md: t('Capas médias'), lg: t('Capas grandes') };
   const legacy = (c) => legacyOf(c, version, prefs.legacyP1);
   const [params, setParams] = useSearchParams();
-  const mode = params.get('m') || 'D';
+  // Sem parâmetros na URL, abre no último modo/nível usado (guardado no aparelho).
+  const last = prefs.tierLast || {};
+  const mode = params.get('m') || prefs.tierMode || 'D';
   const levels = useMemo(() => [...new Set(data.charts.filter((c) => c.mode === mode).map((c) => c.level))].sort((a, b) => a - b), [data, mode]);
-  const level = +(params.get('l') || (mode === 'C' ? levels[0] : 20));
-  const set = (k, v) => { const p = new URLSearchParams(params); p.set(k, v); setParams(p, { replace: true }); };
+  const fallback = (m, lv) => (lv.includes(last[m]) ? last[m] : (m === 'C' ? lv[0] : (lv.includes(20) ? 20 : lv[0])));
+  const asked = +params.get('l');
+  const level = levels.includes(asked) ? asked : fallback(mode, levels);
+  const set = (k, v) => {
+    const p = new URLSearchParams(params);
+    if (k === 'm') {
+      const lv = [...new Set(data.charts.filter((c) => c.mode === v).map((c) => c.level))].sort((a, b) => a - b);
+      p.set('m', v); p.set('l', fallback(v, lv));
+    } else {
+      p.set('m', mode); p.set(k, v);
+    }
+    setParams(p, { replace: true });
+  };
+  // Guarda o que está na tela (vale também para quem chega por um link da Início).
+  useEffect(() => {
+    if (level == null || Number.isNaN(level)) return;
+    if (prefs.tierMode !== mode || last[mode] !== level) setPrefs({ tierMode: mode, tierLast: { ...last, [mode]: level } });
+  }, [mode, level]);
 
   const charts = data.charts.filter((c) => c.mode === mode && c.level === level);
   const groups = TIERS.map((x) => ({
