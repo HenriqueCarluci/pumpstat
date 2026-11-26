@@ -10,6 +10,8 @@ import Tier from './pages/Tier.jsx';
 import Recent from './pages/Recent.jsx';
 import Settings from './pages/Settings.jsx';
 import Login from './pages/Login.jsx';
+import Queue from './pages/Queue.jsx';
+import QueueTV from './pages/QueueTV.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -35,12 +37,45 @@ export default function App() {
     return () => { alive = false; };
   }, [session]);
 
-  if (!session) return <Login notice={fromUrl?.error ? `Não foi possível entrar: ${fromUrl.error}` : ''} />;
+  if (!session) {
+    // a fila do clube é pública: quem chega pelo QR/link não precisa de conta
+    if (isQueueHash()) return <PublicQueue />;
+    return <Login notice={fromUrl?.error ? `Não foi possível entrar: ${fromUrl.error}` : ''} />;
+  }
   return (
     <>
       {recovery && <NewPassword onDone={() => setRecovery(false)} />}
       <DataApp session={session} ingestKey={ingestKey} />
     </>
+  );
+}
+
+const isQueueHash = () => /^#\/fila/.test(window.location.hash);
+
+function PublicQueue() {
+  const [, force] = useState(0);
+  useEffect(() => { const f = () => force((n) => n + 1); window.addEventListener('hashchange', f); return () => window.removeEventListener('hashchange', f); }, []);
+  if (!isQueueHash()) return <Login />;
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/fila/:slug/tv" element={<QueueTV />} />
+        <Route path="*" element={
+          <div className="app">
+            <header className="topbar">
+              <div className="brand"><span className="logo">▲</span> StepClub</div>
+              <a className="btn ghost" href="#/">Entrar</a>
+            </header>
+            <main className="content">
+              <Routes>
+                <Route path="/fila/:slug" element={<Queue />} />
+                <Route path="*" element={<Queue />} />
+              </Routes>
+            </main>
+          </div>
+        } />
+      </Routes>
+    </HashRouter>
   );
 }
 
@@ -97,6 +132,7 @@ function Shell() {
   const { version, setVersion, data, loading, error, reload } = useData();
   const loc = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [loc.pathname]);
+  if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
 
   return (
     <div className="app">
@@ -127,6 +163,8 @@ function Shell() {
             <Route path="/tier" element={<Tier />} />
             <Route path="/recentes" element={<Recent />} />
             <Route path="/ajustes" element={<Settings />} />
+            <Route path="/fila" element={<Queue />} />
+            <Route path="/fila/:slug" element={<Queue />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}
@@ -136,7 +174,7 @@ function Shell() {
         <Tab to="/" icon="◉" label="Início" />
         <Tab to="/musicas" icon="♫" label="Músicas" />
         <Tab to="/tier" icon="▦" label="Tier" />
-        <Tab to="/recentes" icon="↻" label="Recentes" />
+        <Tab to="/fila/liberdade" icon="☰" label="Fila" />
         <Tab to="/ajustes" icon="⚙" label="Ajustes" />
       </nav>
     </div>

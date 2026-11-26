@@ -83,7 +83,7 @@ carregadas de `piugame.com/l_img/p2/…`, acento verde-neon do logo.
 2. Votação própria de tier e notas pessoais por chart.
 3. Metas (ex.: “SSS em todos os D20”) e notificações quando um recorde melhora.
 4. Gráfico da evolução de cada chart usando `best_score_history`.
-5. **Fila do fliperama** (detalhada abaixo).
+5. **Fila do fliperama** — ✅ primeira versão no ar (`#/fila/liberdade`, modo TV em `#/fila/liberdade/tv`).
 
 ### 6.1 Fila do fliperama
 

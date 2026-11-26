@@ -14,6 +14,7 @@ const SITES = { phoenix2: 'https://piugame.com', phoenix: 'https://phoenix.piuga
 const PAGE_DELAY_MS = 250;
 
 const jobs = new Map(); // jobId -> { userId, state, message, progress, results, error, at }
+const attempts = new Map(); // userId -> [timestamps]
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const parseHtml = (html) => new DOMParser().parseFromString(html, 'text/html');
 
@@ -123,6 +124,13 @@ const server = http.createServer(async (req, res) => {
       const { login, password, versions } = await readJson(req);
       if (!login || !password) return send(res, 400, { error: 'Informe o login e a senha da Pump It Up.' }, origin);
       const vs = (Array.isArray(versions) && versions.length ? versions : ['phoenix2', 'phoenix']).filter((v) => SITES[v]);
+      // limites: 1 sincronização a cada 2 min por conta e no máximo 5 tentativas por 15 min (evita bloquear a conta AM.PASS)
+      const now = Date.now();
+      const hist = (attempts.get(user.id) || []).filter((t) => now - t < 15 * 60_000);
+      const lastOk = [...jobs.values()].filter((j) => j.userId === user.id && j.state === 'done').reduce((m, j) => Math.max(m, j.at), 0);
+      if (hist.length >= 5) return send(res, 429, { error: 'Muitas tentativas. Espere alguns minutos e tente de novo.' }, origin);
+      if (now - lastOk < 2 * 60_000) return send(res, 429, { error: 'Você acabou de sincronizar. Tente de novo em 2 minutos.' }, origin);
+      attempts.set(user.id, [...hist, now]);
       const running = [...jobs.values()].find((j) => j.userId === user.id && j.state === 'running');
       if (running) return send(res, 409, { error: 'Já existe uma sincronização em andamento.', jobId: running.id }, origin);
       const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now() };

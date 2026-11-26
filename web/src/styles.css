@@ -290,3 +290,55 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .piu-head img { width: 64px; height: auto; flex: none; }
 .piu-connect .help a, .settings .small a { color: var(--neon); }
 .link.small { font-size: 12.5px; align-self: center; }
+
+/* ---------- fila ---------- */
+.q-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.q-head h1 { font: 800 24px var(--num); letter-spacing: 0.03em; color: #7df9ff; text-shadow: 0 0 14px rgba(125, 249, 255, 0.45); }
+.q-city { font: 700 11px var(--num); letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; }
+.q-head-actions { display: flex; gap: 8px; }
+.q-machine { display: flex; flex-direction: column; gap: 12px; }
+.q-now { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid rgba(140, 255, 58, 0.45);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(140, 255, 58, 0.16), transparent 60%), var(--panel2); }
+.q-now-label { font: 700 11px var(--num); letter-spacing: 0.18em; color: var(--neon); }
+.q-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; counter-reset: q 1; }
+.q-list li { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; background: var(--panel2); }
+.q-list li::before { counter-increment: q; content: counter(q) 'º'; font: 700 13px var(--num); color: var(--muted); width: 26px; }
+.q-list li.away { opacity: 0.55; }
+.q-list li.me { outline: 1.5px solid var(--neon); }
+.q-admin { margin-left: auto; display: flex; gap: 10px; }
+.q-person { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+.q-avatar { width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: var(--panel); border: 1px solid var(--line);
+  display: inline-flex; align-items: center; justify-content: center; font: 700 12px var(--num); flex: none; }
+.q-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.q-name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.q-turns { font-size: 11px; color: var(--muted); }
+.q-person.big .q-avatar { width: 52px; height: 52px; border: 2px solid var(--neon); }
+.q-person.big .q-name { font: 800 22px var(--num); }
+.q-pass { background: linear-gradient(135deg, #2bd2ff, #2b86ff); color: #04121f; }
+.q-mine { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; background: rgba(140, 255, 58, 0.07); border: 1px solid rgba(140, 255, 58, 0.3); }
+.q-join { display: flex; gap: 8px; }
+.q-join input { flex: 1; min-width: 0; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); outline: none; }
+.q-join .btn { background: linear-gradient(135deg, var(--gold), #ffb02e); }
+.q-reset { color: #ff8a96; }
+.q-log { display: flex; flex-direction: column; gap: 4px; }
+
+/* ---------- TV ---------- */
+.tv { min-height: 100vh; padding: 28px 36px; display: flex; flex-direction: column; gap: 24px;
+  background: radial-gradient(80% 60% at 50% 0%, rgba(43, 210, 255, 0.14), transparent 70%), var(--bg); }
+.tv header { display: flex; justify-content: space-between; align-items: center; }
+.tv .brand { font-size: 34px; }
+.tv-clock { font: 800 34px var(--num); color: var(--muted); }
+.tv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 24px; flex: 1; }
+.tv-machine { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+.tv-machine h2 { font: 800 26px var(--num); }
+.tv-now { padding: 18px; border-radius: 14px; border: 2px solid var(--neon); display: flex; flex-direction: column; gap: 10px; }
+.tv-now span { font: 700 14px var(--num); letter-spacing: 0.2em; color: var(--neon); }
+.tv-now.empty { font: 800 28px var(--num); color: var(--neon); border-style: dashed; }
+.tv-now .q-person.big .q-avatar { width: 84px; height: 84px; }
+.tv-now .q-person.big .q-name { font-size: 40px; }
+.tv-machine ol { margin: 0; padding-left: 34px; display: flex; flex-direction: column; gap: 10px; font: 800 22px var(--num); }
+.tv-machine li .q-name { font-size: 24px; }
+.tv-machine li.away { opacity: 0.5; }
+.tv-machine li em { margin-left: 10px; font-size: 14px; color: var(--muted); }
+.tv footer { text-align: center; font-size: 20px; color: var(--muted); }
+.tv footer b { color: var(--text); }

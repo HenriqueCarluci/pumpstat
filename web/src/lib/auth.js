@@ -127,3 +127,8 @@ function translate(m) {
   };
   return map[m] || m;
 }
+
+/** id do usuário logado (campo "sub" do token), ou null. */
+export function currentUserId() {
+  try { return session ? JSON.parse(atob(session.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub : null; } catch { return null; }
+}
