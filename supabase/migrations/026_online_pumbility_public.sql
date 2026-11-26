@@ -1,0 +1,2 @@
+-- 026: o PUMBILITY (Phoenix 2) aparece para todos na lista de online, não só para amigos.
+-- (aplicada via MCP: online_players devolve 'pumbility' sem checar amizade)
