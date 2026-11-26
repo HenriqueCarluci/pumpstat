@@ -3,7 +3,7 @@ import { Person, useVenue } from './Queue.jsx';
 
 /** Tela para deixar na TV do clube: quem está jogando e os próximos, em letras grandes. */
 export default function QueueTV() {
-  const { slug = 'liberdade' } = useParams();
+  const { slug } = useParams();
   const { venue, entries } = useVenue(slug);
   if (!venue) return <div className="tv"><p>Carregando…</p></div>;
   const url = `${window.location.origin}${window.location.pathname}#/fila/${slug}`;

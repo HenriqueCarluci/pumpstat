@@ -22,13 +22,44 @@ async function rest(path) {
 }
 
 export const venueData = (slug) => rpc('venue_data', { p_slug: slug });
-export const listVenues = () => rest('venues?select=slug,name,city&order=name');
+export const listVenues = () => rest('venues?select=slug,name,city,address,latitude,longitude,radius_m,sort&order=sort,name');
 export const queueEntries = (machineIds) =>
   machineIds.length ? rest(`queue_entries?machine_id=in.(${machineIds.join(',')})&order=pos`) : Promise.resolve([]);
 export const recentEvents = (machineIds) =>
   machineIds.length ? rest(`queue_events?machine_id=in.(${machineIds.join(',')})&order=at.desc&limit=8`) : Promise.resolve([]);
 
-export const joinQueue = (machine, name) => rpc('queue_join', { p_machine: machine, p_name: name || null, p_token: deviceToken() });
+/** Posição atual do aparelho (para o check-in). */
+export function getPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error('Este aparelho não informa a localização.'));
+    navigator.geolocation.getCurrentPosition(
+      (p) => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }),
+      (e) => reject(new Error(e.code === 1
+        ? 'Permita o acesso à localização para fazer check-in (o StepClub só confere se você está no fliperama).'
+        : 'Não consegui pegar sua localização. Tente de novo perto de uma janela ou com o GPS ligado.')),
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 },
+    );
+  });
+}
+
+export function distanceM(a, b) {
+  const R = 6371000; const r = (x) => (x * Math.PI) / 180;
+  const h = Math.sin(r(b.lat - a.lat) / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(r(b.lng - a.lng) / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+async function withPosition(needsCheckin) {
+  return needsCheckin ? getPosition() : { lat: null, lng: null, acc: null };
+}
+
+export const joinQueue = async (machine, name, needsCheckin) => {
+  const p = await withPosition(needsCheckin);
+  return rpc('queue_checkin', { p_machine: machine, p_name: name || null, p_token: deviceToken(), p_lat: p.lat, p_lng: p.lng, p_acc: p.acc });
+};
+export const backFromAway = async (entry, needsCheckin) => {
+  const p = await withPosition(needsCheckin);
+  return rpc('queue_back', { p_entry: entry, p_token: deviceToken(), p_lat: p.lat, p_lng: p.lng, p_acc: p.acc });
+};
 export const passTurn = (machine) => rpc('queue_pass', { p_machine: machine });
 export const setAway = (entry, away) => rpc('queue_set_away', { p_entry: entry, p_away: away, p_token: deviceToken() });
 export const leaveQueue = (entry) => rpc('queue_leave', { p_entry: entry, p_token: deviceToken() });

@@ -12,6 +12,7 @@ import Settings from './pages/Settings.jsx';
 import Login from './pages/Login.jsx';
 import Queue from './pages/Queue.jsx';
 import QueueTV from './pages/QueueTV.jsx';
+import Venues from './pages/Venues.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -69,7 +70,7 @@ function PublicQueue() {
             <main className="content">
               <Routes>
                 <Route path="/fila/:slug" element={<Queue />} />
-                <Route path="*" element={<Queue />} />
+                <Route path="*" element={<Venues />} />
               </Routes>
             </main>
           </div>
@@ -163,7 +164,7 @@ function Shell() {
             <Route path="/tier" element={<Tier />} />
             <Route path="/recentes" element={<Recent />} />
             <Route path="/ajustes" element={<Settings />} />
-            <Route path="/fila" element={<Queue />} />
+            <Route path="/fila" element={<Venues />} />
             <Route path="/fila/:slug" element={<Queue />} />
             <Route path="*" element={<Home />} />
           </Routes>
@@ -174,7 +175,7 @@ function Shell() {
         <Tab to="/" icon="◉" label="Início" />
         <Tab to="/musicas" icon="♫" label="Músicas" />
         <Tab to="/tier" icon="▦" label="Tier" />
-        <Tab to="/fila/liberdade" icon="☰" label="Fila" />
+        <Tab to="/fila" icon="☰" label="Fila" />
         <Tab to="/ajustes" icon="⚙" label="Ajustes" />
       </nav>
     </div>

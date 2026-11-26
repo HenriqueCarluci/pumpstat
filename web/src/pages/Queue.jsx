@@ -2,13 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { currentUserId, getSession } from '../lib/auth.js';
 import {
-  joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
+  backFromAway, joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
 } from '../lib/queue.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
 const rememberEntry = (machine, id) => { try { localStorage.setItem(MY_ENTRIES, JSON.stringify({ ...myEntryIds(), [machine]: id })); } catch { /* ignore */ } };
 
+const needsCheckin = (v) => !!(v.venue.require_checkin && v.venue.latitude != null);
 const mins = (iso) => Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
 const EVENT_PT = { join: 'entrou', pass: 'passou a vez', leave: 'saiu', away: 'ficou ausente', back: 'voltou', remove: 'foi removido', reset: 'fila zerada', expire: 'saiu (ausente 1 h)' };
 
@@ -42,8 +43,9 @@ export function useVenue(slug) {
 }
 
 export default function Queue() {
-  const { slug = 'liberdade' } = useParams();
+  const { slug } = useParams();
   const { venue, entries, events, error, refresh } = useVenue(slug);
+  useEffect(() => { try { localStorage.setItem('stepclub:venue', slug); } catch { /* ignore */ } }, [slug]);
   const [showRules, setShowRules] = useState(false);
 
   if (error && !venue) return <div className="page"><p className="empty">{error}</p></div>;
@@ -53,8 +55,15 @@ export default function Queue() {
     <div className="page queue-page">
       <header className="q-head">
         <div>
-          <div className="q-city">{venue.venue.city}</div>
+          <Link to="/fila" className="q-city">‹ {venue.venue.city}</Link>
           <h1>{venue.venue.name}</h1>
+          {venue.venue.address && (
+            <a className="q-addr" target="_blank" rel="noreferrer"
+              href={`https://www.google.com/maps/search/?api=1&query=${venue.venue.latitude && venue.venue.longitude ? `${venue.venue.latitude},${venue.venue.longitude}` : encodeURIComponent(venue.venue.address)}`}>
+              📍 {venue.venue.address}
+            </a>
+          )}
+          {needsCheckin(venue) && <div className="q-geo small">Check-in por localização: só entra na fila quem estiver a até {venue.venue.radius_m} m.</div>}
         </div>
         <div className="q-head-actions">
           <Link className="btn ghost" to={`/fila/${slug}/tv`}>Modo TV</Link>
@@ -63,7 +72,7 @@ export default function Queue() {
       </header>
       {error && <div className="banner err">{error}</div>}
       {venue.machines.map((m) => (
-        <MachineQueue key={m.id} machine={m} isAdmin={venue.is_admin}
+        <MachineQueue key={m.id} machine={m} isAdmin={venue.is_admin} checkin={needsCheckin(venue)}
           entries={entries.filter((e) => e.machine_id === m.id)} onChange={refresh} />
       ))}
       {events.length > 0 && (
@@ -80,7 +89,7 @@ export default function Queue() {
   );
 }
 
-function MachineQueue({ machine, entries, isAdmin, onChange }) {
+function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
   const uid = currentUserId();
   const mine = entries.find((e) => (uid && e.user_id === uid) || myEntryIds()[machine.id] === e.id);
   const [name, setName] = useState(() => { try { return localStorage.getItem('stepclub:queue-name') || ''; } catch { return ''; } });
@@ -99,7 +108,7 @@ function MachineQueue({ machine, entries, isAdmin, onChange }) {
   const join = (e) => {
     e.preventDefault();
     try { localStorage.setItem('stepclub:queue-name', name); } catch { /* ignore */ }
-    act(async () => { const id = await joinQueue(machine.id, name); rememberEntry(machine.id, id); });
+    act(async () => { const id = await joinQueue(machine.id, name, checkin && !isAdmin); rememberEntry(machine.id, id); });
   };
 
   return (
@@ -143,7 +152,7 @@ function MachineQueue({ machine, entries, isAdmin, onChange }) {
                 : <>Você é o <b>{myPos + 1}º</b> da fila{waitMin != null ? ` · espera ~${waitMin} min` : ''}.</>}
           </div>
           <div className="bm-row">
-            <button className="btn ghost" disabled={busy} onClick={() => act(() => setAway(mine.id, mine.status !== 'away'))}>
+            <button className="btn ghost" disabled={busy} onClick={() => act(() => (mine.status === 'away' ? backFromAway(mine.id, checkin && !isAdmin) : setAway(mine.id, true)))}>
               {mine.status === 'away' ? 'Voltei' : 'Estou ausente'}
             </button>
             <button className="btn ghost" disabled={busy} onClick={() => act(() => leaveQueue(mine.id))}>Sair da fila</button>
@@ -153,7 +162,7 @@ function MachineQueue({ machine, entries, isAdmin, onChange }) {
         <form className="q-join" onSubmit={join}>
           <input placeholder={getSession() ? 'seu nome (ou deixe o da Pump)' : 'seu nome'} value={name} maxLength={24}
             onChange={(e) => setName(e.target.value)} required={!getSession()} />
-          <button className="btn" disabled={busy}>Entrar na fila</button>
+          <button className="btn" disabled={busy}>{busy ? (checkin ? 'Conferindo local…' : 'Entrando…') : checkin ? '📍 Check-in e entrar' : 'Entrar na fila'}</button>
         </form>
       )}
 
@@ -182,6 +191,7 @@ function Rules({ onClose }) {
         <h3>Regras da fila</h3>
         <ol className="steps small">
           <li>Respeite a ordem da fila.</li>
+          <li>Para entrar na fila (e para voltar de "ausente") é preciso fazer check-in no local: o app confere a sua localização.</li>
           <li>Indo para o local ou ao banheiro? Marque <b>Estou ausente</b>.</li>
           <li>Ausente por mais de 1 hora sai da fila automaticamente.</li>
           <li>Fila sem movimento por 2 horas é zerada (só a daquela máquina).</li>
