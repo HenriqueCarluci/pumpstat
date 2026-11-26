@@ -46,7 +46,7 @@ export default function Tier() {
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
-          <div className="tier-label"><b>{g.short}</b><span>{g.label}</span></div>
+          <div className="tier-label"><b>{g.short}</b><span>{g.label}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
           <div className="tier-grid">
             {g.charts.map((c) => (
               <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : ''}`}

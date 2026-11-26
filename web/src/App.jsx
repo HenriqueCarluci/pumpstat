@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import { cachedVersion, fetchVersion } from './lib/api.js';
+import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
+import { getSession, onSession, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { VERSIONS } from './lib/piu.js';
 import Home from './pages/Home.jsx';
 import Songs from './pages/Songs.jsx';
@@ -8,6 +9,7 @@ import Song from './pages/Song.jsx';
 import Tier from './pages/Tier.jsx';
 import Recent from './pages/Recent.jsx';
 import Settings from './pages/Settings.jsx';
+import Login from './pages/Login.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -16,7 +18,69 @@ function readVersion() {
   try { return localStorage.getItem('pumpstat:version') || 'phoenix2'; } catch { return 'phoenix2'; }
 }
 
+// Confirmação de e-mail / recuperação de senha chegam com o token na URL
+const fromUrl = sessionFromUrl();
+
 export default function App() {
+  const [session, setSession] = useState(getSession);
+  const [owner, setOwner] = useState(null); // null = verificando
+  const [ingestKey, setIngestKey] = useState('');
+  const [recovery, setRecovery] = useState(fromUrl?.type === 'recovery');
+
+  useEffect(() => onSession((s) => { setSession(s); if (!s) { setOwner(null); setIngestKey(''); clearCache(); } }), []);
+
+  useEffect(() => {
+    if (!session) return;
+    let alive = true;
+    (async () => {
+      try {
+        const r = await rpc('claim_owner');
+        if (!alive) return;
+        setOwner(!!r.owner);
+        if (r.owner) setIngestKey((await rpc('my_ingest_key')) || '');
+      } catch { if (alive) setOwner(false); }
+    })();
+    return () => { alive = false; };
+  }, [session]);
+
+  if (!session) return <Login />;
+  if (owner === null) return <div className="empty">Entrando…</div>;
+  if (!owner) {
+    return (
+      <div className="login"><div className="login-card">
+        <div className="login-brand"><span className="logo">▲</span> PumpStat</div>
+        <p className="center">A conta <b>{session.email}</b> não é a dona deste PumpStat.</p>
+        <button className="btn wide" onClick={signOut}>Sair</button>
+      </div></div>
+    );
+  }
+  return (
+    <>
+      {recovery && <NewPassword onDone={() => setRecovery(false)} />}
+      <DataApp session={session} ingestKey={ingestKey} />
+    </>
+  );
+}
+
+function NewPassword({ onDone }) {
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  const save = async (e) => {
+    e.preventDefault();
+    try { await updatePassword(pw); onDone(); } catch (ex) { setErr(ex.message); }
+  };
+  return (
+    <div className="modal"><form className="login-card" onSubmit={save}>
+      <h3>Nova senha</h3>
+      <label className="field">Senha<input type="password" minLength={6} required value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" /></label>
+      {err && <div className="form-err">{err}</div>}
+      <button className="btn wide">Salvar</button>
+      <button type="button" className="link" onClick={onDone}>Agora não</button>
+    </form></div>
+  );
+}
+
+function DataApp({ session, ingestKey }) {
   const [version, setVersionState] = useState(readVersion);
   const [data, setData] = useState(() => cachedVersion(readVersion()));
   const [loading, setLoading] = useState(true);
@@ -35,7 +99,8 @@ export default function App() {
     setVersionState(v);
   };
 
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload }), [version, data, loading, error, reload]);
+  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey }),
+    [version, data, loading, error, reload, session, ingestKey]);
 
   return (
     <DataCtx.Provider value={ctx}>

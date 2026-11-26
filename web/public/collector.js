@@ -205,12 +205,19 @@
     const bests = [];
     const add = (doc) => rowsOf(doc).forEach((r) => { const p = parseRow(r); if (p) bests.push(p); });
     add(first);
-    for (let p = 2; p <= pages; p++) {
-      msg('Melhores scores: página ' + p + ' de ' + pages + '…');
-      bar(p / (pages + 2));
-      await sleep(DELAY_MS);
-      add(await getDoc('/my_page/my_best_score.php?&&page=' + p));
-    }
+    // 3 páginas em paralelo, com pausa curta entre requisições de cada "trabalhador"
+    let nextPage = 2; let read = 1;
+    const worker = async () => {
+      while (nextPage <= pages) {
+        const n = nextPage++;
+        await sleep(DELAY_MS);
+        add(await getDoc('/my_page/my_best_score.php?&&page=' + n));
+        read++;
+        bar(read / (pages + 2));
+        msg('Melhores scores: ' + read + ' de ' + pages + ' páginas…');
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
 
     // ---------- jogadas recentes ----------
     msg('Lendo jogadas recentes…');

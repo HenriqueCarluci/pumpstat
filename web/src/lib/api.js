@@ -1,17 +1,24 @@
 // Acesso ao Supabase (PostgREST RPC) sem SDK: o app só lê, a escrita vem do coletor.
+import { accessToken } from './auth.js';
+import { SUPABASE_KEY, SUPABASE_URL } from './config.js';
 
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
-export const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY || 'sb_publishable_8_e3UpVPrgDdQbNlFitBvw_9uSoJG_t';
+export { SUPABASE_KEY, SUPABASE_URL };
 
 export async function rpc(fn, args) {
+  const token = await accessToken();
   const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
-    headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+    headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
     body: JSON.stringify(args || {}),
   });
   const body = await res.json().catch(() => null);
   if (!res.ok) throw new Error(body?.message || `Erro ${res.status} em ${fn}`);
   return body;
+}
+
+export function clearCache() {
+  memo.clear();
+  try { Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX)).forEach((k) => localStorage.removeItem(k)); } catch { /* ignore */ }
 }
 
 const memo = new Map();
