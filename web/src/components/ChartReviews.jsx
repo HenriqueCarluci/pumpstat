@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { rpc } from '../lib/api.js';
 import { TIER_VOTES } from '../lib/piu.js';
 import { Grade, timeAgo } from './ui.jsx';
+import { t, tErr, tn } from '../lib/i18n.js';
 
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
@@ -10,8 +11,8 @@ export const REVIEW_TAGS = [
   ['stamina', 'Stamina'], ['hold', 'Hold'], ['tecnico', 'Técnico'],
 ];
 const TAG_LABEL = Object.fromEntries(REVIEW_TAGS);
-const tierLabel = (v) => TIER_VOTES.find(([n]) => n === v)?.[1];
-const avgLabel = (a) => (a == null ? null : a >= 1.5 ? 'Topo do nível' : a >= 0.5 ? 'Difícil' : a > -0.5 ? 'Médio' : a > -1.5 ? 'Fácil' : 'Muito fácil');
+const tierLabel = (v) => t(TIER_VOTES.find(([n]) => n === v)?.[1] || '');
+const avgLabel = (a) => (a == null ? null : t(a >= 1.5 ? 'Topo do nível' : a >= 0.5 ? 'Difícil' : a > -0.5 ? 'Médio' : a > -1.5 ? 'Fácil' : 'Muito fácil'));
 
 /** Avaliações da comunidade de um chart: voto de tier, tags de estilo e comentários. */
 export default function ChartReviews({ chart, onSaved }) {
@@ -26,11 +27,11 @@ export default function ChartReviews({ chart, onSaved }) {
       const r = await rpc('chart_reviews_for', { p_chart: chart.id });
       setInfo(r);
       if (r.mine) setForm({ tier: r.mine.tier, tags: r.mine.tags || [], comment: r.mine.comment || '' });
-    } catch (e) { setErr(e.message); }
+    } catch (e) { setErr(tErr(e.message)); }
   };
   useEffect(() => { load(); }, [chart.id]); // eslint-disable-line
 
-  const toggleTag = (t) => setForm((f) => ({ ...f, tags: f.tags.includes(t) ? f.tags.filter((x) => x !== t) : [...f.tags, t] }));
+  const toggleTag = (tag) => setForm((f) => ({ ...f, tags: f.tags.includes(tag) ? f.tags.filter((x) => x !== tag) : [...f.tags, tag] }));
   const save = async (clear = false) => {
     setBusy(true); setErr(''); setSaved(false);
     try {
@@ -40,44 +41,44 @@ export default function ChartReviews({ chart, onSaved }) {
       await load();
       setSaved(true);
       onSaved?.();
-    } catch (e) { setErr(e.message); }
+    } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };
 
-  if (!info) return <p className="muted small">{err || 'Carregando avaliações…'}</p>;
+  if (!info) return <p className="muted small">{err || t('Carregando avaliações…')}</p>;
   return (
     <div className="reviews">
       <div className="rv-summary">
         {info.votes > 0
-          ? <span>Comunidade: <b>{avgLabel(Number(info.avg))}</b> <span className="muted small">({info.votes} {info.votes === 1 ? 'voto' : 'votos'})</span></span>
-          : <span className="muted small">Ninguém votou no tier deste chart ainda.</span>}
+          ? <span>{t('Comunidade:')} <b>{avgLabel(Number(info.avg))}</b> <span className="muted small">({tn(info.votes, '{n} voto', '{n} votos')})</span></span>
+          : <span className="muted small">{t('Ninguém votou no tier deste chart ainda.')}</span>}
         {info.tags.length > 0 && (
-          <span className="rv-tags">{info.tags.map(([t, n]) => <span key={t} className="tag skill">{TAG_LABEL[t] || t} · {n}</span>)}</span>
+          <span className="rv-tags">{info.tags.map(([x, n]) => <span key={x} className="tag skill">{t(TAG_LABEL[x] || x)} · {n}</span>)}</span>
         )}
       </div>
 
       {info.can_review ? (
         <div className="rv-form">
-          <div className="rv-label">Para você, este chart é…</div>
+          <div className="rv-label">{t('Para você, este chart é…')}</div>
           <div className="chips">
             {TIER_VOTES.map(([v, l]) => (
-              <button key={v} type="button" className={form.tier === v ? 'on' : ''} onClick={() => setForm((f) => ({ ...f, tier: f.tier === v ? null : v }))}>{l}</button>
+              <button key={v} type="button" className={form.tier === v ? 'on' : ''} onClick={() => setForm((f) => ({ ...f, tier: f.tier === v ? null : v }))}>{t(l)}</button>
             ))}
           </div>
-          <div className="rv-label">O que mais pesa nele?</div>
+          <div className="rv-label">{t('O que mais pesa nele?')}</div>
           <div className="chips">
-            {REVIEW_TAGS.map(([t, l]) => <button key={t} type="button" className={form.tags.includes(t) ? 'on' : ''} onClick={() => toggleTag(t)}>{l}</button>)}
+            {REVIEW_TAGS.map(([x, l]) => <button key={x} type="button" className={form.tags.includes(x) ? 'on' : ''} onClick={() => toggleTag(x)}>{t(l)}</button>)}
           </div>
-          <textarea maxLength={500} rows={2} placeholder="Comentário (opcional): dica, parte difícil, como passar…" value={form.comment}
+          <textarea maxLength={500} rows={2} placeholder={t('Comentário (opcional): dica, parte difícil, como passar…')} value={form.comment}
             onChange={(e) => setForm((f) => ({ ...f, comment: e.target.value }))} />
           <div className="rv-actions">
-            <button className="btn" disabled={busy} onClick={() => save(false)}>{info.mine ? 'Atualizar avaliação' : 'Enviar avaliação'}</button>
-            {info.mine && <button className="btn ghost" disabled={busy} onClick={() => save(true)}>Remover</button>}
-            {saved && <span className="muted small">Salvo ✓</span>}
+            <button className="btn" disabled={busy} onClick={() => save(false)}>{info.mine ? t('Atualizar avaliação') : t('Enviar avaliação')}</button>
+            {info.mine && <button className="btn ghost" disabled={busy} onClick={() => save(true)}>{t('Remover')}</button>}
+            {saved && <span className="muted small">{t('Salvo')} ✓</span>}
           </div>
         </div>
       ) : (
-        <p className="muted small">Passe este chart (sem stage break) e sincronize para poder votar no tier, marcar o estilo e comentar.</p>
+        <p className="muted small">{t('Passe este chart (sem stage break) e sincronize para poder votar no tier, marcar o estilo e comentar.')}</p>
       )}
       {err && <div className="form-err">{err}</div>}
 
@@ -88,7 +89,7 @@ export default function ChartReviews({ chart, onSaved }) {
               <span className="q-avatar" style={{ width: 32, height: 32 }}>{c.avatar ? <img src={c.avatar} alt="" referrerPolicy="no-referrer" /> : (c.nickname || '?').slice(0, 2)}</span>
               <div>
                 <div className="rv-c-head">
-                  {c.me ? <b>Você</b> : <Link to={`/jogador/${c.user}`}><b>{c.nickname || 'Jogador'}</b></Link>}
+                  {c.me ? <b>{t('Você')}</b> : <Link to={`/jogador/${c.user}`}><b>{c.nickname || t('Jogador')}</b></Link>}
                   {c.grade && <Grade grade={c.grade} size="sm" />}
                   {c.tier != null && <span className="tag">{tierLabel(c.tier)}</span>}
                   <span className="muted small">{timeAgo(c.at)}</span>

@@ -1,0 +1,63 @@
+import { useEffect, useRef, useState } from 'react';
+import { useData } from '../App.jsx';
+import { rpc } from '../lib/api.js';
+import { canAlert } from '../lib/notify.js';
+import { t } from '../lib/i18n.js';
+
+const who = (p) => (p.friend && p.nickname ? p.nickname : p.title || t('Um jogador'));
+
+/** Aviso flutuante quando alguém te chama para jogar (e quando respondem ao seu convite). */
+export default function InviteToast() {
+  const { presence } = useData();
+  const [hidden, setHidden] = useState(() => new Set());
+  const alerted = useRef(new Set());
+  const invite = presence.invites.find((i) => !hidden.has(`i${i.invite}`));
+  const reply = presence.replies.find((r) => !hidden.has(`r${r.invite}`) && !seenReply(r.invite));
+
+  // aviso do sistema (se permitido) quando chega convite novo com o app em segundo plano
+  useEffect(() => {
+    for (const i of presence.invites) {
+      if (alerted.current.has(i.invite)) continue;
+      alerted.current.add(i.invite);
+      if (canAlert() && Notification.permission === 'granted' && document.hidden) {
+        try { new Notification('StepClub', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
+      }
+    }
+  }, [presence.invites]);
+
+  const hide = (k) => setHidden((s) => new Set(s).add(k));
+  const respond = async (i, accept) => {
+    hide(`i${i.invite}`);
+    try { await rpc('respond_invite', { p_invite: i.invite, p_accept: accept }); } catch { /* ignora */ }
+    presence.refresh();
+  };
+
+  if (invite) {
+    return (
+      <div className="toast invite">
+        <div className="toast-h">🎮 {t('{who} te chamou para jogar', { who: who(invite) })}</div>
+        {invite.message && <div className="toast-msg">“{invite.message}”</div>}
+        {invite.venue && <div className="muted small">📍 {invite.venue}</div>}
+        <div className="bm-row">
+          <button className="btn" onClick={() => respond(invite, true)}>{t('Bora!')}</button>
+          <button className="btn ghost" onClick={() => respond(invite, false)}>{t('Agora não')}</button>
+        </div>
+      </div>
+    );
+  }
+  if (reply) {
+    return (
+      <div className={`toast ${reply.status}`} onClick={() => { markReply(reply.invite); hide(`r${reply.invite}`); }}>
+        <div className="toast-h">
+          {reply.status === 'accepted' ? `✅ ${t('{who} aceitou seu convite!', { who: who(reply) })}` : `${t('{who} não pode agora.', { who: who(reply) })}`}
+        </div>
+        <div className="muted small">{t('Toque para fechar')}</div>
+      </div>
+    );
+  }
+  return null;
+}
+
+const KEY = 'stepclub:seen-replies';
+const seenReply = (id) => { try { return JSON.parse(localStorage.getItem(KEY) || '[]').includes(id); } catch { return false; } };
+const markReply = (id) => { try { localStorage.setItem(KEY, JSON.stringify([...JSON.parse(localStorage.getItem(KEY) || '[]'), id].slice(-50))); } catch { /* ignora */ } };

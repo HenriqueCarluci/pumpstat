@@ -1,0 +1,97 @@
+Recomendadas para você | Recommended for you | Recomendadas para ti | 나를 위한 추천 | あなたへのおすすめ | Recommandés pour vous | Consigliati per te
+um chart novo precisa valer mais de {v} para entrar no seu top 50. | a new chart needs to be worth more than {v} to enter your top 50. | un chart nuevo necesita valer más de {v} para entrar en tu top 50. | 새 채보가 상위 50에 들려면 {v}보다 높아야 합니다. | 新しい譜面がトップ50に入るには {v} より高い値が必要です。 | un nouveau chart doit valoir plus de {v} pour entrer dans votre top 50. | un nuovo chart deve valere più di {v} per entrare nella tua top 50.
+seu top 50 ainda não está cheio, qualquer chart nível 10+ soma. | your top 50 isn't full yet, any level 10+ chart adds up. | tu top 50 aún no está lleno, cualquier chart nivel 10+ suma. | 상위 50이 아직 다 차지 않아 10레벨 이상 채보는 모두 점수에 더해집니다. | トップ50がまだ埋まっていないので、Lv10以上の譜面はすべて加算されます。 | votre top 50 n'est pas encore plein, tout chart niveau 10+ compte. | la tua top 50 non è ancora piena, ogni chart di livello 10+ conta.
+A nota esperada vem das suas notas em charts do mesmo nível, ajustada pela dificuldade de cada chart. | The expected score comes from your scores on charts of the same level, adjusted by each chart's difficulty. | La nota esperada viene de tus notas en charts del mismo nivel, ajustada por la dificultad de cada chart. | 예상 점수는 같은 레벨 채보의 내 점수를 바탕으로 각 채보 난이도를 반영해 계산합니다. | 予想スコアは同じレベルの譜面でのあなたのスコアから、各譜面の難しさで調整して出しています。 | Le score attendu vient de vos scores sur des charts du même niveau, ajusté selon la difficulté de chaque chart. | Il punteggio atteso deriva dai tuoi punteggi su chart dello stesso livello, corretto per la difficoltà di ciascun chart.
+Para jogar | To play | Para jugar | 플레이할 곡 | プレイする譜面 | À jouer | Da giocare
+Melhorar recorde | Improve a record | Mejorar récord | 기록 갱신 | 記録更新 | Améliorer un record | Migliorare un record
+Nada aqui por enquanto. Jogue mais alguns charts de nível 10+ para eu entender seu nível. | Nothing here yet. Play a few more level 10+ charts so I can gauge your level. | Nada por ahora. Juega algunos charts más de nivel 10+ para entender tu nivel. | 아직 없습니다. 10레벨 이상 채보를 몇 개 더 플레이하면 실력을 파악할 수 있어요. | まだありません。Lv10以上の譜面をもう少しプレイすると、実力を把握できます。 | Rien pour l'instant. Jouez encore quelques charts niveau 10+ pour que j'évalue votre niveau. | Niente per ora. Gioca qualche altro chart di livello 10+ così capisco il tuo livello.
+Sincronize suas notas para receber recomendações. | Sync your scores to get recommendations. | Sincroniza tus notas para recibir recomendaciones. | 점수를 동기화하면 추천을 받을 수 있어요. | スコアを同期するとおすすめが表示されます。 | Synchronisez vos scores pour recevoir des recommandations. | Sincronizza i tuoi punteggi per ricevere consigli.
+esperado ~{n} | expected ~{n} | esperado ~{n} | 예상 ~{n} | 予想 ~{n} | attendu ~{n} | atteso ~{n}
+faltam {n} | {n} to go | faltan {n} | {n} 남음 | あと {n} | encore {n} | mancano {n}
+Sincronizar com a Pump It Up | Sync with Pump It Up | Sincronizar con Pump It Up | Pump It Up과 동기화 | Pump It Up と同期 | Synchroniser avec Pump It Up | Sincronizza con Pump It Up
+Última sincronização da {v}: {when} | Last {v} sync: {when} | Última sincronización de {v}: {when} | {v} 마지막 동기화: {when} | {v} の最終同期: {when} | Dernière synchronisation {v} : {when} | Ultima sincronizzazione {v}: {when}
+Entrar com outra conta AM.PASS | Sign in with another AM.PASS account | Entrar con otra cuenta AM.PASS | 다른 AM.PASS 계정으로 로그인 | 別の AM.PASS アカウントでログイン | Se connecter avec un autre compte AM.PASS | Accedi con un altro account AM.PASS
+Exibição | Display | Visualización | 표시 | 表示 | Affichage | Visualizzazione
+Tamanho da nota sobre a capa da música na tela de Tier | Size of the grade over the song jacket on the Tier screen | Tamaño de la nota sobre la portada en la pantalla Tier | 티어 화면에서 곡 이미지 위 그레이드 크기 | ティア画面のジャケット上のグレードの大きさ | Taille du grade sur la pochette dans l'écran Tier | Dimensione del grade sulla copertina nella schermata Tier
+Pequena | Small | Pequeña | 작게 | 小 | Petite | Piccola
+Grande | Large | Grande | 크게 | 大 | Grande | Grande
+Conta StepClub | StepClub account | Cuenta StepClub | StepClub 계정 | StepClub アカウント | Compte StepClub | Account StepClub
+Conectado como | Signed in as | Conectado como | 로그인 계정 | ログイン中: | Connecté en tant que | Connesso come
+Recarregar dados | Reload data | Recargar datos | 데이터 다시 불러오기 | データを再読み込み | Recharger les données | Ricarica dati
+Sair | Sign out | Cerrar sesión | 로그아웃 | ログアウト | Se déconnecter | Esci
+Catálogo de charts e dificuldades: | Chart catalog and difficulties: | Catálogo de charts y dificultades: | 채보 목록과 난이도: | 譜面カタログと難易度: | Catalogue des charts et difficultés : | Catalogo dei chart e difficoltà:
+Estilo dos charts: anotações do | Chart styles: annotations from | Estilo de los charts: anotaciones de | 채보 스타일: 주석 출처 | 譜面の傾向: 注釈の出典 | Style des charts : annotations de | Stile dei chart: annotazioni di
+Imagens de capa, grades, plates e bolinhas: © Andamiro, carregadas direto do piugame.com. | Jackets, grades, plates and level balls: © Andamiro, loaded directly from piugame.com. | Portadas, grades, plates y bolitas: © Andamiro, cargadas directamente de piugame.com. | 곡 이미지, 그레이드, 플레이트, 레벨 볼: © Andamiro, piugame.com에서 직접 불러옵니다. | ジャケット・グレード・プレート・レベルボール: © Andamiro、piugame.com から直接読み込み。 | Pochettes, grades, plates et pastilles : © Andamiro, chargées directement depuis piugame.com. | Copertine, grade, plate e palline: © Andamiro, caricate direttamente da piugame.com.
+Projeto independente, sem vínculo com a Andamiro. | Independent project, not affiliated with Andamiro. | Proyecto independiente, sin vínculo con Andamiro. | Andamiro와 무관한 독립 프로젝트입니다. | Andamiro とは無関係の個人プロジェクトです。 | Projet indépendant, sans lien avec Andamiro. | Progetto indipendente, non affiliato ad Andamiro.
+Música não encontrada nesta versão. | Song not found in this version. | Canción no encontrada en esta versión. | 이 버전에서 곡을 찾을 수 없습니다. | このバージョンに曲が見つかりません。 | Morceau introuvable dans cette version. | Brano non trovato in questa versione.
+Voltar | Back | Volver | 뒤로 | 戻る | Retour | Indietro
+Artista desconhecido | Unknown artist | Artista desconocido | 알 수 없는 아티스트 | アーティスト不明 | Artiste inconnu | Artista sconosciuto
+Ver no YouTube | Watch on YouTube | Ver en YouTube | YouTube에서 보기 | YouTube で見る | Voir sur YouTube | Guarda su YouTube
+Valor estimado no PUMBILITY | Estimated PUMBILITY value | Valor estimado en PUMBILITY | PUMBILITY 추정값 | PUMBILITY の推定値 | Valeur PUMBILITY estimée | Valore PUMBILITY stimato
++{n} p/ {g} | +{n} for {g} | +{n} p/ {g} | {g}까지 +{n} | {g}まで +{n} | +{n} pour {g} | +{n} per {g}
+{n} notas | {n} notes | {n} notas | {n}노트 | {n}ノーツ | {n} notes | {n} note
+Tags marcadas pela comunidade do StepClub | Tags chosen by the StepClub community | Tags marcadas por la comunidad de StepClub | StepClub 커뮤니티가 붙인 태그 | StepClub コミュニティが付けたタグ | Tags choisis par la communauté StepClub | Tag scelti dalla community di StepClub
+Ver estilo do chart | See chart style | Ver estilo del chart | 채보 스타일 보기 | 譜面の傾向を見る | Voir le style du chart | Vedi stile del chart
+Recorde em {d} | Best set {d} | Récord el {d} | {d} 기록 | {d} に記録 | Record le {d} | Record il {d}
+Avaliar | Review | Valorar | 평가 | 評価 | Évaluer | Valuta
+Ranking | Ranking | Ranking | 랭킹 | ランキング | Classement | Classifica
+Histórico | History | Historial | 기록 | 履歴 | Historique | Storico
+Sem histórico registrado ainda. | No history yet. | Aún no hay historial. | 아직 기록이 없습니다. | まだ履歴がありません。 | Pas encore d'historique. | Ancora nessuno storico.
+Evolução do recorde: | Best score progress: | Evolución del récord: | 최고 기록 변화: | ベストの推移: | Évolution du record : | Andamento del record:
+Buscar música ou artista | Search song or artist | Buscar canción o artista | 곡 또는 아티스트 검색 | 曲名・アーティストで検索 | Rechercher un morceau ou un artiste | Cerca brano o artista
+Jogados | Played | Jugados | 플레이함 | プレイ済み | Joués | Giocati
+Não jogados | Not played | No jugados | 미플레이 | 未プレイ | Non joués | Non giocati
+Sem PG | No PG | Sin PG | PG 아님 | PG未達成 | Sans PG | Senza PG
+Nível | Level | Nivel | 레벨 | レベル | Niveau | Livello
+até | to | a | ~ | 〜 | à | a
+Ordenar | Sort | Ordenar | 정렬 | 並び替え | Trier | Ordina
+Maior score | Highest score | Mayor score | 최고 점수 | スコアが高い順 | Meilleur score | Punteggio più alto
+Recorde recente | Recent best | Récord reciente | 최근 기록 | 最近の記録 | Record récent | Record recente
+Mostrando 400. Refine a busca para ver o resto. | Showing 400. Refine your search to see the rest. | Mostrando 400. Afina la búsqueda para ver el resto. | 400개만 표시합니다. 검색을 좁히면 나머지를 볼 수 있어요. | 400件まで表示しています。絞り込むと残りも見られます。 | 400 affichés. Affinez la recherche pour voir le reste. | Mostrati 400. Affina la ricerca per vedere il resto.
+{n} música | {n} song | {n} canción | {n}곡 | {n}曲 | {n} morceau | {n} brano
+{n} músicas | {n} songs | {n} canciones | {n}곡 | {n}曲 | {n} morceaux | {n} brani
+clears · {n} quebrados | clears · {n} broken | clears · {n} rotos | 클리어 · 브레이크 {n} | クリア · ブレイク {n} | clears · {n} cassés | clear · {n} falliti
+melhor | best | mejor | 최고 | 最高 | meilleur | migliore
+Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do StepClub. | Relative difficulty within the level, based on PIU Scores and the StepClub community's votes. | Dificultad relativa dentro del nivel según PIU Scores y los votos de la comunidad de StepClub. | PIU Scores와 StepClub 커뮤니티 투표를 바탕으로 한 레벨 내 상대 난이도입니다. | PIU Scores と StepClub コミュニティの投票による、同じレベル内での相対難易度です。 | Difficulté relative dans le niveau, d'après PIU Scores et les votes de la communauté StepClub. | Difficoltà relativa nel livello secondo PIU Scores e i voti della community di StepClub.
+Carregando títulos… | Loading titles… | Cargando títulos… | 칭호 불러오는 중… | 称号を読み込み中… | Chargement des titres… | Caricamento titoli…
+Nenhum título da {v} ainda. Sincronize em Ajustes para trazer seus títulos. | No {v} titles yet. Sync in Settings to bring in your titles. | Aún no hay títulos de {v}. Sincroniza en Ajustes para traer tus títulos. | 아직 {v} 칭호가 없습니다. 설정에서 동기화하면 칭호를 가져옵니다. | {v} の称号はまだありません。設定から同期すると取り込みます。 | Aucun titre {v} pour l'instant. Synchronisez dans Réglages pour importer vos titres. | Ancora nessun titolo {v}. Sincronizza in Impostazioni per importare i tuoi titoli.
+títulos da {v} | {v} titles | títulos de {v} | {v} 칭호 | {v} の称号 | titres {v} | titoli {v}
+Mais perto de conseguir | Closest to unlocking | Más cerca de conseguir | 획득에 가장 가까운 칭호 | もう少しで獲得 | Les plus proches | I più vicini da ottenere
+Buscar título ou condição | Search title or condition | Buscar título o condición | 칭호 또는 조건 검색 | 称号・条件で検索 | Rechercher un titre ou une condition | Cerca titolo o condizione
+Tenho | Owned | Tengo | 보유 | 獲得済み | Obtenus | Ottenuti
+tenho | owned | tengo | 보유 | 獲得済み | obtenu | ottenuto
+Voltar para | Back to | Volver a | 돌아가기: | 戻る: | Retour à | Torna a
+Procurando… | Searching… | Buscando… | 찾는 중… | 検索中… | Recherche… | Ricerca…
+Pumps perto de mim | Pumps near me | Pumps cerca de mí | 내 주변 펌프 | 近くの Pump | Pumps près de moi | Pump vicino a me
+você está aqui | you are here | estás aquí | 현재 위치 | 現在地 | vous êtes ici | sei qui
+Escolha a sua cidade | Choose your city | Elige tu ciudad | 도시를 선택하세요 | 都市を選んでください | Choisissez votre ville | Scegli la tua città
+Cidades | Cities | Ciudades | 도시 | 都市 | Villes | Città
+escolha o fliperama | choose the arcade | elige el arcade | 오락실을 선택하세요 | ゲーセンを選んでください | choisissez la salle | scegli la sala giochi
+Filas baseadas no | Queues based on | Filas basadas en | 대기열 참고: | 順番待ちの元: | Files basées sur | Code basate su
+Endereços: | Addresses: | Direcciones: | 주소: | 住所: | Adresses : | Indirizzi:
+Topo do nível | Top of level | Tope del nivel | 레벨 최상위 | レベル上位 | Haut du niveau | Top del livello
+Difícil | Hard | Difícil | 어려움 | 難しい | Difficile | Difficile
+Médio | Medium | Medio | 보통 | 普通 | Moyen | Medio
+Fácil | Easy | Fácil | 쉬움 | 易しい | Facile | Facile
+Muito fácil | Very easy | Muy fácil | 매우 쉬움 | とても易しい | Très facile | Molto facile
+Sem dados | No data | Sin datos | 데이터 없음 | データなし | Pas de données | Nessun dato
+Muito difícil | Very hard | Muy difícil | 매우 어려움 | とても難しい | Très difficile | Molto difficile
+Subestimado | Underrated | Subestimado | 과소평가 | 逆詐称 | Sous-coté | Sottovalutato
+Superestimado | Overrated | Sobreestimado | 과대평가 | 詐称 | Surcoté | Sopravvalutato
+SEM FAIXA | UNRANKED | SIN RANGO | 등급 없음 | ランクなし | SANS RANG | SENZA FASCIA
+Twist | Twist | Twist | 트위스트 | ツイスト | Twist | Twist
+Drill | Drill | Drill | 드릴 | ドリル | Drill | Drill
+Corrida | Run | Carrera | 연타 | 階段/連打 | Course | Corsa
+Bracket | Bracket | Bracket | 브라켓 | ブラケット | Bracket | Bracket
+Pulo | Jump | Salto | 점프 | 同時押し | Saut | Salto
+Jack | Jack | Jack | 잭 | 縦連 | Jack | Jack
+Doublestep | Doublestep | Doublestep | 더블스텝 | ダブルステップ | Doublestep | Doublestep
+Footswitch | Footswitch | Footswitch | 풋스위치 | 踏み替え | Footswitch | Footswitch
+Pés cruzados ou de lado | Crossed or sideways feet | Pies cruzados o de lado | 발이 꼬이거나 옆으로 선 자세 | 足が交差、または横向き | Pieds croisés ou de côté | Piedi incrociati o di lato
+Alternar rápido entre 2 setas | Fast alternation between 2 arrows | Alternar rápido entre 2 flechas | 두 화살표를 빠르게 번갈아 밟기 | 2つの矢印を素早く交互に | Alterner vite entre 2 flèches | Alternare veloce tra 2 frecce
+Sequência rápida alternando os pés | Fast stream alternating feet | Secuencia rápida alternando los pies | 발을 번갈아 빠르게 밟는 구간 | 足を交互に速く踏む流れ | Suite rapide en alternant les pieds | Sequenza veloce alternando i piedi
+Duas setas com o mesmo pé | Two arrows with one foot | Dos flechas con el mismo pie | 한 발로 두 화살표 | 片足で2つの矢印 | Deux flèches avec le même pied | Due frecce con lo stesso piede
+Duas setas com os dois pés | Two arrows with both feet | Dos flechas con los dos pies | 양발로 두 화살표 | 両足で2つの矢印 | Deux flèches avec les deux pieds | Due frecce con entrambi i piedi
+Mesma seta repetida com o mesmo pé | Same arrow repeated with the same foot | Misma flecha repetida con el mismo pie | 같은 발로 같은 화살표 반복 | 同じ足で同じ矢印を連続 | Même flèche répétée avec le même pied | Stessa freccia ripetuta con lo stesso piede
+Dois passos seguidos com o mesmo pé | Two steps in a row with the same foot | Dos pasos seguidos con el mismo pie | 같은 발로 연속 두 스텝 | 同じ足で続けて2歩 | Deux pas de suite avec le même pied | Due passi di fila con lo stesso piede
+Troca de pé na mesma seta | Switching feet on the same arrow | Cambio de pie en la misma flecha | 같은 화살표에서 발 바꾸기 | 同じ矢印で足を入れ替える | Changer de pied sur la même flèche | Cambio di piede sulla stessa freccia

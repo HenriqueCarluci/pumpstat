@@ -1,0 +1,89 @@
+pulos | jumps | saltos | 점프 | 同時押し | sauts | salti
+corrida | run | carrera | 연타 | 連打 | course | corsa
+corrida ancorada | anchor run | carrera anclada | 앵커 연타 | 軸足連打 | course ancrée | corsa ancorata
+corrida sem twist | run without twists | carrera sin twist | 트위스트 없는 연타 | ツイストなし連打 | course sans twist | corsa senza twist
+twists | twists | twists | 트위스트 | ツイスト | twists | twist
+lateral (3 setas) | side 3 panels | lateral (3 flechas) | 측면 3패널 | 片側3パネル | côté (3 flèches) | laterale (3 frecce)
+meio (6 setas) | middle 6 panels | centro (6 flechas) | 가운데 6패널 | 中央6パネル | milieu (6 flèches) | centro (6 frecce)
+meio (4 setas) | middle 4 panels | centro (4 flechas) | 가운데 4패널 | 中央4パネル | milieu (4 flèches) | centro (4 frecce)
+bracket escalonado | staggered bracket | bracket escalonado | 엇박 브라켓 | ずらしブラケット | bracket décalé | bracket sfalsato
+corrida de bracket | bracket run | carrera de bracket | 브라켓 연타 | ブラケット連打 | course de bracket | corsa di bracket
+drill de bracket | bracket drill | drill de bracket | 브라켓 드릴 | ブラケットドリル | drill de bracket | drill di bracket
+pulo de bracket | bracket jump | salto de bracket | 브라켓 점프 | ブラケット同時押し | saut de bracket | salto di bracket
+twist de bracket | bracket twist | twist de bracket | 브라켓 트위스트 | ブラケットツイスト | twist de bracket | twist di bracket
+escada de 5 | 5-stair | escalera de 5 | 5계단 | 5段階段 | escalier de 5 | scala da 5
+escada de 10 | 10-stair | escalera de 10 | 10계단 | 10段階段 | escalier de 10 | scala da 10
+yog walk | yog walk | yog walk | 요그 워크 | ヨグウォーク | yog walk | yog walk
+troca de pad | pad transition | cambio de pad | 패드 이동 | パッド移動 | changement de pad | cambio di pad
+troca de pad (co-op) | pad transition (co-op) | cambio de pad (co-op) | 패드 이동 (코옵) | パッド移動 (Co-op) | changement de pad (co-op) | cambio di pad (co-op)
+split | split | split | 스플릿 | スプリット | split | split
+footslide em hold | hold footslide | footslide en hold | 롱노트 풋슬라이드 | ロング中の足滑り | footslide sur hold | footslide su hold
+footswitch em hold | hold footswitch | footswitch en hold | 롱노트 풋스위치 | ロング中の踏み替え | footswitch sur hold | footswitch su hold
+mãos | hands | manos | 손 | 手 | mains | mani
+explosões | bursts | ráfagas | 폭발 구간 | 局所難 | rafales | raffiche
+resistência | stamina | resistencia | 체력 | 体力 | endurance | resistenza
+Gimmick | Gimmick | Gimmick | 기믹 | ギミック | Gimmick | Gimmick
+Stamina | Stamina | Stamina | 체력 | 体力 | Endurance | Resistenza
+Hold | Hold | Hold | 롱노트 | ロング | Hold | Hold
+Técnico | Technical | Técnico | 테크닉 | テクニカル | Technique | Tecnico
+entrou | joined | entró | 들어옴 | 参加 | a rejoint | è entrato
+passou a vez | passed the turn | pasó el turno | 차례를 넘김 | 順番を回した | a passé son tour | ha passato il turno
+saiu | left | salió | 나감 | 離脱 | est parti | è uscito
+ficou ausente | went away | quedó ausente | 자리 비움 | 離席 | s'est absenté | si è assentato
+voltou | came back | volvió | 돌아옴 | 戻った | est revenu | è tornato
+foi removido | was removed | fue quitado | 제거됨 | 削除された | a été retiré | è stato rimosso
+fila zerada | queue cleared | fila vaciada | 대기열 초기화 | 列をリセット | file vidée | coda svuotata
+saiu (ausente 1 h) | left (away 1 h) | salió (ausente 1 h) | 나감 (1시간 자리 비움) | 離脱 (1時間離席) | parti (absent 1 h) | uscito (assente 1 h)
+Bora um x1? | Up for a 1v1? | ¿Un x1? | 1:1 한판? | タイマンしない? | Un 1v1 ? | Un 1v1?
+Tô no fliperama, cola aqui! | I'm at the arcade, come over! | ¡Estoy en el arcade, ven! | 나 오락실이야, 와! | ゲーセンにいるよ、来て! | Je suis à la salle, viens ! | Sono in sala giochi, vieni!
+Bora treinar uns charts juntos? | Wanna practice some charts together? | ¿Entrenamos unos charts juntos? | 같이 채보 연습할래? | 一緒に譜面の練習しない? | On s'entraîne sur quelques charts ensemble ? | Ci alleniamo insieme su qualche chart?
+Bom x1 | Good 1v1 | Buen x1 | 좋은 상대 | 好敵手 | Bon 1v1 | Buon 1v1
+Nível parecido | Similar level | Nivel parecido | 비슷한 실력 | 実力が近い | Niveau proche | Livello simile
+E-mail ou senha incorretos. | Wrong e-mail or password. | E-mail o contraseña incorrectos. | 이메일 또는 비밀번호가 올바르지 않습니다. | メールアドレスまたはパスワードが違います。 | E-mail ou mot de passe incorrect. | E-mail o password errati.
+Confirme o e-mail pelo link que enviamos antes de entrar. | Confirm your e-mail with the link we sent before signing in. | Confirma el e-mail con el enlace que enviamos antes de entrar. | 로그인 전에 보내 드린 링크로 이메일을 확인하세요. | ログインする前に、送ったリンクからメールを確認してください。 | Confirmez votre e-mail avec le lien envoyé avant de vous connecter. | Conferma l'e-mail con il link che ti abbiamo inviato prima di accedere.
+Este e-mail já tem conta. Use "Entrar". | This e-mail already has an account. Use "Sign in". | Este e-mail ya tiene cuenta. Usa "Entrar". | 이미 계정이 있는 이메일입니다. "로그인"을 이용하세요. | このメールアドレスは登録済みです。「ログイン」を使ってください。 | Cet e-mail a déjà un compte. Utilisez « Se connecter ». | Questa e-mail ha già un account. Usa "Accedi".
+A senha precisa ter pelo menos 6 caracteres. | The password needs at least 6 characters. | La contraseña necesita al menos 6 caracteres. | 비밀번호는 6자 이상이어야 합니다. | パスワードは6文字以上にしてください。 | Le mot de passe doit contenir au moins 6 caractères. | La password deve avere almeno 6 caratteri.
+Não foi possível trocar a senha | Couldn't change the password | No se pudo cambiar la contraseña | 비밀번호를 바꿀 수 없습니다 | パスワードを変更できませんでした | Impossible de changer le mot de passe | Impossibile cambiare la password
+Este aparelho não informa a localização. | This device doesn't provide location. | Este dispositivo no informa la ubicación. | 이 기기는 위치 정보를 제공하지 않습니다. | この端末は位置情報に対応していません。 | Cet appareil ne fournit pas sa position. | Questo dispositivo non fornisce la posizione.
+Permita o acesso à localização para fazer check-in (o StepClub só confere se você está no fliperama). | Allow location access to check in (StepClub only checks that you're at the arcade). | Permite el acceso a la ubicación para hacer check-in (StepClub solo comprueba que estés en el arcade). | 체크인하려면 위치 접근을 허용하세요 (StepClub은 오락실에 있는지만 확인합니다). | チェックインには位置情報の許可が必要です (StepClub はゲーセンにいるかだけを確認します)。 | Autorisez l'accès à la position pour le check-in (StepClub vérifie seulement que vous êtes dans la salle). | Consenti l'accesso alla posizione per il check-in (StepClub verifica solo che tu sia in sala giochi).
+Não consegui pegar sua localização. Tente de novo perto de uma janela ou com o GPS ligado. | Couldn't get your location. Try again near a window or with GPS on. | No pude obtener tu ubicación. Inténtalo cerca de una ventana o con el GPS encendido. | 위치를 가져오지 못했습니다. 창가에서 또는 GPS를 켜고 다시 시도하세요. | 位置情報を取得できませんでした。窓の近くか GPS をオンにして再度お試しください。 | Impossible d'obtenir votre position. Réessayez près d'une fenêtre ou avec le GPS activé. | Impossibile ottenere la posizione. Riprova vicino a una finestra o con il GPS attivo.
+A sessão do piugame expirou durante a leitura. | The piugame session expired while reading. | La sesión de piugame expiró durante la lectura. | 읽는 도중 piugame 세션이 만료되었습니다. | 読み込み中に piugame のセッションが切れました。 | La session piugame a expiré pendant la lecture. | La sessione di piugame è scaduta durante la lettura.
+Usando a sessão salva do piugame… | Using the saved piugame session… | Usando la sesión guardada de piugame… | 저장된 piugame 세션 사용 중… | 保存した piugame セッションを使用中… | Utilisation de la session piugame enregistrée… | Uso della sessione piugame salvata…
+A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS. | The piugame session expired. Sign in again with your AM.PASS password. | La sesión de piugame expiró. Entra de nuevo con tu contraseña AM.PASS. | piugame 세션이 만료되었습니다. AM.PASS 비밀번호로 다시 로그인하세요. | piugame のセッションが切れました。AM.PASS のパスワードでもう一度ログインしてください。 | La session piugame a expiré. Reconnectez-vous avec votre mot de passe AM.PASS. | La sessione di piugame è scaduta. Accedi di nuovo con la password AM.PASS.
+Entrando no piugame.com… | Signing in to piugame.com… | Entrando a piugame.com… | piugame.com에 로그인 중… | piugame.com にログイン中… | Connexion à piugame.com… | Accesso a piugame.com…
+Pronto! | Done! | ¡Listo! | 완료! | 完了! | Terminé ! | Fatto!
+Faça login no StepClub. | Sign in to StepClub. | Inicia sesión en StepClub. | StepClub에 로그인하세요. | StepClub にログインしてください。 | Connectez-vous à StepClub. | Accedi a StepClub.
+Sincronização rápida indisponível. | Quick sync unavailable. | Sincronización rápida no disponible. | 빠른 동기화를 사용할 수 없습니다. | クイック同期は利用できません。 | Synchronisation rapide indisponible. | Sincronizzazione rapida non disponibile.
+Entre com a sua conta AM.PASS uma vez para ativar a sincronização rápida. | Sign in with your AM.PASS account once to enable quick sync. | Entra con tu cuenta AM.PASS una vez para activar la sincronización rápida. | 빠른 동기화를 켜려면 AM.PASS 계정으로 한 번 로그인하세요. | クイック同期を有効にするには、一度 AM.PASS アカウントでログインしてください。 | Connectez-vous une fois avec votre compte AM.PASS pour activer la synchronisation rapide. | Accedi una volta con l'account AM.PASS per attivare la sincronizzazione rapida.
+Informe o login e a senha da Pump It Up. | Enter your Pump It Up login and password. | Ingresa el login y la contraseña de Pump It Up. | Pump It Up 아이디와 비밀번호를 입력하세요. | Pump It Up のログインIDとパスワードを入力してください。 | Saisissez l'identifiant et le mot de passe Pump It Up. | Inserisci login e password di Pump It Up.
+Muitas tentativas. Espere alguns minutos e tente de novo. | Too many attempts. Wait a few minutes and try again. | Demasiados intentos. Espera unos minutos e inténtalo de nuevo. | 시도가 너무 많습니다. 몇 분 후 다시 시도하세요. | 試行回数が多すぎます。数分待ってから再度お試しください。 | Trop de tentatives. Attendez quelques minutes et réessayez. | Troppi tentativi. Attendi qualche minuto e riprova.
+Você acabou de sincronizar. Tente de novo em 2 minutos. | You just synced. Try again in 2 minutes. | Acabas de sincronizar. Inténtalo de nuevo en 2 minutos. | 방금 동기화했습니다. 2분 후 다시 시도하세요. | 同期したばかりです。2分後にもう一度お試しください。 | Vous venez de synchroniser. Réessayez dans 2 minutes. | Hai appena sincronizzato. Riprova tra 2 minuti.
+Já existe uma sincronização em andamento. | A sync is already running. | Ya hay una sincronización en curso. | 이미 동기화가 진행 중입니다. | すでに同期中です。 | Une synchronisation est déjà en cours. | C'è già una sincronizzazione in corso.
+Começando… | Starting… | Empezando… | 시작하는 중… | 開始中… | Démarrage… | Avvio…
+Sincronização não encontrada. | Sync not found. | Sincronización no encontrada. | 동기화를 찾을 수 없습니다. | 同期が見つかりません。 | Synchronisation introuvable. | Sincronizzazione non trovata.
+Redirecionamentos demais no login do piugame. | Too many redirects on the piugame login. | Demasiadas redirecciones en el login de piugame. | piugame 로그인에서 리디렉션이 너무 많습니다. | piugame のログインでリダイレクトが多すぎます。 | Trop de redirections lors de la connexion à piugame. | Troppi reindirizzamenti nel login di piugame.
+faça login primeiro | please sign in first | inicia sesión primero | 먼저 로그인하세요 | 先にログインしてください | connectez-vous d'abord | accedi prima
+máquina não encontrada | machine not found | máquina no encontrada | 기기를 찾을 수 없습니다 | 筐体が見つかりません | machine introuvable | macchina non trovata
+aparelho sem identificação | device without an identifier | dispositivo sin identificación | 기기 식별 정보가 없습니다 | 端末を識別できません | appareil sans identifiant | dispositivo senza identificativo
+a vez acabou de ser passada | the turn was just passed | el turno se acaba de pasar | 방금 차례가 넘어갔습니다 | 今ちょうど順番が回りました | le tour vient d'être passé | il turno è appena stato passato
+esta vaga não é sua | this spot isn't yours | este lugar no es tuyo | 내 자리가 아닙니다 | あなたの枠ではありません | cette place n'est pas la vôtre | questo posto non è tuo
+só o administrador do local | only the venue admin can do that | solo el administrador del lugar | 매장 관리자만 가능합니다 | 店舗の管理者のみ可能です | seul l'administrateur du lieu | solo l'amministratore del locale
+versão inválida | invalid version | versión inválida | 잘못된 버전 | 無効なバージョン | version invalide | versione non valida
+este jogador não compartilha os dados | this player doesn't share their data | este jugador no comparte sus datos | 이 플레이어는 데이터를 공유하지 않습니다 | このプレイヤーはデータを共有していません | ce joueur ne partage pas ses données | questo giocatore non condivide i dati
+você não pode adicionar a si mesmo | you can't add yourself | no puedes agregarte a ti mismo | 자기 자신은 추가할 수 없습니다 | 自分自身は追加できません | vous ne pouvez pas vous ajouter vous-même | non puoi aggiungere te stesso
+muitas solicitações pendentes | too many pending requests | demasiadas solicitudes pendientes | 대기 중인 요청이 너무 많습니다 | 保留中の申請が多すぎます | trop de demandes en attente | troppe richieste in sospeso
+as notas só aparecem depois que o jogador aprovar sua solicitação | scores only show after the player approves your request | las notas solo aparecen cuando el jugador apruebe tu solicitud | 상대가 요청을 수락해야 점수가 보입니다 | スコアは相手が申請を承認した後に表示されます | les scores n'apparaissent qu'après l'acceptation de votre demande | i punteggi compaiono solo dopo che il giocatore approva la tua richiesta
+só quem já passou este chart pode avaliar (sincronize suas notas) | only players who cleared this chart can review it (sync your scores) | solo quien pasó este chart puede valorarlo (sincroniza tus notas) | 이 채보를 클리어한 사람만 평가할 수 있습니다 (점수를 동기화하세요) | この譜面をクリアした人だけが評価できます (スコアを同期してください) | seuls ceux qui ont passé ce chart peuvent l'évaluer (synchronisez vos scores) | solo chi ha superato questo chart può valutarlo (sincronizza i punteggi)
+opção inválida | invalid option | opción inválida | 잘못된 옵션 | 無効なオプション | option invalide | opzione non valida
+você não pode convidar a si mesmo | you can't invite yourself | no puedes invitarte a ti mismo | 자기 자신은 초대할 수 없습니다 | 自分自身は誘えません | vous ne pouvez pas vous inviter vous-même | non puoi invitare te stesso
+essa pessoa não está mais online | this person is no longer online | esta persona ya no está en línea | 이 사람은 더 이상 온라인이 아닙니다 | この人はもうオンラインではありません | cette personne n'est plus en ligne | questa persona non è più online
+você já chamou essa pessoa há pouco. Espere a resposta | you invited this person a moment ago. Wait for a reply | ya invitaste a esta persona hace poco. Espera la respuesta | 방금 이 사람을 불렀어요. 답을 기다려 주세요 | 少し前に誘ったばかりです。返事を待ちましょう | vous avez invité cette personne il y a peu. Attendez sa réponse | hai invitato questa persona poco fa. Aspetta la risposta
+muitos convites na última hora. Tente mais tarde | too many invites in the last hour. Try later | demasiadas invitaciones en la última hora. Inténtalo más tarde | 지난 1시간 동안 초대가 너무 많습니다. 나중에 다시 시도하세요 | この1時間の誘いが多すぎます。後でお試しください | trop d'invitations dans la dernière heure. Réessayez plus tard | troppi inviti nell'ultima ora. Riprova più tardi
+{v}: lendo perfil… | {v}: reading profile… | {v}: leyendo perfil… | {v}: 프로필 읽는 중… | {v}: プロフィールを読み込み中… | {v} : lecture du profil… | {v}: lettura profilo…
+{v}: recordes {a}/{b} páginas | {v}: bests {a}/{b} pages | {v}: récords {a}/{b} páginas | {v}: 최고 기록 {a}/{b} 페이지 | {v}: ベスト {a}/{b} ページ | {v} : records {a}/{b} pages | {v}: record {a}/{b} pagine
+{v}: jogadas recentes… | {v}: recent plays… | {v}: partidas recientes… | {v}: 최근 플레이… | {v}: 最近のプレイ… | {v} : parties récentes… | {v}: partite recenti…
+{v}: títulos… | {v}: titles… | {v}: títulos… | {v}: 칭호… | {v}: 称号… | {v} : titres… | {v}: titoli…
+{v}: abrindo a sessão… | {v}: opening the session… | {v}: abriendo la sesión… | {v}: 세션 여는 중… | {v}: セッションを開始中… | {v} : ouverture de la session… | {v}: apertura sessione…
+{v}: gravando {a} recordes… | {v}: saving {a} bests… | {v}: guardando {a} récords… | {v}: 최고 기록 {a}개 저장 중… | {v}: ベスト {a}件を保存中… | {v} : enregistrement de {a} records… | {v}: salvataggio di {a} record…
+piugame: {v} | piugame: {v} | piugame: {v} | piugame: {v} | piugame: {v} | piugame : {v} | piugame: {v}
+Login ou senha da Pump It Up incorretos (ou login do exterior bloqueado no AM.PASS). | Wrong Pump It Up login or password (or AM.PASS is blocking sign-ins from abroad). | Login o contraseña de Pump It Up incorrectos (o AM.PASS bloquea el acceso desde el exterior). | Pump It Up 아이디 또는 비밀번호가 올바르지 않습니다 (또는 AM.PASS가 해외 로그인을 막고 있습니다). | Pump It Up のログインIDまたはパスワードが違います (または AM.PASS で海外からのログインがブロックされています)。 | Identifiant ou mot de passe Pump It Up incorrect (ou AM.PASS bloque les connexions depuis l'étranger). | Login o password di Pump It Up errati (oppure AM.PASS blocca gli accessi dall'estero).

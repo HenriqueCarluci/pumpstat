@@ -489,3 +489,29 @@ a.q-city:hover { color: var(--text); }
 .rv-c-head a { color: inherit; }
 .rv-c-text { white-space: pre-wrap; word-break: break-word; font-size: 14px; }
 .tag.community { border-color: #42c6ff; color: #9fe2ff; }
+.judg-row span { display: flex; flex-direction: column; line-height: 1.15; padding: 3px 0; }
+.judg-row small { font: 700 8px/1.2 var(--num); letter-spacing: .04em; opacity: .85; }
+.login-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.langpick { display: inline-flex; gap: 8px; align-items: center; }
+.langpick select { background: rgba(0,0,0,.3); color: inherit; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 6px 8px; font: inherit; }
+
+/* online / convites */
+.dot-on { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #3ee06f; box-shadow: 0 0 0 3px rgba(62,224,111,.2); vertical-align: middle; }
+.online-list { display: grid; gap: 8px; margin: 8px 0 14px; }
+.online-row { padding: 10px; border-radius: 12px; background: var(--card, rgba(255,255,255,.05)); }
+.online-main { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+.online-av { position: relative; width: 44px; height: 44px; font-size: 20px; }
+.online-av .dot-on { position: absolute; right: -2px; bottom: -2px; }
+.online-title { font-weight: 700; }
+.online-info small { opacity: .8; }
+.online-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.tag.x1-close { border-color: #ff5d8f; color: #ff9fbd; }
+.tag.x1-near { border-color: #ffb02e; color: #ffd08a; }
+.tag.here { border-color: #3ee06f; color: #9ff0b9; }
+.invite-box { display: grid; gap: 8px; margin-top: 10px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 84px; z-index: 60; width: min(420px, calc(100% - 24px)); padding: 12px 14px; border-radius: 14px; background: #1d2230; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 12px 30px rgba(0,0,0,.45); display: grid; gap: 6px; }
+.toast.invite { border-color: #3ee06f; }
+.toast.accepted { border-color: #3ee06f; cursor: pointer; }
+.toast.declined { cursor: pointer; }
+.toast-h { font-weight: 700; }
+.toast-msg { font-size: 15px; }

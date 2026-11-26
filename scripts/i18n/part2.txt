@@ -1,0 +1,106 @@
+Conta criada. Abra o link de confirmação que enviamos para o seu e-mail e depois entre aqui. | Account created. Open the confirmation link we sent to your e-mail, then sign in here. | Cuenta creada. Abre el enlace de confirmación que enviamos a tu e-mail y luego entra aquí. | 계정이 만들어졌습니다. 이메일로 보낸 확인 링크를 연 뒤 여기서 로그인하세요. | アカウントを作成しました。メールで送った確認リンクを開いてから、ここでログインしてください。 | Compte créé. Ouvrez le lien de confirmation envoyé par e-mail, puis connectez-vous ici. | Account creato. Apri il link di conferma che ti abbiamo inviato via e-mail, poi accedi qui.
+Se o e-mail tiver conta, enviamos um link para criar uma nova senha. | If the e-mail has an account, we sent a link to create a new password. | Si el e-mail tiene cuenta, enviamos un enlace para crear una nueva contraseña. | 해당 이메일의 계정이 있으면 새 비밀번호 링크를 보냈습니다. | このメールのアカウントがあれば、新しいパスワードを作るリンクを送りました。 | Si cet e-mail a un compte, nous avons envoyé un lien pour créer un nouveau mot de passe. | Se l'e-mail ha un account, abbiamo inviato un link per creare una nuova password.
+Seus recordes de Pump It Up e o clube num lugar só. | Your Pump It Up scores and your club in one place. | Tus récords de Pump It Up y el club en un solo lugar. | Pump It Up 기록과 클럽을 한곳에서. | Pump It Up の記録とクラブをひとつの場所に。 | Vos records Pump It Up et le club au même endroit. | I tuoi record di Pump It Up e il club in un solo posto.
+E-mail | E-mail | E-mail | 이메일 | メールアドレス | E-mail | E-mail
+Aguarde… | Please wait… | Espera… | 잠시만요… | お待ちください… | Patientez… | Attendi…
+Criar conta | Create account | Crear cuenta | 계정 만들기 | アカウント作成 | Créer un compte | Crea account
+Enviar link | Send link | Enviar enlace | 링크 보내기 | リンクを送信 | Envoyer le lien | Invia link
+ou | or | o | 또는 | または | ou | oppure
+Entrar com Google | Sign in with Google | Entrar con Google | Google로 로그인 | Google でログイン | Se connecter avec Google | Accedi con Google
+Já tenho conta | I already have an account | Ya tengo cuenta | 이미 계정이 있어요 | アカウントを持っています | J'ai déjà un compte | Ho già un account
+Esqueci a senha | Forgot password | Olvidé la contraseña | 비밀번호를 잊었어요 | パスワードを忘れた | Mot de passe oublié | Password dimenticata
+Quer receber um aviso no aparelho quando um amigo bater recorde ou sair música nova? | Want a device alert when a friend sets a record or a new song comes out? | ¿Quieres un aviso en el dispositivo cuando un amigo bata un récord o salga una canción nueva? | 친구가 기록을 갱신하거나 새 곡이 나오면 기기 알림을 받을까요? | フレンドが記録を更新したり新曲が出たときに端末で通知を受け取りますか? | Recevoir une alerte quand un ami bat un record ou qu'un nouveau morceau sort ? | Vuoi un avviso sul dispositivo quando un amico fa un record o esce un nuovo brano?
+Ativar avisos | Turn on alerts | Activar avisos | 알림 켜기 | 通知をオン | Activer les alertes | Attiva avvisi
+Tudo | All | Todo | 전체 | すべて | Tout | Tutto
+Músicas novas | New songs | Canciones nuevas | 새 곡 | 新曲 | Nouveaux morceaux | Nuovi brani
+Nada por aqui ainda. Quando seus amigos sincronizarem recordes novos ou sair música nova no catálogo, aparece aqui. | Nothing here yet. When your friends sync new records or a new song hits the catalog, it shows up here. | Nada por aquí todavía. Cuando tus amigos sincronicen récords nuevos o salga una canción nueva, aparecerá aquí. | 아직 없습니다. 친구가 새 기록을 동기화하거나 새 곡이 추가되면 여기에 표시됩니다. | まだ何もありません。フレンドが新記録を同期したり新曲が追加されると、ここに表示されます。 | Rien pour l'instant. Quand vos amis synchronisent de nouveaux records ou qu'un nouveau morceau arrive, ça apparaît ici. | Ancora niente. Quando i tuoi amici sincronizzano nuovi record o arriva un nuovo brano, comparirà qui.
+Os recordes dos amigos aparecem quando eles sincronizam a conta da Pump. Músicas novas entram quando o catálogo é atualizado (uma vez por dia). | Friends' records show up when they sync their Pump account. New songs arrive when the catalog updates (once a day). | Los récords de los amigos aparecen cuando sincronizan su cuenta de Pump. Las canciones nuevas entran cuando se actualiza el catálogo (una vez al día). | 친구 기록은 친구가 Pump 계정을 동기화하면 표시됩니다. 새 곡은 카탈로그가 업데이트될 때(하루 1회) 추가됩니다. | フレンドの記録は、フレンドが Pump アカウントを同期したときに表示されます。新曲はカタログ更新時(1日1回)に追加されます。 | Les records des amis apparaissent quand ils synchronisent leur compte Pump. Les nouveaux morceaux arrivent à la mise à jour du catalogue (une fois par jour). | I record degli amici compaiono quando sincronizzano l'account Pump. I nuovi brani arrivano con l'aggiornamento del catalogo (una volta al giorno).
+Online agora | Online now | En línea ahora | 지금 온라인 | オンライン中 | En ligne maintenant | Online ora
+Quem está com o StepClub aberto. Chame para jogar: a pessoa recebe o convite na hora. | People with StepClub open right now. Invite them to play: they get it instantly. | Quién tiene StepClub abierto. Invítalos a jugar: reciben la invitación al instante. | 지금 StepClub을 열어 둔 사람들입니다. 같이 하자고 부르면 바로 알림이 가요. | 今 StepClub を開いている人です。誘うとすぐに届きます。 | Les personnes qui ont StepClub ouvert. Invitez-les à jouer : elles reçoivent l'invitation tout de suite. | Chi ha StepClub aperto ora. Invitali a giocare: ricevono l'invito subito.
+Quem pode me ver online | Who can see me online | Quién puede verme en línea | 내 온라인 상태를 볼 수 있는 사람 | 自分のオンライン状態を見られる人 | Qui peut me voir en ligne | Chi può vedermi online
+Todos | Everyone | Todos | 모두 | 全員 | Tout le monde | Tutti
+Só amigos | Friends only | Solo amigos | 친구만 | フレンドのみ | Amis seulement | Solo amici
+Ninguém | No one | Nadie | 아무도 | 誰にも見せない | Personne | Nessuno
+Você está invisível: não aparece na lista e não recebe convites. | You're invisible: you don't appear in the list and won't get invites. | Estás invisible: no apareces en la lista y no recibes invitaciones. | 숨김 상태입니다: 목록에 표시되지 않고 초대도 받지 않습니다. | 非表示です: 一覧に表示されず、誘いも届きません。 | Vous êtes invisible : vous n'apparaissez pas dans la liste et ne recevez pas d'invitations. | Sei invisibile: non compari nell'elenco e non ricevi inviti.
+Sugestões de x1 | 1v1 suggestions | Sugerencias de x1 | 1:1 대결 추천 | タイマン相手のおすすめ | Suggestions de 1v1 | Suggerimenti 1v1
+Jogadores online com PUMBILITY parecido com o seu (Phoenix 2). | Online players with a PUMBILITY close to yours (Phoenix 2). | Jugadores en línea con PUMBILITY parecido al tuyo (Phoenix 2). | 나와 PUMBILITY가 비슷한 온라인 플레이어 (Phoenix 2). | あなたと PUMBILITY が近いオンラインのプレイヤー (Phoenix 2)。 | Joueurs en ligne avec un PUMBILITY proche du vôtre (Phoenix 2). | Giocatori online con un PUMBILITY simile al tuo (Phoenix 2).
+Todos online | Everyone online | Todos en línea | 온라인 전체 | オンラインの全員 | Tous en ligne | Tutti online
+Ninguém online agora além de você. Chame seus amigos para usar o StepClub! | No one else is online right now. Invite your friends to StepClub! | No hay nadie más en línea ahora. ¡Invita a tus amigos a usar StepClub! | 지금은 나 말고 온라인인 사람이 없어요. 친구들을 StepClub에 초대해 보세요! | 今オンラインなのはあなただけです。フレンドを StepClub に誘ってみよう! | Personne d'autre en ligne pour l'instant. Invitez vos amis sur StepClub ! | Nessun altro è online ora. Invita i tuoi amici su StepClub!
+Para quem não é seu amigo, aparece só o título. Nick, avatar e PUMBILITY só entre amigos. | Non-friends only see your title. Nickname, avatar and PUMBILITY are shown to friends only. | Para quien no es tu amigo, solo aparece el título. Nick, avatar y PUMBILITY solo entre amigos. | 친구가 아니면 칭호만 보입니다. 닉네임, 아바타, PUMBILITY는 친구끼리만 보여요. | フレンド以外には称号だけが表示されます。ニックネーム・アバター・PUMBILITY はフレンド同士だけです。 | Pour les non-amis, seul le titre apparaît. Pseudo, avatar et PUMBILITY sont réservés aux amis. | Chi non è tuo amico vede solo il titolo. Nick, avatar e PUMBILITY solo tra amici.
+No mesmo fliperama | At the same arcade | En el mismo arcade | 같은 오락실 | 同じゲーセン | Dans la même salle | Nella stessa sala giochi
+amigo | friend | amigo | 친구 | フレンド | ami | amico
+Convite enviado | Invite sent | Invitación enviada | 초대 보냄 | 誘いを送信済み | Invitation envoyée | Invito inviato
+Chamar | Invite | Invitar | 부르기 | 誘う | Inviter | Invita
+Ou escreva uma mensagem… | Or write a message… | O escribe un mensaje… | 또는 메시지를 입력… | またはメッセージを入力… | Ou écrivez un message… | Oppure scrivi un messaggio…
+Enviar | Send | Enviar | 보내기 | 送信 | Envoyer | Invia
+Buscar | Search | Buscar | 검색 | 検索 | Rechercher | Cerca
+Solicitações | Requests | Solicitudes | 요청 | 申請 | Demandes | Richieste
+Você ainda não tem amigos no StepClub. Busque pelo nickname da Pump e mande uma solicitação: as notas só aparecem depois que a pessoa aprovar. | You have no friends on StepClub yet. Search by Pump nickname and send a request: scores only show once they approve. | Aún no tienes amigos en StepClub. Busca por el nickname de Pump y envía una solicitud: las notas solo aparecen cuando la persona la apruebe. | 아직 StepClub 친구가 없습니다. Pump 닉네임으로 검색해 요청을 보내세요: 상대가 수락해야 점수가 보입니다. | まだ StepClub のフレンドがいません。Pump のニックネームで検索して申請を送りましょう。スコアは相手が承認してから表示されます。 | Vous n'avez pas encore d'amis sur StepClub. Cherchez le pseudo Pump et envoyez une demande : les scores n'apparaissent qu'après acceptation. | Non hai ancora amici su StepClub. Cerca il nickname Pump e invia una richiesta: i punteggi compaiono solo dopo l'approvazione.
+você | you | tú | 나 | あなた | vous | tu
+Recebidas | Received | Recibidas | 받은 요청 | 受け取った申請 | Reçues | Ricevute
+Nenhuma solicitação pendente. | No pending requests. | No hay solicitudes pendientes. | 대기 중인 요청이 없습니다. | 保留中の申請はありません。 | Aucune demande en attente. | Nessuna richiesta in sospeso.
+quer ver suas notas e mostrar as dele | wants to see your scores and share theirs | quiere ver tus notas y mostrar las suyas | 서로의 점수를 보고 싶어 해요 | スコアを見せ合いたいそうです | veut voir vos scores et partager les siens | vuole vedere i tuoi punteggi e mostrarti i suoi
+Aceitar | Accept | Aceptar | 수락 | 承認 | Accepter | Accetta
+Recusar | Decline | Rechazar | 거절 | 拒否 | Refuser | Rifiuta
+Enviadas | Sent | Enviadas | 보낸 요청 | 送った申請 | Envoyées | Inviate
+Nenhuma solicitação aguardando resposta. | No requests waiting for a reply. | No hay solicitudes esperando respuesta. | 응답을 기다리는 요청이 없습니다. | 返事待ちの申請はありません。 | Aucune demande en attente de réponse. | Nessuna richiesta in attesa di risposta.
+aguardando aprovação | waiting for approval | esperando aprobación | 승인 대기 중 | 承認待ち | en attente d'acceptation | in attesa di approvazione
+Cancelar | Cancel | Cancelar | 취소 | キャンセル | Annuler | Annulla
+Solicitação enviada | Request sent | Solicitud enviada | 요청 보냄 | 申請済み | Demande envoyée | Richiesta inviata
+Digite o nickname da Pump… | Type the Pump nickname… | Escribe el nickname de Pump… | Pump 닉네임 입력… | Pump のニックネームを入力… | Tapez le pseudo Pump… | Scrivi il nickname Pump…
+buscando… | searching… | buscando… | 검색 중… | 検索中… | recherche… | ricerca…
+Ninguém com “{q}”. A pessoa precisa ter conectado a conta da Pump no StepClub. | No one matches “{q}”. They need to have connected their Pump account on StepClub. | Nadie con “{q}”. La persona debe haber conectado su cuenta de Pump en StepClub. | “{q}”에 해당하는 사람이 없습니다. 상대가 StepClub에 Pump 계정을 연결해야 합니다. | 「{q}」に一致する人はいません。相手が StepClub に Pump アカウントを連携している必要があります。 | Personne ne correspond à « {q} ». La personne doit avoir connecté son compte Pump sur StepClub. | Nessuno corrisponde a “{q}”. La persona deve aver collegato l'account Pump su StepClub.
+Adicionar | Add | Agregar | 추가 | 追加 | Ajouter | Aggiungi
+A busca mostra só nick, título e avatar. As notas aparecem depois que a pessoa aprovar. | Search only shows nickname, title and avatar. Scores show once they approve. | La búsqueda solo muestra nick, título y avatar. Las notas aparecen cuando la persona apruebe. | 검색에는 닉네임, 칭호, 아바타만 보입니다. 점수는 상대가 수락한 뒤에 보입니다. | 検索ではニックネーム・称号・アバターだけが表示されます。スコアは承認後に表示されます。 | La recherche affiche seulement le pseudo, le titre et l'avatar. Les scores apparaissent après acceptation. | La ricerca mostra solo nick, titolo e avatar. I punteggi compaiono dopo l'approvazione.
+Ver amigos e solicitações | See friends and requests | Ver amigos y solicitudes | 친구와 요청 보기 | フレンドと申請を見る | Voir amis et demandes | Vedi amici e richieste
+Carregando comparação… | Loading comparison… | Cargando comparación… | 비교 불러오는 중… | 比較を読み込み中… | Chargement de la comparaison… | Caricamento confronto…
+{n} charts em comum | {n} charts in common | {n} charts en común | 공통 채보 {n}개 | 共通の譜面 {n} | {n} charts en commun | {n} chart in comune
+Em comum | In common | En común | 공통 | 共通 | En commun | In comune
+Só ele jogou | Only they played | Solo él jugó | 상대만 플레이 | 相手だけがプレイ | Joués par l'autre seulement | Solo l'altro
+Só você jogou | Only you played | Solo tú jugaste | 나만 플레이 | 自分だけがプレイ | Joués par vous seulement | Solo tu
+Carregando ranking… | Loading ranking… | Cargando ranking… | 랭킹 불러오는 중… | ランキングを読み込み中… | Chargement du classement… | Caricamento classifica…
+Só você entre seus amigos registrou este chart. | Only you among your friends have a score on this chart. | Solo tú entre tus amigos tienes este chart. | 친구 중에서는 나만 이 채보 기록이 있습니다. | フレンドの中でこの譜面の記録があるのはあなただけです。 | Parmi vos amis, vous êtes le seul à avoir un score sur ce chart. | Tra i tuoi amici solo tu hai un punteggio su questo chart.
+Nenhum amigo registrou este chart ainda. | None of your friends has a score on this chart yet. | Ningún amigo tiene este chart todavía. | 아직 이 채보 기록이 있는 친구가 없습니다. | まだこの譜面の記録があるフレンドはいません。 | Aucun ami n'a encore de score sur ce chart. | Nessun amico ha ancora un punteggio su questo chart.
+Adicione amigos em Amigos. | Add friends under Friends. | Agrega amigos en Amigos. | 친구 메뉴에서 친구를 추가하세요. | フレンドから追加しましょう。 | Ajoutez des amis dans Amis. | Aggiungi amici in Amici.
+Local não encontrado. | Place not found. | Lugar no encontrado. | 장소를 찾을 수 없습니다. | 場所が見つかりません。 | Lieu introuvable. | Luogo non trovato.
+Carregando a fila… | Loading the queue… | Cargando la fila… | 대기열 불러오는 중… | 順番待ちを読み込み中… | Chargement de la file… | Caricamento coda…
+Check-in por localização: só entra na fila quem estiver a até {n} m. | Location check-in: only people within {n} m can join the queue. | Check-in por ubicación: solo entra en la fila quien esté a menos de {n} m. | 위치 체크인: {n}m 이내에 있어야 대기열에 들어갈 수 있습니다. | 位置情報チェックイン: {n}m 以内にいる人だけが並べます。 | Check-in par localisation : seules les personnes à moins de {n} m peuvent rejoindre la file. | Check-in con posizione: entra in coda solo chi è entro {n} m.
+Modo TV | TV mode | Modo TV | TV 모드 | TVモード | Mode TV | Modalità TV
+Regras | Rules | Reglas | 규칙 | ルール | Règles | Regole
+Movimento | Activity | Movimiento | 활동 | 動き | Activité | Attività
+{n} na fila · ~{m} min por vez | {n} in queue · ~{m} min per turn | {n} en la fila · ~{m} min por turno | 대기 {n}명 · 1회 약 {m}분 | {n}人待ち · 1回 約{m}分 | {n} dans la file · ~{m} min par tour | {n} in coda · ~{m} min a turno
+Jogando agora | Playing now | Jugando ahora | 지금 플레이 중 | プレイ中 | Joue maintenant | Sta giocando
+Fila vazia, bora jogar! Coloque seu nome aqui embaixo. | Queue is empty, let's play! Put your name below. | Fila vacía, ¡a jugar! Pon tu nombre abajo. | 대기열이 비었어요, 플레이하세요! 아래에 이름을 적으세요. | 誰も並んでいません、遊ぼう! 下に名前を入れてください。 | File vide, on joue ! Mettez votre nom ci-dessous. | Coda vuota, si gioca! Metti il tuo nome qui sotto.
+ausente há {n} min | away for {n} min | ausente hace {n} min | {n}분째 자리 비움 | {n}分前から離席 | absent depuis {n} min | assente da {n} min
+Mover para o topo | Move to top | Mover arriba | 맨 위로 | 先頭へ | Mettre en tête | Sposta in cima
+Passar a vez | Pass turn | Pasar turno | 차례 넘기기 | 順番を回す | Passer son tour | Passa il turno
+Você está marcado como ausente. | You're marked as away. | Estás marcado como ausente. | 자리 비움으로 표시되어 있습니다. | 離席中になっています。 | Vous êtes marqué absent. | Sei segnato come assente.
+É a sua vez! | It's your turn! | ¡Es tu turno! | 내 차례예요! | あなたの番です! | C'est votre tour ! | Tocca a te!
+Sua posição na fila: {n} | Your place in the queue: {n} | Tu posición en la fila: {n} | 내 대기 순서: {n} | あなたの順番: {n} | Votre place dans la file : {n} | La tua posizione in coda: {n}
+espera ~{n} min | wait ~{n} min | espera ~{n} min | 약 {n}분 대기 | 待ち 約{n}分 | attente ~{n} min | attesa ~{n} min
+Voltei | I'm back | Volví | 돌아왔어요 | 戻りました | Je suis de retour | Sono tornato
+Estou ausente | I'm away | Estoy ausente | 자리 비움 | 離席中 | Je suis absent | Sono assente
+Sair da fila | Leave queue | Salir de la fila | 대기열 나가기 | 列から抜ける | Quitter la file | Esci dalla coda
+seu nome (ou deixe o da Pump) | your name (or keep your Pump name) | tu nombre (o deja el de Pump) | 이름 (비우면 Pump 닉네임) | 名前 (空欄なら Pump の名前) | votre nom (ou gardez celui de Pump) | il tuo nome (o lascia quello di Pump)
+seu nome | your name | tu nombre | 이름 | 名前 | votre nom | il tuo nome
+Conferindo local… | Checking location… | Comprobando ubicación… | 위치 확인 중… | 位置を確認中… | Vérification du lieu… | Verifica posizione…
+Entrando… | Joining… | Entrando… | 들어가는 중… | 参加中… | Inscription… | Ingresso…
+Check-in e entrar | Check in and join | Check-in y entrar | 체크인하고 들어가기 | チェックインして並ぶ | Check-in et rejoindre | Check-in ed entra
+Entrar na fila | Join queue | Entrar en la fila | 대기열 들어가기 | 列に並ぶ | Rejoindre la file | Entra in coda
+Zerar a fila desta máquina? | Clear this machine's queue? | ¿Vaciar la fila de esta máquina? | 이 기기의 대기열을 비울까요? | この筐体の列をリセットしますか? | Vider la file de cette machine ? | Svuotare la coda di questa macchina?
+Zerar fila | Clear queue | Vaciar fila | 대기열 비우기 | 列をリセット | Vider la file | Svuota coda
+{n}× jogou | played {n}× | jugó {n}× | {n}회 플레이 | {n}回プレイ | a joué {n}× | ha giocato {n}×
+Regras da fila | Queue rules | Reglas de la fila | 대기열 규칙 | 順番待ちのルール | Règles de la file | Regole della coda
+Respeite a ordem da fila. | Respect the queue order. | Respeta el orden de la fila. | 대기 순서를 지켜 주세요. | 順番を守りましょう。 | Respectez l'ordre de la file. | Rispetta l'ordine della coda.
+Para entrar na fila (e para voltar de "ausente") é preciso fazer check-in no local: o app confere a sua localização. | To join the queue (and to come back from "away") you need to check in at the place: the app verifies your location. | Para entrar en la fila (y volver de "ausente") hay que hacer check-in en el lugar: la app comprueba tu ubicación. | 대기열에 들어가거나 "자리 비움"에서 돌아오려면 현장에서 체크인해야 합니다: 앱이 위치를 확인합니다. | 列に並ぶとき(と「離席」から戻るとき)は現地でのチェックインが必要です: アプリが位置を確認します。 | Pour rejoindre la file (et revenir d'« absent »), il faut faire un check-in sur place : l'app vérifie votre position. | Per entrare in coda (e tornare da "assente") serve il check-in sul posto: l'app verifica la tua posizione.
+Indo para o local ou ao banheiro? Marque "Estou ausente". | Heading over or going to the restroom? Tap "I'm away". | ¿Vas en camino o al baño? Marca "Estoy ausente". | 오는 중이거나 화장실에 가나요? "자리 비움"을 누르세요. | 向かっている途中やトイレのときは「離席中」に。 | En route ou aux toilettes ? Touchez « Je suis absent ». | Stai arrivando o vai in bagno? Tocca "Sono assente".
+Ausente por mais de 1 hora sai da fila automaticamente. | Away for more than 1 hour removes you from the queue automatically. | Ausente por más de 1 hora sale de la fila automáticamente. | 1시간 넘게 자리 비움이면 자동으로 대기열에서 빠집니다. | 1時間以上離席すると自動的に列から外れます。 | Absent plus d'une heure : vous quittez la file automatiquement. | Assente per più di 1 ora: esci automaticamente dalla coda.
+Fila sem movimento por 2 horas é zerada (só a daquela máquina). | A queue with no activity for 2 hours is cleared (only that machine's). | La fila sin movimiento por 2 horas se vacía (solo la de esa máquina). | 2시간 동안 움직임이 없으면 대기열이 초기화됩니다 (해당 기기만). | 2時間動きがない列はリセットされます (その筐体のみ)。 | Une file sans activité pendant 2 heures est vidée (seulement celle de cette machine). | Una coda senza movimento per 2 ore viene svuotata (solo quella della macchina).
+Terminou seu crédito? Toque em "Passar a vez": você vai para o fim da fila. | Out of credits? Tap "Pass turn": you go to the end of the queue. | ¿Se acabó tu crédito? Toca "Pasar turno": vas al final de la fila. | 크레딧이 끝났나요? "차례 넘기기"를 누르면 대기열 맨 뒤로 갑니다. | クレジットが終わったら「順番を回す」をタップ: 列の最後に回ります。 | Plus de crédits ? Touchez « Passer son tour » : vous passez en fin de file. | Crediti finiti? Tocca "Passa il turno": vai in fondo alla coda.
+Fechar | Close | Cerrar | 닫기 | 閉じる | Fermer | Chiudi
+Máquina livre! | Machine is free! | ¡Máquina libre! | 기기가 비었어요! | 筐体が空いています! | Machine libre ! | Macchina libera!
+ausente | away | ausente | 자리 비움 | 離席 | absent | assente
+Entre na fila pelo celular: | Join the queue on your phone: | Entra en la fila desde el celular: | 휴대폰으로 대기열에 들어가세요: | スマホから並べます: | Rejoignez la file depuis votre téléphone : | Entra in coda dal telefono:
+Nenhuma jogada registrada ainda. Sincronize em Ajustes. | No plays recorded yet. Sync in Settings. | Aún no hay partidas registradas. Sincroniza en Ajustes. | 아직 플레이 기록이 없습니다. 설정에서 동기화하세요. | まだプレイ記録がありません。設定から同期してください。 | Aucune partie enregistrée. Synchronisez dans Réglages. | Ancora nessuna partita registrata. Sincronizza in Impostazioni.
+{n} jogada | {n} play | {n} partida | {n}회 플레이 | {n}プレイ | {n} partie | {n} partita
+{n} jogadas | {n} plays | {n} partidas | {n}회 플레이 | {n}プレイ | {n} parties | {n} partite

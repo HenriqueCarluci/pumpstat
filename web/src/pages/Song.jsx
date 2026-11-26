@@ -8,13 +8,14 @@ import { chartLabel, chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS
 import { topStyles, useStyles, youtubeUrl } from '../lib/style.js';
 import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
+import { t } from '../lib/i18n.js';
 
 export default function Song() {
   const { id } = useParams();
   const { data, version, reload } = useData();
   const song = data.songs.find((s) => String(s.id) === id);
   const styleOf = useStyles(song ? [song.id] : []);
-  if (!song) return <div className="page"><p className="empty">Música não encontrada nesta versão.</p><Link to="/musicas">Voltar</Link></div>;
+  if (!song) return <div className="page"><p className="empty">{t('Música não encontrada nesta versão.')}</p><Link to="/musicas">{t('Voltar')}</Link></div>;
 
   const other = version === 'phoenix2' ? VERSIONS.phoenix : VERSIONS.phoenix2;
   const groups = [['S', 'Single'], ['D', 'Double'], ['C', 'Co-op']]
@@ -27,12 +28,12 @@ export default function Song() {
         <Jacket song={song} width={220} className="hero-jacket" />
         <div>
           <h1>{song.title}</h1>
-          <div className="muted">{song.artist || 'Artista desconhecido'}</div>
+          <div className="muted">{song.artist || t('Artista desconhecido')}</div>
           <div className="tags">
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
           </div>
-          <a className="btn yt" href={youtubeUrl(song.title)} target="_blank" rel="noreferrer">▶ Ver no YouTube</a>
+          <a className="btn yt" href={youtubeUrl(song.title)} target="_blank" rel="noreferrer">▶ {t('Ver no YouTube')}</a>
         </div>
       </section>
 
@@ -54,7 +55,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
   const [rank, setRank] = useState(false);
   const rating = chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, c.broken);
   const nxt = c.score != null && !c.broken ? nextGrade(version, c.score) : null;
-  const tier = TIERS.find((t) => t.id === chartTier(c));
+  const tier = TIERS.find((x) => x.id === chartTier(c));
   const yt = youtubeUrl(c.song.title, chartLabel(c).replace(' ', ''));
 
   const toggle = async () => {
@@ -75,27 +76,27 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
           </div>
         </div>
         <div className="cc-side">
-          {rating > 0 && <div className="rating" title="Valor estimado no PUMBILITY">{rating.toFixed(2)}</div>}
-          {nxt && <div className="need">+{fmtScore(nxt.need)} p/ {nxt.grade}</div>}
+          {rating > 0 && <div className="rating" title={t('Valor estimado no PUMBILITY')}>{rating.toFixed(2)}</div>}
+          {nxt && <div className="need">{t('+{n} p/ {g}', { n: fmtScore(nxt.need), g: nxt.grade })}</div>}
         </div>
       </div>
 
       <div className="cc-meta">
-        {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{tier.label}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
-        {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {DIFF_PT[c.passDifficulty] || c.passDifficulty}</span>}
+        {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
+        {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag">✎ {c.stepArtist}</span>}
-        {c.notes ? <span className="tag">{c.notes} notas</span> : null}
+        {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
-          <span className="tag community" title="Tags marcadas pela comunidade do StepClub">
-            👥 {c.community.tags.map((t) => REVIEW_TAGS.find(([k]) => k === t)?.[1] || t).join(' · ')}
+          <span className="tag community" title={t('Tags marcadas pela comunidade do StepClub')}>
+            👥 {c.community.tags.map((x) => t(REVIEW_TAGS.find(([k]) => k === x)?.[1] || x)).join(' · ')}
           </span>
         )}
       </div>
       {style && (
-        <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title="Ver estilo do chart">
-          {topStyles(style).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{k.label} {Math.round(k.v)}%</span>)}
-          {style.nps != null && <span className="muted small">{style.nps} notas/s</span>}
+        <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title={t('Ver estilo do chart')}>
+          {topStyles(style).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
+          {style.nps != null && <span className="muted small">{t('{n} notas/s', { n: style.nps })}</span>}
           <span className="muted small">{showStyle ? '▲' : '▼'}</span>
         </button>
       )}
@@ -109,20 +110,20 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
       )}
 
       <div className="cc-actions">
-        {c.achievedAt && <span className="muted">Recorde em {fmtDate(c.achievedAt)}</span>}
+        {c.achievedAt && <span className="muted">{t('Recorde em {d}', { d: fmtDate(c.achievedAt) })}</span>}
         <span className="spacer" />
         <a href={yt} target="_blank" rel="noreferrer" className="link">▶ YouTube</a>
-        <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? 'Fechar' : `Avaliar${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
-        <button className="link" onClick={() => setRank((r) => !r)}>{rank ? 'Fechar' : 'Ranking'}</button>
-        <button className="link" onClick={toggle}>{open ? 'Fechar' : 'Histórico'}</button>
+        <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? t('Fechar') : `${t('Avaliar')}${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
+        <button className="link" onClick={() => setRank((r) => !r)}>{rank ? t('Fechar') : t('Ranking')}</button>
+        <button className="link" onClick={toggle}>{open ? t('Fechar') : t('Histórico')}</button>
       </div>
 
       {reviews && <div className="cc-hist"><ChartReviews chart={c} onSaved={onReviewed} /></div>}
       {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}
       {open && (
         <div className="cc-hist">
-          {!hist && <p className="muted">Carregando…</p>}
-          {hist && !hist.plays.length && !hist.bests.length && <p className="muted">Sem histórico registrado ainda.</p>}
+          {!hist && <p className="muted">{t('Carregando…')}</p>}
+          {hist && !hist.plays.length && !hist.bests.length && <p className="muted">{t('Sem histórico registrado ainda.')}</p>}
           {hist?.plays?.map((p, i) => (
             <div key={i} className="hrow">
               <span className="muted">{fmtDate(p[0])}</span>
@@ -133,7 +134,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
             </div>
           ))}
           {hist?.bests?.length > 0 && (
-            <div className="muted small">Evolução do recorde: {hist.bests.map((b) => fmtScore(b[1])).join(' → ')}</div>
+            <div className="muted small">{t('Evolução do recorde:')} {hist.bests.map((b) => fmtScore(b[1])).join(' → ')}</div>
           )}
         </div>
       )}

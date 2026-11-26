@@ -4,6 +4,8 @@ import { currentUserId, getSession } from '../lib/auth.js';
 import {
   backFromAway, joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
 } from '../lib/queue.js';
+import { locale, t, tErr } from '../lib/i18n.js';
+import { rememberVenue } from '../lib/presence.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
@@ -12,6 +14,7 @@ const rememberEntry = (machine, id) => { try { localStorage.setItem(MY_ENTRIES, 
 const needsCheckin = (v) => !!(v.venue.require_checkin && v.venue.latitude != null);
 const mins = (iso) => Math.max(0, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
 const EVENT_PT = { join: 'entrou', pass: 'passou a vez', leave: 'saiu', away: 'ficou ausente', back: 'voltou', remove: 'foi removido', reset: 'fila zerada', expire: 'saiu (ausente 1 h)' };
+const evText = (k) => (EVENT_PT[k] ? t(EVENT_PT[k]) : k);
 
 export function useVenue(slug) {
   const [venue, setVenue] = useState(null);
@@ -26,10 +29,10 @@ export function useVenue(slug) {
     try {
       const [e, ev] = await Promise.all([queueEntries(machineIds), recentEvents(machineIds)]);
       setEntries(e); setEvents(ev); setError('');
-    } catch (ex) { setError(ex.message); }
+    } catch (ex) { setError(tErr(ex.message)); }
   }, [machineIds]);
 
-  useEffect(() => { venueData(slug).then((v) => (v ? setVenue(v) : setError('Local não encontrado.'))).catch((e) => setError(e.message)); }, [slug]);
+  useEffect(() => { venueData(slug).then((v) => (v ? setVenue(v) : setError(t('Local não encontrado.')))).catch((e) => setError(tErr(e.message))); }, [slug]);
   useEffect(() => {
     if (!machineIds.length) return undefined;
     refresh();
@@ -45,11 +48,11 @@ export function useVenue(slug) {
 export default function Queue() {
   const { slug } = useParams();
   const { venue, entries, events, error, refresh } = useVenue(slug);
-  useEffect(() => { try { localStorage.setItem('stepclub:venue', slug); } catch { /* ignore */ } }, [slug]);
+  useEffect(() => { rememberVenue(slug); }, [slug]);
   const [showRules, setShowRules] = useState(false);
 
   if (error && !venue) return <div className="page"><p className="empty">{error}</p></div>;
-  if (!venue) return <div className="page"><p className="empty">Carregando a fila…</p></div>;
+  if (!venue) return <div className="page"><p className="empty">{t('Carregando a fila…')}</p></div>;
 
   return (
     <div className="page queue-page">
@@ -63,11 +66,11 @@ export default function Queue() {
               📍 {venue.venue.address}
             </a>
           )}
-          {needsCheckin(venue) && <div className="q-geo small">Check-in por localização: só entra na fila quem estiver a até {venue.venue.radius_m} m.</div>}
+          {needsCheckin(venue) && <div className="q-geo small">{t('Check-in por localização: só entra na fila quem estiver a até {n} m.', { n: venue.venue.radius_m })}</div>}
         </div>
         <div className="q-head-actions">
-          <Link className="btn ghost" to={`/fila/${slug}/tv`}>Modo TV</Link>
-          <button className="btn ghost" onClick={() => setShowRules(true)}>Regras</button>
+          <Link className="btn ghost" to={`/fila/${slug}/tv`}>{t('Modo TV')}</Link>
+          <button className="btn ghost" onClick={() => setShowRules(true)}>{t('Regras')}</button>
         </div>
       </header>
       {error && <div className="banner err">{error}</div>}
@@ -77,10 +80,10 @@ export default function Queue() {
       ))}
       {events.length > 0 && (
         <section className="card q-log">
-          <h3>Movimento</h3>
+          <h3>{t('Movimento')}</h3>
           {events.map((ev) => (
-            <div key={ev.id} className="small"><span className="muted">{new Date(ev.at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>{' '}
-              {ev.entry_name && ev.kind !== 'reset' ? <b>{ev.entry_name}</b> : null} {EVENT_PT[ev.kind] || ev.kind}{ev.kind === 'reset' && ev.entry_name ? ` (${ev.entry_name})` : ''}</div>
+            <div key={ev.id} className="small"><span className="muted">{new Date(ev.at).toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' })}</span>{' '}
+              {ev.entry_name && ev.kind !== 'reset' ? <b>{ev.entry_name}</b> : null} {evText(ev.kind)}{ev.kind === 'reset' && ev.entry_name ? ` (${ev.entry_name})` : ''}</div>
           ))}
         </section>
       )}
@@ -102,7 +105,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
 
   const act = async (fn) => {
     setBusy(true); setErr('');
-    try { await fn(); await onChange(); } catch (e) { setErr(e.message); }
+    try { await fn(); await onChange(); } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };
   const join = (e) => {
@@ -115,25 +118,25 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
     <section className="card q-machine">
       <div className="row-between">
         <h3>{machine.name}</h3>
-        <span className="muted small">{entries.length} na fila · ~{Math.round(machine.avg_turn_sec / 60)} min por vez</span>
+        <span className="muted small">{t('{n} na fila · ~{m} min por vez', { n: entries.length, m: Math.round(machine.avg_turn_sec / 60) })}</span>
       </div>
 
       {playing ? (
         <div className="q-now">
-          <span className="q-now-label">Jogando agora</span>
+          <span className="q-now-label">{t('Jogando agora')}</span>
           <Person entry={playing} big />
         </div>
-      ) : <p className="muted center">Fila vazia, bora jogar! Coloque seu nome aqui embaixo.</p>}
+      ) : <p className="muted center">{t('Fila vazia, bora jogar! Coloque seu nome aqui embaixo.')}</p>}
 
       <ol className="q-list">
         {entries.filter((e) => e !== playing).map((e) => (
           <li key={e.id} className={`${e.status === 'away' ? 'away' : ''} ${mine?.id === e.id ? 'me' : ''}`}>
             <Person entry={e} />
-            {e.status === 'away' && <span className="tag">ausente há {mins(e.away_since)} min</span>}
+            {e.status === 'away' && <span className="tag">{t('ausente há {n} min', { n: mins(e.away_since) })}</span>}
             {isAdmin && (
               <span className="q-admin">
-                <button className="link" onClick={() => act(() => toFront(e.id))} title="Mover para o topo">⤒</button>
-                <button className="link" onClick={() => act(() => leaveQueue(e.id))} title="Remover">✕</button>
+                <button className="link" onClick={() => act(() => toFront(e.id))} title={t('Mover para o topo')}>⤒</button>
+                <button className="link" onClick={() => act(() => leaveQueue(e.id))} title={t('Remover')}>✕</button>
               </span>
             )}
           </li>
@@ -142,32 +145,32 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
 
       {err && <div className="form-err">{err}</div>}
 
-      <button className="btn wide q-pass" disabled={busy || !playing} onClick={() => act(() => passTurn(machine.id))}>Passar a vez ⏭</button>
+      <button className="btn wide q-pass" disabled={busy || !playing} onClick={() => act(() => passTurn(machine.id))}>{t('Passar a vez')} ⏭</button>
 
       {mine ? (
         <div className="q-mine">
           <div className="small">
-            {mine.status === 'away' ? 'Você está marcado como ausente.'
-              : myPos === 0 ? <b>É a sua vez!</b>
-                : <>Você é o <b>{myPos + 1}º</b> da fila{waitMin != null ? ` · espera ~${waitMin} min` : ''}.</>}
+            {mine.status === 'away' ? t('Você está marcado como ausente.')
+              : myPos === 0 ? <b>{t('É a sua vez!')}</b>
+                : <>{t('Sua posição na fila: {n}', { n: myPos + 1 })}{waitMin != null ? ` · ${t('espera ~{n} min', { n: waitMin })}` : ''}</>}
           </div>
           <div className="bm-row">
             <button className="btn ghost" disabled={busy} onClick={() => act(() => (mine.status === 'away' ? backFromAway(mine.id, checkin && !isAdmin) : setAway(mine.id, true)))}>
-              {mine.status === 'away' ? 'Voltei' : 'Estou ausente'}
+              {mine.status === 'away' ? t('Voltei') : t('Estou ausente')}
             </button>
-            <button className="btn ghost" disabled={busy} onClick={() => act(() => leaveQueue(mine.id))}>Sair da fila</button>
+            <button className="btn ghost" disabled={busy} onClick={() => act(() => leaveQueue(mine.id))}>{t('Sair da fila')}</button>
           </div>
         </div>
       ) : (
         <form className="q-join" onSubmit={join}>
-          <input placeholder={getSession() ? 'seu nome (ou deixe o da Pump)' : 'seu nome'} value={name} maxLength={24}
+          <input placeholder={getSession() ? t('seu nome (ou deixe o da Pump)') : t('seu nome')} value={name} maxLength={24}
             onChange={(e) => setName(e.target.value)} required={!getSession()} />
-          <button className="btn" disabled={busy}>{busy ? (checkin ? 'Conferindo local…' : 'Entrando…') : checkin ? '📍 Check-in e entrar' : 'Entrar na fila'}</button>
+          <button className="btn" disabled={busy}>{busy ? (checkin ? t('Conferindo local…') : t('Entrando…')) : checkin ? `📍 ${t('Check-in e entrar')}` : t('Entrar na fila')}</button>
         </form>
       )}
 
       {isAdmin && entries.length > 0 && (
-        <button className="link small q-reset" onClick={() => window.confirm('Zerar a fila desta máquina?') && act(() => resetQueue(machine.id))}>Zerar fila</button>
+        <button className="link small q-reset" onClick={() => window.confirm(t('Zerar a fila desta máquina?')) && act(() => resetQueue(machine.id))}>{t('Zerar fila')}</button>
       )}
     </section>
   );
@@ -179,7 +182,7 @@ export function Person({ entry, big }) {
     <span className={`q-person ${big ? 'big' : ''}`}>
       <span className="q-avatar">{entry.avatar_url ? <img src={entry.avatar_url} alt="" referrerPolicy="no-referrer" /> : initials}</span>
       <span className="q-name">{entry.display_name}</span>
-      {entry.turns > 0 && <span className="q-turns">{entry.turns}× jogou</span>}
+      {entry.turns > 0 && <span className="q-turns">{t('{n}× jogou', { n: entry.turns })}</span>}
     </span>
   );
 }
@@ -188,16 +191,16 @@ function Rules({ onClose }) {
   return (
     <div className="modal" onClick={onClose}>
       <div className="login-card" onClick={(e) => e.stopPropagation()}>
-        <h3>Regras da fila</h3>
+        <h3>{t('Regras da fila')}</h3>
         <ol className="steps small">
-          <li>Respeite a ordem da fila.</li>
-          <li>Para entrar na fila (e para voltar de "ausente") é preciso fazer check-in no local: o app confere a sua localização.</li>
-          <li>Indo para o local ou ao banheiro? Marque <b>Estou ausente</b>.</li>
-          <li>Ausente por mais de 1 hora sai da fila automaticamente.</li>
-          <li>Fila sem movimento por 2 horas é zerada (só a daquela máquina).</li>
-          <li>Terminou seu crédito? Toque em <b>Passar a vez</b>: você vai para o fim da fila.</li>
+          <li>{t('Respeite a ordem da fila.')}</li>
+          <li>{t('Para entrar na fila (e para voltar de "ausente") é preciso fazer check-in no local: o app confere a sua localização.')}</li>
+          <li>{t('Indo para o local ou ao banheiro? Marque "Estou ausente".')}</li>
+          <li>{t('Ausente por mais de 1 hora sai da fila automaticamente.')}</li>
+          <li>{t('Fila sem movimento por 2 horas é zerada (só a daquela máquina).')}</li>
+          <li>{t('Terminou seu crédito? Toque em "Passar a vez": você vai para o fim da fila.')}</li>
         </ol>
-        <button className="btn wide" onClick={onClose}>Fechar</button>
+        <button className="btn wide" onClick={onClose}>{t('Fechar')}</button>
       </div>
     </div>
   );

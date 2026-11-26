@@ -19,6 +19,10 @@ import Players, { ComparePlayer } from './pages/Players.jsx';
 import Recommend from './pages/Recommend.jsx';
 import Notifications from './pages/Notifications.jsx';
 import { useNotifications } from './lib/notify.js';
+import { usePresence } from './lib/presence.js';
+import Online from './pages/Online.jsx';
+import InviteToast from './components/InviteToast.jsx';
+import { t, tErr } from './lib/i18n.js';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -47,7 +51,7 @@ export default function App() {
   if (!session) {
     // a fila do clube é pública: quem chega pelo QR/link não precisa de conta
     if (isQueueHash()) return <PublicQueue />;
-    return <Login notice={fromUrl?.error ? `Não foi possível entrar: ${fromUrl.error}` : ''} />;
+    return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
   return (
     <>
@@ -71,7 +75,7 @@ function PublicQueue() {
           <div className="app">
             <header className="topbar">
               <div className="brand"><span className="logo">▲</span> StepClub</div>
-              <a className="btn ghost" href="#/">Entrar</a>
+              <a className="btn ghost" href="#/">{t('Entrar')}</a>
             </header>
             <main className="content">
               <Routes>
@@ -95,11 +99,11 @@ function NewPassword({ onDone }) {
   };
   return (
     <div className="modal"><form className="login-card" onSubmit={save}>
-      <h3>Nova senha</h3>
-      <label className="field">Senha<input type="password" minLength={6} required value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" /></label>
+      <h3>{t('Nova senha')}</h3>
+      <label className="field">{t('Senha')}<input type="password" minLength={6} required value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" /></label>
       {err && <div className="form-err">{err}</div>}
-      <button className="btn wide">Salvar</button>
-      <button type="button" className="link" onClick={onDone}>Agora não</button>
+      <button className="btn wide">{t('Salvar')}</button>
+      <button type="button" className="link" onClick={onDone}>{t('Agora não')}</button>
     </form></div>
   );
 }
@@ -124,10 +128,11 @@ function DataApp({ session, ingestKey }) {
   };
 
   const notifications = useNotifications(!!session);
+  const presence = usePresence(!!session);
   // acorda a API e deixa ela atualizar o catálogo (no máximo 1x por dia)
   useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications }),
-    [version, data, loading, error, reload, session, ingestKey, notifications]);
+  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications, presence }),
+    [version, data, loading, error, reload, session, ingestKey, notifications, presence]);
 
   return (
     <DataCtx.Provider value={ctx}>
@@ -148,10 +153,10 @@ function Shell() {
     <div className="app">
       <header className="topbar">
         <div className="brand"><span className="logo">▲</span> StepClub</div>
-        <NavLink to="/notificacoes" className="bell" aria-label="Notificações">
+        <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
           🔔{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
         </NavLink>
-        <div className="seg" role="tablist" aria-label="Versão">
+        <div className="seg" role="tablist" aria-label={t('Versão')}>
           {Object.values(VERSIONS).map((v) => (
             <button key={v.id} className={v.id === version ? 'on' : ''} onClick={() => setVersion(v.id)}>{v.name}</button>
           ))}
@@ -161,13 +166,13 @@ function Shell() {
       {loading && <div className="loadbar" />}
       {error && (
         <div className="banner err">
-          Não consegui carregar os dados: {error} <button onClick={() => reload()}>Tentar de novo</button>
+          {t('Não consegui carregar os dados:')} {tErr(error)} <button onClick={() => reload()}>{t('Tentar de novo')}</button>
         </div>
       )}
 
       <main className="content">
         {!data ? (
-          <div className="empty">{loading ? 'Carregando…' : 'Sem dados ainda.'}</div>
+          <div className="empty">{loading ? t('Carregando…') : t('Sem dados ainda.')}</div>
         ) : (
           <Routes>
             <Route path="/" element={<Home />} />
@@ -184,17 +189,20 @@ function Shell() {
             <Route path="/fila/:slug" element={<Queue />} />
             <Route path="/recomendacoes" element={<Recommend />} />
             <Route path="/notificacoes" element={<Notifications />} />
+            <Route path="/online" element={<Online />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}
       </main>
 
+      <InviteToast />
+
       <nav className="tabbar">
-        <Tab to="/" icon="◉" label="Início" />
-        <Tab to="/musicas" icon="♫" label="Músicas" />
-        <Tab to="/tier" icon="▦" label="Tier" />
-        <Tab to="/fila" icon="☰" label="Fila" />
-        <Tab to="/ajustes" icon="⚙" label="Ajustes" />
+        <Tab to="/" icon="◉" label={t('Início')} />
+        <Tab to="/musicas" icon="♫" label={t('Músicas')} />
+        <Tab to="/tier" icon="▦" label={t('Tier')} />
+        <Tab to="/fila" icon="☰" label={t('Fila')} />
+        <Tab to="/ajustes" icon="⚙" label={t('Ajustes')} />
       </nav>
     </div>
   );

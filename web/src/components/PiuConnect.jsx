@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { accessToken } from '../lib/auth.js';
 import { API_URL } from '../lib/config.js';
+import { t, tMsg } from '../lib/i18n.js';
 
 const AMPASS_RECOVER = 'https://am-pass.net/bbs/password_lost.php';
 
@@ -19,7 +20,7 @@ export function useSyncJob(onDone) {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...(opts.headers || {}) },
     });
     const body = await res.json().catch(() => ({}));
-    if (!res.ok && res.status !== 409) { const e = new Error(body.error || `Erro ${res.status}`); e.needLogin = body.needLogin; throw e; }
+    if (!res.ok && res.status !== 409) { const e = new Error(tMsg(body.error) || `${t('Erro')} ${res.status}`); e.needLogin = body.needLogin; throw e; }
     return body;
   };
   const poll = async (id) => {
@@ -29,16 +30,16 @@ export function useSyncJob(onDone) {
       if (j.state === 'running') timer.current = setTimeout(() => poll(id), 1500);
       else if (j.state === 'done') onDone?.(j);
       else if (j.needLogin) setNeedLogin(true);
-    } catch (e) { setErr(e.message); setJob(null); }
+    } catch (e) { setErr(tMsg(e.message)); setJob(null); }
   };
   const start = async (body) => {
     setErr(''); setNeedLogin(false);
-    setJob({ state: 'running', message: 'Conectando… (na primeira vez pode levar até 1 minuto)' });
+    setJob({ state: 'running', message: t('Conectando… (na primeira vez pode levar até 1 minuto)') });
     try {
       const r = await call('/api/piu/sync', { method: 'POST', body: JSON.stringify(body) });
       if (r.jobId) poll(r.jobId);
       return true;
-    } catch (ex) { setErr(ex.message); setJob(null); if (ex.needLogin) setNeedLogin(true); return false; }
+    } catch (ex) { setErr(tMsg(ex.message)); setJob(null); if (ex.needLogin) setNeedLogin(true); return false; }
   };
   return { job, err, needLogin, start, running: job?.state === 'running' };
 }
@@ -48,11 +49,11 @@ export function JobStatus({ job }) {
   return (
     <div className={`job ${job.state}`}>
       {job.state === 'running' && <span className="spinner" />}
-      <span>{job.message}</span>
+      <span>{tMsg(job.message)}</span>
       {job.state === 'done' && job.results && (
         <ul className="small">
           {Object.entries(job.results).map(([v, r]) => (
-            <li key={v}>{v === 'phoenix' ? 'Phoenix' : 'Phoenix 2'}: {r.bests} recordes ({r.new_bests} novos) · {r.plays} jogadas ({r.new_plays} novas){r.titles ? ` · ${r.titles} títulos` : ''}</li>
+            <li key={v}>{v === 'phoenix' ? 'Phoenix' : 'Phoenix 2'}: {t('{a} recordes ({b} novos) · {c} jogadas ({d} novas)', { a: r.bests, b: r.new_bests, c: r.plays, d: r.new_plays })}{r.titles ? ` · ${t('{n} títulos', { n: r.titles })}` : ''}</li>
           ))}
         </ul>
       )}
@@ -66,7 +67,7 @@ export function QuickSync({ onDone }) {
   return (
     <div className="piu-connect">
       <button className="btn wide" disabled={running} onClick={() => start({ useSaved: true })}>
-        {running ? 'Sincronizando…' : '⟳ Sincronizar agora'}
+        {running ? t('Sincronizando…') : `⟳ ${t('Sincronizar agora')}`}
       </button>
       {err && <div className="form-err">{err}</div>}
       <JobStatus job={job} />
@@ -94,29 +95,28 @@ export default function PiuConnect({ onDone, compact }) {
         <div className="piu-head">
           <img src="https://piugame.com/l_img/logo.png" alt="" referrerPolicy="no-referrer" />
           <div>
-            <h3>Entrar com a conta Pump It Up</h3>
-            <p className="muted small">O mesmo login do piugame.com (AM.PASS). Importamos Phoenix 2 e Phoenix.</p>
+            <h3>{t('Entrar com a conta Pump It Up')}</h3>
+            <p className="muted small">{t('O mesmo login do piugame.com (AM.PASS). Importamos Phoenix 2 e Phoenix.')}</p>
           </div>
         </div>
       )}
-      <label className="field">E-mail ou ID AM.PASS
+      <label className="field">{t('E-mail ou ID AM.PASS')}
         <input name="username" autoComplete="username" required value={login} onChange={(e) => setLogin(e.target.value)} disabled={running} />
       </label>
-      <label className="field">Senha AM.PASS
+      <label className="field">{t('Senha AM.PASS')}
         <input name="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={running} />
       </label>
       {err && <div className="form-err">{err}</div>}
       <JobStatus job={job} />
-      <button className="btn wide" disabled={running}>{running ? 'Sincronizando…' : 'Entrar e sincronizar'}</button>
-      <button type="button" className="link small" onClick={() => setHelp((h) => !h)}>Entro no piugame com Google</button>
+      <button className="btn wide" disabled={running}>{running ? t('Sincronizando…') : t('Entrar e sincronizar')}</button>
+      <button type="button" className="link small" onClick={() => setHelp((h) => !h)}>{t('Entro no piugame com Google')}</button>
       {help && (
         <p className="muted small help">
-          Contas AM.PASS com Google também têm e-mail. Se você nunca criou uma senha, peça uma em{' '}
-          <a href={AMPASS_RECOVER} target="_blank" rel="noreferrer">am-pass.net → Find My Account</a> com o mesmo e-mail do Google
-          e use aqui. O login com Google continua funcionando normalmente no jogo e no site.
+          {t('Contas AM.PASS com Google também têm e-mail. Se você nunca criou uma senha, peça uma em am-pass.net → Find My Account com o mesmo e-mail do Google e use aqui. O login com Google continua funcionando normalmente no jogo e no site.')}{' '}
+          <a href={AMPASS_RECOVER} target="_blank" rel="noreferrer">am-pass.net ▸</a>
         </p>
       )}
-      <p className="muted small">A senha é usada só para entrar no piugame e não fica salva. Guardamos apenas a sessão do site (criptografada) para o botão "Sincronizar agora" funcionar sem pedir a senha de novo.</p>
+      <p className="muted small">{t('A senha é usada só para entrar no piugame e não fica salva. Guardamos apenas a sessão do site (criptografada) para o botão "Sincronizar agora" funcionar sem pedir a senha de novo.')}</p>
     </form>
   );
 }

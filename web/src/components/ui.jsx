@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { chartLabel, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
+import { locale, t } from '../lib/i18n.js';
 
 // Imagens oficiais do site da Phoenix 2 (carregadas direto do piugame.com).
 const IMG = 'https://piugame.com/l_img/p2';
@@ -46,9 +47,9 @@ export function Jacket({ song, width = 96, className = '' }) {
 
 /** Bolinha pequena de nível colorida pelo grade obtido (lista de músicas). */
 export function ChartPip({ chart }) {
-  const t = chart.score != null ? gradeTier(chart.grade) : 'none';
+  const gt = chart.score != null ? gradeTier(chart.grade) : 'none';
   return (
-    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${t} ${chart.broken ? 'broken' : ''}`}
+    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${gt} ${chart.broken ? 'broken' : ''}`}
       title={`${chartLabel(chart)}${chart.score != null ? ` · ${fmtScore(chart.score)} ${chart.grade || ''}` : ''}`}>
       {chart.mode === 'C' ? `×${chart.level}` : chart.level}
     </span>
@@ -101,13 +102,13 @@ export function Stat({ label, value, sub }) {
 }
 
 export function timeAgo(iso) {
-  if (!iso) return 'nunca';
+  if (!iso) return t('nunca');
   const d = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (d < 60) return 'agora';
-  if (d < 3600) return `há ${Math.floor(d / 60)} min`;
-  if (d < 86400) return `há ${Math.floor(d / 3600)} h`;
-  if (d < 86400 * 30) return `há ${Math.floor(d / 86400)} d`;
-  return new Date(iso).toLocaleDateString('pt-BR');
+  if (d < 60) return t('agora');
+  if (d < 3600) return t('há {n} min', { n: Math.floor(d / 60) });
+  if (d < 86400) return t('há {n} h', { n: Math.floor(d / 3600) });
+  if (d < 86400 * 30) return t('há {n} d', { n: Math.floor(d / 86400) });
+  return new Date(iso).toLocaleDateString(locale());
 }
 
-export const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '—');
+export const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString(locale(), { dateStyle: 'short', timeStyle: 'short' }) : '—');

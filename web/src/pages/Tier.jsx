@@ -5,6 +5,7 @@ import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, TIERS } from '../lib/piu.js';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
+import { t } from '../lib/i18n.js';
 
 export default function Tier() {
   const { data } = useData();
@@ -16,9 +17,9 @@ export default function Tier() {
   const set = (k, v) => { const p = new URLSearchParams(params); p.set(k, v); setParams(p, { replace: true }); };
 
   const charts = data.charts.filter((c) => c.mode === mode && c.level === level);
-  const groups = TIERS.map((t) => ({
-    ...t,
-    charts: charts.filter((c) => chartTier(c) === t.id)
+  const groups = TIERS.map((x) => ({
+    ...x,
+    charts: charts.filter((c) => chartTier(c) === x.id)
       .sort((a, b) => (b.scoringLevel ?? 0) - (a.scoringLevel ?? 0) || a.song.title.localeCompare(b.song.title)),
   })).filter((g) => g.charts.length);
 
@@ -41,14 +42,14 @@ export default function Tier() {
         <Ball chart={{ mode, level }} size="lg" />
         <div>
           <div className="big">{clears.length}<span className="muted">/{charts.length}</span></div>
-          <div className="muted">clears · {played.length - clears.length} quebrados</div>
+          <div className="muted">{t('clears · {n} quebrados', { n: played.length - clears.length })}</div>
         </div>
-        {best && <div className="tier-best"><span className="muted">melhor</span><Grade grade={best.grade} size="sm" /></div>}
+        {best && <div className="tier-best"><span className="muted">{t('melhor')}</span><Grade grade={best.grade} size="sm" /></div>}
       </section>
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
-          <div className="tier-label"><b>{g.short}</b><span>{g.label}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
+          <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
           <div className="tier-grid">
             {g.charts.map((c) => (
               <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : ''}`}
@@ -67,7 +68,7 @@ export default function Tier() {
           </div>
         </section>
       ))}
-      <p className="muted small center">Dificuldade relativa dentro do nível segundo a comunidade do PIU Scores.</p>
+      <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do StepClub.')}</p>
     </div>
   );
 }

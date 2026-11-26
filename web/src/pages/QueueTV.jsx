@@ -1,17 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { Person, useVenue } from './Queue.jsx';
+import { locale, t } from '../lib/i18n.js';
 
 /** Tela para deixar na TV do clube: quem está jogando e os próximos, em letras grandes. */
 export default function QueueTV() {
   const { slug } = useParams();
   const { venue, entries } = useVenue(slug);
-  if (!venue) return <div className="tv"><p>Carregando…</p></div>;
+  if (!venue) return <div className="tv"><p>{t('Carregando…')}</p></div>;
   const url = `${window.location.origin}${window.location.pathname}#/fila/${slug}`;
   return (
     <div className="tv">
       <header>
         <div className="brand"><span className="logo">▲</span> {venue.venue.name}</div>
-        <div className="tv-clock">{new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</div>
+        <div className="tv-clock">{new Date().toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' })}</div>
       </header>
       <div className="tv-grid">
         {venue.machines.map((m) => {
@@ -20,18 +21,18 @@ export default function QueueTV() {
           return (
             <section key={m.id} className="tv-machine">
               <h2>{m.name}</h2>
-              {waiting[0] ? <div className="tv-now"><span>JOGANDO AGORA</span><Person entry={waiting[0]} big /></div>
-                : <div className="tv-now empty">Máquina livre!</div>}
+              {waiting[0] ? <div className="tv-now"><span>{t('Jogando agora').toUpperCase()}</span><Person entry={waiting[0]} big /></div>
+                : <div className="tv-now empty">{t('Máquina livre!')}</div>}
               <ol>
                 {list.filter((e) => e !== waiting[0]).slice(0, 8).map((e) => (
-                  <li key={e.id} className={e.status === 'away' ? 'away' : ''}><Person entry={e} />{e.status === 'away' && <em>ausente</em>}</li>
+                  <li key={e.id} className={e.status === 'away' ? 'away' : ''}><Person entry={e} />{e.status === 'away' && <em>{t('ausente')}</em>}</li>
                 ))}
               </ol>
             </section>
           );
         })}
       </div>
-      <footer>Entre na fila pelo celular: <b>{url.replace(/^https?:\/\//, '')}</b></footer>
+      <footer>{t('Entre na fila pelo celular:')} <b>{url.replace(/^https?:\/\//, '')}</b></footer>
     </div>
   );
 }

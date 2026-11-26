@@ -1,27 +1,28 @@
 // Notificações do StepClub: amigos que bateram recorde, músicas novas e pedidos de amizade.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { rpc } from './api.js';
+import { fmtNum, t } from './i18n.js';
 
 const POLL_MS = 2 * 60 * 1000;
 
 export function describe(n) {
-  const who = n.nickname || 'Um amigo';
+  const who = n.nickname || t('Um amigo');
   switch (n.kind) {
     case 'friend_score':
       return n.prev_score
-        ? `${who} subiu ${n.title} ${n.mode}${n.level} para ${n.grade} (${fmt(n.prev_score)} → ${fmt(n.score)})`
-        : `${who} fez ${n.grade} em ${n.title} ${n.mode}${n.level} (${fmt(n.score)})`;
+        ? t('{who} subiu {song} {chart} para {grade} ({from} → {to})', { who, song: n.title, chart: `${n.mode}${n.level}`, grade: n.grade, from: fmt(n.prev_score), to: fmt(n.score) })
+        : t('{who} fez {grade} em {song} {chart} ({to})', { who, song: n.title, chart: `${n.mode}${n.level}`, grade: n.grade, to: fmt(n.score) });
     case 'new_song':
-      return `Música nova no catálogo: ${n.title}${n.charts?.length ? ` (${n.charts.join(' ')})` : ''}`;
+      return t('Música nova no catálogo: {song}', { song: n.title }) + (n.charts?.length ? ` (${n.charts.join(' ')})` : '');
     case 'friend_request':
-      return `${who} quer ser seu amigo no StepClub`;
+      return t('{who} quer ser seu amigo no StepClub', { who });
     case 'friend_accepted':
-      return `${who} aceitou sua solicitação. Agora vocês veem as notas um do outro`;
+      return t('{who} aceitou sua solicitação. Agora vocês veem as notas um do outro', { who });
     default:
-      return 'Novidade no StepClub';
+      return t('Novidade no StepClub');
   }
 }
-const fmt = (v) => Number(v).toLocaleString('pt-BR');
+const fmt = (v) => fmtNum(v);
 
 export const linkFor = (n) => (n.kind === 'friend_score' || n.kind === 'new_song' ? `/musica/${n.song}`
   : n.kind === 'friend_request' ? '/jogadores' : `/jogador/${n.user}`);

@@ -1,4 +1,5 @@
 // Regras do jogo: grades, plates, PUMBILITY e tiers de dificuldade.
+import { locale } from './i18n.js';
 
 export const VERSIONS = {
   phoenix2: { id: 'phoenix2', name: 'Phoenix 2', short: 'P2', site: 'https://piugame.com' },
@@ -113,7 +114,7 @@ export const DIFF_PT = {
   Underrated: 'Subestimado', Overrated: 'Superestimado', Unrecorded: 'Sem dados',
 };
 
-export const fmtScore = (n) => (n == null ? '—' : n.toLocaleString('pt-BR'));
+export const fmtScore = (n) => (n == null ? '—' : n.toLocaleString(locale()));
 export const chartLabel = (c) => (c.mode === 'C' ? `CO-OP x${c.level}` : `${c.mode}${c.level}`);
 
 // ---------- faixas de PUMBILITY da Phoenix 2 ----------

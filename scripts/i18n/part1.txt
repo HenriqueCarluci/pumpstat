@@ -1,0 +1,103 @@
+# pt | en | es | ko | ja | fr | it
+Não foi possível entrar: {e} | Couldn't sign in: {e} | No se pudo iniciar sesión: {e} | 로그인할 수 없습니다: {e} | ログインできませんでした: {e} | Connexion impossible : {e} | Impossibile accedere: {e}
+Entrar | Sign in | Entrar | 로그인 | ログイン | Se connecter | Accedi
+Nova senha | New password | Nueva contraseña | 새 비밀번호 | 新しいパスワード | Nouveau mot de passe | Nuova password
+Senha | Password | Contraseña | 비밀번호 | パスワード | Mot de passe | Password
+Salvar | Save | Guardar | 저장 | 保存 | Enregistrer | Salva
+Agora não | Not now | Ahora no | 나중에 | 今はやめておく | Pas maintenant | Non ora
+Notificações | Notifications | Notificaciones | 알림 | 通知 | Notifications | Notifiche
+Versão | Version | Versión | 버전 | バージョン | Version | Versione
+Não consegui carregar os dados: | Couldn't load your data: | No pude cargar los datos: | 데이터를 불러오지 못했습니다: | データを読み込めませんでした: | Impossible de charger les données : | Impossibile caricare i dati:
+Tentar de novo | Try again | Reintentar | 다시 시도 | 再試行 | Réessayer | Riprova
+Carregando… | Loading… | Cargando… | 불러오는 중… | 読み込み中… | Chargement… | Caricamento…
+Sem dados ainda. | No data yet. | Aún no hay datos. | 아직 데이터가 없습니다. | まだデータがありません。 | Pas encore de données. | Ancora nessun dato.
+Início | Home | Inicio | 홈 | ホーム | Accueil | Home
+Músicas | Songs | Canciones | 곡 | 楽曲 | Morceaux | Brani
+Tier | Tier | Tier | 티어 | ティア | Tier | Tier
+Fila | Queue | Fila | 대기열 | 順番待ち | File | Coda
+Ajustes | Settings | Ajustes | 설정 | 設定 | Réglages | Impostazioni
+Carregando avaliações… | Loading reviews… | Cargando valoraciones… | 평가 불러오는 중… | 評価を読み込み中… | Chargement des avis… | Caricamento valutazioni…
+Comunidade: | Community: | Comunidad: | 커뮤니티: | コミュニティ: | Communauté : | Community:
+Ninguém votou no tier deste chart ainda. | No one has voted on this chart's tier yet. | Nadie ha votado el tier de este chart todavía. | 아직 이 채보의 티어에 투표한 사람이 없습니다. | この譜面のティアにはまだ投票がありません。 | Personne n'a encore voté pour le tier de ce chart. | Nessuno ha ancora votato il tier di questo chart.
+Para você, este chart é… | To you, this chart is… | Para ti, este chart es… | 내가 느끼기에 이 채보는… | あなたにとってこの譜面は… | Pour vous, ce chart est… | Per te, questo chart è…
+O que mais pesa nele? | What makes it hard? | ¿Qué es lo que más pesa? | 무엇이 가장 어렵나요? | 何が一番きつい? | Qu'est-ce qui le rend difficile ? | Cosa lo rende difficile?
+Comentário (opcional): dica, parte difícil, como passar… | Comment (optional): tip, hard section, how to pass… | Comentario (opcional): consejo, parte difícil, cómo pasarlo… | 코멘트 (선택): 팁, 어려운 구간, 클리어 방법… | コメント (任意): コツ、難所、クリアの仕方… | Commentaire (facultatif) : astuce, passage difficile, comment le passer… | Commento (facoltativo): consiglio, parte difficile, come superarlo…
+Atualizar avaliação | Update review | Actualizar valoración | 평가 수정 | 評価を更新 | Mettre à jour l'avis | Aggiorna valutazione
+Enviar avaliação | Submit review | Enviar valoración | 평가 보내기 | 評価を送信 | Envoyer l'avis | Invia valutazione
+Remover | Remove | Quitar | 삭제 | 削除 | Supprimer | Rimuovi
+Salvo | Saved | Guardado | 저장됨 | 保存しました | Enregistré | Salvato
+Passe este chart (sem stage break) e sincronize para poder votar no tier, marcar o estilo e comentar. | Clear this chart (no stage break) and sync to vote on its tier, tag its style and comment. | Pasa este chart (sin stage break) y sincroniza para votar el tier, marcar el estilo y comentar. | 이 채보를 스테이지 브레이크 없이 클리어하고 동기화하면 티어 투표, 스타일 태그, 코멘트를 남길 수 있습니다. | この譜面をステージブレイクなしでクリアして同期すると、ティア投票・スタイルのタグ付け・コメントができます。 | Passez ce chart (sans stage break) et synchronisez pour voter son tier, indiquer son style et commenter. | Supera questo chart (senza stage break) e sincronizza per votarne il tier, indicarne lo stile e commentare.
+Você | You | Tú | 나 | あなた | Vous | Tu
+Jogador | Player | Jugador | 플레이어 | プレイヤー | Joueur | Giocatore
+{n} voto | {n} vote | {n} voto | {n}표 | {n}票 | {n} vote | {n} voto
+{n} votos | {n} votes | {n} votos | {n}표 | {n}票 | {n} votes | {n} voti
+Um jogador | A player | Un jugador | 한 플레이어 | あるプレイヤー | Un joueur | Un giocatore
+Bora jogar? | Wanna play? | ¿Jugamos? | 같이 할래요? | 一緒にやらない? | On joue ? | Giochiamo?
+{who} te chamou para jogar | {who} invited you to play | {who} te invitó a jugar | {who}님이 같이 하자고 불렀어요 | {who}さんから一緒にプレイしようと誘われました | {who} vous invite à jouer | {who} ti ha invitato a giocare
+Bora! | Let's go! | ¡Vamos! | 좋아요! | やろう! | C'est parti ! | Andiamo!
+{who} aceitou seu convite! | {who} accepted your invite! | ¡{who} aceptó tu invitación! | {who}님이 초대를 수락했어요! | {who}さんが誘いを受けました! | {who} a accepté votre invitation ! | {who} ha accettato il tuo invito!
+{who} não pode agora. | {who} can't right now. | {who} no puede ahora. | {who}님은 지금은 어렵대요. | {who}さんは今は無理なようです。 | {who} ne peut pas maintenant. | {who} non può adesso.
+Toque para fechar | Tap to close | Toca para cerrar | 눌러서 닫기 | タップで閉じる | Touchez pour fermer | Tocca per chiudere
+Idioma | Language | Idioma | 언어 | 言語 | Langue | Lingua
+Erro | Error | Error | 오류 | エラー | Erreur | Errore
+Conectando… (na primeira vez pode levar até 1 minuto) | Connecting… (the first time can take up to 1 minute) | Conectando… (la primera vez puede tardar hasta 1 minuto) | 연결 중… (처음에는 최대 1분 걸릴 수 있어요) | 接続中…(初回は最大1分かかることがあります) | Connexion… (la première fois peut prendre jusqu'à 1 minute) | Connessione… (la prima volta può richiedere fino a 1 minuto)
+{a} recordes ({b} novos) · {c} jogadas ({d} novas) | {a} bests ({b} new) · {c} plays ({d} new) | {a} récords ({b} nuevos) · {c} partidas ({d} nuevas) | 최고 기록 {a}개 (새 기록 {b}) · 플레이 {c}회 (신규 {d}) | ベスト {a}件 (新規 {b}) · プレイ {c}件 (新規 {d}) | {a} records ({b} nouveaux) · {c} parties ({d} nouvelles) | {a} record ({b} nuovi) · {c} partite ({d} nuove)
+{n} títulos | {n} titles | {n} títulos | 칭호 {n}개 | 称号 {n}個 | {n} titres | {n} titoli
+Sincronizando… | Syncing… | Sincronizando… | 동기화 중… | 同期中… | Synchronisation… | Sincronizzazione…
+Sincronizar agora | Sync now | Sincronizar ahora | 지금 동기화 | 今すぐ同期 | Synchroniser | Sincronizza ora
+Entrar com a conta Pump It Up | Sign in with your Pump It Up account | Entrar con tu cuenta de Pump It Up | Pump It Up 계정으로 로그인 | Pump It Up アカウントでログイン | Se connecter avec le compte Pump It Up | Accedi con l'account Pump It Up
+O mesmo login do piugame.com (AM.PASS). Importamos Phoenix 2 e Phoenix. | The same login as piugame.com (AM.PASS). We import Phoenix 2 and Phoenix. | El mismo login de piugame.com (AM.PASS). Importamos Phoenix 2 y Phoenix. | piugame.com과 같은 로그인(AM.PASS)입니다. Phoenix 2와 Phoenix 기록을 가져옵니다. | piugame.com と同じログイン(AM.PASS)です。Phoenix 2 と Phoenix を取り込みます。 | Le même identifiant que sur piugame.com (AM.PASS). Nous importons Phoenix 2 et Phoenix. | Lo stesso login di piugame.com (AM.PASS). Importiamo Phoenix 2 e Phoenix.
+E-mail ou ID AM.PASS | AM.PASS e-mail or ID | E-mail o ID de AM.PASS | AM.PASS 이메일 또는 ID | AM.PASS のメールまたはID | E-mail ou identifiant AM.PASS | E-mail o ID AM.PASS
+Senha AM.PASS | AM.PASS password | Contraseña de AM.PASS | AM.PASS 비밀번호 | AM.PASS パスワード | Mot de passe AM.PASS | Password AM.PASS
+Entrar e sincronizar | Sign in and sync | Entrar y sincronizar | 로그인하고 동기화 | ログインして同期 | Se connecter et synchroniser | Accedi e sincronizza
+Entro no piugame com Google | I sign in to piugame with Google | Entro a piugame con Google | piugame에 Google로 로그인해요 | piugame には Google でログインしています | Je me connecte à piugame avec Google | Accedo a piugame con Google
+Contas AM.PASS com Google também têm e-mail. Se você nunca criou uma senha, peça uma em am-pass.net → Find My Account com o mesmo e-mail do Google e use aqui. O login com Google continua funcionando normalmente no jogo e no site. | AM.PASS accounts linked to Google also have an e-mail. If you never created a password, request one at am-pass.net → Find My Account with the same Google e-mail and use it here. Google sign-in keeps working normally in the game and on the site. | Las cuentas AM.PASS con Google también tienen e-mail. Si nunca creaste una contraseña, pide una en am-pass.net → Find My Account con el mismo e-mail de Google y úsala aquí. El login con Google sigue funcionando normalmente en el juego y en el sitio. | Google로 연결된 AM.PASS 계정에도 이메일이 있습니다. 비밀번호를 만든 적이 없다면 am-pass.net → Find My Account에서 같은 Google 이메일로 비밀번호를 요청해 여기에 입력하세요. 게임과 사이트의 Google 로그인은 그대로 사용할 수 있습니다. | Google 連携の AM.PASS アカウントにもメールアドレスがあります。パスワードを作ったことがなければ、am-pass.net → Find My Account で同じ Google のメールから発行して、ここで使ってください。ゲームやサイトでの Google ログインはそのまま使えます。 | Les comptes AM.PASS liés à Google ont aussi un e-mail. Si vous n'avez jamais créé de mot de passe, demandez-en un sur am-pass.net → Find My Account avec le même e-mail Google et utilisez-le ici. La connexion Google continue de fonctionner normalement dans le jeu et sur le site. | Anche gli account AM.PASS collegati a Google hanno un'e-mail. Se non hai mai creato una password, richiedila su am-pass.net → Find My Account con la stessa e-mail di Google e usala qui. L'accesso con Google continua a funzionare normalmente nel gioco e sul sito.
+A senha é usada só para entrar no piugame e não fica salva. Guardamos apenas a sessão do site (criptografada) para o botão "Sincronizar agora" funcionar sem pedir a senha de novo. | Your password is only used to sign in to piugame and is never stored. We keep only the site session (encrypted) so "Sync now" works without asking for the password again. | La contraseña solo se usa para entrar a piugame y no se guarda. Solo guardamos la sesión del sitio (cifrada) para que "Sincronizar ahora" funcione sin pedir la contraseña de nuevo. | 비밀번호는 piugame 로그인에만 쓰이고 저장되지 않습니다. "지금 동기화"가 비밀번호 없이 동작하도록 사이트 세션만 암호화해서 보관합니다. | パスワードは piugame へのログインにだけ使い、保存しません。「今すぐ同期」がパスワードなしで動くよう、サイトのセッションだけを暗号化して保存します。 | Le mot de passe sert uniquement à se connecter à piugame et n'est jamais enregistré. Nous gardons seulement la session du site (chiffrée) pour que « Synchroniser » fonctionne sans redemander le mot de passe. | La password serve solo per accedere a piugame e non viene salvata. Conserviamo solo la sessione del sito (cifrata) perché "Sincronizza ora" funzioni senza chiedere di nuovo la password.
+Estilo do chart | Chart style | Estilo del chart | 채보 스타일 | 譜面の傾向 | Style du chart | Stile del chart
+{n} notas/s | {n} notes/s | {n} notas/s | 초당 {n}노트 | {n} ノーツ/秒 | {n} notes/s | {n} note/s
+Destaques: | Highlights: | Destacados: | 특징: | 特徴: | Points forts : | In evidenza:
+% das notas em cada padrão. Um passo pode contar em mais de um. Fonte: anotações do piucenter.com. | % of notes in each pattern. A step can count in more than one. Source: piucenter.com annotations. | % de notas en cada patrón. Un paso puede contar en más de uno. Fuente: anotaciones de piucenter.com. | 각 패턴에 해당하는 노트 비율(%). 한 스텝이 여러 패턴에 포함될 수 있습니다. 출처: piucenter.com 주석. | 各パターンに含まれるノーツの割合(%)。1つのステップが複数に数えられることがあります。出典: piucenter.com の注釈。 | % des notes dans chaque motif. Un pas peut compter dans plusieurs. Source : annotations de piucenter.com. | % di note in ogni pattern. Un passo può contare in più di uno. Fonte: annotazioni di piucenter.com.
+nunca | never | nunca | 없음 | なし | jamais | mai
+agora | just now | ahora | 방금 | たった今 | à l'instant | adesso
+há {n} min | {n} min ago | hace {n} min | {n}분 전 | {n}分前 | il y a {n} min | {n} min fa
+há {n} h | {n} h ago | hace {n} h | {n}시간 전 | {n}時間前 | il y a {n} h | {n} h fa
+há {n} d | {n} d ago | hace {n} d | {n}일 전 | {n}日前 | il y a {n} j | {n} g fa
+{n} recordes | {n} bests | {n} récords | 최고 기록 {n}개 | ベスト {n}件 | {n} records | {n} record
+Um amigo | A friend | Un amigo | 친구 | フレンド | Un ami | Un amico
+{who} subiu {song} {chart} para {grade} ({from} → {to}) | {who} improved {song} {chart} to {grade} ({from} → {to}) | {who} subió {song} {chart} a {grade} ({from} → {to}) | {who}님이 {song} {chart}을(를) {grade}(으)로 갱신 ({from} → {to}) | {who}さんが {song} {chart} を {grade} に更新 ({from} → {to}) | {who} a amélioré {song} {chart} en {grade} ({from} → {to}) | {who} ha migliorato {song} {chart} a {grade} ({from} → {to})
+{who} fez {grade} em {song} {chart} ({to}) | {who} got {grade} on {song} {chart} ({to}) | {who} sacó {grade} en {song} {chart} ({to}) | {who}님이 {song} {chart}에서 {grade} 달성 ({to}) | {who}さんが {song} {chart} で {grade} を達成 ({to}) | {who} a fait {grade} sur {song} {chart} ({to}) | {who} ha fatto {grade} su {song} {chart} ({to})
+Música nova no catálogo: {song} | New song in the catalog: {song} | Canción nueva en el catálogo: {song} | 새 곡 추가: {song} | 新曲追加: {song} | Nouveau morceau au catalogue : {song} | Nuovo brano nel catalogo: {song}
+{who} quer ser seu amigo no StepClub | {who} wants to be your friend on StepClub | {who} quiere ser tu amigo en StepClub | {who}님이 StepClub 친구 요청을 보냈어요 | {who}さんから StepClub のフレンド申請が届きました | {who} veut devenir votre ami sur StepClub | {who} vuole essere tuo amico su StepClub
+{who} aceitou sua solicitação. Agora vocês veem as notas um do outro | {who} accepted your request. You can now see each other's scores | {who} aceptó tu solicitud. Ahora ven las notas del otro | {who}님이 요청을 수락했어요. 이제 서로의 점수를 볼 수 있어요 | {who}さんが申請を承認しました。お互いのスコアが見られます | {who} a accepté votre demande. Vous voyez maintenant vos scores mutuels | {who} ha accettato la tua richiesta. Ora vedete i punteggi l'uno dell'altro
+Novidade no StepClub | New on StepClub | Novedad en StepClub | StepClub 새 소식 | StepClub のお知らせ | Nouveau sur StepClub | Novità su StepClub
+Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix. | Sign in with your Pump It Up account and we'll bring in your Phoenix 2 and Phoenix scores. | Entra con tu cuenta de Pump It Up y traemos tus récords de Phoenix 2 y Phoenix. | Pump It Up 계정으로 로그인하면 Phoenix 2와 Phoenix 기록을 가져옵니다. | Pump It Up アカウントでログインすると、Phoenix 2 と Phoenix の記録を取り込みます。 | Connectez-vous avec votre compte Pump It Up et nous importons vos records Phoenix 2 et Phoenix. | Accedi con il tuo account Pump It Up e importiamo i tuoi record di Phoenix 2 e Phoenix.
+Sem título | No title | Sin título | 칭호 없음 | 称号なし | Sans titre | Nessun titolo
+Faça a primeira sincronização | Do your first sync | Haz la primera sincronización | 첫 동기화를 해 주세요 | 最初の同期をしてください | Faites la première synchronisation | Fai la prima sincronizzazione
+sincronizado {when} | synced {when} | sincronizado {when} | {when} 동기화 | {when} 同期 | synchronisé {when} | sincronizzato {when}
+Online | Online | En línea | 온라인 | オンライン | En ligne | Online
+Recomendadas | Recommended | Recomendadas | 추천 | おすすめ | Recommandés | Consigliati
+Títulos | Titles | Títulos | 칭호 | 称号 | Titres | Titoli
+Amigos | Friends | Amigos | 친구 | フレンド | Amis | Amici
+Recentes | Recent | Recientes | 최근 | 最近 | Récents | Recenti
+Charts jogados | Charts played | Charts jugados | 플레이한 채보 | プレイした譜面 | Charts joués | Chart giocati
+de {n} | of {n} | de {n} | / {n} | / {n} | sur {n} | su {n}
+Clears | Clears | Clears | 클리어 | クリア | Clears | Clear
+Média | Average | Promedio | 평균 | 平均 | Moyenne | Media
+Grades | Grades | Grades | 그레이드 | グレード | Grades | Grade
+Nenhum clear ainda nesta versão. | No clears yet in this version. | Aún no hay clears en esta versión. | 이 버전에서 아직 클리어가 없습니다. | このバージョンではまだクリアがありません。 | Aucun clear dans cette version pour l'instant. | Ancora nessun clear in questa versione.
+Progresso por nível | Progress by level | Progreso por nivel | 레벨별 진행도 | レベル別の進捗 | Progression par niveau | Progresso per livello
+Top 50 do PUMBILITY | PUMBILITY top 50 | Top 50 de PUMBILITY | PUMBILITY 상위 50 | PUMBILITY トップ50 | Top 50 PUMBILITY | Top 50 PUMBILITY
+estimativa | estimate | estimación | 추정 | 推定 | estimation | stima
+Ocultar | Hide | Ocultar | 숨기기 | 隠す | Masquer | Nascondi
+Mostrar | Show | Mostrar | 보기 | 表示 | Afficher | Mostra
+Últimas jogadas | Latest plays | Últimas partidas | 최근 플레이 | 最近のプレイ | Dernières parties | Ultime partite
+Ver todas | See all | Ver todas | 전체 보기 | すべて見る | Tout voir | Vedi tutte
+Evolução do PUMBILITY | PUMBILITY over time | Evolución de PUMBILITY | PUMBILITY 변화 | PUMBILITY の推移 | Évolution du PUMBILITY | Andamento PUMBILITY
+estimado {v} | estimated {v} | estimado {v} | 추정 {v} | 推定 {v} | estimé {v} | stimato {v}
+Faltam | You need | Faltan | 남은 점수 | あと | Il manque | Mancano
+para | to reach | para | → | で | pour | per
+Como subir | How to climb | Cómo subir | 올리는 방법 | 上げるには | Comment progresser | Come salire
++{n} pontos para | +{n} points for | +{n} puntos para | +{n}점이면 | あと +{n} 点で | +{n} points pour | +{n} punti per
+Um {c} novo com {g} | A new {c} with {g} | Un {c} nuevo con {g} | 새 {c}에서 {g} | 新しい {c} で {g} | Un nouveau {c} en {g} | Un nuovo {c} con {g}
+entra no top 50 | enters your top 50 | entra en el top 50 | 상위 50에 들어감 | トップ50入り | entre dans le top 50 | entra nella top 50
+Ver músicas recomendadas para subir | See recommended songs to climb | Ver canciones recomendadas para subir | 올리기 좋은 추천 곡 보기 | 上げるためのおすすめ曲を見る | Voir les morceaux recommandés pour progresser | Vedi i brani consigliati per salire

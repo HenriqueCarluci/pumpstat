@@ -4,9 +4,10 @@ import { useData } from '../App.jsx';
 import PiuConnect from '../components/PiuConnect.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
+import { locale, t } from '../lib/i18n.js';
 
 export default function Home() {
-  const { data, version, reload } = useData();
+  const { data, version, reload, presence } = useData();
   const [showTop, setShowTop] = useState(false);
   const [mode, setMode] = useState('D');
 
@@ -45,7 +46,7 @@ export default function Home() {
       <div className="page">
         <section className="card hero-connect">
           <div className="login-brand"><span className="logo">▲</span> StepClub</div>
-          <p className="center">Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix.</p>
+          <p className="center">{t('Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix.')}</p>
         </section>
         <section className="card"><PiuConnect onDone={() => reload()} /></section>
       </div>
@@ -57,29 +58,30 @@ export default function Home() {
       <section className="card profile">
         <div className="avatar">{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
         <div className="pinfo">
-          <div className="ptitle">{p?.title || 'Sem título'}</div>
-          <div className="pname">{p?.nickname || 'Faça a primeira sincronização'}</div>
-          <div className="psync">{v.name} · sincronizado {timeAgo(data.lastSync)}</div>
+          <div className="ptitle">{p?.title || t('Sem título')}</div>
+          <div className="pname">{p?.nickname || t('Faça a primeira sincronização')}</div>
+          <div className="psync">{v.name} · {t('sincronizado {when}', { when: timeAgo(data.lastSync) })}</div>
         </div>
       </section>
 
       <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
 
       <div className="quick-links">
-        <Link to="/recomendacoes" className="ql">🎯 Recomendadas</Link>
-        <Link to="/titulos" className="ql">🏷️ Títulos</Link>
-        <Link to="/jogadores" className="ql">👥 Amigos</Link>
-        <Link to="/recentes" className="ql">↻ Recentes</Link>
+        <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>
+        <Link to="/recomendacoes" className="ql">🎯 {t('Recomendadas')}</Link>
+        <Link to="/titulos" className="ql">🏷️ {t('Títulos')}</Link>
+        <Link to="/jogadores" className="ql">👥 {t('Amigos')}</Link>
+        <Link to="/recentes" className="ql">↻ {t('Recentes')}</Link>
       </div>
 
       <section className="stats">
-        <Stat label="Charts jogados" value={stats.played.length} sub={`de ${data.charts.length}`} />
-        <Stat label="Clears" value={stats.clears.length} />
-        <Stat label="Média" value={stats.avg ? fmtScore(stats.avg) : '—'} />
+        <Stat label={t('Charts jogados')} value={stats.played.length} sub={t('de {n}', { n: data.charts.length })} />
+        <Stat label={t('Clears')} value={stats.clears.length} />
+        <Stat label={t('Média')} value={stats.avg ? fmtScore(stats.avg) : '—'} />
       </section>
 
       <section className="card">
-        <h3>Grades</h3>
+        <h3>{t('Grades')}</h3>
         <div className="gradebars">
           {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
             <div key={g} className="gb">
@@ -88,13 +90,13 @@ export default function Home() {
               <span className="gb-n">{stats.grades[g]}</span>
             </div>
           ))}
-          {!stats.clears.length && <p className="muted">Nenhum clear ainda nesta versão.</p>}
+          {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
         </div>
       </section>
 
       <section className="card">
         <div className="row-between">
-          <h3>Progresso por nível</h3>
+          <h3>{t('Progresso por nível')}</h3>
           <div className="seg sm">
             {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
           </div>
@@ -113,8 +115,8 @@ export default function Home() {
 
       <section className="card">
         <div className="row-between">
-          <h3>Top 50 do PUMBILITY <span className="muted">(estimativa)</span></h3>
-          <button className="link" onClick={() => setShowTop((s) => !s)}>{showTop ? 'Ocultar' : 'Mostrar'}</button>
+          <h3>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></h3>
+          <button className="link" onClick={() => setShowTop((s) => !s)}>{showTop ? t('Ocultar') : t('Mostrar')}</button>
         </div>
         {showTop && (
           <ol className="toplist">
@@ -136,7 +138,7 @@ export default function Home() {
 
       {data.plays.length > 0 && (
         <section className="card">
-          <div className="row-between"><h3>Últimas jogadas</h3><Link className="link" to="/recentes">Ver todas</Link></div>
+          <div className="row-between"><h3>{t('Últimas jogadas')}</h3><Link className="link" to="/recentes">{t('Ver todas')}</Link></div>
           <div className="cards">
             {data.plays.slice(0, 4).map((pl, i) => (
               <ScoreCard key={i} chart={pl.chart} score={pl.score} grade={pl.grade} plate={pl.plate}
@@ -155,11 +157,11 @@ function Spark({ points }) {
   const min = Math.min(...vals); const max = Math.max(...vals);
   const w = 120; const h = 40;
   const d = vals.map((v, i) => `${i ? 'L' : 'M'}${(i / (vals.length - 1)) * w},${h - ((v - min) / (max - min || 1)) * (h - 4) - 2}`).join(' ');
-  return <svg className="spark" viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-label="Evolução do PUMBILITY"><path d={d} /></svg>;
+  return <svg className="spark" viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-label={t('Evolução do PUMBILITY')}><path d={d} /></svg>;
 }
 
 function TierCard({ version, points, estimated, history, charts }) {
-  const fmt = (n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmt = (n) => Number(n).toLocaleString(locale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const ideas = useMemo(() => pumbilitySuggestions(version, charts), [version, charts]);
   if (version !== 'phoenix2') {
     return (
@@ -167,52 +169,52 @@ function TierCard({ version, points, estimated, history, charts }) {
         <div className="pumb-main">
           <div className="l">PUMBILITY</div>
           <div className="v">{fmt(points)}</div>
-          <div className="s">Phoenix · estimado {fmt(estimated)}</div>
+          <div className="s">Phoenix · {t('estimado {v}', { v: fmt(estimated) })}</div>
         </div>
         <Spark points={history} />
       </section>
     );
   }
-  const t = pbTier(points);
+  const tier = pbTier(points);
   return (
     <section className="card pumb tier-card">
       <div className="tier-top">
-        {t.icon ? <img className="tier-icon" src={t.icon} alt="" referrerPolicy="no-referrer" /> : <div className="tier-icon none">PB</div>}
+        {tier.icon ? <img className="tier-icon" src={tier.icon} alt="" referrerPolicy="no-referrer" /> : <div className="tier-icon none">PB</div>}
         <div className="pumb-main">
-          <div className="l">PUMBILITY · {t.name}{t.lv ? ` LV.${t.lv}` : ''}</div>
+          <div className="l">PUMBILITY · {t(tier.name)}{tier.lv ? ` LV.${tier.lv}` : ''}</div>
           <div className="v">{fmt(points)}</div>
-          <div className="s">estimado {fmt(estimated)}</div>
+          <div className="s">{t('estimado {v}', { v: fmt(estimated) })}</div>
         </div>
         <Spark points={history} />
       </div>
-      {t.nextLabel && (
+      {tier.nextLabel && (
         <>
-          <div className="tier-bar"><i style={{ width: `${Math.min(100, t.progress * 100)}%` }} /></div>
+          <div className="tier-bar"><i style={{ width: `${Math.min(100, tier.progress * 100)}%` }} /></div>
           <div className="tier-next small">
-            Faltam <b>{fmt(t.toNextLv)}</b> para <b>{t.nextLabel}</b>
-            {t.nextTier && t.toNextTier !== t.toNextLv && <> · <b>{fmt(t.toNextTier)}</b> para <b>{t.nextTier.name}</b></>}
+            {t('Faltam')} <b>{fmt(tier.toNextLv)}</b> {t('para')} <b>{tier.nextLabel}</b>
+            {tier.nextTier && tier.toNextTier !== tier.toNextLv && <> · <b>{fmt(tier.toNextTier)}</b> {t('para')} <b>{tier.nextTier.name}</b></>}
           </div>
         </>
       )}
       {ideas.length > 0 && (
         <div className="ideas">
-          <div className="ideas-h">Como subir</div>
+          <div className="ideas-h">{t('Como subir')}</div>
           {ideas.map((i, k) => (
             i.kind === 'grade' ? (
               <Link key={k} to={`/musica/${i.chart.song.id}`} className="idea">
                 <Ball chart={i.chart} size="sm" />
-                <span className="t">{i.chart.song.title}<small>+{fmtScore(i.need)} pontos para <b>{i.grade}</b></small></span>
+                <span className="t">{i.chart.song.title}<small>{t('+{n} pontos para', { n: fmtScore(i.need) })} <b>{i.grade}</b></small></span>
                 <span className="gain">+{i.gain.toFixed(1)}</span>
               </Link>
             ) : (
               <Link key={k} to={`/tier?m=${i.mode}&l=${i.level}`} className="idea">
                 <Ball chart={{ mode: i.mode, level: i.level }} size="sm" />
-                <span className="t">Um {chartLabel({ mode: i.mode, level: i.level })} novo com {i.grade}<small>entra no top 50</small></span>
+                <span className="t">{t('Um {c} novo com {g}', { c: chartLabel({ mode: i.mode, level: i.level }), g: i.grade })}<small>{t('entra no top 50')}</small></span>
                 <span className="gain">+{i.gain.toFixed(1)}</span>
               </Link>
             )
           ))}
-          <Link to="/recomendacoes" className="link">Ver músicas recomendadas para subir ▸</Link>
+          <Link to="/recomendacoes" className="link">{t('Ver músicas recomendadas para subir')} ▸</Link>
         </div>
       )}
     </section>

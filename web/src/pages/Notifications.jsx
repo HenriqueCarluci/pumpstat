@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { Grade, Jacket, timeAgo } from '../components/ui.jsx';
 import { canAlert, describe, linkFor } from '../lib/notify.js';
 import { Chips } from './Songs.jsx';
+import { t } from '../lib/i18n.js';
 
 export default function Notifications() {
   const { notifications: nt } = useData();
@@ -19,17 +20,17 @@ export default function Notifications() {
 
   return (
     <div className="page">
-      <h2>Notificações</h2>
+      <h2>{t('Notificações')}</h2>
       {perm === 'default' && (
         <div className="banner">
-          Quer receber um aviso no aparelho quando um amigo bater recorde ou sair música nova?
-          <button className="btn" onClick={ask}>Ativar avisos</button>
+          {t('Quer receber um aviso no aparelho quando um amigo bater recorde ou sair música nova?')}
+          <button className="btn" onClick={ask}>{t('Ativar avisos')}</button>
         </div>
       )}
-      <Chips value={filter} onChange={setFilter} options={[['all', 'Tudo'], ['friends', 'Amigos'], ['songs', 'Músicas novas']]} />
-      {!nt.loaded && <p className="empty">Carregando…</p>}
+      <Chips value={filter} onChange={setFilter} options={[['all', t('Tudo')], ['friends', t('Amigos')], ['songs', t('Músicas novas')]]} />
+      {!nt.loaded && <p className="empty">{t('Carregando…')}</p>}
       {nt.loaded && !items.length && (
-        <p className="empty">Nada por aqui ainda. Quando seus <Link to="/jogadores">amigos</Link> sincronizarem recordes novos ou sair música nova no catálogo, aparece aqui.</p>
+        <p className="empty">{t('Nada por aqui ainda. Quando seus amigos sincronizarem recordes novos ou sair música nova no catálogo, aparece aqui.')} <Link to="/jogadores">{t('Amigos')} ▸</Link></p>
       )}
       <div className="notifs">
         {items.map((n, i) => (
@@ -44,7 +45,7 @@ export default function Notifications() {
           </Link>
         ))}
       </div>
-      <p className="muted tiny">Os recordes dos amigos aparecem quando eles sincronizam a conta da Pump. Músicas novas entram quando o catálogo é atualizado (uma vez por dia).</p>
+      <p className="muted tiny">{t('Os recordes dos amigos aparecem quando eles sincronizam a conta da Pump. Músicas novas entram quando o catálogo é atualizado (uma vez por dia).')}</p>
     </div>
   );
 }

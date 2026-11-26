@@ -138,3 +138,14 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Botão "Avaliar" em cada chart. Só quem passou o chart (recorde sem stage break) pode avaliar: voto de tier (muito fácil → topo do nível), tags de estilo (twist, drill, corrida, bracket, pulo, jack, doublestep, footswitch, gimmick, stamina, hold, técnico) e comentário de até 500 caracteres.
 - O tier mostrado no app mistura o PIU Scores (peso de 3 votos) com a média dos votos (`community_charts`). As tags mais marcadas aparecem no card do chart.
 - Comentários são visíveis para todos os usuários logados; a nota de quem comentou só aparece para amigos.
+
+## Idiomas
+- Português, English, Español, 한국어, 日本語, Français e Italiano. Escolha em Ajustes ou na tela de login; na primeira vez segue o idioma do aparelho.
+- `t('texto em português')` com dicionários em `web/src/lib/locales/*.json`, gerados por `scripts/i18n-build.py` a partir de `scripts/i18n/part*.txt`. Erros do servidor (em português) são traduzidos na tela quando conhecidos.
+- Datas e números seguem o idioma escolhido. Nomes de músicas, títulos do jogo e termos como PERFECT/GREAT ficam como no jogo.
+
+## Online agora (`#/online`)
+- Com o app aberto, cada usuário manda um "heartbeat" a cada 30 s (`heartbeat`); online = visto nos últimos 3 min. Quem abriu a fila de um fliperama nas últimas 3 h aparece como "no mesmo fliperama".
+- Lista (`online_players`): para não-amigos só o título; nick, avatar e PUMBILITY só entre amigos. Sugestão de x1 por PUMBILITY parecido (±500 = bom x1, ±1500 = nível parecido), sem revelar o número.
+- Convite (`send_invite`) com mensagem rápida ou texto (até 140 caracteres). Limites: 1 convite por pessoa a cada 10 min e 10 por hora. O convidado vê um aviso na hora (e notificação do sistema se permitido) e responde "Bora!" ou "Agora não"; quem chamou recebe a resposta.
+- Visibilidade: todos, só amigos ou ninguém (`set_presence_mode`).
