@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useData } from '../App.jsx';
 import { timeAgo } from '../components/ui.jsx';
 import { signOut } from '../lib/auth.js';
+import PiuConnect from '../components/PiuConnect.jsx';
 import { SUPABASE_KEY, SUPABASE_URL } from '../lib/api.js';
 import { VERSIONS } from '../lib/piu.js';
 
@@ -31,7 +32,13 @@ export default function Settings() {
   return (
     <div className="page settings">
       <section className="card">
-        <h3>Sincronizar scores</h3>
+        <h3>Sincronizar com a Pump It Up</h3>
+        <p className="muted small">Entra no piugame.com com o seu login AM.PASS e atualiza tudo.</p>
+        <PiuConnect compact onDone={() => reload()} />
+      </section>
+
+      <section className="card">
+        <h3>Sincronizar pelo favorito (alternativa)</h3>
         <ol className="steps">
           <li>Arraste o botão <b>PumpStat Sync</b> para a barra de favoritos. No celular, copie o código, crie um favorito qualquer e substitua o endereço dele pelo código.</li>
           <li>Entre em <a href="https://piugame.com/my_page/my_best_score.php" target="_blank" rel="noreferrer">piugame.com</a> (Phoenix 2) ou <a href="https://phoenix.piugame.com/my_page/my_best_score.php" target="_blank" rel="noreferrer">phoenix.piugame.com</a> (Phoenix), já logado, e clique no favorito.</li>

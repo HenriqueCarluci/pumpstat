@@ -23,37 +23,19 @@ const fromUrl = sessionFromUrl();
 
 export default function App() {
   const [session, setSession] = useState(getSession);
-  const [owner, setOwner] = useState(null); // null = verificando
   const [ingestKey, setIngestKey] = useState('');
   const [recovery, setRecovery] = useState(fromUrl?.type === 'recovery');
 
-  useEffect(() => onSession((s) => { setSession(s); if (!s) { setOwner(null); setIngestKey(''); clearCache(); } }), []);
+  useEffect(() => onSession((s) => { setSession(s); if (!s) { setIngestKey(''); clearCache(); } }), []);
 
   useEffect(() => {
     if (!session) return;
     let alive = true;
-    (async () => {
-      try {
-        const r = await rpc('claim_owner');
-        if (!alive) return;
-        setOwner(!!r.owner);
-        if (r.owner) setIngestKey((await rpc('my_ingest_key')) || '');
-      } catch { if (alive) setOwner(false); }
-    })();
+    rpc('my_sync_key').then((k) => { if (alive) setIngestKey(k || ''); }).catch(() => {});
     return () => { alive = false; };
   }, [session]);
 
   if (!session) return <Login />;
-  if (owner === null) return <div className="empty">Entrando…</div>;
-  if (!owner) {
-    return (
-      <div className="login"><div className="login-card">
-        <div className="login-brand"><span className="logo">▲</span> PumpStat</div>
-        <p className="center">A conta <b>{session.email}</b> não é a dona deste PumpStat.</p>
-        <button className="btn wide" onClick={signOut}>Sair</button>
-      </div></div>
-    );
-  }
   return (
     <>
       {recovery && <NewPassword onDone={() => setRecovery(false)} />}

@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import PiuConnect from '../components/PiuConnect.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { fmtScore, GRADE_ORDER, gradeTier, pumbility, VERSIONS } from '../lib/piu.js';
 
 export default function Home() {
-  const { data, version } = useData();
+  const { data, version, reload } = useData();
   const [showTop, setShowTop] = useState(false);
   const [mode, setMode] = useState('D');
 
@@ -38,6 +39,18 @@ export default function Home() {
   const p = data.profile;
   const maxGrade = Math.max(1, ...Object.values(stats.grades));
   const v = VERSIONS[version];
+
+  if (!p && !stats.played.length) {
+    return (
+      <div className="page">
+        <section className="card hero-connect">
+          <div className="login-brand"><span className="logo">▲</span> PumpStat</div>
+          <p className="center">Conecte sua conta da Pump It Up para trazer seus recordes da Phoenix 2 e da Phoenix.</p>
+        </section>
+        <section className="card"><PiuConnect onDone={() => reload()} /></section>
+      </div>
+    );
+  }
 
   return (
     <div className="page">
