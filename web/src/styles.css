@@ -872,3 +872,37 @@ a.q-city:hover { color: var(--text); }
 .ws-clears { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
 .ws-clear { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: inherit; text-decoration: none; padding: 2px 8px 2px 2px; border-radius: 999px; background: rgba(255, 255, 255, 0.05); }
 .ws-rival { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* desafios do mês */
+.ch-banner { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
+  border-color: rgba(255, 210, 63, 0.45); background: linear-gradient(90deg, rgba(255, 210, 63, 0.12), transparent 70%), var(--panel); }
+.ch-banner > svg:first-child { color: #ffd23f; flex: none; }
+.ch-banner-main { flex: 1; display: grid; gap: 2px; min-width: 0; }
+.ch-banner-cta { color: #ffd23f; font-weight: 700; }
+.challenge h3 { margin: 0; }
+.challenge.done { border-color: rgba(62, 224, 111, 0.5); }
+.challenge.ended { opacity: 0.85; }
+.challenge.inactive { opacity: 0.6; border-style: dashed; }
+.ch-status.live { background: rgba(62, 224, 111, 0.15); color: #3ee06f; }
+.ch-status.soon { background: rgba(61, 143, 230, 0.15); color: #7fb6f0; }
+.ch-goal { margin: 6px 0 4px; font-size: 15px; }
+.ch-prize { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: 10px; margin: 8px 0; background: rgba(255, 210, 63, 0.08); }
+.ch-prize > svg { color: #ffd23f; flex: none; margin-top: 2px; }
+.ch-progress { margin: 8px 0; }
+.ch-won { color: #ffd23f; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.ch-board { display: grid; gap: 6px; margin-top: 8px; }
+.ch-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) 90px 44px; align-items: center; gap: 8px; font-size: 13px; }
+.ch-row.me { font-weight: 700; }
+.ch-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ch-bar { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.ch-bar span { display: block; height: 100%; background: #3ee06f; }
+.ch-n { text-align: right; font: 700 12px var(--num); }
+.ch-admin { display: grid; gap: 10px; }
+.ch-form { display: grid; gap: 8px; }
+.ch-form label { display: grid; gap: 4px; font-size: 13px; }
+.ch-form label.check { display: flex; }
+.ch-form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.ch-templates, .ch-song-list { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.ch-winners { display: grid; gap: 4px; margin: 6px 0; }
+.ch-winner { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.toggle-row small.up { color: #3ee06f; }

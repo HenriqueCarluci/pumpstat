@@ -4,12 +4,15 @@ import { distanceM, getPosition, listVenues } from '../lib/queue.js';
 import { t, tErr } from '../lib/i18n.js';
 import { MapPin, PadArrow } from '../components/Icons.jsx';
 import VenueRequest from '../components/VenueRequest.jsx';
+import { useData } from '../App.jsx';
+import { isOn } from '../lib/plans.js';
 
 const CITY_ORDER = ['Natal', 'Fortaleza', 'São Paulo', 'Porto Alegre', 'Recife'];
 const ACCENTS = ['#ff4fd8', '#2bd2ff', '#ffd23f', '#8cff3a', '#ff9f2f'];
 
 /** Escolha da cidade e do fliperama (mesma organização do Fila Pump). */
 export default function Venues() {
+  const { plan } = useData();
   const [venues, setVenues] = useState(null);
   const [city, setCity] = useState(null);
   const [error, setError] = useState('');
@@ -78,7 +81,7 @@ export default function Venues() {
         </>
       )}
       {error && <div className="form-err center">{error}</div>}
-      <VenueRequest />
+      {isOn(plan, 'venue_requests') && <VenueRequest />}
       <p className="muted small center">{t('Filas baseadas no')} <a href="https://fila-pump.pages.dev" target="_blank" rel="noreferrer">Fila Pump</a> (K4L1zinha / Octg Natal). {t('Endereços:')} <a href="https://zenius-i-vanisher.com" target="_blank" rel="noreferrer">Zenius -I- vanisher</a>.</p>
     </div>
   );

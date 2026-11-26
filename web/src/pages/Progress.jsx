@@ -9,7 +9,7 @@ import Rival from './Rival.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
-import { entitlements } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball, Jacket } from '../components/ui.jsx';
 import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
@@ -86,7 +86,7 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', t('Evolução')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ['rival', t('Rival')]]} />
+          options={[['evolucao', t('Evolução')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
         {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
@@ -95,7 +95,7 @@ export default function Progress() {
       {r && tab === 'fracos' && (ent.can('weakness') ? <Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /> : <Locked />)}
       {r && tab === 'dicas' && (ent.can('tips') ? <Tips r={r} mode={mode} /> : <Locked />)}
       {r && tab === 'plano' && (ent.can('training_plan') ? <Plan r={r} /> : <Locked />)}
-      {tab === 'rival' && (ent.can('rival') ? <Rival /> : <Locked />)}
+      {tab === 'rival' && isOn(plan, 'rival') && (ent.can('rival') ? <Rival /> : <Locked />)}
     </div>
   );
 }

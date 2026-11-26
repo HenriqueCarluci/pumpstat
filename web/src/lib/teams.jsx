@@ -1,6 +1,8 @@
 // Times: tag do time ao lado do nick (busca em lote, com cache curto).
 import { useEffect, useState } from 'react';
 import { rpc } from './api.js';
+import { useData } from '../App.jsx';
+import { isOn } from './plans.js';
 
 const cache = new Map(); // userId -> { id, name, tag } | null
 let pending = null;
@@ -39,6 +41,7 @@ export function TeamLogo({ team, size = 16 }) {
 }
 
 export function TeamTag({ team }) {
-  if (!team) return null;
+  const { plan } = useData();
+  if (!team || !isOn(plan, 'teams')) return null;
   return <span className={`team-tag ${team.logo ? 'has-logo' : ''}`} title={team.name}>{team.logo && <TeamLogo team={team} size={14} />}{team.tag || team.name}</span>;
 }

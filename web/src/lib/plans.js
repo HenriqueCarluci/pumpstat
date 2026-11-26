@@ -22,6 +22,21 @@ export const LIMITS = [
   { id: 'history_months', label: 'Meses de histórico' },
 ];
 
+// Liga/desliga geral (Administração → Recursos). Ausente = ligado.
+export const TOGGLES = [
+  { id: 'missions', label: 'Missões da semana', group: 'Gamificação' },
+  { id: 'streak', label: 'Sequência de semanas', group: 'Gamificação' },
+  { id: 'week_summary', label: 'Resumo da semana passada', group: 'Gamificação' },
+  { id: 'challenges', label: 'Desafios do mês', group: 'Gamificação' },
+  { id: 'rival', label: 'Rival', group: 'Social' },
+  { id: 'friend_online', label: 'Aviso de amigo online', group: 'Social' },
+  { id: 'online', label: 'Online agora e convites para jogar', group: 'Social' },
+  { id: 'teams', label: 'Times', group: 'Social' },
+  { id: 'tier_votes', label: 'Votação de tier', group: 'Comunidade' },
+  { id: 'venue_requests', label: 'Cadastro e exclusão de fliperama pelos membros', group: 'Comunidade' },
+];
+export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
+
 const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 
 /** O que o usuário pode usar, a partir de my_plan(). */

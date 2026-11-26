@@ -52,6 +52,10 @@ export function describe(n) {
       return t('{who} pediu para tirar o fliperama {name} ({city}) da lista', { who, name: n.name, city: n.city }) + (n.reason ? `: “${n.reason}”` : '');
     case 'admin_team_request':
       return t('{who} pediu o cadastro do time {name}', { who, name: n.name });
+    case 'challenge_new':
+      return t('Desafio novo no clube: {name}. Participe!', { name: n.title });
+    case 'challenge_won':
+      return t('Você ganhou no desafio {name}!', { name: n.title }) + (n.prize ? ` ${t('Prêmio')}: ${n.prize}` : '');
     default:
       return t('Novidade no StepClub');
   }
@@ -66,6 +70,7 @@ export function linkFor(n) {
     case 'venue_approved': return `/fila/${n.venue}`;
     case 'venue_rejected': case 'venue_removed': case 'venue_removal_rejected': return '/fila';
     case 'team_approved': case 'team_rejected': return '/ajustes';
+    case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     default: return n.user ? `/jogador/${n.user}` : '/';
   }

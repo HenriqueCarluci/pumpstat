@@ -31,6 +31,7 @@ import Plans from './pages/Plans.jsx';
 import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
+import Challenges from './pages/Challenges.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -207,6 +208,7 @@ function Shell() {
             <Route path="/recomendacoes" element={<Recommend />} />
             <Route path="/progresso" element={<Progress />} />
             <Route path="/votacoes" element={<Votes />} />
+            <Route path="/desafios" element={<Challenges />} />
             <Route path="/notificacoes" element={<Notifications />} />
             <Route path="/online" element={<Online />} />
             <Route path="/admin" element={<Admin />} />

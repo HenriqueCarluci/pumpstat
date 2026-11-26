@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import { isOn } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { canAlert } from '../lib/notify.js';
 import { t } from '../lib/i18n.js';
@@ -10,7 +11,8 @@ const who = (p) => p.nickname || p.title || t('Um jogador');
 
 /** Aviso flutuante quando alguém te chama para jogar (e quando respondem ao seu convite). */
 export default function InviteToast() {
-  const { presence } = useData();
+  const { presence, plan } = useData();
+  const enabled = isOn(plan, 'online');
   const navigate = useNavigate();
   const [hidden, setHidden] = useState(() => new Set());
   const alerted = useRef(new Set());
@@ -35,6 +37,7 @@ export default function InviteToast() {
     presence.refresh();
   };
 
+  if (!enabled) return null;
   if (invite && invite.kind === 'message') {
     return (
       <div className="toast invite">

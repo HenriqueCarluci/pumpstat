@@ -10,12 +10,13 @@ import { pbTier } from '../lib/piu.js';
 import { Check, ChevronRight, Gamepad2, MapPin, Swords } from '../components/Icons.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
 import { TeamTag, useTeams } from '../lib/teams.jsx';
+import { isOn } from '../lib/plans.js';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
 
 /** Quem está com o app aberto agora, com convite para jogar e sugestão de x1. */
 export default function Online() {
-  const { presence } = useData();
+  const { presence, plan } = useData();
   const [list, setList] = useState(null);
   const [err, setErr] = useState('');
   const [open, setOpen] = useState(null); // id do jogador com o convite aberto
@@ -31,6 +32,7 @@ export default function Online() {
     try { await rpc('set_presence_mode', { p_mode: m }); presence.refresh(); } catch (e) { setErr(tErr(e.message)); }
   };
 
+  if (!isOn(plan, 'online')) return <div className="page"><p className="empty">{t('Este recurso está desligado no momento.')}</p></div>;
   const x1 = (list || []).filter((p) => p.match === 'close' || p.match === 'near').slice(0, 3);
 
   return (

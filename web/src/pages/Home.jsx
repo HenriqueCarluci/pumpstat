@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import PiuConnect from '../components/PiuConnect.jsx';
 import WeekCard from '../components/WeekCard.jsx';
+import ChallengeBanner from '../components/ChallengeBanner.jsx';
+import { isOn } from '../lib/plans.js';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronRight, History, Logo, Tag, Target, Users, TrendingUp } from '../components/Icons.jsx';
+import { ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp } from '../components/Icons.jsx';
 
 export default function Home() {
-  const { data, version, reload, presence } = useData();
+  const { data, version, reload, presence, plan } = useData();
   const [showTop, setShowTop] = useState(false);
   const [mode, setMode] = useState('D');
 
@@ -69,10 +71,12 @@ export default function Home() {
 
       <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
 
+      <ChallengeBanner />
       <WeekCard />
 
       <div className="quick-links">
-        <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>
+        {isOn(plan, 'online') && <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>}
+        {isOn(plan, 'challenges') && <Link to="/desafios" className="ql"><Trophy size={16} /> {t('Desafios')}</Link>}
         <Link to="/progresso" className="ql"><TrendingUp size={16} /> {t('Progresso')}</Link>
         <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
         <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>

@@ -3,15 +3,19 @@ import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { ProposalCard } from '../components/TierVote.jsx';
 import { Vote } from '../components/Icons.jsx';
+import { useData } from '../App.jsx';
+import { isOn } from '../lib/plans.js';
 
 /** Votações de tier abertas e as encerradas na última semana. */
 export default function Votes() {
+  const { plan } = useData();
   const [list, setList] = useState(null);
   const [err, setErr] = useState('');
   const load = () => rpc('tier_proposals_list', { p_charts: null }).then(setList).catch((e) => setErr(tErr(e.message)));
   useEffect(() => { load(); }, []);
   const open = (list || []).filter((p) => p.status === 'open');
   const closed = (list || []).filter((p) => p.status !== 'open');
+  if (!isOn(plan, 'tier_votes')) return <div className="page"><p className="empty">{t('Este recurso está desligado no momento.')}</p></div>;
   return (
     <div className="page votes-page">
       <h2 className="ic-row"><Vote size={20} /> {t('Votações de tier')}</h2>

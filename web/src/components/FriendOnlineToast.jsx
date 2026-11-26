@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { usePrefs } from '../lib/prefs.js';
+import { isOn } from '../lib/plans.js';
 import { t } from '../lib/i18n.js';
 import { MapPin, X } from './Icons.jsx';
 
@@ -21,7 +22,8 @@ function remember(id) {
 }
 
 export default function FriendOnlineToast() {
-  const { presence } = useData();
+  const { presence, plan } = useData();
+  const enabled = isOn(plan, 'friend_online');
   const [prefs] = usePrefs();
   const navigate = useNavigate();
   const [cards, setCards] = useState([]); // { key, friend, leaving }
@@ -35,13 +37,13 @@ export default function FriendOnlineToast() {
     if (known.current === null) { known.current = now; return; }
     const fresh = list.filter((f) => !known.current.has(f.id));
     known.current = now;
-    if (prefs.friendOnline === false || document.hidden) return;
+    if (!enabled || prefs.friendOnline === false || document.hidden) return;
     const seen = lastAlert();
     const show = fresh.filter((f) => !seen[f.id] || Date.now() - seen[f.id] > COOLDOWN_MS).slice(0, 3);
     if (!show.length) return;
     show.forEach((f) => remember(f.id));
     setCards((cs) => [...cs, ...show.map((f) => ({ key: `${f.id}-${Date.now()}`, friend: f, leaving: false }))].slice(-3));
-  }, [presence.friends, prefs.friendOnline]);
+  }, [presence.friends, prefs.friendOnline, enabled]);
 
   // cada cartão fica alguns segundos e desce
   useEffect(() => {

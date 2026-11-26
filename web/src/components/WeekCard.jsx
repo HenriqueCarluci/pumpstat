@@ -6,6 +6,7 @@ import { loadProgress, rpc } from '../lib/api.js';
 import { chartAttempts, levelStats, parseProgress, playerLevel, weaknessSums, weaknesses } from '../lib/insights.js';
 import { lastWeekSummary, weeklyMissions, weekStart, weekStreak } from '../lib/missions.js';
 import { DIM_LABEL } from '../pages/Progress.jsx';
+import { isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball } from './ui.jsx';
 import { CalendarCheck, Check, ChevronRight, Flame, Swords, Trophy, X } from './Icons.jsx';
@@ -28,17 +29,20 @@ function missionText(m) {
 }
 
 export default function WeekCard() {
-  const { data, version } = useData();
+  const { data, version, plan } = useData();
+  const on = { missions: isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: isOn(plan, 'week_summary') };
   const [raw, setRaw] = useState(null);
   const [week, setWeek] = useState(null);
   const [seen, setSeen] = useState(() => { try { return localStorage.getItem(SEEN_KEY); } catch { return null; } });
 
+  const any = on.missions || on.streak || on.summary;
   useEffect(() => {
+    if (!any) return undefined;
     let alive = true;
     loadProgress(version, data.lastSync || null).then((r) => { if (alive) setRaw(r); }).catch(() => {});
     rpc('my_week').then((w) => { if (alive) setWeek(w); }).catch(() => {});
     return () => { alive = false; };
-  }, [version, data.lastSync]);
+  }, [version, data.lastSync, any]);
 
   const a = useMemo(() => {
     if (!raw) return null;
@@ -49,30 +53,31 @@ export default function WeekCard() {
     const lvl = playerLevel(levelStats(attempts, mode));
     const weak = lvl ? weaknesses(weaknessSums(attempts, prog, mode, lvl), new Map()) : [];
     const ctx = { prog, attempts, mode, lvl, weak };
-    return { mode, now: weeklyMissions(ctx), last: lastWeekSummary({ ...ctx, week }) };
-  }, [raw, data, week]);
+    return { mode, now: weeklyMissions(ctx), last: { ...lastWeekSummary({ ...ctx, week }), showRival: isOn(plan, 'rival') } };
+  }, [raw, data, week, plan]);
 
-  const streak = week ? weekStreak(week.weeks, week.week) : null;
+  const streak = week && on.streak ? weekStreak(week.weeks, week.week) : null;
   const lastKey = String(weekStart() - 7 * 86400000);
-  const showSummary = a && !a.last.empty && seen !== lastKey;
+  const showSummary = on.summary && a && !a.last.empty && seen !== lastKey;
   const closeSummary = () => { try { localStorage.setItem(SEEN_KEY, lastKey); } catch { /* ignora */ } setSeen(lastKey); };
 
-  if (!a) return null;
+  if (!a || !any) return null;
   const { now } = a;
   const end = now.ws + 6 * 86400000;
 
   return (
     <>
       {showSummary && <LastWeek s={a.last} streak={streak} onClose={closeSummary} />}
-      <section className="card week-card">
+      {(on.missions || streak) && <section className="card week-card">
         <div className="row-between">
-          <h3 className="ic-row"><Trophy size={18} /> {t('Missões da semana')}</h3>
+          <h3 className="ic-row">{on.missions ? <><Trophy size={18} /> {t('Missões da semana')}</> : <><Flame size={18} /> {t('Sequência de semanas')}</>}</h3>
           {streak && (
             <span className={`streak ${streak.streak ? 'on' : ''}`} title={t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}>
               <Flame size={16} /> {tn(streak.streak, '{n} semana', '{n} semanas')}
             </span>
           )}
         </div>
+        {on.missions && <>
         <p className="muted small">
           {fmtDay(now.ws)}–{fmtDay(end)} · {t('{d} de {n} completas', { d: now.done, n: now.total })}
           {a.mode && <> · {a.mode === 'S' ? 'Single' : 'Double'}</>}
@@ -87,10 +92,12 @@ export default function WeekCard() {
             </li>
           ))}
         </ul>
+        </>}
         {streak?.atRisk && <p className="small streak-warn"><Flame size={14} /> {tn(streak.streak, 'Jogue esta semana para não perder a sequência de {n} semana.', 'Jogue esta semana para não perder a sequência de {n} semanas.')}</p>}
-        {now.done === now.total && <p className="small mission-all"><Trophy size={14} /> {t('Semana completa! Novas missões na segunda.')}</p>}
-        <p className="muted small">{t('As missões se completam sozinhas quando você sincroniza.')} <Link to="/progresso?v=plano">{t('Ver plano de treino')} <ChevronRight size={12} /></Link></p>
-      </section>
+        {on.missions && now.done === now.total && <p className="small mission-all"><Trophy size={14} /> {t('Semana completa! Novas missões na segunda.')}</p>}
+        {on.missions && <p className="muted small">{t('As missões se completam sozinhas quando você sincroniza.')} <Link to="/progresso?v=plano">{t('Ver plano de treino')} <ChevronRight size={12} /></Link></p>}
+        {!on.missions && streak && <p className="muted small">{t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}</p>}
+      </section>}
     </>
   );
 }
@@ -119,7 +126,7 @@ function LastWeek({ s, streak, onClose }) {
           ))}
         </div>
       )}
-      {s.rival && (
+      {s.rival && s.showRival && (
         <p className="small ic-row ws-rival">
           <Swords size={14} />
           {s.rival.delta != null && s.pb

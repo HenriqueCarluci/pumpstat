@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import { isOn } from '../lib/plans.js';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
 import { LegacyToggle } from './Song.jsx';
@@ -11,7 +12,7 @@ import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
 
 export default function Tier() {
-  const { data, version } = useData();
+  const { data, version, plan } = useData();
   const [prefs] = usePrefs();
   const legacy = (c) => legacyOf(c, version, prefs.legacyP1);
   const [params, setParams] = useSearchParams();
@@ -56,7 +57,7 @@ export default function Tier() {
 
       <div className="tier-tools">
         {hasLegacy && <LegacyToggle />}
-        <Link to="/votacoes" className="chip-toggle"><Vote size={14} /> {t('Votações de tier')}</Link>
+        {isOn(plan, 'tier_votes') && <Link to="/votacoes" className="chip-toggle"><Vote size={14} /> {t('Votações de tier')}</Link>}
       </div>
 
       {groups.map((g) => (

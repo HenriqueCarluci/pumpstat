@@ -8,6 +8,7 @@ import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck, X } from '../components/Icons.jsx';
 import { FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER } from '../lib/plans.js';
 import { Chips } from './Songs.jsx';
+import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -19,13 +20,15 @@ export default function Admin() {
     <div className="page admin">
       <h2>{t('Administração')}</h2>
       <Stats />
-      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['approvals', t('Aprovações')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')]]} />
+      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['approvals', t('Aprovações')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')], ['challenges', t('Desafios')], ['features', t('Recursos')]]} />
       {tab === 'users' && <Users />}
       {tab === 'approvals' && <Approvals />}
       {tab === 'reports' && <Reports />}
       {tab === 'feedback' && <FeedbackList />}
       {tab === 'plans' && <PlansConfig />}
       {tab === 'ads' && <AdsConfig />}
+      {tab === 'challenges' && <ChallengesAdmin />}
+      {tab === 'features' && <FeatureToggles />}
     </div>
   );
 }

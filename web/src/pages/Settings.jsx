@@ -5,7 +5,7 @@ import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { Link } from 'react-router-dom';
 import { Crown, Lock, ShieldCheck, Trash2 } from '../components/Icons.jsx';
-import { entitlements, PLAN_LABEL } from '../lib/plans.js';
+import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
 import { signOut } from '../lib/auth.js';
@@ -33,7 +33,7 @@ export default function Settings() {
         </details>
       </section>
 
-      <TeamPicker userId={session?.user?.id} />
+      {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
 
       <section className="card plan-card">
         <div className="row-between">

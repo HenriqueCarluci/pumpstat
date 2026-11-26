@@ -219,3 +219,123 @@ Ver rival | See rival | Ver rival | 라이벌 보기 | ライバルを見る | V
 {n} semanas | {n} weeks | {n} semanas | {n}주 | {n} 週 | {n} semaines | {n} settimane
 jogadas em {n} dia | plays on {n} day | jugadas en {n} día | 회 플레이 ({n}일) | 回プレイ ({n} 日) | parties sur {n} jour | partite in {n} giorno
 jogadas em {n} dias | plays on {n} days | jugadas en {n} días | 회 플레이 ({n}일) | 回プレイ ({n} 日) | parties sur {n} jours | partite in {n} giorni
+{n} desafios do mês abertos | {n} monthly challenges open | {n} desafíos del mes abiertos | 이번 달 챌린지 {n}개 진행 중 | 今月のチャレンジ {n} 件開催中 | {n} défis du mois ouverts | {n} sfide del mese aperte
+Toque para participar | Tap to join | Toca para participar | 눌러서 참여하기 | タップして参加 | Touchez pour participer | Tocca per partecipare
+Sequência de semanas | Week streak | Racha de semanas | 연속 주 기록 | 連続週 | Série de semaines | Serie di settimane
+Passe {song} em {n} dificuldades diferentes | Clear {song} on {n} different difficulties | Pasa {song} en {n} dificultades distintas | {song}을(를) 서로 다른 난이도 {n}개로 클리어 | {song} を {n} 種類の難易度でクリア | Validez {song} sur {n} difficultés différentes | Supera {song} in {n} difficoltà diverse
+Passe {song} em qualquer dificuldade | Clear {song} on any difficulty | Pasa {song} en cualquier dificultad | {song}을(를) 아무 난이도로 클리어 | {song} を好きな難易度でクリア | Validez {song} dans n'importe quelle difficulté | Supera {song} a qualsiasi difficoltà
+Todo mundo que completar ganha | Everyone who completes it wins | Todos los que lo completen ganan | 완료한 모두에게 지급 | 達成した全員がもらえる | Tous ceux qui le terminent gagnent | Vince chiunque la completi
+Jogue em {n} dia diferente | Play on {n} different day | Juega en {n} día distinto | {n}일 플레이하기 | {n} 日プレイする | Jouez {n} jour | Gioca in {n} giorno diverso
+Faça {n} jogada | Play {n} song | Haz {n} jugada | {n}곡 플레이 | {n} 曲プレイ | Faites {n} partie | Fai {n} partita
+Faça {n} jogadas | Play {n} songs | Haz {n} jugadas | {n}곡 플레이 | {n} 曲プレイ | Faites {n} parties | Fai {n} partite
+Passe {n} chart que você nunca tinha passado | Clear {n} chart you had never cleared | Pasa {n} chart que nunca habías pasado | 처음 클리어하는 채보 {n}개 | 未クリアの譜面を {n} 個クリア | Validez {n} chart jamais validé | Supera {n} chart mai superato
+Passe {n} charts que você nunca tinha passado | Clear {n} charts you had never cleared | Pasa {n} charts que nunca habías pasado | 처음 클리어하는 채보 {n}개 | 未クリアの譜面を {n} 個クリア | Validez {n} charts jamais validés | Supera {n} chart mai superati
+Bata seu recorde em {n} chart | Beat your record on {n} chart | Supera tu récord en {n} chart | 채보 {n}개에서 개인 기록 경신 | {n} 譜面で自己ベスト更新 | Battez votre record sur {n} chart | Batti il tuo record in {n} chart
+Bata seu recorde em {n} charts | Beat your record on {n} charts | Supera tu récord en {n} charts | 채보 {n}개에서 개인 기록 경신 | {n} 譜面で自己ベスト更新 | Battez votre record sur {n} charts | Batti il tuo record in {n} chart
+Tire {g} ou melhor em {n} jogada, no nível que quiser | Get {g} or better on {n} play, at any level you like | Saca {g} o mejor en {n} jugada, en el nivel que quieras | 원하는 레벨에서 {g} 이상 {n}회 | 好きなレベルで {g} 以上を {n} 回 | Obtenez {g} ou mieux sur {n} partie, au niveau de votre choix | Prendi {g} o meglio in {n} partita, al livello che vuoi
+Tire {g} ou melhor em {n} jogadas, no nível que quiser | Get {g} or better on {n} plays, at any level you like | Saca {g} o mejor en {n} jugadas, en el nivel que quieras | 원하는 레벨에서 {g} 이상 {n}회 | 好きなレベルで {g} 以上を {n} 回 | Obtenez {g} ou mieux sur {n} parties, au niveau de votre choix | Prendi {g} o meglio in {n} partite, al livello che vuoi
+O 1º colocado ganha | First place wins | El 1.º lugar gana | 1위가 받습니다 | 1 位が受け取ります | La 1re place gagne | Vince il 1º classificato
+Os {n} primeiros ganham | The top {n} win | Los {n} primeros ganan | 상위 {n}명이 받습니다 | 上位 {n} 人が受け取ります | Les {n} premiers gagnent | Vincono i primi {n}
+Sorteio de {n} prêmio entre quem completar | {n} prize drawn among those who complete it | Sorteo de {n} premio entre quienes lo completen | 완료자 중 {n}명 추첨 | 達成者から {n} 名に抽選 | Tirage de {n} lot parmi ceux qui terminent | Estrazione di {n} premio tra chi completa
+Sorteio de {n} prêmios entre quem completar | {n} prizes drawn among those who complete it | Sorteo de {n} premios entre quienes lo completen | 완료자 중 {n}명 추첨 | 達成者から {n} 名に抽選 | Tirage de {n} lots parmi ceux qui terminent | Estrazione di {n} premi tra chi completa
+Desafio novo no clube: {name}. Participe! | New club challenge: {name}. Join in! | Nuevo desafío en el club: {name}. ¡Participa! | 클럽 새 챌린지: {name}. 참여하세요! | クラブの新チャレンジ: {name}。参加しよう! | Nouveau défi au club : {name}. Participez ! | Nuova sfida del club: {name}. Partecipa!
+Você ganhou no desafio {name}! | You won the {name} challenge! | ¡Ganaste en el desafío {name}! | {name} 챌린지에 당첨되었습니다! | チャレンジ {name} で当選しました! | Vous avez gagné le défi {name} ! | Hai vinto la sfida {name}!
+Prêmio | Prize | Premio | 상품 | 賞品 | Lot | Premio
+Desafios | Challenges | Desafíos | 챌린지 | チャレンジ | Défis | Sfide
+Recursos | Features | Funciones | 기능 | 機能 | Fonctions | Funzioni
+Desligue um recurso para escondê-lo de todo mundo (administradores também) até você ligar de novo. Nada é apagado. | Turn a feature off to hide it from everyone (admins included) until you turn it back on. Nothing is deleted. | Apaga una función para ocultarla a todos (administradores incluidos) hasta que la vuelvas a encender. No se borra nada. | 기능을 끄면 다시 켤 때까지 모두에게(관리자 포함) 숨겨집니다. 삭제되는 것은 없습니다. | 機能をオフにすると、再びオンにするまで全員(管理者も)から隠れます。何も削除されません。 | Désactivez une fonction pour la cacher à tous (admins compris) jusqu'à la réactiver. Rien n'est supprimé. | Disattiva una funzione per nasconderla a tutti (amministratori compresi) finché non la riattivi. Non si cancella nulla.
+ligado | on | encendido | 켜짐 | オン | activé | attivo
+desligado | off | apagado | 꺼짐 | オフ | désactivé | disattivato
+Salvo. | Saved. | Guardado. | 저장했습니다. | 保存しました。 | Enregistré. | Salvato.
+Desafios medem esforço (dias jogados, recordes pessoais, charts novos), não nível: qualquer pessoa pode completar. Prefira sorteio entre quem completou ou brinde para todos. | Challenges measure effort (days played, personal records, new charts), not level: anyone can complete them. Prefer a draw among those who complete or a gift for everyone. | Los desafíos miden esfuerzo (días jugados, récords personales, charts nuevos), no nivel: cualquiera puede completarlos. Prefiere sorteo entre quienes completan o regalo para todos. | 챌린지는 레벨이 아니라 노력(플레이한 날, 개인 기록, 새 채보)을 측정해 누구나 완료할 수 있습니다. 완료자 추첨이나 전원 증정을 권장합니다. | チャレンジはレベルではなく努力(プレイ日数・自己ベスト・新譜面)を測るので誰でも達成できます。達成者からの抽選か全員プレゼントがおすすめです。 | Les défis mesurent l'effort (jours joués, records perso, nouveaux charts), pas le niveau : tout le monde peut les finir. Préférez un tirage parmi ceux qui terminent ou un cadeau pour tous. | Le sfide misurano l'impegno (giorni giocati, record personali, nuovi chart), non il livello: chiunque può completarle. Preferisci un'estrazione tra chi completa o un regalo per tutti.
+Novo desafio | New challenge | Nuevo desafío | 새 챌린지 | 新しいチャレンジ | Nouveau défi | Nuova sfida
+Nenhum desafio cadastrado ainda. | No challenges yet. | Aún no hay desafíos. | 등록된 챌린지가 없습니다. | チャレンジはまだありません。 | Aucun défi pour l'instant. | Nessuna sfida ancora.
+Dê um nome ao desafio. | Give the challenge a name. | Ponle un nombre al desafío. | 챌린지 이름을 입력하세요. | チャレンジ名を入力してください。 | Donnez un nom au défi. | Dai un nome alla sfida.
+Escolha a música do desafio. | Pick the challenge song. | Elige la canción del desafío. | 챌린지 곡을 선택하세요. | チャレンジの曲を選んでください。 | Choisissez le morceau du défi. | Scegli il brano della sfida.
+A data final precisa ser depois da inicial. | The end date must be after the start date. | La fecha final debe ser posterior a la inicial. | 종료일은 시작일 이후여야 합니다. | 終了日は開始日より後にしてください。 | La date de fin doit être après celle de début. | La data di fine deve essere dopo quella di inizio.
+Editar desafio | Edit challenge | Editar desafío | 챌린지 수정 | チャレンジを編集 | Modifier le défi | Modifica sfida
+Modelos prontos | Ready-made templates | Plantillas listas | 기본 템플릿 | テンプレート | Modèles prêts | Modelli pronti
+Nome | Name | Nombre | 이름 | 名前 | Nom | Nome
+Descrição | Description | Descripción | 설명 | 説明 | Description | Descrizione
+Tipo | Type | Tipo | 유형 | 種類 | Type | Tipo
+Meta | Goal | Meta | 목표 | 目標 | Objectif | Obiettivo
+Nota mínima | Minimum grade | Nota mínima | 최소 등급 | 最低ランク | Note minimale | Voto minimo
+Música | Song | Canción | 곡 | 曲 | Morceau | Brano
+Trocar | Change | Cambiar | 변경 | 変更 | Changer | Cambia
+Buscar música… | Search song… | Buscar canción… | 곡 검색… | 曲を検索… | Chercher un morceau… | Cerca brano…
+Começa | Starts | Empieza | 시작 | 開始 | Début | Inizio
+Termina | Ends | Termina | 종료 | 終了 | Fin | Fine
+Prêmio ou brinde | Prize or gift | Premio o regalo | 상품 또는 기념품 | 賞品・プレゼント | Lot ou cadeau | Premio o regalo
+Ex.: 10 fichas, camiseta do clube, adesivo | E.g. 10 credits, club T-shirt, sticker | Ej.: 10 fichas, camiseta del club, sticker | 예: 코인 10개, 클럽 티셔츠, 스티커 | 例: クレジット 10 枚、クラブ T シャツ、ステッカー | Ex. : 10 crédits, t-shirt du club, sticker | Es.: 10 gettoni, maglietta del club, adesivo
+Como premiar | How to award | Cómo premiar | 지급 방식 | 授与方法 | Comment récompenser | Come premiare
+Quantos ganham | How many win | Cuántos ganan | 당첨 인원 | 当選人数 | Combien gagnent | Quanti vincono
+Atenção: ranking dos primeiros favorece quem joga mais. Para ser igualitário, prefira sorteio entre quem completar. | Note: a top ranking favors whoever plays more. To keep it fair, prefer a draw among those who complete. | Atención: el ranking de los primeros favorece a quien juega más. Para ser igualitario, prefiere sorteo entre quienes completen. | 주의: 순위 방식은 많이 하는 사람에게 유리합니다. 공평하게 하려면 완료자 추첨을 권장합니다. | 注意: 上位ランキングはたくさん遊ぶ人に有利です。公平にするなら達成者からの抽選がおすすめです。 | Attention : un classement favorise ceux qui jouent le plus. Pour rester équitable, préférez un tirage parmi ceux qui terminent. | Attenzione: la classifica favorisce chi gioca di più. Per essere equo, preferisci un'estrazione tra chi completa.
+Visível para os membros | Visible to members | Visible para los miembros | 회원에게 표시 | メンバーに表示 | Visible par les membres | Visibile ai membri
+Prévia | Preview | Vista previa | 미리보기 | プレビュー | Aperçu | Anteprima
+Ao salvar um desafio visível, todos os membros recebem uma notificação. | When you save a visible challenge, every member gets a notification. | Al guardar un desafío visible, todos los miembros reciben una notificación. | 표시되는 챌린지를 저장하면 모든 회원에게 알림이 갑니다. | 表示中のチャレンジを保存すると全メンバーに通知されます。 | En enregistrant un défi visible, tous les membres reçoivent une notification. | Salvando una sfida visibile, tutti i membri ricevono una notifica.
+Refazer a premiação? Os ganhadores atuais serão trocados. | Redo the awarding? Current winners will be replaced. | ¿Rehacer la premiación? Los ganadores actuales serán reemplazados. | 다시 추첨할까요? 현재 당첨자가 바뀝니다. | 再抽選しますか? 現在の当選者は入れ替わります。 | Refaire l'attribution ? Les gagnants actuels seront remplacés. | Rifare la premiazione? I vincitori attuali verranno sostituiti.
+Premiar agora com o progresso atual? | Award now with the current progress? | ¿Premiar ahora con el progreso actual? | 현재 진행 상황으로 지금 지급할까요? | 現在の進捗で今すぐ授与しますか? | Récompenser maintenant avec la progression actuelle ? | Premiare ora con i progressi attuali?
+oculto | hidden | oculto | 숨김 | 非表示 | masqué | nascosta
+Agendado | Scheduled | Programado | 예정 | 予定 | Programmé | Programmata
+Em andamento | In progress | En curso | 진행 중 | 開催中 | En cours | In corso
+Encerrado | Ended | Terminado | 종료 | 終了 | Terminé | Terminata
+Ganhadores | Winners | Ganadores | 당첨자 | 当選者 | Gagnants | Vincitori
+entregue | delivered | entregado | 전달 완료 | 受け渡し済み | remis | consegnato
+Editar | Edit | Editar | 수정 | 編集 | Modifier | Modifica
+Refazer premiação | Redo awarding | Rehacer premiación | 다시 추첨 | 再抽選 | Refaire l'attribution | Rifai premiazione
+Sortear | Draw | Sortear | 추첨 | 抽選 | Tirer au sort | Estrai
+Premiar | Award | Premiar | 지급 | 授与 | Récompenser | Premia
+O ideal é premiar depois do fim, para todo mundo ter o prazo inteiro. | Best to award after it ends, so everyone gets the full time. | Lo ideal es premiar después del final, para que todos tengan el plazo completo. | 모두가 기간을 다 쓸 수 있도록 종료 후 지급하는 것이 좋습니다. | 全員が期間を使えるよう、終了後に授与するのがおすすめです。 | Mieux vaut récompenser après la fin, pour que tous aient tout le temps. | Meglio premiare dopo la fine, così tutti hanno il tempo intero.
+{n} participante | {n} participant | {n} participante | 참가자 {n}명 | 参加者 {n} 人 | {n} participant | {n} partecipante
+{n} participantes | {n} participants | {n} participantes | 참가자 {n}명 | 参加者 {n} 人 | {n} participants | {n} partecipanti
+{n} completou | {n} completed | {n} completó | {n}명 완료 | {n} 人達成 | {n} a terminé | {n} ha completato
+{n} completaram | {n} completed | {n} completaron | {n}명 완료 | {n} 人達成 | {n} ont terminé | {n} hanno completato
+Este recurso está desligado no momento. | This feature is turned off right now. | Esta función está desactivada por ahora. | 이 기능은 현재 꺼져 있습니다. | この機能は現在オフです。 | Cette fonction est désactivée pour le moment. | Questa funzione è disattivata al momento.
+Desafios do mês | Monthly challenges | Desafíos del mes | 이번 달 챌린지 | 今月のチャレンジ | Défis du mois | Sfide del mese
+Metas que medem o seu esforço, não o seu nível: iniciante e pro disputam de igual para igual. O progresso conta sozinho quando você sincroniza. | Goals that measure your effort, not your level: beginners and pros compete on equal terms. Progress counts on its own when you sync. | Metas que miden tu esfuerzo, no tu nivel: principiantes y pros compiten de igual a igual. El progreso cuenta solo cuando sincronizas. | 레벨이 아니라 노력을 재는 목표라 초보와 고수가 동등하게 겨룹니다. 동기화하면 진행도가 자동으로 집계됩니다. | レベルではなく努力を測る目標なので、初心者も上級者も対等に競えます。同期すると進捗が自動で反映されます。 | Des objectifs qui mesurent votre effort, pas votre niveau : débutants et pros jouent à égalité. La progression compte toute seule quand vous synchronisez. | Obiettivi che misurano il tuo impegno, non il tuo livello: principianti e pro sfidano alla pari. I progressi contano da soli quando sincronizzi.
+Nenhum desafio no momento. Fique de olho: os próximos aparecem aqui. | No challenges right now. Stay tuned: the next ones show up here. | No hay desafíos por ahora. Atento: los próximos aparecen aquí. | 지금은 챌린지가 없습니다. 다음 챌린지는 여기에 표시됩니다. | 現在チャレンジはありません。次回はここに表示されます。 | Aucun défi pour le moment. Restez à l'affût : les prochains apparaîtront ici. | Nessuna sfida al momento. Resta sintonizzato: le prossime compaiono qui.
+Encerrados | Ended | Terminados | 종료됨 | 終了済み | Terminés | Terminate
+Começa {d} | Starts {d} | Empieza {d} | {d} 시작 | {d} 開始 | Début le {d} | Inizia il {d}
+Meta cumprida! | Goal reached! | ¡Meta cumplida! | 목표 달성! | 目標達成! | Objectif atteint ! | Obiettivo raggiunto!
+Você ganhou! Fale com o clube para retirar o prêmio. | You won! Talk to the club to pick up your prize. | ¡Ganaste! Habla con el club para retirar tu premio. | 당첨되었습니다! 클럽에 문의해 상품을 받으세요. | 当選しました! クラブで賞品を受け取ってください。 | Vous avez gagné ! Voyez le club pour récupérer votre lot. | Hai vinto! Parla con il club per ritirare il premio.
+Resultado em breve. | Results soon. | Resultado pronto. | 결과가 곧 나옵니다. | 結果はまもなく。 | Résultats bientôt. | Risultato a breve.
+Participar | Join | Participar | 참여 | 参加 | Participer | Partecipa
+Sair do desafio | Leave challenge | Salir del desafío | 챌린지 나가기 | チャレンジをやめる | Quitter le défi | Esci dalla sfida
+Ver a música | See the song | Ver la canción | 곡 보기 | 曲を見る | Voir le morceau | Vedi il brano
+Participantes | Participants | Participantes | 참가자 | 参加者 | Participants | Partecipanti
+Ninguém entrou ainda. Seja o primeiro! | Nobody has joined yet. Be the first! | Nadie se ha unido aún. ¡Sé el primero! | 아직 참가자가 없습니다. 첫 번째가 되어 보세요! | まだ参加者がいません。一番乗りしよう! | Personne n'a encore rejoint. Soyez le premier ! | Ancora nessuno. Sii il primo!
+Falta {n} dia | {n} day left | Falta {n} día | {n}일 남음 | 残り {n} 日 | Il reste {n} jour | Manca {n} giorno
+Faltam {n} dias | {n} days left | Faltan {n} días | {n}일 남음 | 残り {n} 日 | Il reste {n} jours | Mancano {n} giorni
+Resumo da semana passada | Last week summary | Resumen de la semana pasada | 지난주 요약 | 先週のまとめ | Résumé de la semaine dernière | Riepilogo della settimana scorsa
+Aviso de amigo online | Friend online notice | Aviso de amigo en línea | 친구 접속 알림 | 友達オンライン通知 | Alerte ami en ligne | Avviso amico online
+Online agora e convites para jogar | Online now and play invites | En línea ahora e invitaciones para jugar | 지금 접속 중 및 플레이 초대 | オンライン中とプレイ招待 | En ligne et invitations à jouer | Online ora e inviti a giocare
+Votação de tier | Tier voting | Votación de tier | 티어 투표 | ティア投票 | Vote de tier | Votazione tier
+Cadastro e exclusão de fliperama pelos membros | Members adding and removing arcades | Alta y baja de recreativas por los miembros | 회원의 오락실 등록·삭제 | メンバーによるゲームセンター登録・削除 | Ajout et retrait de salles par les membres | Aggiunta e rimozione di sale giochi da parte dei membri
+os desafios estão desligados no momento | challenges are turned off right now | los desafíos están desactivados por ahora | 챌린지가 현재 꺼져 있습니다 | チャレンジは現在オフです | les défis sont désactivés pour le moment | le sfide sono disattivate al momento
+desafio não encontrado | challenge not found | desafío no encontrado | 챌린지를 찾을 수 없습니다 | チャレンジが見つかりません | défi introuvable | sfida non trovata
+esse desafio já terminou | this challenge has already ended | este desafío ya terminó | 이미 종료된 챌린지입니다 | このチャレンジは終了しています | ce défi est déjà terminé | questa sfida è già terminata
+Dias com jogo | Days played | Días con juego | 플레이한 날 | プレイ日数 | Jours joués | Giorni di gioco
+Dias diferentes em que a pessoa jogou no período. | Different days the player played during the period. | Días distintos en que la persona jugó en el período. | 기간 중 플레이한 서로 다른 날의 수. | 期間中にプレイした日数。 | Jours différents où la personne a joué pendant la période. | Giorni diversi in cui la persona ha giocato nel periodo.
+Jogadas | Plays | Jugadas | 플레이 수 | プレイ数 | Parties | Partite
+Quantidade de músicas jogadas no período. | Number of songs played during the period. | Cantidad de canciones jugadas en el período. | 기간 중 플레이한 곡 수. | 期間中にプレイした曲数。 | Nombre de morceaux joués pendant la période. | Numero di brani giocati nel periodo.
+Charts novos passados | New charts cleared | Charts nuevos pasados | 새로 클리어한 채보 | 新規クリア譜面 | Nouveaux charts validés | Nuovi chart superati
+Charts que a pessoa nunca tinha passado, em qualquer nível. | Charts the player had never cleared, at any level. | Charts que la persona nunca había pasado, en cualquier nivel. | 레벨 상관없이 처음 클리어한 채보. | レベルを問わず初めてクリアした譜面。 | Charts jamais validés, à n'importe quel niveau. | Chart mai superati prima, a qualsiasi livello.
+Recordes pessoais batidos | Personal records beaten | Récords personales superados | 개인 기록 경신 | 自己ベスト更新 | Records perso battus | Record personali battuti
+Charts já passados em que a pessoa melhorou a própria nota. | Already cleared charts where the player improved their own score. | Charts ya pasados en los que la persona mejoró su propia nota. | 이미 클리어한 채보에서 자기 점수를 올린 경우. | クリア済み譜面で自己スコアを伸ばしたもの。 | Charts déjà validés où la personne a amélioré son score. | Chart già superati in cui la persona ha migliorato il proprio punteggio.
+Música do mês | Song of the month | Canción del mes | 이달의 곡 | 今月の曲 | Morceau du mois | Brano del mese
+Passar a música escolhida em qualquer dificuldade (conta cada chart diferente). | Clear the chosen song on any difficulty (each different chart counts). | Pasar la canción elegida en cualquier dificultad (cuenta cada chart distinto). | 선택한 곡을 아무 난이도로 클리어 (채보마다 1회). | 選んだ曲を好きな難易度でクリア(譜面ごとにカウント)。 | Valider le morceau choisi dans n'importe quelle difficulté (chaque chart compte). | Superare il brano scelto a qualsiasi difficoltà (conta ogni chart diverso).
+Jogadas com a nota escolhida ou melhor, no nível que a pessoa quiser. | Plays with the chosen grade or better, at any level the player likes. | Jugadas con la nota elegida o mejor, en el nivel que la persona quiera. | 원하는 레벨에서 선택한 등급 이상을 받은 플레이. | 好きなレベルで指定ランク以上を取ったプレイ。 | Parties avec la note choisie ou mieux, au niveau de son choix. | Partite con il voto scelto o migliore, al livello che si vuole.
+Sorteio entre quem completar | Draw among those who complete it | Sorteo entre quienes completen | 완료자 중 추첨 | 達成者から抽選 | Tirage parmi ceux qui terminent | Estrazione tra chi completa
+Os primeiros colocados | Top places | Los primeros lugares | 상위 순위 | 上位入賞者 | Les premiers | I primi classificati
+Maratona do mês | Monthly marathon | Maratón del mes | 이달의 마라톤 | 今月のマラソン | Marathon du mois | Maratona del mese
+Apareça no fliperama em 8 dias diferentes no mês. Vale qualquer música e qualquer nível. | Show up at the arcade on 8 different days this month. Any song and any level counts. | Ve a la recreativa en 8 días distintos del mes. Vale cualquier canción y cualquier nivel. | 이번 달 서로 다른 8일 오락실에 오세요. 어떤 곡, 어떤 레벨이든 됩니다. | 今月 8 日以上ゲームセンターに来よう。曲もレベルも自由です。 | Venez à la salle 8 jours différents ce mois-ci. N'importe quel morceau et niveau comptent. | Vieni in sala in 8 giorni diversi del mese. Vale qualsiasi brano e livello.
+Supere-se | Beat yourself | Supérate | 자신을 넘어서라 | 自分を超えろ | Dépassez-vous | Supera te stesso
+Bata o seu próprio recorde em 10 charts. A disputa é com você mesmo. | Beat your own record on 10 charts. You're competing against yourself. | Supera tu propio récord en 10 charts. Compites contigo mismo. | 채보 10개에서 자기 기록을 경신하세요. 경쟁 상대는 자기 자신입니다. | 10 譜面で自己ベストを更新しよう。ライバルは自分自身です。 | Battez votre propre record sur 10 charts. Votre adversaire, c'est vous. | Batti il tuo record in 10 chart. La sfida è con te stesso.
+Desbravador | Explorer | Explorador | 개척자 | 開拓者 | Explorateur | Esploratore
+Passe 10 charts que você nunca tinha passado, no nível que for melhor para você. | Clear 10 charts you had never cleared, at whatever level suits you. | Pasa 10 charts que nunca habías pasado, en el nivel que mejor te vaya. | 자신에게 맞는 레벨에서 처음 보는 채보 10개를 클리어하세요. | 自分に合ったレベルで未クリア譜面を 10 個クリアしよう。 | Validez 10 charts jamais validés, au niveau qui vous convient. | Supera 10 chart mai superati, al livello che preferisci.
+Passe a música do mês em qualquer dificuldade. Todo mundo que passar ganha o brinde. | Clear the song of the month on any difficulty. Everyone who clears it gets the gift. | Pasa la canción del mes en cualquier dificultad. Todos los que la pasen ganan el regalo. | 이달의 곡을 아무 난이도로 클리어하세요. 클리어한 모두에게 기념품을 드립니다. | 今月の曲を好きな難易度でクリアしよう。クリアした全員にプレゼント。 | Validez le morceau du mois dans n'importe quelle difficulté. Tous ceux qui le valident gagnent le cadeau. | Supera il brano del mese a qualsiasi difficoltà. Chiunque lo superi vince il regalo.
+Caçador de S | S hunter | Cazador de S | S 사냥꾼 | S ハンター | Chasseur de S | Cacciatore di S
+Tire S ou melhor em 15 jogadas. Escolha charts do seu nível de conforto. | Get S or better on 15 plays. Pick charts at your comfort level. | Saca S o mejor en 15 jugadas. Elige charts de tu nivel cómodo. | S 이상을 15회 받으세요. 편한 레벨의 채보를 고르세요. | S 以上を 15 回取ろう。得意なレベルの譜面でどうぞ。 | Obtenez S ou mieux sur 15 parties. Choisissez des charts à votre niveau. | Prendi S o meglio in 15 partite. Scegli chart del tuo livello comodo.
+Gamificação | Gamification | Gamificación | 게임화 | ゲーミフィケーション | Gamification | Gamification
+Social | Social | Social | 소셜 | ソーシャル | Social | Social
+Comunidade | Community | Comunidad | 커뮤니티 | コミュニティ | Communauté | Comunità
