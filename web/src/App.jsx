@@ -33,6 +33,7 @@ import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
 import Challenges from './pages/Challenges.jsx';
+import DeleteInfo from './pages/DeleteInfo.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -66,6 +67,7 @@ export default function App() {
   if (!session) {
     // a fila do clube é pública: quem chega pelo QR/link não precisa de conta
     if (isQueueHash()) return <PublicQueue />;
+    if (/^#\/excluir-conta/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> StepClub</a></header><main className="content"><DeleteInfo /></main></div>;
     if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> StepClub</a></header><main className="content"><Privacy /></main></div>;
     return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
@@ -216,6 +218,7 @@ function Shell() {
             <Route path="/admin" element={<Admin />} />
             <Route path="/planos" element={<Plans />} />
             <Route path="/privacidade" element={<Privacy />} />
+            <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}
