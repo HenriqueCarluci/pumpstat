@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
+import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { VERSIONS } from './lib/piu.js';
 import Home from './pages/Home.jsx';
@@ -15,6 +16,9 @@ import QueueTV from './pages/QueueTV.jsx';
 import Venues from './pages/Venues.jsx';
 import Titles from './pages/Titles.jsx';
 import Players, { ComparePlayer } from './pages/Players.jsx';
+import Recommend from './pages/Recommend.jsx';
+import Notifications from './pages/Notifications.jsx';
+import { useNotifications } from './lib/notify.js';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -119,8 +123,11 @@ function DataApp({ session, ingestKey }) {
     setVersionState(v);
   };
 
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey }),
-    [version, data, loading, error, reload, session, ingestKey]);
+  const notifications = useNotifications(!!session);
+  // acorda a API e deixa ela atualizar o catálogo (no máximo 1x por dia)
+  useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
+  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications }),
+    [version, data, loading, error, reload, session, ingestKey, notifications]);
 
   return (
     <DataCtx.Provider value={ctx}>
@@ -132,7 +139,7 @@ function DataApp({ session, ingestKey }) {
 }
 
 function Shell() {
-  const { version, setVersion, data, loading, error, reload } = useData();
+  const { version, setVersion, data, loading, error, reload, notifications } = useData();
   const loc = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [loc.pathname]);
   if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
@@ -141,6 +148,9 @@ function Shell() {
     <div className="app">
       <header className="topbar">
         <div className="brand"><span className="logo">▲</span> StepClub</div>
+        <NavLink to="/notificacoes" className="bell" aria-label="Notificações">
+          🔔{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
+        </NavLink>
         <div className="seg" role="tablist" aria-label="Versão">
           {Object.values(VERSIONS).map((v) => (
             <button key={v.id} className={v.id === version ? 'on' : ''} onClick={() => setVersion(v.id)}>{v.name}</button>
@@ -172,6 +182,8 @@ function Shell() {
             <Route path="/jogadores" element={<Players />} />
             <Route path="/jogador/:id" element={<ComparePlayer />} />
             <Route path="/fila/:slug" element={<Queue />} />
+            <Route path="/recomendacoes" element={<Recommend />} />
+            <Route path="/notificacoes" element={<Notifications />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}

@@ -66,6 +66,7 @@ export default function Home() {
       <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
 
       <div className="quick-links">
+        <Link to="/recomendacoes" className="ql">🎯 Recomendadas</Link>
         <Link to="/titulos" className="ql">🏷️ Títulos</Link>
         <Link to="/jogadores" className="ql">👥 Amigos</Link>
         <Link to="/recentes" className="ql">↻ Recentes</Link>
@@ -211,6 +212,7 @@ function TierCard({ version, points, estimated, history, charts }) {
               </Link>
             )
           ))}
+          <Link to="/recomendacoes" className="link">Ver músicas recomendadas para subir ▸</Link>
         </div>
       )}
     </section>

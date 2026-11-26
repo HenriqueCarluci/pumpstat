@@ -5,11 +5,14 @@ import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
 import { chartLabel, chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
+import { topStyles, useStyles, youtubeUrl } from '../lib/style.js';
+import StyleBars from '../components/StyleBars.jsx';
 
 export default function Song() {
   const { id } = useParams();
   const { data, version } = useData();
   const song = data.songs.find((s) => String(s.id) === id);
+  const styleOf = useStyles(song ? [song.id] : []);
   if (!song) return <div className="page"><p className="empty">Música não encontrada nesta versão.</p><Link to="/musicas">Voltar</Link></div>;
 
   const other = version === 'phoenix2' ? VERSIONS.phoenix : VERSIONS.phoenix2;
@@ -28,27 +31,29 @@ export default function Song() {
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
           </div>
+          <a className="btn yt" href={youtubeUrl(song.title)} target="_blank" rel="noreferrer">▶ Ver no YouTube</a>
         </div>
       </section>
 
       {groups.map(([label, charts]) => (
         <section key={label}>
           <h3 className="group-h">{label}</h3>
-          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} />)}
+          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} />)}
         </section>
       ))}
     </div>
   );
 }
 
-function ChartCard({ chart: c, version, other }) {
+function ChartCard({ chart: c, version, other, style }) {
+  const [showStyle, setShowStyle] = useState(false);
   const [hist, setHist] = useState(null);
   const [open, setOpen] = useState(false);
   const [rank, setRank] = useState(false);
   const rating = chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, c.broken);
   const nxt = c.score != null && !c.broken ? nextGrade(version, c.score) : null;
   const tier = TIERS.find((t) => t.id === chartTier(c));
-  const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${c.song.title} ${chartLabel(c).replace(' ', '')} pump it up`)}`;
+  const yt = youtubeUrl(c.song.title, chartLabel(c).replace(' ', ''));
 
   const toggle = async () => {
     setOpen((o) => !o);
@@ -80,6 +85,14 @@ function ChartCard({ chart: c, version, other }) {
         {c.notes ? <span className="tag">{c.notes} notas</span> : null}
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
       </div>
+      {style && (
+        <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title="Ver estilo do chart">
+          {topStyles(style).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{k.label} {Math.round(k.v)}%</span>)}
+          {style.nps != null && <span className="muted small">{style.nps} notas/s</span>}
+          <span className="muted small">{showStyle ? '▲' : '▼'}</span>
+        </button>
+      )}
+      {style && showStyle && <StyleBars style={style} />}
 
       {c.otherScore != null && (
         <div className="cc-other">
@@ -91,7 +104,7 @@ function ChartCard({ chart: c, version, other }) {
       <div className="cc-actions">
         {c.achievedAt && <span className="muted">Recorde em {fmtDate(c.achievedAt)}</span>}
         <span className="spacer" />
-        <a href={yt} target="_blank" rel="noreferrer" className="link">Vídeo ▸</a>
+        <a href={yt} target="_blank" rel="noreferrer" className="link">▶ YouTube</a>
         <button className="link" onClick={() => setRank((r) => !r)}>{rank ? 'Fechar' : 'Ranking'}</button>
         <button className="link" onClick={toggle}>{open ? 'Fechar' : 'Histórico'}</button>
       </div>

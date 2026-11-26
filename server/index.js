@@ -5,6 +5,7 @@ import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
+import { refreshCatalog } from './catalog.js';
 
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
@@ -161,6 +162,8 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
+    // o app chama isto ao abrir; no máximo uma atualização do catálogo por dia
+    if (url.pathname === '/api/catalog/tick') { catalogTick(); return send(res, 202, { ok: true }, origin); }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
     if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
@@ -204,6 +207,17 @@ const server = http.createServer(async (req, res) => {
     return send(res, 500, { error: e.message, cause: e.cause?.code || e.cause?.message }, origin);
   }
 });
+
+let catalogBusy = false;
+function catalogTick() {
+  if (catalogBusy || !process.env.INGEST_KEY) return;
+  catalogBusy = true;
+  refreshCatalog({ supabaseUrl: SUPABASE_URL, supabaseKey: SUPABASE_KEY, ingestKey: process.env.INGEST_KEY })
+    .catch((e) => console.error('catálogo:', e.message))
+    .finally(() => { catalogBusy = false; });
+}
+setTimeout(catalogTick, 30_000).unref();
+setInterval(catalogTick, 6 * 3600_000).unref();
 
 // limpa jobs antigos
 setInterval(() => { const lim = Date.now() - 30 * 60_000; for (const [id, j] of jobs) if (j.state !== 'running' && j.at < lim) jobs.delete(id); }, 60_000).unref();

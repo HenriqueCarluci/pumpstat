@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
@@ -101,38 +101,48 @@ function SearchPlayers({ onChange }) {
   const [q, setQ] = useState('');
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
-  const search = async (e) => {
-    e?.preventDefault();
-    if (q.trim().length < 2) return;
+  const seq = useRef(0);
+  const run = async (term) => {
+    const my = ++seq.current;
+    if (term.length < 2) { setRes(null); setBusy(false); return; }
     setBusy(true);
-    try { setRes(await rpc('search_players', { p_query: q.trim() })); } catch { setRes([]); }
-    setBusy(false);
+    let r = [];
+    try { r = await rpc('search_players', { p_query: term }); } catch { /* sem resultado */ }
+    if (my === seq.current) { setRes(r); setBusy(false); }
   };
-  const add = async (p) => { await rpc('send_friend_request', { p_user: p.id }); await search(); onChange(); };
-  const LABEL = { friends: 'Amigos ✓', pending_out: 'Solicitação enviada', pending_in: 'Aceitar solicitação' };
+  // busca enquanto digita (espera 250 ms entre teclas)
+  useEffect(() => { const t = setTimeout(() => run(q.trim()), 250); return () => clearTimeout(t); }, [q]); // eslint-disable-line
+  const add = async (p) => { await rpc('send_friend_request', { p_user: p.id }); await run(q.trim()); onChange(); };
+  const LABEL = { friends: 'Amigos ✓', pending_out: 'Solicitação enviada' };
   return (
-    <>
-      <form className="q-join" onSubmit={search}>
-        <input placeholder="Nickname da Pump (ex.: CARLUCI)" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="btn" disabled={busy}>Buscar</button>
-      </form>
+    <div className="typeahead">
+      <input autoFocus placeholder="Digite o nickname da Pump…" value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" />
+      {busy && <span className="ta-spin muted small">buscando…</span>}
+      {res && (
+        <div className="ta-list">
+          {!res.length && <p className="muted small ta-empty">Ninguém com “{q.trim()}”. A pessoa precisa ter conectado a conta da Pump no StepClub.</p>}
+          {res.map((p) => (
+            <div key={p.id} className="player req">
+              <Avatar p={p} />
+              <span className="pinfo"><span className="ptitle">{p.title}</span><b>{hl(p.nickname, q.trim())}</b></span>
+              <span className="req-actions">
+                {p.relation === 'none' || p.relation === 'pending_in'
+                  ? <button className="btn" onClick={() => add(p)}>{p.relation === 'pending_in' ? 'Aceitar' : 'Adicionar'}</button>
+                  : <span className="tag">{LABEL[p.relation]}</span>}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
       <p className="muted small">A busca mostra só nick, título e avatar. As notas aparecem depois que a pessoa aprovar.</p>
-      {res && !res.length && <p className="muted">Ninguém encontrado. A pessoa precisa ter conectado a conta da Pump no StepClub.</p>}
-      <div className="players">
-        {(res || []).map((p) => (
-          <div key={p.id} className="player req">
-            <Avatar p={p} />
-            <span className="pinfo"><span className="ptitle">{p.title}</span><b>{p.nickname}</b></span>
-            <span className="req-actions">
-              {p.relation === 'none' || p.relation === 'pending_in'
-                ? <button className="btn" onClick={() => add(p)}>{p.relation === 'pending_in' ? 'Aceitar' : 'Adicionar'}</button>
-                : <span className="tag">{LABEL[p.relation]}</span>}
-            </span>
-          </div>
-        ))}
-      </div>
-    </>
+    </div>
   );
+}
+
+function hl(name, term) {
+  const i = (name || '').toLowerCase().indexOf(term.toLowerCase());
+  if (i < 0 || !term) return name;
+  return <>{name.slice(0, i)}<mark>{name.slice(i, i + term.length)}</mark>{name.slice(i + term.length)}</>;
 }
 
 /** Comparação chart a chart entre você e outro jogador. */
