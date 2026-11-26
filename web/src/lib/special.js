@@ -11,6 +11,6 @@ export const GIMMICKS = [
 export const GIMMICK_LABEL = Object.fromEntries(GIMMICKS);
 export const hasGimmick = (c) => !!c?.special?.gimmick;
 export const isOffCurve = (c) => !!c?.special?.off;
-/** Unique: marcado pela comunidade/admin (gimmick ou fora da curva) ou na faixa Unique do ArcadeStat. */
+/** Unique: a faixa Unique do ArcadeStat ou "fora da curva" (admin/comunidade). Gimmick é outra coisa: é tag, e o chart continua na faixa dele. */
 export const isUnique = (c) => c?.ref === 9;
-export const isSpecial = (c) => hasGimmick(c) || isOffCurve(c) || isUnique(c);
+export const isSpecial = (c) => isOffCurve(c) || isUnique(c);

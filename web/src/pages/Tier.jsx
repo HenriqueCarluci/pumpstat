@@ -79,7 +79,7 @@ export default function Tier() {
                   {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
                   {c.song.isNew && <div className="tile-new">NEW</div>}
                   {training?.has(c.id) && <div className="tile-train" title={t('No Meu treino')}><BookmarkCheck size={12} /></div>}
-                  {isSpecial(c) && <div className="tile-special" title={hasGimmick(c) ? t('Gimmick') : t('Fora da curva')}>{hasGimmick(c) ? <Zap size={12} /> : <Shuffle size={12} />}</div>}
+                  {(hasGimmick(c) || isSpecial(c)) && <div className="tile-special" title={hasGimmick(c) ? t('Gimmick') : t('Fora da curva')}>{hasGimmick(c) ? <Zap size={12} /> : <Shuffle size={12} />}</div>}
                 </div>
                 <div className="tile-name">{c.song.title}</div>
                 {c.score != null && <div className="tile-score">{fmtScore(c.score)}</div>}

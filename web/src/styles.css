@@ -1413,3 +1413,48 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .dr-judg-n .j4 small { color: #ff9a3c; } .dr-judg-n .j5 small { color: #ff4b5c; }
 .dr-preview.busy { opacity: .45; }
 .dr-sheet .chips { justify-content: center; }
+
+/* ---------- perfil do jogador ---------- */
+.ball-s-txt { color: var(--single); } .ball-d-txt { color: var(--double); }
+.pp-head { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.pp-id { min-width: 0; display: grid; gap: 2px; }
+.pp-id h2 { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 22px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-pb { display: grid; justify-items: center; gap: 2px; text-align: center; }
+.pp-pb img { width: 56px; height: 56px; object-fit: contain; }
+.pp-pb b { font: 800 22px var(--num); }
+.pp-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.pp-actions .btn { display: inline-flex; align-items: center; gap: 6px; }
+.pp-kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+.pp-kpi { display: grid; gap: 2px; padding: 12px; margin: 0; min-width: 0; }
+.pp-kpi small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-kpi b { font: 800 24px var(--num); }
+.pp-kpis .up { color: var(--neon); } .pp-kpis .down { color: var(--single); }
+.pp-grades { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pp-grade { display: grid; justify-items: center; gap: 2px; padding: 8px; border-radius: 12px; background: var(--panel); }
+.pp-grade b { font: 800 20px var(--num); }
+.pp-plates { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.pp-plate { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; background: var(--panel); }
+.pp-plate b { font: 700 15px var(--num); }
+.pp-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pp-lv-col h4 { margin: 0 0 6px; }
+.pp-lv { display: grid; grid-template-columns: 40px 1fr 44px; gap: 6px; align-items: center; font-size: 13px; margin: 3px 0; }
+.pp-lv-n { font: 700 13px var(--num); }
+.pp-lv-bar { display: flex; height: 10px; border-radius: 6px; background: rgba(255,255,255,.06); overflow: hidden; }
+.pp-lv-bar i { display: block; height: 100%; }
+.pp-lv-bar i.ok.S { background: var(--single); } .pp-lv-bar i.ok.D { background: var(--double); }
+.pp-lv-bar i.bad { background: rgba(255,77,94,.35); }
+.pp-lv-c { font: 700 13px var(--num); text-align: right; }
+.pp-top { display: grid; gap: 4px; margin-top: 8px; }
+.pp-top-row { display: grid; grid-template-columns: 26px 64px 40px 1fr auto 54px; gap: 8px; align-items: center; padding: 6px; border-radius: 10px; color: inherit; text-decoration: none; }
+.pp-top-row:hover { background: var(--panel); }
+.pp-top-row .rank { font: 700 13px var(--num); color: var(--muted); text-align: right; }
+.pp-top-name { min-width: 0; display: grid; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-top-gp { display: flex; gap: 4px; align-items: center; }
+.pp-top-pts { font: 800 15px var(--num); text-align: right; color: var(--neon); }
+@media (max-width: 520px) {
+  .pp-head { grid-template-columns: auto 1fr; } .pp-pb { grid-column: 1 / -1; grid-auto-flow: column; justify-content: start; align-items: center; gap: 8px; }
+  .pp-pb img { width: 40px; height: 40px; }
+  .pp-levels { grid-template-columns: 1fr; }
+  .pp-top-row { grid-template-columns: 22px 40px 1fr auto 46px; } .pp-top-row .jacket { display: none; }
+}
+@media (min-width: 700px) { .pp-kpis { grid-template-columns: repeat(4, 1fr); } }

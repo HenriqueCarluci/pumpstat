@@ -6,7 +6,8 @@ import { TeamTag, useTeams } from '../lib/teams.jsx';
 import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
-import { fmtScore, pbTier, VERSIONS } from '../lib/piu.js';
+import { fmtScore, pbTier, PLATE_ORDER, pumbility, VERSIONS } from '../lib/piu.js';
+import { Award, Swords } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
@@ -181,6 +182,171 @@ function hl(name, term) {
   return <>{name.slice(0, i)}<mark>{name.slice(i, i + term.length)}</mark>{name.slice(i + term.length)}</>;
 }
 
+/** Perfil de um amigo: informações, estatísticas, as 50 músicas que formam o PUMBILITY e o botão para comparar. */
+export function PlayerProfile() {
+  const { id } = useParams();
+  const { data, version, session } = useData();
+  const myId = session?.user?.id;
+  const [rows, setRows] = useState(null);
+  const [other, setOther] = useState(null);
+  const [err, setErr] = useState('');
+  const [mode, setMode] = useState('all');
+  const teamOf = useTeams([id]);
+  const ccOf = useCountries([id]);
+
+  useEffect(() => {
+    setRows(null); setErr('');
+    Promise.all([rpc('compare_player', { p_other: id, p_version: version }), rpc('players', { p_version: version })])
+      .then(([r, ps]) => { setRows(r || []); setOther(ps.find((p) => p.id === id) || null); })
+      .catch((e) => setErr(tErr(e.message)));
+  }, [id, version]);
+
+  // os recordes dele, no mesmo formato dos charts do app (para reaproveitar o cálculo do PUMBILITY)
+  const charts = useMemo(() => (rows || []).filter((r) => r[5] != null).map(([chartId, , , , , os, og, op, ob]) => {
+    const c = data.byId.get(chartId);
+    return c ? { ...c, score: os, grade: og, plate: op, broken: !!ob } : null;
+  }).filter(Boolean), [rows, data]);
+  const pb = useMemo(() => pumbility(version, charts), [version, charts]);
+  const vs = useMemo(() => {
+    const both = (rows || []).filter((r) => r[1] != null && r[5] != null);
+    return { both: both.length, wins: both.filter((r) => r[1] > r[5]).length, losses: both.filter((r) => r[1] < r[5]).length };
+  }, [rows]);
+  const stats = useMemo(() => ['S', 'D'].map((m) => {
+    const cs = charts.filter((c) => c.mode === m);
+    const clears = cs.filter((c) => !c.broken);
+    const byLevel = new Map();
+    for (const c of cs) {
+      const s = byLevel.get(c.level) || { level: c.level, clear: 0, broken: 0 };
+      if (c.broken) s.broken++; else s.clear++;
+      byLevel.set(c.level, s);
+    }
+    return { mode: m, total: cs.length, clears: clears.length, max: clears.reduce((a, c) => Math.max(a, c.level), 0),
+      levels: [...byLevel.values()].filter((l) => l.level >= 10).sort((a, b) => b.level - a.level) };
+  }), [charts]);
+  const grades = useMemo(() => {
+    const g = { SSS: 0, SS: 0, S: 0, AAA: 0 };
+    for (const c of charts) {
+      if (c.broken || !c.grade) continue;
+      const k = c.grade.replace('+', '');
+      if (k in g) g[k]++;
+    }
+    return g;
+  }, [charts]);
+  const plates = useMemo(() => {
+    const p = {};
+    for (const c of charts) if (c.plate && !c.broken) p[c.plate] = (p[c.plate] || 0) + 1;
+    return PLATE_ORDER.filter((k) => p[k]).map((k) => [k, p[k]]);
+  }, [charts]);
+
+  if (id === myId) return <div className="page"><p className="empty">{t('Este é o seu perfil.')}</p><Link to="/" className="btn ghost">{t('Ir para o início')}</Link></div>;
+  if (err) return <div className="page"><p className="empty">{err}</p><Link to="/jogadores" className="btn ghost">{t('Ver amigos e solicitações')}</Link></div>;
+  if (!rows) return <div className="page"><p className="empty">{t('Carregando perfil…')}</p></div>;
+
+  const total = other?.pumbility != null ? Number(other.pumbility) : pb.total;
+  const tier = version === 'phoenix2' ? pbTier(total) : null;
+  const top = pb.top.filter((r) => mode === 'all' || r.chart.mode === mode);
+  const maxLv = Math.max(1, ...stats.flatMap((s) => s.levels.map((l) => l.clear + l.broken)));
+
+  return (
+    <div className="page profile">
+      <section className="card pp-head">
+        <Avatar p={other || {}} size={72} />
+        <div className="pp-id">
+          {other?.title && <span className="ptitle">{other.title}</span>}
+          <h2><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</h2>
+          <TeamTag team={teamOf(id)} />
+        </div>
+        <div className="pp-pb">
+          {tier?.icon && <img src={tier.icon} alt="" referrerPolicy="no-referrer" />}
+          <b>{fmtNum(Math.round(total))}</b>
+          <small className="muted">PUMBILITY{tier?.name && tier.lv ? ` · ${tier.name} ${tier.lv}` : ''}</small>
+        </div>
+      </section>
+
+      <div className="pp-actions">
+        <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>
+        <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
+      </div>
+
+      <section className="pp-kpis">
+        <div className="card pp-kpi"><small className="muted">{t('Recordes')}</small><b>{fmtNum(charts.length)}</b></div>
+        {stats.map((s) => (
+          <div key={s.mode} className="card pp-kpi">
+            <small className="muted">{s.mode === 'S' ? t('Maior Single') : t('Maior Double')}</small>
+            <b className={s.mode === 'S' ? 'ball-s-txt' : 'ball-d-txt'}>{s.max ? `${s.mode}${s.max}` : '—'}</b>
+            <small className="muted">{tn(s.clears, '{n} passe', '{n} passes')}</small>
+          </div>
+        ))}
+        <div className="card pp-kpi">
+          <small className="muted">{t('Você × {n}', { n: other?.nickname || t('Jogador') })}</small>
+          <b><span className="up">{vs.wins}</span> × <span className="down">{vs.losses}</span></b>
+          <small className="muted">{t('{n} charts em comum', { n: vs.both })}</small>
+        </div>
+      </section>
+
+      <section className="card">
+        <h3>{t('Notas e placas')}</h3>
+        <div className="pp-grades">
+          {Object.entries(grades).map(([g, n]) => (
+            <span key={g} className="pp-grade"><Grade grade={g === 'SSS' ? 'SSS+' : g === 'SS' ? 'SS+' : g === 'S' ? 'S+' : 'AAA+'} size="sm" /><b>{n}</b><small className="muted">{g} {t('ou melhor')}</small></span>
+          ))}
+        </div>
+        {plates.length > 0 && (
+          <div className="pp-plates">
+            {plates.map(([k, n]) => <span key={k} className="pp-plate"><Plate plate={k} size="sm" /><b>{n}</b></span>)}
+          </div>
+        )}
+      </section>
+
+      <section className="card">
+        <h3>{t('Passes por nível')}</h3>
+        <div className="pp-levels">
+          {stats.map((s) => (
+            <div key={s.mode} className="pp-lv-col">
+              <h4 className={s.mode === 'S' ? 'ball-s-txt' : 'ball-d-txt'}>{s.mode === 'S' ? 'Single' : 'Double'}</h4>
+              {!s.levels.length && <p className="muted small">{t('Sem recordes do nível 10 para cima.')}</p>}
+              {s.levels.slice(0, 14).map((l) => (
+                <div key={l.level} className="pp-lv" title={`${l.clear} / ${l.clear + l.broken}`}>
+                  <span className="pp-lv-n">{s.mode}{l.level}</span>
+                  <span className="pp-lv-bar">
+                    <i className={`ok ${s.mode}`} style={{ width: `${(l.clear / maxLv) * 100}%` }} />
+                    <i className="bad" style={{ width: `${(l.broken / maxLv) * 100}%` }} />
+                  </span>
+                  <span className="pp-lv-c">{l.clear}{l.broken ? <small className="muted"> +{l.broken}</small> : null}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p className="muted small">{t('Barra cheia: passou. Parte vermelha: só tem recorde quebrado.')}</p>
+      </section>
+
+      <section className="card">
+        <h3>{t('Top 50 do PUMBILITY')}</h3>
+        <p className="muted small">{t('As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale.')}</p>
+        <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+        {!top.length && <p className="empty">{t('Sem notas que contam para o PUMBILITY nesta versão.')}</p>}
+        <div className="pp-top">
+          {top.map((r) => (
+            <Link key={r.chart.id} to={`/musica/${r.chart.song.id}`} className="pp-top-row">
+              <span className="rank">{pb.top.indexOf(r) + 1}</span>
+              <Jacket song={r.chart.song} width={64} />
+              <Ball chart={r.chart} size="sm" />
+              <span className="pp-top-name">{r.chart.song.title}<small className="muted">{fmtScore(r.chart.score)}</small></span>
+              <span className="pp-top-gp"><Grade grade={r.chart.grade} size="xs" /><Plate plate={r.chart.plate} size="xs" /></span>
+              <b className="pp-top-pts">{fmtNum(Math.round(r.value))}</b>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <SocialLinks userId={id} />
+      <MiniChat user={id} name={other?.nickname} />
+      <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />
+    </div>
+  );
+}
+
 /** Comparação chart a chart entre você e outro jogador. */
 export function ComparePlayer() {
   const { id } = useParams();
@@ -227,16 +393,14 @@ export function ComparePlayer() {
         </div>
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
         <div className="vs-side">
-          <Avatar p={other || {}} size={36} />
+          <Link to={`/jogador/${id}`}><Avatar p={other || {}} size={36} /></Link>
           <b className="vs-nick"><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</b>
           <TeamTag team={teamOf(id)} />
           <small className="muted vs-you">{t('amigo')}</small>
           <span className="big down">{losses}</span>
         </div>
       </section>
-      <SocialLinks userId={id} />
-      <MiniChat user={id} name={other?.nickname} />
-      <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />
+      <Link to={`/jogador/${id}`} className="link small">{t('Ver o perfil de {n}', { n: other?.nickname || t('Jogador') })}</Link>
       <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />
       <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
       <div className="cmp-list">
