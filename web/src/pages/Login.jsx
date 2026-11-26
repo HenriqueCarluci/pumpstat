@@ -32,7 +32,7 @@ export default function Login({ notice }) {
   return (
     <div className="login">
       <div className="login-card">
-        <div className="login-top"><div className="login-brand"><Logo size={30} /> StepClub</div><LangPicker compact /></div>
+        <div className="login-top"><div className="login-brand"><Logo size={30} /> PIU Stats</div><LangPicker compact /></div>
         <p className="muted center">{t('Seus recordes de Pump It Up e o clube num lugar só.')}</p>
         <form onSubmit={submit}>
           <label className="field">{t('E-mail')}

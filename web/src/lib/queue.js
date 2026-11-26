@@ -34,7 +34,7 @@ export async function getPosition() {
   if (isNative) {
     try { return await nativePosition(); } catch (e) {
       throw new Error(e.code === 1 || /denied|permission/i.test(e.message || '')
-        ? 'Permita o acesso à localização para fazer check-in (o StepClub só confere se você está no fliperama).'
+        ? 'Permita o acesso à localização para fazer check-in (o PIU Stats só confere se você está no fliperama).'
         : 'Não consegui pegar sua localização. Tente de novo perto de uma janela ou com o GPS ligado.');
     }
   }
@@ -43,7 +43,7 @@ export async function getPosition() {
     navigator.geolocation.getCurrentPosition(
       (p) => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }),
       (e) => reject(new Error(e.code === 1
-        ? 'Permita o acesso à localização para fazer check-in (o StepClub só confere se você está no fliperama).'
+        ? 'Permita o acesso à localização para fazer check-in (o PIU Stats só confere se você está no fliperama).'
         : 'Não consegui pegar sua localização. Tente de novo perto de uma janela ou com o GPS ligado.')),
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 },
     );

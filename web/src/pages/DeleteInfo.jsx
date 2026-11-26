@@ -4,11 +4,11 @@ import { t } from '../lib/i18n.js';
 export default function DeleteInfo() {
   return (
     <div className="page privacy">
-      <h2>{t('Excluir sua conta do StepClub')}</h2>
+      <h2>{t('Excluir sua conta do PIU Stats')}</h2>
       <p>{t('Você pode apagar sua conta e todos os seus dados a qualquer momento, pelo app ou pelo site.')}</p>
       <h3>{t('Como excluir')}</h3>
       <ol>
-        <li>{t('Abra o app StepClub ou o site stepclub.onrender.com e entre na sua conta.')}</li>
+        <li>{t('Abra o app PIU Stats ou o site stepclub.onrender.com e entre na sua conta.')}</li>
         <li>{t('Vá em Configurações e toque em "Excluir conta".')}</li>
         <li>{t('Confirme digitando o texto pedido. A exclusão é imediata.')}</li>
       </ol>

@@ -90,7 +90,7 @@ export const TIERS = [
 const LABEL_TIER = { VeryHard: 'top', Hard: 'high', Underrated: 'high', Medium: 'mid', Easy: 'low', Overrated: 'low', VeryEasy: 'bottom' };
 
 const TIER_NUM = { top: 2, high: 1, mid: 0, low: -1, bottom: -2 };
-/** Tier do chart: dados do PIU Scores misturados com os votos da comunidade do StepClub
+/** Tier do chart: dados do PIU Scores misturados com os votos da comunidade do PIU Stats
  *  (o PIU Scores pesa como 3 votos; sem dados dele, vale só a comunidade). */
 export function chartTier(c) {
   const base = baseTier(c);

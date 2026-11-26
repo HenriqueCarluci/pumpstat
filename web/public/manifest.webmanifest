@@ -1,6 +1,6 @@
 {
-  "name": "StepClub",
-  "short_name": "StepClub",
+  "name": "PIU Stats",
+  "short_name": "PIU Stats",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#141518",

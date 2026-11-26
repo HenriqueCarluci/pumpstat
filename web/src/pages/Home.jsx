@@ -50,7 +50,7 @@ export default function Home() {
     return (
       <div className="page">
         <section className="card hero-connect">
-          <div className="login-brand"><Logo size={30} /> StepClub</div>
+          <div className="login-brand"><Logo size={30} /> PIU Stats</div>
           <p className="center">{t('Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix.')}</p>
         </section>
         <section className="card"><PiuConnect onDone={() => reload()} /></section>

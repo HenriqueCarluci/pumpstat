@@ -178,7 +178,7 @@ export function weaknesses(...sumsList) {
 }
 
 // Sem estilo do piucenter (músicas novas da Phoenix 2), o estilo vem dos padrões do PIU Scores (c.skills)
-// e das tags que a comunidade do StepClub marca nos charts.
+// e das tags que a comunidade do PIU Stats marca nos charts.
 const TAG_TO_DIM = { twist: 'twist', drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', doublestep: 'doublestep',
   footswitch: 'footswitch', stamina: 'stamina', speed: 'speed', gimmick: null };
 const BADGE_RULES = [

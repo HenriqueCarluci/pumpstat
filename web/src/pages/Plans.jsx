@@ -24,7 +24,7 @@ export default function Plans() {
   return (
     <div className="page plans">
       {!cfg.show_plans && <div className="banner">{t('Prévia: só administradores veem esta tela enquanto os planos estão em desenvolvimento.')}</div>}
-      <h2 className="ic-row"><Crown size={20} /> {t('Planos do StepClub')}</h2>
+      <h2 className="ic-row"><Crown size={20} /> {t('Planos do PIU Stats')}</h2>
       <p className="muted small">{t('Fila, amigos, chat e sincronização continuam grátis para todos. Os planos liberam análises e recursos extras.')}</p>
       {/* só o preço da região de quem vê; o admin pode conferir as outras */}
       {plan?.admin && (

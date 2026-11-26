@@ -63,7 +63,7 @@ export default function FriendOnlineToast() {
       {cards.map(({ key, friend: f, leaving }) => (
         <div key={key} className={`fo-toast ${leaving ? 'leaving' : ''}`} role="status"
           onClick={() => { close(key); navigate(`/jogador/${f.id}`); }}>
-          <div className="fo-bar"><span className="fo-brand">StepClub</span>
+          <div className="fo-bar"><span className="fo-brand">PIU Stats</span>
             <button className="fo-x" aria-label={t('Fechar')} onClick={(e) => { e.stopPropagation(); close(key); }}><X size={14} /></button>
           </div>
           <div className="fo-body">

@@ -1,4 +1,4 @@
-// StepClub API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
+// PIU Stats API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
 // usando o token do próprio usuário (RPC ingest_me). A senha da Pump nunca é gravada.
 import http from 'node:http';
 import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:crypto';
@@ -216,7 +216,7 @@ const server = http.createServer(async (req, res) => {
     }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
-    if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
+    if (!user?.id) return send(res, 401, { error: 'Faça login no PIU Stats.' }, origin);
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
       const { login, password, versions, useSaved, partial } = await readJson(req);
@@ -246,7 +246,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ajuda/feedback: a mensagem já foi salva no Supabase; aqui só avisamos o suporte por e-mail.
-    // FEEDBACK_WEBHOOK é o app da Web do Apps Script "StepClub Suporte" (na conta Google do dono), que envia o e-mail.
+    // FEEDBACK_WEBHOOK é o app da Web do Apps Script "PIU Stats Suporte" (na conta Google do dono), que envia o e-mail.
     // FEEDBACK_TOKEN é o segredo que o script confere antes de enviar.
     if (req.method === 'POST' && url.pathname === '/api/feedback') {
       const hook = process.env.FEEDBACK_WEBHOOK;
@@ -263,7 +263,7 @@ const server = http.createServer(async (req, res) => {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: 'https://stepclub.onrender.com', Referer: 'https://stepclub.onrender.com/' },
         body: JSON.stringify({
           _token: process.env.FEEDBACK_TOKEN || '',
-          _subject: `StepClub · ${label} #${Number(id) || ''}`, _template: 'table', _captcha: 'false',
+          _subject: `PIU Stats · ${label} #${Number(id) || ''}`, _template: 'table', _captcha: 'false',
           _replyto: String(contact || user.email || ''),
           Tipo: label, Mensagem: String(message || '').slice(0, 2000), 'Responder para': String(contact || '—'),
           Conta: user.email || user.id, 'ID no banco': Number(id) || '—',
@@ -332,4 +332,4 @@ setInterval(catalogTick, 6 * 3600_000).unref();
 // limpa jobs antigos
 setInterval(() => { const lim = Date.now() - 30 * 60_000; for (const [id, j] of jobs) if (j.state !== 'running' && j.at < lim) jobs.delete(id); }, 60_000).unref();
 
-server.listen(PORT, () => console.log(`StepClub API na porta ${PORT}`));
+server.listen(PORT, () => console.log(`PIU Stats API na porta ${PORT}`));

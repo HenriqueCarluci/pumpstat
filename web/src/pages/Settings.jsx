@@ -37,7 +37,7 @@ export default function Settings() {
 
       <section className="card plan-card">
         <div className="row-between">
-          <h3 className="ic-row">{plan?.plan && plan.plan !== 'free' ? <><Crown size={18} /> StepClub {PLAN_LABEL[plan.plan]}</> : t('Plano grátis')}</h3>
+          <h3 className="ic-row">{plan?.plan && plan.plan !== 'free' ? <><Crown size={18} /> PIU Stats {PLAN_LABEL[plan.plan]}</> : t('Plano grátis')}</h3>
           {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
         </div>
         <p className="muted small">
@@ -45,7 +45,7 @@ export default function Settings() {
             ? (plan.source === 'lifetime' ? t('Acesso vitalício.')
               : plan.source === 'trial' ? t('Teste grátis até {d}. Depois sua conta volta para o plano grátis, sem cobrança.', { d: fmtDate(plan.expires_at) })
                 : plan.expires_at ? t('Ativo até {d}.', { d: fmtDate(plan.expires_at) }) : t('Assinatura ativa.'))
-            : t('Os recursos do StepClub+ chegam em breve.')}
+            : t('Os recursos do PIU Stats+ chegam em breve.')}
         </p>
         {ent.showPlans && <Link className="btn ghost" to="/planos"><Crown size={15} /> {t('Ver planos')}</Link>}
       </section>
@@ -74,7 +74,7 @@ export default function Settings() {
           <input type="checkbox" checked={prefs.friendOnline !== false} onChange={(e) => setPrefs({ friendOnline: e.target.checked })} />
           <span>
             <b>{t('Avisar quando um amigo ficar online')}</b><br />
-            <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o StepClub enquanto você está com ele aberto.')}</small>
+            <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o PIU Stats enquanto você está com ele aberto.')}</small>
           </span>
         </label>
       </section>
@@ -86,7 +86,7 @@ export default function Settings() {
       </section>
 
       <section className="card">
-        <h3>{t('Conta StepClub')}</h3>
+        <h3>{t('Conta PIU Stats')}</h3>
         <p className="muted">{t('Conectado como')} <b>{session.email}</b></p>
         <div className="bm-row">
           <button className="btn ghost" onClick={() => reload()}>{t('Recarregar dados')}</button>
@@ -145,7 +145,7 @@ function DeleteAccount() {
   if (!open) return <button className="link small danger ic-row delete-link" onClick={() => setOpen(true)}><Trash2 size={13} /> {t('Excluir minha conta')}</button>;
   return (
     <div className="delete-box">
-      <p className="small">{t('Isso apaga sua conta do StepClub e todos os dados ligados a ela (notas importadas, amigos, mensagens, avaliações). Não dá para desfazer. Sua conta da Pump It Up não é afetada.')}</p>
+      <p className="small">{t('Isso apaga sua conta do PIU Stats e todos os dados ligados a ela (notas importadas, amigos, mensagens, avaliações). Não dá para desfazer. Sua conta da Pump It Up não é afetada.')}</p>
       <input placeholder={t('Digite EXCLUIR para confirmar')} value={text} onChange={(e) => setText(e.target.value)} />
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row">
@@ -174,7 +174,7 @@ function AutoSync() {
           <small className="muted">
             {!st.has_session ? t('Faça uma sincronização com a senha AM.PASS para ativar.')
               : st.error === 'session_expired' ? t('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.')
-                : t('O StepClub atualiza suas notas sozinho algumas vezes por dia.')}
+                : t('O PIU Stats atualiza suas notas sozinho algumas vezes por dia.')}
             {st.last && <> · {t('última tentativa {when}', { when: timeAgo(st.last) })}</>}
           </small>
         </span>

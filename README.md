@@ -1,4 +1,4 @@
-# StepClub
+# PIU Stats
 
 App do clube de Pump It Up da Liberdade (São Paulo): recordes de cada jogador, tier lists e, em breve, fila das máquinas.
 
@@ -22,9 +22,9 @@ Variáveis opcionais (`.env`): `VITE_SUPABASE_URL`, `VITE_SUPABASE_KEY` (chave p
 
 ## Sincronizar
 
-1. Abra o app → **Ajustes**, cole a chave de sincronização e arraste o favorito **StepClub Sync**.
+1. Abra o app → **Ajustes**, cole a chave de sincronização e arraste o favorito **PIU Stats Sync**.
 2. Logado em `piugame.com` (Phoenix 2) ou `phoenix.piugame.com` (Phoenix), clique no favorito.
-3. Para capas, use o favorito **StepClub Capas** no piugame.com. Para atualizar o catálogo, clique no **StepClub Sync** em `piuscores.arroweclip.se`.
+3. Para capas, use o favorito **PIU Stats Capas** no piugame.com. Para atualizar o catálogo, clique no **PIU Stats Sync** em `piuscores.arroweclip.se`.
 
 ## Créditos
 

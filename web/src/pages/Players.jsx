@@ -74,7 +74,7 @@ export default function Players() {
                 ))}
               </section>
             )}
-            {list.length <= 1 && <p className="muted small">{t('Você ainda não tem amigos no StepClub. Busque pelo nickname da Pump e mande uma solicitação: as notas só aparecem depois que a pessoa aprovar.')}</p>}
+            {list.length <= 1 && <p className="muted small">{t('Você ainda não tem amigos no PIU Stats. Busque pelo nickname da Pump e mande uma solicitação: as notas só aparecem depois que a pessoa aprovar.')}</p>}
             <div className="players">
               {list.map((p, i) => {
                 const tier = version === 'phoenix2' ? pbTier(p.pumbility) : null;
@@ -153,7 +153,7 @@ function SearchPlayers({ onChange }) {
       {busy && <span className="ta-spin muted small">{t('buscando…')}</span>}
       {res && (
         <div className="ta-list">
-          {!res.length && <p className="muted small ta-empty">{t('Ninguém com “{q}”. A pessoa precisa ter conectado a conta da Pump no StepClub.', { q: q.trim() })}</p>}
+          {!res.length && <p className="muted small ta-empty">{t('Ninguém com “{q}”. A pessoa precisa ter conectado a conta da Pump no PIU Stats.', { q: q.trim() })}</p>}
           {res.map((p) => (
             <div key={p.id} className="player req">
               <Avatar p={p} />
@@ -239,7 +239,7 @@ export function ComparePlayer() {
   );
 }
 
-/** Ranking de um chart entre os jogadores do StepClub (usado na página da música). */
+/** Ranking de um chart entre os jogadores do PIU Stats (usado na página da música). */
 export function ChartRanking({ chartId }) {
   const [list, setList] = useState(null);
   useEffect(() => { rpc('chart_ranking', { p_chart_id: chartId }).then(setList).catch(() => setList([])); }, [chartId]);

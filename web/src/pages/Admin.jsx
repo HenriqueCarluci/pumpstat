@@ -168,7 +168,7 @@ function FeedbackList() {
               {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}
             </small>
             <div className="bm-row">
-              {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`StepClub #${f.id}`)}`}>{t('Responder por e-mail')}</a>}
+              {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`PIU Stats #${f.id}`)}`}>{t('Responder por e-mail')}</a>}
               {f.status === 'open'
                 ? <button className="btn" onClick={() => mark(f.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
                 : <button className="btn ghost" onClick={() => mark(f.id, 'open')}>{t('Reabrir')}</button>}

@@ -1,4 +1,4 @@
-# Traduções do StepClub
+# Traduções do PIU Stats
 
 O app usa o texto em português como chave (`t('Músicas')`).
 

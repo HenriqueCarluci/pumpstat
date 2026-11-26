@@ -1,10 +1,10 @@
-# StepClub na Google Play — ficha e respostas dos formulários
+# PIU Stats na Google Play — ficha e respostas dos formulários
 
 Pronto para colar no Play Console quando a conta for liberada.
 Arquivos: `icon-512.png` (ícone 512×512) e `feature-1024x500.png` (imagem de destaque).
 
 ## Detalhes do app
-- Nome do app: **StepClub**
+- Nome do app: **PIU Stats**
 - Idioma padrão: Português (Brasil) – pt-BR (com tradução em inglês – en-US)
 - Tipo: App · Gratuito (com assinatura opcional no futuro)
 - Categoria: Esportes (alternativa: Estilo de vida)
@@ -18,7 +18,7 @@ Arquivos: `icon-512.png` (ícone 512×512) e `feature-1024x500.png` (imagem de d
 Recordes de Pump It Up, tier das músicas, fila do fliperama e desafios do clube.
 
 **Descrição completa:**
-O StepClub é o app do jogador de Pump It Up: seus recordes da Phoenix 2 e da Phoenix num lugar só, com tudo o que você precisa para evoluir e jogar com a galera.
+O PIU Stats é o app do jogador de Pump It Up: seus recordes da Phoenix 2 e da Phoenix num lugar só, com tudo o que você precisa para evoluir e jogar com a galera.
 
 SEUS RECORDES
 • Sincronize com a sua conta do AM.PASS e veja notas, grades e plates de todos os charts.
@@ -38,14 +38,14 @@ JOGUE COM A GALERA
 • Desafios do mês com brindes, pensados para qualquer nível.
 • Times e votação de tier do clube.
 
-O StepClub é um app independente feito por jogadores. Não é oficial nem afiliado à Andamiro. Pump It Up, Phoenix e AM.PASS são marcas dos seus donos.
+O PIU Stats é um app independente feito por jogadores. Não é oficial nem afiliado à Andamiro. Pump It Up, Phoenix e AM.PASS são marcas dos seus donos.
 
 ## en-US
 **Short description:**
 Pump It Up scores, song tiers, arcade queue and club challenges in one app.
 
 **Full description:**
-StepClub is the app for Pump It Up players: your Phoenix 2 and Phoenix records in one place, with everything you need to improve and play with friends.
+PIU Stats is the app for Pump It Up players: your Phoenix 2 and Phoenix records in one place, with everything you need to improve and play with friends.
 
 YOUR RECORDS
 • Sync with your AM.PASS account and see scores, grades and plates for every chart.
@@ -65,7 +65,7 @@ PLAY WITH FRIENDS
 • Monthly challenges with prizes, designed for every level.
 • Teams and club tier voting.
 
-StepClub is an independent app made by players. It is not official or affiliated with Andamiro. Pump It Up, Phoenix and AM.PASS are trademarks of their owners.
+PIU Stats is an independent app made by players. It is not official or affiliated with Andamiro. Pump It Up, Phoenix and AM.PASS are trademarks of their owners.
 
 ## Acesso ao app (para a revisão do Google)
 O app pede login. Informar uma conta de teste (e-mail e senha) com dados de exemplo, e a instrução:

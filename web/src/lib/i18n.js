@@ -1,4 +1,4 @@
-// Idiomas do StepClub. O texto em português é a própria chave: t('Músicas') → 'Songs' em inglês.
+// Idiomas do PIU Stats. O texto em português é a própria chave: t('Músicas') → 'Songs' em inglês.
 // Variáveis entre chaves: t('{n} recordes', { n: 12 }). Sem tradução, fica o português.
 // cada idioma vira um arquivo separado e só é baixado quando escolhido
 const LOADERS = import.meta.glob('./locales/*.json', { import: 'default' });

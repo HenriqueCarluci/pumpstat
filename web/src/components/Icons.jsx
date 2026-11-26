@@ -1,4 +1,4 @@
-// Ícones do app: marca própria do StepClub, setas no estilo do pad da Pump e ícones de linha (lucide).
+// Ícones do app: marca própria do PIU Stats, setas no estilo do pad da Pump e ícones de linha (lucide).
 export {
   Bell, Check, CheckCheck, ChevronDown, ChevronRight, ChevronUp, CircleCheck, Gamepad2, Home as HomeIcon, ListOrdered,
   MapPin, MessageCircle, Music2, PencilLine, Play, RefreshCw, Settings as SettingsIcon, SkipForward, Swords, Tag,
@@ -6,18 +6,26 @@ export {
   Flag, Ban, Trash2, Lock, TrendingUp, Plus, ThumbsUp, ThumbsDown, Vote, Clock, Flame, Trophy, CalendarCheck, Gift, ToggleRight,
 } from 'lucide-react';
 
-/** Marca do StepClub: o painel central do pad com uma seta, em gradiente. */
+/** Marca do PIU Stats: a seta do pad (estilo LX) em verde, sobre o fundo escuro. */
+const MARK = ['92,420 92,158 152,218 152,360 294,360 354,420', '184,328 184,168 232,216 232,280 296,280 344,328'];
+const SHAFT = '223,235 377,81 431,135 277,289';
 export function Logo({ size = 22 }) {
   return (
-    <svg className="logo-mark" width={size} height={size} viewBox="0 0 32 32" aria-hidden>
+    <svg className="logo-mark" width={size} height={size} viewBox="0 0 512 512" aria-hidden>
       <defs>
-        <linearGradient id="sc-g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#b6ff5c" />
-          <stop offset="1" stopColor="#2bd2ff" />
+        <linearGradient id="ps-g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#d2ff7a" />
+          <stop offset=".5" stopColor="#8cff3a" />
+          <stop offset="1" stopColor="#2fb866" />
         </linearGradient>
       </defs>
-      <rect x="2" y="2" width="28" height="28" rx="8" fill="url(#sc-g)" />
-      <path d="M16 7.5 L24 17 H19.2 V24.5 H12.8 V17 H8 Z" fill="#0f1114" />
+      <rect width="512" height="512" rx="112" fill="#0e0f12" />
+      <g transform="translate(256 256) scale(.92) translate(-256 -256)">
+        {[...MARK, SHAFT].map((p) => <polygon key={p} points={p} fill="#e2ffc0" stroke="#e2ffc0" strokeWidth="30" />)}
+        {[...MARK, SHAFT].map((p) => <polygon key={p} points={p} fill="#05070d" stroke="#05070d" strokeWidth="15" />)}
+        <polygon points={SHAFT} fill="url(#ps-g)" />
+        {MARK.map((p) => <polygon key={p} points={p} fill="url(#ps-g)" stroke="#05070d" strokeWidth="10" paintOrder="stroke" />)}
+      </g>
     </svg>
   );
 }

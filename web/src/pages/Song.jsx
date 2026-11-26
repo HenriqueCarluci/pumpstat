@@ -172,7 +172,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
-          <span className="tag community" title={t('Tags marcadas pela comunidade do StepClub')}>
+          <span className="tag community" title={t('Tags marcadas pela comunidade do PIU Stats')}>
             <Users size={12} /> {c.community.tags.map((x) => t(REVIEW_TAGS.find(([k]) => k === x)?.[1] || x)).join(' · ')}
           </span>
         )}

@@ -1,6 +1,6 @@
 {
   "appId": "com.henriquecarluci.stepclub",
-  "appName": "StepClub",
+  "appName": "PIU Stats",
   "webDir": "dist",
   "backgroundColor": "#141518",
   "android": { "allowMixedContent": false },

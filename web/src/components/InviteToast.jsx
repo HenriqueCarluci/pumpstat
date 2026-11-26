@@ -25,7 +25,7 @@ export default function InviteToast() {
       if (alerted.current.has(i.invite)) continue;
       alerted.current.add(i.invite);
       if (canAlert() && Notification.permission === 'granted' && document.hidden) {
-        try { new Notification('StepClub', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
+        try { new Notification('PIU Stats', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
       }
     }
   }, [presence.invites]);

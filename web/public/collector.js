@@ -1,4 +1,4 @@
-/* StepClub — coletor de scores do piugame.com (Phoenix 2) e phoenix.piugame.com (Phoenix).
+/* PIU Stats — coletor de scores do piugame.com (Phoenix 2) e phoenix.piugame.com (Phoenix).
  * Roda dentro da página oficial (mesma origem), lê My Best Score, Recently Played e o perfil,
  * e envia para o Supabase via RPC ingest(). Configuração vem do bookmarklet em window.__PUMPSTAT.
  */
@@ -14,7 +14,7 @@
   box.style.cssText = 'position:fixed;inset:auto 16px 16px auto;z-index:2147483647;width:min(360px,calc(100vw - 32px));' +
     'background:#12131a;color:#eef;border:1px solid #3b3f5c;border-radius:14px;padding:16px;font:14px/1.45 system-ui,sans-serif;' +
     'box-shadow:0 12px 40px rgba(0,0,0,.5)';
-  box.innerHTML = '<div style="font-weight:700;font-size:16px;margin-bottom:6px">StepClub · sincronizando</div>' +
+  box.innerHTML = '<div style="font-weight:700;font-size:16px;margin-bottom:6px">PIU Stats · sincronizando</div>' +
     '<div id="ps-msg">Preparando…</div><div style="height:6px;background:#262840;border-radius:3px;margin-top:10px">' +
     '<div id="ps-bar" style="height:100%;width:0;background:linear-gradient(90deg,#ff7a2f,#ffcf3f);border-radius:3px;transition:width .2s"></div></div>';
   document.body.appendChild(box);
@@ -29,13 +29,13 @@
     box.appendChild(b);
   };
 
-  if (!CFG.key || !CFG.url || !CFG.anon) return fail('Bookmarklet sem configuração. Gere de novo em StepClub → Ajustes.');
+  if (!CFG.key || !CFG.url || !CFG.anon) return fail('Bookmarklet sem configuração. Gere de novo em PIU Stats → Ajustes.');
 
   const host = location.hostname;
 
   // ---------- catálogo: no site do PIU Scores, baixa o export de charts e atualiza o banco ----------
   if (host === 'piuscores.arroweclip.se') {
-    box.querySelector('div').textContent = 'StepClub · catálogo';
+    box.querySelector('div').textContent = 'PIU Stats · catálogo';
     const cols = 'ChartId,Song,Artist,StepArtist,Type,Level,SongType,BPM,NoteCount,Badges,PassDifficulty,ScoreDifficulty,ScoringLevel';
     const parseCSV = (t) => {
       const rows = []; let row = []; let f = ''; let q = false;
@@ -85,7 +85,7 @@
       }
       done.push(found.length + ' capas novas');
       msg('<b>Catálogo atualizado.</b><br>' + done.join(' · ') +
-        (CFG.app ? '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o StepClub →</a>' : ''));
+        (CFG.app ? '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o PIU Stats →</a>' : ''));
       addClose();
     } catch (e) { fail('Erro: ' + e.message); }
     return;
@@ -166,7 +166,7 @@
         const u = bgUrl(a.querySelector('.songImg_w .re'));
         if (t && u && !map.has(t)) map.set(t, u);
       });
-      box.querySelector('div').textContent = 'StepClub · capas';
+      box.querySelector('div').textContent = 'PIU Stats · capas';
       const first = await getDoc('/leaderboard/over_ranking.php');
       take(first);
       const pages = lastPage(first);
@@ -191,7 +191,7 @@
       if (!res.ok) throw new Error(out.message || ('Supabase HTTP ' + res.status));
       bar(1);
       msg('<b>Capas atualizadas.</b><br>' + out.updated + ' músicas receberam capa · ' + out.without_jacket + ' ainda sem capa' +
-        (CFG.app ? '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o StepClub →</a>' : ''));
+        (CFG.app ? '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o PIU Stats →</a>' : ''));
       addClose();
     } catch (e) {
       fail(e.message === 'LOGIN' ? 'Faça login no site e clique de novo.' : 'Erro: ' + e.message);
@@ -263,12 +263,12 @@
     if (out.unmatched && out.unmatched.length) {
       html += '<br><span style="color:#ffcf3f">' + out.unmatched.length + ' charts fora do catálogo (criados automaticamente).</span>';
     }
-    if (CFG.app) html += '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o StepClub →</a>';
+    if (CFG.app) html += '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o PIU Stats →</a>';
     msg(html);
     addClose();
   } catch (e) {
     if (e.message === 'LOGIN') fail('Você não está logado neste site. Faça login e clique no favorito de novo.');
     else fail('Erro: ' + e.message);
-    console.error('[StepClub]', e);
+    console.error('[PIU Stats]', e);
   }
 })();

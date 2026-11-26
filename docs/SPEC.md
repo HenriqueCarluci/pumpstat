@@ -1,8 +1,8 @@
-# StepClub — especificação do MVP
+# PIU Stats — especificação do MVP
 
-> Nome do app: **StepClub** (antes PumpStat). Também será o app do clube de Pump It Up que o Henrique vai abrir na Liberdade (SP).
+> Nome do app: **PIU Stats** (antes PumpStat). Também será o app do clube de Pump It Up que o Henrique vai abrir na Liberdade (SP).
 
-Tracker pessoal de Pump It Up no estilo do ArcadeStat (StepClub), para **Phoenix 2** com os recordes da **Phoenix**.
+Tracker pessoal de Pump It Up no estilo do ArcadeStat (PIU Stats), para **Phoenix 2** com os recordes da **Phoenix**.
 É um site com cara de app (PWA), pensado para ser embrulhado num WebView (Capacitor) depois.
 
 ## 1. Referência: o que o ArcadeStat faz
@@ -22,7 +22,7 @@ Tracker pessoal de Pump It Up no estilo do ArcadeStat (StepClub), para **Phoenix
 
 ```
 piugame.com / phoenix.piugame.com (logado)
-   └─ favorito "StepClub Sync" → carrega /collector.js do StepClub
+   └─ favorito "PIU Stats Sync" → carrega /collector.js do PIU Stats
         ├─ lê /my_page/pumbility.php        (perfil, PUMBILITY oficial)
         ├─ lê /my_page/my_best_score.php     (todas as páginas, 250 ms entre elas)
         ├─ lê /my_page/recently_played.php   (últimas 50, com julgamentos)
@@ -96,7 +96,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
   fila parada por 2 h é zerada (só aquela fila); quem não está no local e não marcou ausente recebe aviso.
 - Sem login: qualquer um digita um nome.
 
-**Como fica no StepClub**
+**Como fica no PIU Stats**
 
 | Item | Proposta |
 |---|---|
@@ -162,9 +162,9 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Sempre salva na tabela `feedback` (`submit_feedback`, até 5 por hora). A API (`POST /api/feedback`) manda o e-mail pelo FormSubmit para o endereço configurado em `FEEDBACK_WEBHOOK` no Render (`https://formsubmit.co/ajax/<destino>`); sem a variável, fica só no banco. No primeiro envio o FormSubmit manda um e-mail de ativação para o destino.
 
 ## Administração (`#/admin`, só para `app_admins`)
-- Dono: conta CARLUCI (Henrique), com StepClub+ vitalício.
+- Dono: conta CARLUCI (Henrique), com PIU Stats+ vitalício.
 - Resumo: usuários, novos e ativos em 7 dias, online, com conta da Pump, assinantes, suporte em aberto e bloqueados (`admin_stats`).
-- Usuários (`admin_users`): busca por e-mail ou nick; liberar StepClub+ como cortesia (30 dias, 3 meses, 1 ano ou vitalício, com motivo), remover plano, bloquear/desbloquear conta (`auth.users.banned_until`, derruba as sessões) e dar/tirar acesso de admin.
+- Usuários (`admin_users`): busca por e-mail ou nick; liberar PIU Stats+ como cortesia (30 dias, 3 meses, 1 ano ou vitalício, com motivo), remover plano, bloquear/desbloquear conta (`auth.users.banned_until`, derruba as sessões) e dar/tirar acesso de admin.
 - Suporte (`admin_feedback`): mensagens do formulário, responder por e-mail e marcar como resolvida.
 - Planos: tabela `subscriptions` (fonte `store`, `comp` ou `lifetime`); `my_plan()` diz o plano e se o usuário é admin. Assinaturas da loja entram com `source = 'store'` quando o pagamento for ligado.
 

@@ -15,7 +15,7 @@ Exibição | Display | Visualización | 표시 | 表示 | Affichage | Visualizza
 Tamanho da nota sobre a capa da música na tela de Tier | Size of the grade over the song jacket on the Tier screen | Tamaño de la nota sobre la portada en la pantalla Tier | 티어 화면에서 곡 이미지 위 그레이드 크기 | ティア画面のジャケット上のグレードの大きさ | Taille du grade sur la pochette dans l'écran Tier | Dimensione del grade sulla copertina nella schermata Tier
 Pequena | Small | Pequeña | 작게 | 小 | Petite | Piccola
 Grande | Large | Grande | 크게 | 大 | Grande | Grande
-Conta StepClub | StepClub account | Cuenta StepClub | StepClub 계정 | StepClub アカウント | Compte StepClub | Account StepClub
+Conta PIU Stats | PIU Stats account | Cuenta PIU Stats | PIU Stats 계정 | PIU Stats アカウント | Compte PIU Stats | Account PIU Stats
 Conectado como | Signed in as | Conectado como | 로그인 계정 | ログイン中: | Connecté en tant que | Connesso come
 Recarregar dados | Reload data | Recargar datos | 데이터 다시 불러오기 | データを再読み込み | Recharger les données | Ricarica dati
 Sair | Sign out | Cerrar sesión | 로그아웃 | ログアウト | Se déconnecter | Esci
@@ -30,7 +30,7 @@ Ver no YouTube | Watch on YouTube | Ver en YouTube | YouTube에서 보기 | YouT
 Valor estimado no PUMBILITY | Estimated PUMBILITY value | Valor estimado en PUMBILITY | PUMBILITY 추정값 | PUMBILITY の推定値 | Valeur PUMBILITY estimée | Valore PUMBILITY stimato
 +{n} p/ {g} | +{n} for {g} | +{n} p/ {g} | {g}까지 +{n} | {g}まで +{n} | +{n} pour {g} | +{n} per {g}
 {n} notas | {n} notes | {n} notas | {n}노트 | {n}ノーツ | {n} notes | {n} note
-Tags marcadas pela comunidade do StepClub | Tags chosen by the StepClub community | Tags marcadas por la comunidad de StepClub | StepClub 커뮤니티가 붙인 태그 | StepClub コミュニティが付けたタグ | Tags choisis par la communauté StepClub | Tag scelti dalla community di StepClub
+Tags marcadas pela comunidade do PIU Stats | Tags chosen by the PIU Stats community | Tags marcadas por la comunidad de PIU Stats | PIU Stats 커뮤니티가 붙인 태그 | PIU Stats コミュニティが付けたタグ | Tags choisis par la communauté PIU Stats | Tag scelti dalla community di PIU Stats
 Ver estilo do chart | See chart style | Ver estilo del chart | 채보 스타일 보기 | 譜面の傾向を見る | Voir le style du chart | Vedi stile del chart
 Recorde em {d} | Best set {d} | Récord el {d} | {d} 기록 | {d} に記録 | Record le {d} | Record il {d}
 Avaliar | Review | Valorar | 평가 | 評価 | Évaluer | Valuta
@@ -52,7 +52,7 @@ Mostrando 400. Refine a busca para ver o resto. | Showing 400. Refine your searc
 {n} músicas | {n} songs | {n} canciones | {n}곡 | {n}曲 | {n} morceaux | {n} brani
 clears · {n} quebrados | clears · {n} broken | clears · {n} rotos | 클리어 · 브레이크 {n} | クリア · ブレイク {n} | clears · {n} cassés | clear · {n} falliti
 melhor | best | mejor | 최고 | 最高 | meilleur | migliore
-Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do StepClub. | Relative difficulty within the level, based on PIU Scores and the StepClub community's votes. | Dificultad relativa dentro del nivel según PIU Scores y los votos de la comunidad de StepClub. | PIU Scores와 StepClub 커뮤니티 투표를 바탕으로 한 레벨 내 상대 난이도입니다. | PIU Scores と StepClub コミュニティの投票による、同じレベル内での相対難易度です。 | Difficulté relative dans le niveau, d'après PIU Scores et les votes de la communauté StepClub. | Difficoltà relativa nel livello secondo PIU Scores e i voti della community di StepClub.
+Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do PIU Stats. | Relative difficulty within the level, based on PIU Scores and the PIU Stats community's votes. | Dificultad relativa dentro del nivel según PIU Scores y los votos de la comunidad de PIU Stats. | PIU Scores와 PIU Stats 커뮤니티 투표를 바탕으로 한 레벨 내 상대 난이도입니다. | PIU Scores と PIU Stats コミュニティの投票による、同じレベル内での相対難易度です。 | Difficulté relative dans le niveau, d'après PIU Scores et les votes de la communauté PIU Stats. | Difficoltà relativa nel livello secondo PIU Scores e i voti della community di PIU Stats.
 Carregando títulos… | Loading titles… | Cargando títulos… | 칭호 불러오는 중… | 称号を読み込み中… | Chargement des titres… | Caricamento titoli…
 Nenhum título da {v} ainda. Sincronize em Ajustes para trazer seus títulos. | No {v} titles yet. Sync in Settings to bring in your titles. | Aún no hay títulos de {v}. Sincroniza en Ajustes para traer tus títulos. | 아직 {v} 칭호가 없습니다. 설정에서 동기화하면 칭호를 가져옵니다. | {v} の称号はまだありません。設定から同期すると取り込みます。 | Aucun titre {v} pour l'instant. Synchronisez dans Réglages pour importer vos titres. | Ancora nessun titolo {v}. Sincronizza in Impostazioni per importare i tuoi titoli.
 títulos da {v} | {v} titles | títulos de {v} | {v} 칭호 | {v} の称号 | titres {v} | titoli {v}

@@ -39,7 +39,7 @@ async function getDispatcher() {
   dispatcher = new Agent({ connect: { ca: [...tls.rootCertificates, ...new Set(pems)] } });
   return dispatcher;
 }
-const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Mobile Safari/537.36 StepClub/0.1';
+const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Mobile Safari/537.36 PIUStats/0.1';
 
 export class PiuSession {
   constructor(base) {

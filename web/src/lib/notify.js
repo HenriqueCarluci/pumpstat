@@ -1,4 +1,4 @@
-// Notificações do StepClub: amizades, mensagens e convites, recordes dos amigos, músicas novas,
+// Notificações do PIU Stats: amizades, mensagens e convites, recordes dos amigos, músicas novas,
 // pedidos de fliperama e de time, votações de tier e, para o admin, pedidos esperando aprovação.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { rpc } from './api.js';
@@ -19,11 +19,11 @@ export function describe(n) {
     case 'new_song':
       return t('Música nova no catálogo: {song}', { song: n.title }) + (n.charts?.length ? ` (${n.charts.join(' ')})` : '');
     case 'friend_request':
-      return t('{who} quer ser seu amigo no StepClub', { who });
+      return t('{who} quer ser seu amigo no PIU Stats', { who });
     case 'friend_accepted':
       return t('{who} aceitou sua solicitação. Agora vocês veem as notas um do outro', { who });
     case 'friend_new':
-      return t('Você e {who} agora são amigos no StepClub', { who });
+      return t('Você e {who} agora são amigos no PIU Stats', { who });
     case 'message':
       return (n.count > 1 ? t('{who} te mandou {n} mensagens', { who, n: n.count }) : t('{who} te mandou uma mensagem', { who })) + (n.message ? `: “${n.message}”` : '');
     case 'invite':
@@ -57,7 +57,7 @@ export function describe(n) {
     case 'challenge_won':
       return t('Você ganhou no desafio {name}!', { name: n.title }) + (n.prize ? ` ${t('Prêmio')}: ${n.prize}` : '');
     default:
-      return t('Novidade no StepClub');
+      return t('Novidade no PIU Stats');
   }
 }
 const fmt = (v) => fmtNum(v);
@@ -89,7 +89,7 @@ export function useNotifications(enabled) {
       const fresh = r.items.filter((n) => n.unread);
       if (seen.current && canAlert() && Notification.permission === 'granted') {
         for (const n of fresh.filter((x) => !seen.current.has(key(x))).slice(0, 3)) {
-          try { new Notification('StepClub', { body: describe(n), icon: n.jacket || '/icon.svg', tag: key(n) }); } catch { /* sem suporte */ }
+          try { new Notification('PIU Stats', { body: describe(n), icon: n.jacket || '/icon.svg', tag: key(n) }); } catch { /* sem suporte */ }
         }
       }
       seen.current = new Set(r.items.map(key));

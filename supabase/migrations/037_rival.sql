@@ -6,7 +6,7 @@ returns void language plpgsql security definer set search_path = public as $$
 declare me uuid := auth.uid();
 begin
   if me is null then raise exception 'faça login primeiro' using errcode = '28000'; end if;
-  if p_user is not null and not are_friends(me, p_user) then raise exception 'O rival precisa ser seu amigo no StepClub.'; end if;
+  if p_user is not null and not are_friends(me, p_user) then raise exception 'O rival precisa ser seu amigo no PIU Stats.'; end if;
   insert into user_settings (user_id, rival) values (me, p_user)
   on conflict (user_id) do update set rival = excluded.rival;
 end $$;

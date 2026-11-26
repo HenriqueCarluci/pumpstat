@@ -109,7 +109,7 @@ export default function Tier() {
         </section>
       ))}
       <AdSlot place="tier" />
-      <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do StepClub.')}</p>
+      <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do PIU Stats.')}</p>
     </div>
   );
 }

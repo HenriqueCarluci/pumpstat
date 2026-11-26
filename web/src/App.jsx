@@ -67,8 +67,8 @@ export default function App() {
   if (!session) {
     // a fila do clube é pública: quem chega pelo QR/link não precisa de conta
     if (isQueueHash()) return <PublicQueue />;
-    if (/^#\/excluir-conta/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> StepClub</a></header><main className="content"><DeleteInfo /></main></div>;
-    if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> StepClub</a></header><main className="content"><Privacy /></main></div>;
+    if (/^#\/excluir-conta/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><DeleteInfo /></main></div>;
+    if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><Privacy /></main></div>;
     return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
   return (
@@ -92,7 +92,7 @@ function PublicQueue() {
         <Route path="*" element={
           <div className="app">
             <header className="topbar">
-              <a href="#/fila" className="brand"><Logo /> StepClub</a>
+              <a href="#/fila" className="brand"><Logo /> PIU Stats</a>
               <a className="btn ghost" href="#/">{t('Entrar')}</a>
             </header>
             <main className="content">
@@ -173,7 +173,7 @@ function Shell() {
   return (
     <div className="app">
       <header className="topbar">
-        <NavLink to="/" end className="brand" title={t('Início')}><Logo /> <span className="brand-text">StepClub</span></NavLink>
+        <NavLink to="/" end className="brand" title={t('Início')}><Logo /> <span className="brand-text">PIU Stats</span></NavLink>
         <StatusPicker />
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
           <Bell size={21} strokeWidth={2} />{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}

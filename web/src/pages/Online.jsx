@@ -39,7 +39,7 @@ export default function Online() {
   return (
     <div className="page online">
       <h2><span className="dot-on" /> {t('Online agora')}</h2>
-      <p className="muted small">{t('Quem está com o StepClub aberto. Chame para jogar: a pessoa recebe o convite na hora.')}</p>
+      <p className="muted small">{t('Quem está com o PIU Stats aberto. Chame para jogar: a pessoa recebe o convite na hora.')}</p>
 
       <div className="card">
         <div className="rv-label">{t('Quem pode me ver online')}</div>
@@ -62,7 +62,7 @@ export default function Online() {
       {list && (
         <section>
           <h3>{t('Todos online')} <span className="muted">({list.length})</span></h3>
-          {!list.length && <p className="empty">{t('Ninguém online agora além de você. Chame seus amigos para usar o StepClub!')}</p>}
+          {!list.length && <p className="empty">{t('Ninguém online agora além de você. Chame seus amigos para usar o PIU Stats!')}</p>}
           <div className="online-list">{list.map((p) => <OnlineRow key={p.id} p={p} open={open === p.id} onToggle={() => setOpen(open === p.id ? null : p.id)} onSent={load} />)}</div>
         </section>
       )}

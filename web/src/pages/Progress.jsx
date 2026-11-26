@@ -148,7 +148,7 @@ function Evolution({ a, r, mode }) {
           <>
             <LineChart points={timeline.map((w) => ({ x: w.at, y: w.total, note: t('maior nível: {l}', { l: chartLabel({ mode, level: w.maxLv }) }) }))}
               color={SERIES.a} fmtY={(v) => fmtNum(v)} fmtX={fmtWeek} step label={t('Clears acumulados')} />
-            <p className="muted tiny">{t('Clears anteriores ao seu primeiro sync aparecem juntos na data em que o StepClub os viu pela primeira vez.')}</p>
+            <p className="muted tiny">{t('Clears anteriores ao seu primeiro sync aparecem juntos na data em que o PIU Stats os viu pela primeira vez.')}</p>
           </>
         ) : <p className="muted small">{t('Ainda não há semanas suficientes para o gráfico.')}</p>}
       </section>
@@ -289,7 +289,7 @@ function tipText(tp) {
     case 'trend': return v.up
       ? t('Nas últimas 2 semanas você passou {a}% das tentativas (antes: {b}%). Está evoluindo, mantenha o ritmo.', v)
       : t('Nas últimas 2 semanas você passou {a}% das tentativas (antes: {b}%). Se estiver forçando nível alto demais, intercale com charts do seu nível de conforto.', v);
-    case 'data': return t('O StepClub tem só {n} jogadas suas registradas. O site da Pump guarda apenas as 50 últimas, então sincronize depois de cada sessão (ou ligue a sincronização automática) para as dicas ficarem mais precisas.', v);
+    case 'data': return t('O PIU Stats tem só {n} jogadas suas registradas. O site da Pump guarda apenas as 50 últimas, então sincronize depois de cada sessão (ou ligue a sincronização automática) para as dicas ficarem mais precisas.', v);
     default: return '';
   }
 }
