@@ -157,7 +157,7 @@ const server = http.createServer(async (req, res) => {
     }
     return send(res, 404, { error: 'not found' }, origin);
   } catch (e) {
-    return send(res, 500, { error: e.message }, origin);
+    return send(res, 500, { error: e.message, cause: e.cause?.code || e.cause?.message }, origin);
   }
 });
 
