@@ -188,3 +188,12 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Idiomas
 - Cada dicionário é baixado só quando o idioma é escolhido (import dinâmico).
+
+## Progresso (evolução, pontos fracos, dicas e plano de treino)
+- Tela `/progresso` (atalho "Progresso" no início), por modo (Single/Double). Dados: RPC `my_progress(versão)` com histórico de recordes, todas as jogadas registradas e o estilo dos charts.
+- Cada tentativa vem das jogadas registradas (o piugame só mostra as 50 últimas; o auto-sync ajuda a não perder) e dos recordes: recorde quebrado = nunca passou; recorde que já esteve quebrado = houve quebra antes do pass.
+- Nível: maior passado, conforto (último nível com ≥70% dos charts tentados passados) e alvo.
+- Pontos fracos: para cada padrão (twist, drill, corrida, bracket, pulo, jack, doublestep, footswitch, velocidade, resistência), compara os charts com ≥20% do padrão com o resto, perto do nível, descontando a taxa de quebra esperada pelo nível e a nota média do nível. Usa as duas versões (padrão é habilidade do jogador) e as tags da comunidade quando o chart não tem estilo do piucenter (músicas novas da Phoenix 2).
+- Dicas: muro de nível, charts travados (2+ quebras sem passar), ponto fraco/forte com charts para treinar, precisão (misses/greats), tendência das últimas 2 semanas e aviso de pouco histórico.
+- Plano de treino semanal (muda toda segunda, determinístico): 3 sessões com aquecimento, ponto fraco, consolidar, desafio e nota; metas com progresso calculado das jogadas da semana.
+- Recursos no admin: `evolution_chart`, `weakness`, `tips`, `training_plan`.

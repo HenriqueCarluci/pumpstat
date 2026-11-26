@@ -22,6 +22,8 @@ pat = {
   'web/src/pages/Online.jsx': [r"\['(Bom x1|Nível parecido)'"],
   'web/src/lib/auth.js': [r"': '([^']+)'", r"\|\| '([^']+)'"],
   'web/src/lib/queue.js': [r"Error\('([^']+)'\)", r"\? '([^']+)'", r": '([^']+)'\)"],
+  'web/src/pages/Progress.jsx': [r"(?m)^  \w+: '([^']+)',$", r"\['(?:speed|stamina)', '([^']+)'\]", r"(?:warm|focus|consolidate|challenge|score): '([^']+)'"],
+  'web/src/lib/plans.js': [r"label: '([^']+)'"],
 }
 for f, ps in pat.items():
     s = open(f, encoding='utf-8').read()
@@ -39,6 +41,6 @@ for f in sorted(glob.glob('supabase/migrations/*.sql')):
 JUNK = {'top', 'high', 'mid', 'low', 'bottom', 'twist', 'drill', 'run', 'bracket', 'jump', 'jack', 'doublestep', 'footswitch',
         'application/json', 'null', 'not found', 'payload grande demais', 'chave de ingestão inválida', 'chave inválida',
         'chave de sincronização inválida', 'formato do export do PIU Scores mudou', 'session_expired'}
-keys = [k for k in keys if k not in JUNK and '%' not in k]
+keys = [k for k in keys if k not in JUNK and re.search(r'[a-zà-ú]{2}', k, re.I) and not re.search(r'(?<!})%', k)]
 json.dump(keys, open(sys.argv[1], 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 print(len(keys))

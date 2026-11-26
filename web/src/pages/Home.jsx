@@ -6,7 +6,7 @@ import PiuConnect from '../components/PiuConnect.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronRight, History, Logo, Tag, Target, Users } from '../components/Icons.jsx';
+import { ChevronRight, History, Logo, Tag, Target, Users, TrendingUp } from '../components/Icons.jsx';
 
 export default function Home() {
   const { data, version, reload, presence } = useData();
@@ -70,6 +70,7 @@ export default function Home() {
 
       <div className="quick-links">
         <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>
+        <Link to="/progresso" className="ql"><TrendingUp size={16} /> {t('Progresso')}</Link>
         <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
         <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>
         <Link to="/jogadores" className="ql"><Users size={16} /> {t('Amigos')}</Link>

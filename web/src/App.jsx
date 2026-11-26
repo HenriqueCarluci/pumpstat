@@ -17,6 +17,7 @@ import QueueTV from './pages/QueueTV.jsx';
 import Venues from './pages/Venues.jsx';
 import Titles from './pages/Titles.jsx';
 import Players, { ComparePlayer } from './pages/Players.jsx';
+import Progress from './pages/Progress.jsx';
 import Recommend from './pages/Recommend.jsx';
 import Notifications from './pages/Notifications.jsx';
 import { useNotifications } from './lib/notify.js';
@@ -202,6 +203,7 @@ function Shell() {
             <Route path="/jogador/:id" element={<ComparePlayer />} />
             <Route path="/fila/:slug" element={<Queue />} />
             <Route path="/recomendacoes" element={<Recommend />} />
+            <Route path="/progresso" element={<Progress />} />
             <Route path="/notificacoes" element={<Notifications />} />
             <Route path="/online" element={<Online />} />
             <Route path="/admin" element={<Admin />} />

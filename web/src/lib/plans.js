@@ -7,12 +7,13 @@ export const FEATURES = [
   { id: 'recommendations_all', label: 'Todas as recomendações para subir PUMBILITY' },
   { id: 'history_full', label: 'Histórico completo de notas' },
   { id: 'style_full', label: 'Estilo do chart completo (% por padrão)' },
-  { id: 'evolution_chart', label: 'Gráfico de evolução', soon: true },
+  { id: 'evolution_chart', label: 'Gráficos de evolução' },
+  { id: 'tips', label: 'Dicas com base nos seus passes e quebras' },
   { id: 'export', label: 'Exportar tier e cards em imagem', soon: true },
   { id: 'auto_sync', label: 'Sincronização automática' },
   { id: 'push', label: 'Notificação com o app fechado', soon: true },
-  { id: 'training_plan', label: 'Plano de treino semanal e metas', soon: true },
-  { id: 'weakness', label: 'Pontos fracos por padrão', soon: true },
+  { id: 'training_plan', label: 'Plano de treino semanal e metas' },
+  { id: 'weakness', label: 'Pontos fracos por padrão' },
 ];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
