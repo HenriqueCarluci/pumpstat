@@ -1,4 +1,44 @@
 // Sessão HTTP com cookies para o piugame.com / phoenix.piugame.com (e o SSO do AM.PASS).
+import tls from 'node:tls';
+import { X509Certificate } from 'node:crypto';
+import { Agent } from 'undici';
+
+// O piugame.com não envia o certificado intermediário (o navegador baixa sozinho, o Node não).
+// Buscamos o intermediário indicado no próprio certificado (AIA "CA Issuers") e validamos normalmente com ele.
+const extraCAs = new Map(); // host -> PEM
+let dispatcher = null;
+
+async function intermediateFor(host) {
+  if (extraCAs.has(host)) return extraCAs.get(host);
+  const cert = await new Promise((resolve, reject) => {
+    // conexão só para ler o certificado do servidor; nenhum dado é enviado por ela
+    const sock = tls.connect({ host, port: 443, servername: host, rejectUnauthorized: false }, () => {
+      const c = sock.getPeerCertificate(false); sock.end(); resolve(c);
+    });
+    sock.on('error', reject);
+  });
+  const aia = (cert.infoAccess && cert.infoAccess['CA Issuers - URI']) || [];
+  let pem = null;
+  for (const u of aia) {
+    try {
+      const der = Buffer.from(await (await fetch(u)).arrayBuffer());
+      pem = new X509Certificate(der).toString();
+      break;
+    } catch { /* tenta o próximo */ }
+  }
+  extraCAs.set(host, pem);
+  return pem;
+}
+
+async function getDispatcher() {
+  if (dispatcher) return dispatcher;
+  const pems = [];
+  for (const h of ['piugame.com', 'phoenix.piugame.com', 'am-pass.net']) {
+    try { const p = await intermediateFor(h); if (p) pems.push(p); } catch { /* host sem o problema */ }
+  }
+  dispatcher = new Agent({ connect: { ca: [...tls.rootCertificates, ...new Set(pems)] } });
+  return dispatcher;
+}
 const UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Mobile Safari/537.36 PumpStat/0.1';
 
 export class PiuSession {
@@ -37,6 +77,7 @@ export class PiuSession {
     let body = form ? new URLSearchParams(form).toString() : undefined;
     for (let hop = 0; hop < 10; hop++) {
       const res = await fetch(url, {
+        dispatcher: await getDispatcher(),
         method,
         redirect: 'manual',
         headers: {
