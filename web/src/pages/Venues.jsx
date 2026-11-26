@@ -12,7 +12,7 @@ const ACCENTS = ['#ff4fd8', '#2bd2ff', '#ffd23f', '#8cff3a', '#ff9f2f'];
 
 /** Escolha da cidade e do fliperama (mesma organização do Fila Pump). */
 export default function Venues() {
-  const { plan } = useData();
+  const { plan } = useData() || {};
   const [venues, setVenues] = useState(null);
   const [city, setCity] = useState(null);
   const [error, setError] = useState('');

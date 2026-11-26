@@ -41,7 +41,7 @@ export function TeamLogo({ team, size = 16 }) {
 }
 
 export function TeamTag({ team }) {
-  const { plan } = useData();
+  const { plan } = useData() || {};
   if (!team || !isOn(plan, 'teams')) return null;
   return <span className={`team-tag ${team.logo ? 'has-logo' : ''}`} title={team.name}>{team.logo && <TeamLogo team={team} size={14} />}{team.tag || team.name}</span>;
 }
