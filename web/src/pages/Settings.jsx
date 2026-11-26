@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
+import { usePrefs } from '../lib/prefs.js';
+import { Chips } from './Songs.jsx';
 import PiuConnect from '../components/PiuConnect.jsx';
 import { timeAgo } from '../components/ui.jsx';
 import { signOut } from '../lib/auth.js';
@@ -9,6 +11,7 @@ import { VERSIONS } from '../lib/piu.js';
 export default function Settings() {
   const { data, version, reload, session } = useData();
   const [isPublic, setIsPublic] = useState(null);
+  const [prefs, setPrefs] = usePrefs();
   useEffect(() => { rpc('players', { p_version: version }).then((ps) => setIsPublic(ps.find((p) => p.me)?.public ?? true)).catch(() => {}); }, [version]);
   const togglePublic = async () => { const v = !isPublic; setIsPublic(v); try { await rpc('set_public', { p_public: v }); } catch { setIsPublic(!v); } };
 
@@ -18,6 +21,13 @@ export default function Settings() {
         <h3>Sincronizar com a Pump It Up</h3>
         <p className="muted small">Última sincronização da {VERSIONS[version].name}: {timeAgo(data.lastSync)}</p>
         <PiuConnect compact onDone={() => reload()} />
+      </section>
+
+      <section className="card">
+        <h3>Exibição</h3>
+        <p className="muted small">Tamanho da nota sobre a capa da música na tela de Tier</p>
+        <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
+          options={[['sm', 'Pequena'], ['md', 'Média'], ['lg', 'Grande']]} />
       </section>
 
       <section className="card">

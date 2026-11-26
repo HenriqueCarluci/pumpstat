@@ -367,6 +367,9 @@ a.q-city:hover { color: var(--text); }
 .tile-art { position: relative; }
 .tile-grade { position: absolute; left: 4px; bottom: 2px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.9)); }
 .tile-grade .grade-img.md { height: 34px; }
+.tile-grade.g-size-sm .grade-img.md { height: 20px; }
+.tile-grade.g-size-lg { left: 50%; bottom: 50%; transform: translate(-50%, 50%); }
+.tile-grade.g-size-lg .grade-img.md { height: 52px; }
 .tile-plate { position: absolute; right: 4px; bottom: 4px; filter: drop-shadow(0 1px 2px #000); }
 .tile-plate .plate-img.xs { height: 14px; }
 .tile.clear .tile-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0, 0, 0, 0.55), transparent 55%); pointer-events: none; }

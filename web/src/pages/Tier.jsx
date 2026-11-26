@@ -4,9 +4,11 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, TIERS } from '../lib/piu.js';
 import { Chips } from './Songs.jsx';
+import { usePrefs } from '../lib/prefs.js';
 
 export default function Tier() {
   const { data } = useData();
+  const [prefs] = usePrefs();
   const [params, setParams] = useSearchParams();
   const mode = params.get('m') || 'D';
   const levels = useMemo(() => [...new Set(data.charts.filter((c) => c.mode === mode).map((c) => c.level))].sort((a, b) => b - a), [data, mode]);
@@ -54,7 +56,7 @@ export default function Tier() {
                 <div className="tile-art">
                   <Jacket song={c.song} width="100%" />
                   {c.score != null && (
-                    <div className="tile-grade"><Grade grade={c.grade} broken={c.broken} size="md" /></div>
+                    <div className={`tile-grade g-size-${prefs.tierGrade}`}><Grade grade={c.grade} broken={c.broken} size="md" /></div>
                   )}
                   {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
                 </div>
