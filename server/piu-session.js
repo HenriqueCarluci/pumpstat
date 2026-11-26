@@ -30,7 +30,7 @@ async function intermediateFor(host) {
   return pem;
 }
 
-async function getDispatcher() {
+export async function getDispatcher() {
   if (dispatcher) return dispatcher;
   const pems = [];
   for (const h of ['piugame.com', 'phoenix.piugame.com', 'am-pass.net']) {

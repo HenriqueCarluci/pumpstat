@@ -4,7 +4,7 @@ import http from 'node:http';
 import { createCipheriv, createDecipheriv, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
-import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
+import { getDispatcher, isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
 import { resolveVideo, searchUrl } from './videos.js';
 import { refreshCatalog } from './catalog.js';
 
@@ -181,7 +181,9 @@ async function proxyImage(raw) {
   const key = u.toString();
   let hit = imgCache.get(key);
   if (!hit) {
+    const dispatcher = u.hostname.endsWith('piugame.com') ? await getDispatcher().catch(() => undefined) : undefined;
     const r = await fetch(key, {
+      dispatcher,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36',
         Accept: 'image/avif,image/webp,image/png,image/*,*/*;q=0.8',
