@@ -4,6 +4,7 @@ import { rpc } from '../lib/api.js';
 import { TIER_VOTES } from '../lib/piu.js';
 import { Grade, timeAgo } from './ui.jsx';
 import { t, tErr, tn } from '../lib/i18n.js';
+import { Check } from './Icons.jsx';
 
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
@@ -74,7 +75,7 @@ export default function ChartReviews({ chart, onSaved }) {
           <div className="rv-actions">
             <button className="btn" disabled={busy} onClick={() => save(false)}>{info.mine ? t('Atualizar avaliação') : t('Enviar avaliação')}</button>
             {info.mine && <button className="btn ghost" disabled={busy} onClick={() => save(true)}>{t('Remover')}</button>}
-            {saved && <span className="muted small">{t('Salvo')} ✓</span>}
+            {saved && <span className="muted small">{t('Salvo')} <Check size={14} /></span>}
           </div>
         </div>
       ) : (

@@ -5,6 +5,7 @@ import PiuConnect from '../components/PiuConnect.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
+import { ChevronRight, History, Logo, Tag, Target, Users } from '../components/Icons.jsx';
 
 export default function Home() {
   const { data, version, reload, presence } = useData();
@@ -45,7 +46,7 @@ export default function Home() {
     return (
       <div className="page">
         <section className="card hero-connect">
-          <div className="login-brand"><span className="logo">▲</span> StepClub</div>
+          <div className="login-brand"><Logo size={30} /> StepClub</div>
           <p className="center">{t('Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix.')}</p>
         </section>
         <section className="card"><PiuConnect onDone={() => reload()} /></section>
@@ -68,10 +69,10 @@ export default function Home() {
 
       <div className="quick-links">
         <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>
-        <Link to="/recomendacoes" className="ql">🎯 {t('Recomendadas')}</Link>
-        <Link to="/titulos" className="ql">🏷️ {t('Títulos')}</Link>
-        <Link to="/jogadores" className="ql">👥 {t('Amigos')}</Link>
-        <Link to="/recentes" className="ql">↻ {t('Recentes')}</Link>
+        <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
+        <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>
+        <Link to="/jogadores" className="ql"><Users size={16} /> {t('Amigos')}</Link>
+        <Link to="/recentes" className="ql"><History size={16} /> {t('Recentes')}</Link>
       </div>
 
       <section className="stats">
@@ -214,7 +215,7 @@ function TierCard({ version, points, estimated, history, charts }) {
               </Link>
             )
           ))}
-          <Link to="/recomendacoes" className="link">{t('Ver músicas recomendadas para subir')} ▸</Link>
+          <Link to="/recomendacoes" className="link">{t('Ver músicas recomendadas para subir')} <ChevronRight size={14} /></Link>
         </div>
       )}
     </section>

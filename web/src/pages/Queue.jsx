@@ -6,6 +6,7 @@ import {
 } from '../lib/queue.js';
 import { locale, t, tErr } from '../lib/i18n.js';
 import { rememberVenue } from '../lib/presence.js';
+import { ArrowUpToLine, MapPin, SkipForward, X } from '../components/Icons.jsx';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
@@ -65,7 +66,7 @@ export default function Queue() {
           {venue.venue.address && (
             <a className="q-addr" target="_blank" rel="noreferrer"
               href={`https://www.google.com/maps/search/?api=1&query=${venue.venue.latitude && venue.venue.longitude ? `${venue.venue.latitude},${venue.venue.longitude}` : encodeURIComponent(venue.venue.address)}`}>
-              📍 {venue.venue.address}
+              <MapPin size={14} /> {venue.venue.address}
             </a>
           )}
           <div className="q-geo small">{hasRadius(venue) ? t('Check-in por localização: só entra na fila quem estiver a até {n} m.', { n: venue.venue.radius_m }) : t('Para entrar na fila, permita o acesso à localização.')}</div>
@@ -137,8 +138,8 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
             {e.status === 'away' && <span className="tag">{t('ausente há {n} min', { n: mins(e.away_since) })}</span>}
             {isAdmin && (
               <span className="q-admin">
-                <button className="link" onClick={() => act(() => toFront(e.id))} title={t('Mover para o topo')}>⤒</button>
-                <button className="link" onClick={() => act(() => leaveQueue(e.id))} title={t('Remover')}>✕</button>
+                <button className="link" onClick={() => act(() => toFront(e.id))} title={t('Mover para o topo')}><ArrowUpToLine size={16} /></button>
+                <button className="link" onClick={() => act(() => leaveQueue(e.id))} title={t('Remover')}><X size={16} /></button>
               </span>
             )}
           </li>
@@ -147,7 +148,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
 
       {err && <div className="form-err">{err}</div>}
 
-      <button className="btn wide q-pass" disabled={busy || !playing} onClick={() => act(() => passTurn(machine.id))}>{t('Passar a vez')} ⏭</button>
+      <button className="btn wide q-pass" disabled={busy || !playing} onClick={() => act(() => passTurn(machine.id))}>{t('Passar a vez')} <SkipForward size={16} /></button>
 
       {mine ? (
         <div className="q-mine">
@@ -167,7 +168,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
         <form className="q-join" onSubmit={join}>
           <input placeholder={getSession() ? t('seu nome (ou deixe o da Pump)') : t('seu nome')} value={name} maxLength={24}
             onChange={(e) => setName(e.target.value)} required={!getSession()} />
-          <button className="btn" disabled={busy}>{busy ? (checkin ? t('Conferindo local…') : t('Entrando…')) : checkin ? `📍 ${t('Check-in e entrar')}` : t('Entrar na fila')}</button>
+          <button className="btn" disabled={busy}>{busy ? (checkin ? t('Conferindo local…') : t('Entrando…')) : checkin ? <><MapPin size={16} /> {t('Check-in e entrar')}</> : t('Entrar na fila')}</button>
         </form>
       )}
 

@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { SongRow } from '../components/ui.jsx';
 import { locale, t, tn } from '../lib/i18n.js';
 import { Grade } from '../components/ui.jsx';
+import { X } from '../components/Icons.jsx';
 
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]/gu, '');
 
@@ -76,7 +77,7 @@ export default function Songs() {
         <div className="grade-filter">
           <Grade grade={grade} size="sm" />
           <span>{t('Charts que você passou com {g}', { g: grade })} · {tn(list.reduce((n, s) => n + s.charts.filter(chartFilter).length, 0), '{n} chart', '{n} charts')}</span>
-          <button className="link" onClick={() => set('g', '')}>✕ {t('Limpar')}</button>
+          <button className="link" onClick={() => set('g', '')}><X size={14} /> {t('Limpar')}</button>
         </div>
       )}
       <div className="count muted">{tn(list.length, '{n} música', '{n} músicas')}</div>

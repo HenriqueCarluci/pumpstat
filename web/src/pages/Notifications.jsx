@@ -5,6 +5,7 @@ import { Grade, Jacket, timeAgo } from '../components/ui.jsx';
 import { canAlert, describe, linkFor } from '../lib/notify.js';
 import { Chips } from './Songs.jsx';
 import { t } from '../lib/i18n.js';
+import { ChevronRight } from '../components/Icons.jsx';
 
 export default function Notifications() {
   const { notifications: nt } = useData();
@@ -30,7 +31,7 @@ export default function Notifications() {
       <Chips value={filter} onChange={setFilter} options={[['all', t('Tudo')], ['friends', t('Amigos')], ['songs', t('Músicas novas')]]} />
       {!nt.loaded && <p className="empty">{t('Carregando…')}</p>}
       {nt.loaded && !items.length && (
-        <p className="empty">{t('Nada por aqui ainda. Quando seus amigos sincronizarem recordes novos ou sair música nova no catálogo, aparece aqui.')} <Link to="/jogadores">{t('Amigos')} ▸</Link></p>
+        <p className="empty">{t('Nada por aqui ainda. Quando seus amigos sincronizarem recordes novos ou sair música nova no catálogo, aparece aqui.')} <Link to="/jogadores" className="ic-row">{t('Amigos')} <ChevronRight size={14} /></Link></p>
       )}
       <div className="notifs">
         {items.map((n, i) => (

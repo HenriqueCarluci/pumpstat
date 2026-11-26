@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { canAlert } from '../lib/notify.js';
 import { t } from '../lib/i18n.js';
+import { CircleCheck, Gamepad2, MapPin, MessageCircle } from './Icons.jsx';
 
 const who = (p) => p.nickname || p.title || t('Um jogador');
 
@@ -22,7 +23,7 @@ export default function InviteToast() {
       if (alerted.current.has(i.invite)) continue;
       alerted.current.add(i.invite);
       if (canAlert() && Notification.permission === 'granted' && document.hidden) {
-        try { new Notification('StepClub', { body: `${i.kind === 'message' ? '💬' : '🎮'} ${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
+        try { new Notification('StepClub', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
       }
     }
   }, [presence.invites]);
@@ -37,7 +38,7 @@ export default function InviteToast() {
   if (invite && invite.kind === 'message') {
     return (
       <div className="toast invite">
-        <div className="toast-h">💬 {who(invite)}</div>
+        <div className="toast-h"><MessageCircle size={18} /> {who(invite)}</div>
         <div className="toast-msg">{invite.message}</div>
         <div className="bm-row">
           <button className="btn" onClick={() => { respond(invite, true); navigate(`/jogador/${invite.id}`); }}>{t('Responder')}</button>
@@ -49,9 +50,9 @@ export default function InviteToast() {
   if (invite) {
     return (
       <div className="toast invite">
-        <div className="toast-h">🎮 {t('{who} te chamou para jogar', { who: who(invite) })}</div>
+        <div className="toast-h"><Gamepad2 size={18} /> {t('{who} te chamou para jogar', { who: who(invite) })}</div>
         {invite.message && <div className="toast-msg">“{invite.message}”</div>}
-        {invite.venue && <div className="muted small">📍 {invite.venue}</div>}
+        {invite.venue && <div className="muted small ic-row"><MapPin size={14} /> {invite.venue}</div>}
         <div className="bm-row">
           <button className="btn" onClick={() => respond(invite, true)}>{t('Bora!')}</button>
           <button className="btn ghost" onClick={() => respond(invite, false)}>{t('Agora não')}</button>
@@ -63,7 +64,7 @@ export default function InviteToast() {
     return (
       <div className={`toast ${reply.status}`} onClick={() => { markReply(reply.invite); hide(`r${reply.invite}`); }}>
         <div className="toast-h">
-          {reply.status === 'accepted' ? `✅ ${t('{who} aceitou seu convite!', { who: who(reply) })}` : `${t('{who} não pode agora.', { who: who(reply) })}`}
+          {reply.status === 'accepted' ? <><CircleCheck size={18} /> {t('{who} aceitou seu convite!', { who: who(reply) })}</> : t('{who} não pode agora.', { who: who(reply) })}
         </div>
         <div className="muted small">{t('Toque para fechar')}</div>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { accessToken } from '../lib/auth.js';
 import { API_URL } from '../lib/config.js';
 import { t, tMsg } from '../lib/i18n.js';
+import { ChevronRight, RefreshCw } from './Icons.jsx';
 
 const AMPASS_RECOVER = 'https://am-pass.net/bbs/password_lost.php';
 
@@ -67,7 +68,7 @@ export function QuickSync({ onDone }) {
   return (
     <div className="piu-connect">
       <button className="btn wide" disabled={running} onClick={() => start({ useSaved: true })}>
-        {running ? t('Sincronizando…') : `⟳ ${t('Sincronizar agora')}`}
+        {running ? t('Sincronizando…') : <><RefreshCw size={16} /> {t('Sincronizar agora')}</>}
       </button>
       {err && <div className="form-err">{err}</div>}
       <JobStatus job={job} />
@@ -113,7 +114,7 @@ export default function PiuConnect({ onDone, compact }) {
       {help && (
         <p className="muted small help">
           {t('Contas AM.PASS com Google também têm e-mail. Se você nunca criou uma senha, peça uma em am-pass.net → Find My Account com o mesmo e-mail do Google e use aqui. O login com Google continua funcionando normalmente no jogo e no site.')}{' '}
-          <a href={AMPASS_RECOVER} target="_blank" rel="noreferrer">am-pass.net ▸</a>
+          <a href={AMPASS_RECOVER} target="_blank" rel="noreferrer">am-pass.net <ChevronRight size={14} /></a>
         </p>
       )}
       <p className="muted small">{t('A senha é usada só para entrar no piugame e não fica salva. Guardamos apenas a sessão do site (criptografada) para o botão "Sincronizar agora" funcionar sem pedir a senha de novo.')}</p>

@@ -5,6 +5,7 @@ import { rpc } from '../lib/api.js';
 import { TITLE_COLORS, VERSIONS } from '../lib/piu.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
+import { Check } from '../components/Icons.jsx';
 
 /** Títulos do jogador (os que tem e os que faltam, com o progresso), como na página "Title" do piugame. */
 export default function Titles() {
@@ -59,7 +60,7 @@ function TitleRow({ t: x }) {
   return (
     <div className={`title-row ${x.owned ? 'owned' : 'missing'}`}>
       <div className="title-name" style={{ backgroundImage: TITLE_COLORS[x.color ?? 0] }}>{x.name}</div>
-      {x.owned ? <span className="tag owned-tag">✓ {t('tenho')}</span> : x.condition && <div className="small muted">{x.condition}</div>}
+      {x.owned ? <span className="tag owned-tag ic-row"><Check size={12} /> {t('tenho')}</span> : x.condition && <div className="small muted">{x.condition}</div>}
       {!x.owned && pct != null && (
         <div className="title-prog">
           <div className="tier-bar"><i style={{ width: `${pct}%` }} /></div>

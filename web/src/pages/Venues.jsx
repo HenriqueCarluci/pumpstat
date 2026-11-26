@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { distanceM, getPosition, listVenues } from '../lib/queue.js';
 import { t, tErr } from '../lib/i18n.js';
+import { MapPin, PadArrow } from '../components/Icons.jsx';
 
 const CITY_ORDER = ['Natal', 'Fortaleza', 'São Paulo', 'Porto Alegre', 'Recife'];
 const ACCENTS = ['#ff4fd8', '#2bd2ff', '#ffd23f', '#8cff3a', '#ff9f2f'];
@@ -37,11 +38,11 @@ export default function Venues() {
 
   return (
     <div className="page venues">
-      <div className="v-title">↖ ↗<h1>{t('Fila').toUpperCase()}</h1>↙ ↘</div>
+      <div className="v-title"><span className="v-arrows"><PadArrow dir="ul" /><PadArrow dir="ur" /></span><h1>{t('Fila').toUpperCase()}</h1><span className="v-arrows"><PadArrow dir="dl" /><PadArrow dir="dr" /></span></div>
       {lastVenue && !city && (
         <Link to={`/fila/${lastVenue.slug}`} className="v-last">{t('Voltar para')} <b>{lastVenue.name}</b> · {lastVenue.city}</Link>
       )}
-      <button className="btn ghost wide" onClick={findNear} disabled={locating}>{locating ? t('Procurando…') : `📍 ${t('Pumps perto de mim')}`}</button>
+      <button className="btn ghost wide" onClick={findNear} disabled={locating}>{locating ? t('Procurando…') : <><MapPin size={16} /> {t('Pumps perto de mim')}</>}</button>
       {near && (
         <div className="v-near">
           {near.map((v) => (

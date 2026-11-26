@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { timeAgo } from './ui.jsx';
+import { CheckCheck, MessageCircle, Swords } from './Icons.jsx';
 
 /** Minichat com um amigo, com botão de chamar para x1. Atualiza a cada 5 s com a tela aberta. */
 export default function MiniChat({ user, name }) {
@@ -41,19 +42,19 @@ export default function MiniChat({ user, name }) {
   return (
     <section className="card minichat">
       <div className="row-between">
-        <h3>💬 {name || t('Jogador')}</h3>
+        <h3 className="ic-row"><MessageCircle size={18} /> {name || t('Jogador')}</h3>
         <span className="small">{online ? <><span className="dot-on" /> {t('online agora')}</> : <span className="muted">{t('offline')}</span>}</span>
       </div>
       <div className="mc-list" ref={box}>
         {msgs && !msgs.length && <p className="muted small center">{t('Nenhuma mensagem ainda. Diga oi ou chame para um x1!')}</p>}
         {(msgs || []).map((m) => (
           <div key={m.id} className={`mc-msg ${m.mine ? 'mine' : ''} ${m.kind}`}>
-            {m.kind === 'invite' && <b>⚔️ {t('Convite para jogar')}{m.message ? ': ' : ''}</b>}
+            {m.kind === 'invite' && <b className="ic-row"><Swords size={14} /> {t('Convite para jogar')}{m.message ? ': ' : ''}</b>}
             {m.message}
             <small>
               {timeAgo(m.at)}
               {m.kind === 'invite' && m.status !== 'pending' && ` · ${m.status === 'accepted' ? t('aceito') : t('recusado')}`}
-              {m.mine && m.kind === 'message' && m.status !== 'pending' && ' · ✓✓'}
+              {m.mine && m.kind === 'message' && m.status !== 'pending' && <> · <CheckCheck size={12} className="read" /></>}
             </small>
           </div>
         ))}
@@ -62,7 +63,7 @@ export default function MiniChat({ user, name }) {
         <input maxLength={140} placeholder={t('Escreva uma mensagem…')} value={text} onChange={(e) => setText(e.target.value)} />
         <button className="btn" disabled={busy || !text.trim()}>{t('Enviar')}</button>
       </form>
-      <button className="btn ghost wide" disabled={busy} onClick={() => send('invite', t('Bora um x1?'))}>⚔️ {t('Chamar para x1')}</button>
+      <button className="btn ghost wide" disabled={busy} onClick={() => send('invite', t('Bora um x1?'))}><Swords size={16} /> {t('Chamar para x1')}</button>
       {!online && <p className="muted tiny">{t('Se estiver offline, a pessoa vê quando abrir o app (convites valem por 2 h).')}</p>}
       {err && <div className="form-err">{err}</div>}
     </section>

@@ -9,6 +9,7 @@ import { topStyles, useStyles, youtubeUrl } from '../lib/style.js';
 import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
 import { t } from '../lib/i18n.js';
+import { ChevronDown, ChevronUp, PencilLine, Play, Users } from '../components/Icons.jsx';
 
 export default function Song() {
   const { id } = useParams();
@@ -33,7 +34,7 @@ export default function Song() {
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
           </div>
-          <a className="btn yt" href={youtubeUrl(song.title)} target="_blank" rel="noreferrer">▶ {t('Ver no YouTube')}</a>
+          <a className="btn yt" href={youtubeUrl(song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
         </div>
       </section>
 
@@ -84,12 +85,12 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
       <div className="cc-meta">
         {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
         {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
-        {c.stepArtist && <span className="tag">✎ {c.stepArtist}</span>}
+        {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
         {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
           <span className="tag community" title={t('Tags marcadas pela comunidade do StepClub')}>
-            👥 {c.community.tags.map((x) => t(REVIEW_TAGS.find(([k]) => k === x)?.[1] || x)).join(' · ')}
+            <Users size={12} /> {c.community.tags.map((x) => t(REVIEW_TAGS.find(([k]) => k === x)?.[1] || x)).join(' · ')}
           </span>
         )}
       </div>
@@ -97,7 +98,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
         <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title={t('Ver estilo do chart')}>
           {topStyles(style).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
           {style.nps != null && <span className="muted small">{t('{n} notas/s', { n: style.nps })}</span>}
-          <span className="muted small">{showStyle ? '▲' : '▼'}</span>
+          <span className="muted small">{showStyle ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
         </button>
       )}
       {style && showStyle && <StyleBars style={style} />}
@@ -112,7 +113,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
       <div className="cc-actions">
         {c.achievedAt && <span className="muted">{t('Recorde em {d}', { d: fmtDate(c.achievedAt) })}</span>}
         <span className="spacer" />
-        <a href={yt} target="_blank" rel="noreferrer" className="link">▶ YouTube</a>
+        <a href={yt} target="_blank" rel="noreferrer" className="link ic-row"><Play size={13} fill="currentColor" /> YouTube</a>
         <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? t('Fechar') : `${t('Avaliar')}${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
         <button className="link" onClick={() => setRank((r) => !r)}>{rank ? t('Fechar') : t('Ranking')}</button>
         <button className="link" onClick={toggle}>{open ? t('Fechar') : t('Histórico')}</button>

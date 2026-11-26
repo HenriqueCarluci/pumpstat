@@ -535,3 +535,18 @@ a.q-city:hover { color: var(--text); }
 .topbar a.brand { color: inherit; text-decoration: none; }
 .topbar .brand { cursor: pointer; border-radius: 10px; padding: 4px 6px; margin-left: -6px; }
 .topbar .brand:hover { background: rgba(255,255,255,.06); }
+
+/* ícones (lucide) e marca */
+.logo-mark { display: inline-block; vertical-align: middle; flex: none; }
+.brand, .login-brand { display: inline-flex; align-items: center; gap: 8px; }
+.ic-row { display: inline-flex; align-items: center; gap: 5px; }
+.btn svg, .ql svg, .link svg, .tag svg, .toast-h svg { vertical-align: -3px; flex: none; }
+.btn, .ql { gap: 6px; }
+.ql { display: inline-flex; align-items: center; }
+.tabbar a .ico { display: grid; place-items: center; height: 22px; }
+.tabbar a.on .ico svg { filter: drop-shadow(0 0 6px rgba(140, 255, 58, 0.55)); }
+.topbar .bell { display: inline-flex; align-items: center; }
+.toast-h { display: flex; align-items: center; gap: 8px; }
+.mc-msg .read { color: #42c6ff; vertical-align: -2px; }
+.v-arrows { display: inline-flex; gap: 6px; }
+.online-av svg { opacity: .8; }

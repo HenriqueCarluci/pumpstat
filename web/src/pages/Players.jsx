@@ -115,7 +115,7 @@ function SearchPlayers({ onChange }) {
   // busca enquanto digita (espera 250 ms entre teclas)
   useEffect(() => { const h = setTimeout(() => run(q.trim()), 250); return () => clearTimeout(h); }, [q]); // eslint-disable-line
   const add = async (p) => { await rpc('send_friend_request', { p_user: p.id }); await run(q.trim()); onChange(); };
-  const LABEL = { friends: `${t('Amigos')} ✓`, pending_out: t('Solicitação enviada') };
+  const LABEL = { friends: t('Amigos'), pending_out: t('Solicitação enviada') };
   return (
     <div className="typeahead">
       <input autoFocus placeholder={t('Digite o nickname da Pump…')} value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" />

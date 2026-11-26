@@ -7,6 +7,7 @@ import { QUICK_MESSAGES } from '../lib/presence.js';
 import { Ball } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
 import { pbTier } from '../lib/piu.js';
+import { Check, ChevronRight, Gamepad2, MapPin, Swords } from '../components/Icons.jsx';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
 
@@ -47,7 +48,7 @@ export default function Online() {
 
       {x1.length > 0 && (
         <section>
-          <h3>⚔️ {t('Sugestões de x1')}</h3>
+          <h3 className="ic-row"><Swords size={18} /> {t('Sugestões de x1')}</h3>
           <p className="muted small">{t('Jogadores online com PUMBILITY parecido com o seu (Phoenix 2).')}</p>
           <div className="online-list">{x1.map((p) => <OnlineRow key={`x-${p.id}`} p={p} open={open === `x-${p.id}`} onToggle={() => setOpen(open === `x-${p.id}` ? null : `x-${p.id}`)} onSent={load} />)}</div>
         </section>
@@ -60,7 +61,7 @@ export default function Online() {
           <div className="online-list">{list.map((p) => <OnlineRow key={p.id} p={p} open={open === p.id} onToggle={() => setOpen(open === p.id ? null : p.id)} onSent={load} />)}</div>
         </section>
       )}
-      <p className="muted tiny"><Link to="/jogadores">{t('Amigos')} ▸</Link></p>
+      <p className="muted tiny"><Link to="/jogadores" className="ic-row">{t('Amigos')} <ChevronRight size={14} /></Link></p>
     </div>
   );
 }
@@ -80,7 +81,7 @@ function OnlineRow({ p, open, onToggle, onSent }) {
     <div className="online-row">
       <div className="online-main">
         <span className="q-avatar online-av">
-          {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : '🎮'}
+          {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : <Gamepad2 size={20} />}
           <i className="dot-on" />
         </span>
         <div className="online-info">
@@ -95,11 +96,11 @@ function OnlineRow({ p, open, onToggle, onSent }) {
           )}
           <div className="online-tags">
             {match && <span className={`tag ${match[1]}`}>{t(match[0])}</span>}
-            {p.same_venue ? <span className="tag here">📍 {t('No mesmo fliperama')}</span> : p.venue && <span className="tag">📍 {p.venue}</span>}
+            {p.same_venue ? <span className="tag here ic-row"><MapPin size={12} /> {t('No mesmo fliperama')}</span> : p.venue && <span className="tag ic-row"><MapPin size={12} /> {p.venue}</span>}
             {p.friend && <span className="tag">{t('amigo')}</span>}
           </div>
         </div>
-        {sent ? <span className="tag">{t('Convite enviado')} ✓</span>
+        {sent ? <span className="tag ic-row">{t('Convite enviado')} <Check size={12} /></span>
           : <button className="btn" onClick={onToggle}>{t('Chamar')}</button>}
       </div>
       {open && !sent && (

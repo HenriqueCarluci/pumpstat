@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { Person, useVenue } from './Queue.jsx';
 import { locale, t } from '../lib/i18n.js';
+import { Logo } from '../components/Icons.jsx';
 
 /** Tela para deixar na TV do clube: quem está jogando e os próximos, em letras grandes. */
 export default function QueueTV() {
@@ -11,7 +12,7 @@ export default function QueueTV() {
   return (
     <div className="tv">
       <header>
-        <div className="brand"><span className="logo">▲</span> {venue.venue.name}</div>
+        <div className="brand"><Logo size={34} /> {venue.venue.name}</div>
         <div className="tv-clock">{new Date().toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' })}</div>
       </header>
       <div className="tv-grid">

@@ -23,6 +23,7 @@ import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
 import { t, tErr } from './lib/i18n.js';
+import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
 
 const DataCtx = createContext(null);
 export const useData = () => useContext(DataCtx);
@@ -77,7 +78,7 @@ function PublicQueue() {
         <Route path="*" element={
           <div className="app">
             <header className="topbar">
-              <a href="#/fila" className="brand"><span className="logo">▲</span> StepClub</a>
+              <a href="#/fila" className="brand"><Logo /> StepClub</a>
               <a className="btn ghost" href="#/">{t('Entrar')}</a>
             </header>
             <main className="content">
@@ -155,9 +156,9 @@ function Shell() {
   return (
     <div className="app">
       <header className="topbar">
-        <NavLink to="/" end className="brand" title={t('Início')}><span className="logo">▲</span> StepClub</NavLink>
+        <NavLink to="/" end className="brand" title={t('Início')}><Logo /> StepClub</NavLink>
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>
-          🔔{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
+          <Bell size={21} strokeWidth={2} />{notifications?.unread > 0 && <span className="badge">{notifications.unread > 9 ? '9+' : notifications.unread}</span>}
         </NavLink>
         <div className="seg" role="tablist" aria-label={t('Versão')}>
           {Object.values(VERSIONS).map((v) => (
@@ -201,11 +202,11 @@ function Shell() {
       <InviteToast />
 
       <nav className="tabbar">
-        <Tab to="/" icon="◉" label={t('Início')} />
-        <Tab to="/musicas" icon="♫" label={t('Músicas')} />
-        <Tab to="/tier" icon="▦" label={t('Tier')} />
-        <Tab to="/fila" icon="☰" label={t('Fila')} />
-        <Tab to="/ajustes" icon="⚙" label={t('Ajustes')} />
+        <Tab to="/" icon={<HomeIcon size={21} />} label={t('Início')} />
+        <Tab to="/musicas" icon={<Music2 size={21} />} label={t('Músicas')} />
+        <Tab to="/tier" icon={<LayoutGrid size={21} />} label={t('Tier')} />
+        <Tab to="/fila" icon={<ListOrdered size={21} />} label={t('Fila')} />
+        <Tab to="/ajustes" icon={<SettingsIcon size={21} />} label={t('Ajustes')} />
       </nav>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { resetPassword, signIn, signInWithGoogle, signUp } from '../lib/auth.js';
 import { t, tErr } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
+import { Logo } from '../components/Icons.jsx';
 
 export default function Login({ notice }) {
   const [mode, setMode] = useState('in'); // in | up | reset
@@ -31,7 +32,7 @@ export default function Login({ notice }) {
   return (
     <div className="login">
       <div className="login-card">
-        <div className="login-top"><div className="login-brand"><span className="logo">▲</span> StepClub</div><LangPicker compact /></div>
+        <div className="login-top"><div className="login-brand"><Logo size={30} /> StepClub</div><LangPicker compact /></div>
         <p className="muted center">{t('Seus recordes de Pump It Up e o clube num lugar só.')}</p>
         <form onSubmit={submit}>
           <label className="field">{t('E-mail')}
