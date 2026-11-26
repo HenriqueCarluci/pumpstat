@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import MyTeam from './pages/MyTeam.jsx';
+import Recommend from './pages/Recommend.jsx';
 import Tour from './components/Tour.jsx';
 import { TrainingAddChip } from './components/TrainingToggle.jsx';
 import { Ball as B2 } from './components/ui.jsx';
@@ -69,6 +70,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/plano" element={<P />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

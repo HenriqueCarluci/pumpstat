@@ -1258,3 +1258,8 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
   .plan-item .kind { grid-column: 1 / -1; }
   .train-chip { padding: 0 8px; font-size: 11.5px; }
 }
+
+/* Recomendadas: botão Treinar em cada música */
+.rec-wrap { border-radius: 12px; background: var(--card, rgba(255,255,255,.05)); }
+.rec-wrap .rec { background: transparent; }
+.rec-actions { display: flex; justify-content: flex-end; padding: 0 8px 8px; margin-top: -4px; }

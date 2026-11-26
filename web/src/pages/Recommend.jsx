@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket } from '../components/ui.jsx';
 import { chartTier, fmtScore, TIERS } from '../lib/piu.js';
@@ -39,7 +40,8 @@ export default function Recommend() {
           const c = r.chart;
           const tier = TIERS.find((x) => x.id === chartTier(c));
           return (
-            <Link key={c.id} to={`/musica/${c.songId}`} className="rec">
+            <div key={c.id} className="rec-wrap">
+            <Link to={`/musica/${c.songId}?c=${c.id}`} className="rec">
               <Jacket song={c.song} width={84} />
               <div className="rec-main">
                 <div className="title">{c.song.title}</div>
@@ -57,6 +59,8 @@ export default function Recommend() {
               </div>
               <div className="rec-gain"><b>+{r.gain.toFixed(1)}</b><small>PUMBILITY</small></div>
             </Link>
+            <div className="rec-actions"><TrainingAddChip chart={c} /></div>
+            </div>
           );
         })}
       </div>
