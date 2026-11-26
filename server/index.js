@@ -221,7 +221,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     // ajuda/feedback: a mensagem já foi salva no Supabase; aqui só avisamos o suporte por e-mail.
-    // FEEDBACK_WEBHOOK é o endpoint do FormSubmit (https://formsubmit.co/ajax/<destino>), configurado no Render.
+    // FEEDBACK_WEBHOOK é o app da Web do Apps Script "StepClub Suporte" (na conta Google do dono), que envia o e-mail.
+    // FEEDBACK_TOKEN é o segredo que o script confere antes de enviar.
     if (req.method === 'POST' && url.pathname === '/api/feedback') {
       const hook = process.env.FEEDBACK_WEBHOOK;
       if (!hook) return send(res, 202, { emailed: false }, origin);
@@ -236,6 +237,7 @@ const server = http.createServer(async (req, res) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: 'https://stepclub.onrender.com', Referer: 'https://stepclub.onrender.com/' },
         body: JSON.stringify({
+          _token: process.env.FEEDBACK_TOKEN || '',
           _subject: `StepClub · ${label} #${Number(id) || ''}`, _template: 'table', _captcha: 'false',
           _replyto: String(contact || user.email || ''),
           Tipo: label, Mensagem: String(message || '').slice(0, 2000), 'Responder para': String(contact || '—'),
@@ -244,7 +246,8 @@ const server = http.createServer(async (req, res) => {
           Aparelho: m2.ua || '—', 'Tamanho da tela': m2.screen || '—', Build: m2.build || '—',
         }),
       }).catch(() => null);
-      const ok = !!r && r.ok;
+      const body = r && r.ok ? await r.json().catch(() => ({})) : null;
+      const ok = !!body && body.ok !== false;
       if (ok && id) await rpcAsUser(token, 'feedback_emailed', { p_id: Number(id) }).catch(() => {});
       return send(res, 200, { emailed: ok }, origin);
     }

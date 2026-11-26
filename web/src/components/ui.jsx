@@ -46,17 +46,19 @@ export function Jacket({ song, width = 96, className = '' }) {
 }
 
 /** Bolinha pequena de nível colorida pelo grade obtido (lista de músicas). */
-export function ChartPip({ chart }) {
-  const gt = chart.score != null ? gradeTier(chart.grade) : 'none';
+export function ChartPip({ chart, legacy }) {
+  const gt = chart.score != null ? gradeTier(chart.grade) : legacy ? gradeTier(legacy.grade) : 'none';
+  const title = chart.score != null ? ` · ${fmtScore(chart.score)} ${chart.grade || ''}`
+    : legacy ? ` · ${t('Legado Phoenix')}: ${fmtScore(legacy.score)} ${legacy.grade || ''}` : '';
   return (
-    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${gt} ${chart.broken ? 'broken' : ''}`}
-      title={`${chartLabel(chart)}${chart.score != null ? ` · ${fmtScore(chart.score)} ${chart.grade || ''}` : ''}`}>
+    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${gt} ${chart.broken ? 'broken' : ''} ${legacy ? 'legacy' : ''}`}
+      title={`${chartLabel(chart)}${title}`}>
       {chart.mode === 'C' ? `×${chart.level}` : chart.level}
     </span>
   );
 }
 
-export function SongRow({ song, filter }) {
+export function SongRow({ song, filter, legacy }) {
   const charts = filter ? song.charts.filter(filter) : song.charts;
   return (
     <Link to={`/musica/${song.id}`} className="songrow">
@@ -64,7 +66,7 @@ export function SongRow({ song, filter }) {
       <div className="songrow-main">
         <div className="title">{song.title}</div>
         <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${song.bpm} BPM` : ''}</div>
-        <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} />)}</div>
+        <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} legacy={legacy ? legacy(c) : null} />)}</div>
       </div>
     </Link>
   );

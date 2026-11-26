@@ -6,6 +6,12 @@ export const VERSIONS = {
   phoenix: { id: 'phoenix', name: 'Phoenix', short: 'P1', site: 'https://phoenix.piugame.com' },
 };
 
+/** Recorde legado da Phoenix num chart da Phoenix 2 que ainda não tem recorde na P2 (ou null). */
+export function legacyOf(c, version, show) {
+  if (!show || version !== 'phoenix2' || c.score != null || c.otherScore == null) return null;
+  return { score: c.otherScore, grade: c.otherGrade, plate: c.otherPlate };
+}
+
 export const GRADE_ORDER = ['SSS+', 'SSS', 'SS+', 'SS', 'S+', 'S', 'AAA+', 'AAA', 'AA+', 'AA', 'A+', 'A', 'B', 'C', 'D', 'F'];
 export const gradeRank = (g) => (g ? GRADE_ORDER.indexOf(g) : 99);
 

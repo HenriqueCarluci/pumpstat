@@ -4,12 +4,18 @@ import { useData } from '../App.jsx';
 import { SongRow } from '../components/ui.jsx';
 import { locale, t, tn } from '../lib/i18n.js';
 import { Grade } from '../components/ui.jsx';
-import { X } from '../components/Icons.jsx';
+import { History, X } from '../components/Icons.jsx';
+import { usePrefs } from '../lib/prefs.js';
+import { legacyOf } from '../lib/piu.js';
 
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]/gu, '');
 
 export default function Songs() {
-  const { data } = useData();
+  const { data, version } = useData();
+  const [prefs, setPrefs] = usePrefs();
+  const isP2 = version === 'phoenix2';
+  const showLegacy = isP2 && prefs.legacyP1;
+  const legacy = (c) => legacyOf(c, version, showLegacy);
   const [params, setParams] = useSearchParams();
   const q = params.get('q') || '';
   const mode = params.get('m') || 'all';
@@ -28,7 +34,9 @@ export default function Songs() {
   const chartFilter = useMemo(() => (c) =>
     (mode === 'all' || c.mode === mode) &&
     (c.mode === 'C' || (c.level >= minL && c.level <= maxL)) &&
-    (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null : c.score != null && !c.broken && c.plate !== 'PG')) &&
+    (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null
+      : status === 'legacy' ? c.score == null && c.otherScore != null
+        : c.score != null && !c.broken && c.plate !== 'PG')) &&
     (!grade || (c.score != null && !c.broken && c.grade === grade)),
   [mode, minL, maxL, status, grade]);
 
@@ -54,7 +62,14 @@ export default function Songs() {
         <Chips value={mode} onChange={(v) => set('m', v === 'all' ? '' : v)}
           options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double'], ['C', 'Co-op']]} />
         <Chips value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
-          options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['improve', t('Sem PG')]]} />
+          options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['improve', t('Sem PG')],
+            ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />
+        {isP2 && (
+          <button className={`chip-toggle ${prefs.legacyP1 ? 'on' : ''}`} onClick={() => { setPrefs({ legacyP1: !prefs.legacyP1 }); if (status === 'legacy') set('s', ''); }}
+            title={t('Mostrar os recordes da Phoenix nos charts que você ainda não jogou na Phoenix 2')}>
+            <History size={14} /> {t('Legado P1')}
+          </button>
+        )}
         <div className="range">
           <label>{t('Nível')}
             <select value={minL} onChange={(e) => set('min', e.target.value)}>
@@ -80,9 +95,11 @@ export default function Songs() {
           <button className="link" onClick={() => set('g', '')}><X size={14} /> {t('Limpar')}</button>
         </div>
       )}
-      <div className="count muted">{tn(list.length, '{n} música', '{n} músicas')}</div>
+      <div className="count muted">{tn(list.length, '{n} música', '{n} músicas')}
+        {showLegacy && <span className="legacy-note"> · <span className="pip legacy t-a single">P1</span> {t('= recorde legado da Phoenix, ainda sem nota na Phoenix 2')}</span>}
+      </div>
       <div className="songlist">
-        {list.slice(0, 400).map((s) => <SongRow key={s.id} song={s} filter={chartFilter} />)}
+        {list.slice(0, 400).map((s) => <SongRow key={s.id} song={s} filter={chartFilter} legacy={showLegacy ? legacy : null} />)}
         {list.length > 400 && <p className="muted center">{t('Mostrando 400. Refine a busca para ver o resto.')}</p>}
       </div>
     </div>

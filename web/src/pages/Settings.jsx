@@ -55,6 +55,13 @@ export default function Settings() {
         <p className="muted small">{t('Tamanho da nota sobre a capa da música na tela de Tier')}</p>
         <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
           options={[['sm', t('Pequena')], ['md', t('Média')], ['lg', t('Grande')]]} />
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={!!prefs.legacyP1} onChange={(e) => setPrefs({ legacyP1: e.target.checked })} />
+          <span>
+            <b>{t('Mostrar recordes legados da Phoenix na Phoenix 2')}</b><br />
+            <small className="muted">{t('Nos charts que você ainda não jogou na Phoenix 2, mostra a nota da Phoenix marcada como P1. Ela não entra nas contagens, filtros de grade nem no PUMBILITY da Phoenix 2.')}</small>
+          </span>
+        </label>
       </section>
 
       <section className="card">

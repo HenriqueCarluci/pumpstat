@@ -2,7 +2,9 @@
 import { useEffect, useState } from 'react';
 
 const KEY = 'stepclub:prefs';
-const DEFAULTS = { tierGrade: 'md' }; // tamanho da nota sobre a capa no Tier: sm | md | lg
+// tierGrade: tamanho da nota sobre a capa no Tier (sm | md | lg).
+// legacyP1: na Phoenix 2, mostrar (separado e marcado) o recorde da Phoenix nos charts que você ainda não jogou na P2.
+const DEFAULTS = { tierGrade: 'md', legacyP1: true };
 
 function read() {
   try { return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch { return { ...DEFAULTS }; }

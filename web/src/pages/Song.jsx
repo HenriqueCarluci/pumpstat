@@ -9,7 +9,8 @@ import { topStyles, useStyles, youtubeUrl } from '../lib/style.js';
 import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
 import { t } from '../lib/i18n.js';
-import { ChevronDown, ChevronUp, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { ChevronDown, ChevronUp, History, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { usePrefs } from '../lib/prefs.js';
 import { entitlements } from '../lib/plans.js';
 import { Crown } from '../components/Icons.jsx';
 
@@ -21,6 +22,7 @@ export default function Song() {
   if (!song) return <div className="page"><p className="empty">{t('Música não encontrada nesta versão.')}</p><Link to="/musicas">{t('Voltar')}</Link></div>;
 
   const other = version === 'phoenix2' ? VERSIONS.phoenix : VERSIONS.phoenix2;
+  const hasLegacy = version === 'phoenix2' && song.charts.some((c) => c.otherScore != null);
   const groups = [['S', 'Single'], ['D', 'Double'], ['C', 'Co-op']]
     .map(([m, label]) => [label, song.charts.filter((c) => c.mode === m)])
     .filter(([, cs]) => cs.length);
@@ -40,6 +42,8 @@ export default function Song() {
         </div>
       </section>
 
+      {hasLegacy && <LegacyToggle />}
+
       {groups.map(([label, charts]) => (
         <section key={label}>
           <h3 className="group-h">{label}</h3>
@@ -50,8 +54,21 @@ export default function Song() {
   );
 }
 
+export function LegacyToggle() {
+  const [prefs, setPrefs] = usePrefs();
+  return (
+    <button className={`chip-toggle ${prefs.legacyP1 ? 'on' : ''}`} onClick={() => setPrefs({ legacyP1: !prefs.legacyP1 })}
+      title={t('Mostrar os recordes da Phoenix nos charts que você ainda não jogou na Phoenix 2')}>
+      <History size={14} /> {prefs.legacyP1 ? t('Esconder legado P1') : t('Mostrar legado P1')}
+    </button>
+  );
+}
+
 function ChartCard({ chart: c, version, other, style, onReviewed }) {
   const { plan } = useData();
+  const [prefs] = usePrefs();
+  const legacyMode = version === 'phoenix2';
+  const showOther = c.otherScore != null && (!legacyMode || prefs.legacyP1);
   const ent = entitlements(plan);
   const months = ent.can('history_full') ? null : ent.limit('history_months');
   const histCut = months ? new Date(Date.now() - months * 30.4 * 86400000) : null;
@@ -109,9 +126,9 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
       )}
       {style && showStyle && <StyleBars style={style} locked={!ent.can('style_full')} />}
 
-      {c.otherScore != null && (
-        <div className="cc-other">
-          {other.name}: <b>{fmtScore(c.otherScore)}</b> <Grade grade={c.otherGrade} size="sm" /> <Plate plate={c.otherPlate} />
+      {showOther && (
+        <div className={`cc-other ${legacyMode ? 'legacy' : ''}`}>
+          {legacyMode ? <span className="legacy-tag"><History size={12} /> {t('Legado Phoenix')}</span> : `${other.name}:`} <b>{fmtScore(c.otherScore)}</b> <Grade grade={c.otherGrade} size="sm" /> <Plate plate={c.otherPlate} />
           {c.score != null && <span className={c.score >= c.otherScore ? 'up' : 'down'}> {c.score >= c.otherScore ? '▲' : '▼'} {fmtScore(Math.abs(c.score - c.otherScore))}</span>}
         </div>
       )}

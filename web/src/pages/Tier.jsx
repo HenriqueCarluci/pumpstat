@@ -2,14 +2,16 @@ import { useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
-import { chartTier, fmtScore, gradeRank, TIERS } from '../lib/piu.js';
+import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
+import { LegacyToggle } from './Song.jsx';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
 
 export default function Tier() {
-  const { data } = useData();
+  const { data, version } = useData();
   const [prefs] = usePrefs();
+  const legacy = (c) => legacyOf(c, version, prefs.legacyP1);
   const [params, setParams] = useSearchParams();
   const mode = params.get('m') || 'D';
   const levels = useMemo(() => [...new Set(data.charts.filter((c) => c.mode === mode).map((c) => c.level))].sort((a, b) => a - b), [data, mode]);
@@ -26,6 +28,8 @@ export default function Tier() {
   const played = charts.filter((c) => c.score != null);
   const clears = played.filter((c) => !c.broken);
   const best = [...clears].sort((a, b) => gradeRank(a.grade) - gradeRank(b.grade))[0];
+  const legacyN = charts.filter((c) => legacy(c)).length;
+  const hasLegacy = version === 'phoenix2' && charts.some((c) => c.score == null && c.otherScore != null);
 
   return (
     <div className="page">
@@ -43,28 +47,36 @@ export default function Tier() {
         <div>
           <div className="big">{clears.length}<span className="muted">/{charts.length}</span></div>
           <div className="muted">{t('clears · {n} quebrados', { n: played.length - clears.length })}</div>
+          {legacyN > 0 && <div className="muted small">{t('+{n} com recorde legado da Phoenix', { n: legacyN })}</div>}
         </div>
         {best && <div className="tier-best"><span className="muted">{t('melhor')}</span><Grade grade={best.grade} size="sm" /></div>}
       </section>
+
+      {hasLegacy && <LegacyToggle />}
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
           <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
           <div className="tier-grid">
-            {g.charts.map((c) => (
-              <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : ''}`}
+            {g.charts.map((c) => { const lg = legacy(c); return (
+              <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
                 <div className="tile-art">
                   <Jacket song={c.song} width="100%" />
                   {c.score != null && (
                     <div className={`tile-grade g-size-${prefs.tierGrade}`}><Grade grade={c.grade} broken={c.broken} size="md" /></div>
                   )}
+                  {lg && (
+                    <div className={`tile-grade legacy g-size-${prefs.tierGrade}`}><Grade grade={lg.grade} size="md" /></div>
+                  )}
+                  {lg && <div className="tile-legacy" title={t('Legado Phoenix')}>P1</div>}
                   {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
                 </div>
                 <div className="tile-name">{c.song.title}</div>
                 {c.score != null && <div className="tile-score">{fmtScore(c.score)}</div>}
+                {lg && <div className="tile-score legacy">P1 · {fmtScore(lg.score)}</div>}
               </Link>
-            ))}
+            ); })}
           </div>
         </section>
       ))}
