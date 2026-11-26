@@ -208,3 +208,5 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Estilo das músicas novas da Phoenix 2: padrões do PIU Scores (`charts.skills`) e tags da comunidade entram nos pontos fracos e no plano de treino.
 - Planos: cada pessoa vê só o preço da sua região (pelo fuso do aparelho; idioma como reserva); o admin pode conferir as outras.
 - Página da música: notas dos amigos em cada chart, com a diferença para a sua; vindo do Tier, o chart clicado fica em destaque.
+- Progresso → Pontos fracos: gráficos de setor de passes e quebras pelo padrão principal de cada chart (cor fixa por padrão).
+- Progresso → Rival (Phoenix 2): um amigo escolhido (`set_my_rival`/`my_rival`); PUMBILITY, maior S/D, charts passados, confronto direto (setor), clears por nível lado a lado e listas "onde ele está na frente", "só ele passou" e "onde você está na frente".

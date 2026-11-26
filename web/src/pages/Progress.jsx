@@ -3,15 +3,16 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { cachedVersion, fetchVersion, rpc } from '../lib/api.js';
 import {
-  chartAttempts, clearTimeline, levelStats, parseProgress, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
+  chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, PATTERNS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
 } from '../lib/insights.js';
+import Rival from './Rival.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
 import { entitlements } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball, Jacket } from '../components/ui.jsx';
-import { ChartTable, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
+import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
 import { Chips } from './Songs.jsx';
 import { Check, Crown, Lock, Target } from '../components/Icons.jsx';
 
@@ -75,10 +76,13 @@ export default function Progress() {
     const lvl = playerLevel(stats);
     const othLvl = a.oth ? playerLevel(levelStats(a.oth.attempts, mode)) : null;
     const weak = weaknesses(weaknessSums(a.attempts, a.prog, mode, lvl), a.oth ? weaknessSums(a.oth.attempts, a.oth.prog, mode, othLvl) : new Map());
+    const s1 = patternShare(a.attempts, a.prog, mode, lvl), s2 = a.oth ? patternShare(a.oth.attempts, a.oth.prog, mode, othLvl) : { pass: {}, fail: {} };
+    const sum = (x, y) => Object.fromEntries(PATTERNS.map((p) => [p, (x[p] || 0) + (y[p] || 0)]));
+    const share = { pass: sum(s1.pass, s2.pass), fail: sum(s1.fail, s2.fail) };
     const tipList = makeTips(data, a.prog, a.attempts, mode, lvl, weak);
     const recs = recommendations(version, data.charts);
     const planW = trainingPlan(version, data, a.prog, a.attempts, mode, lvl, weak, [...recs.improve, ...recs.fresh]);
-    return { stats, lvl, weak, tipList, plan: planW };
+    return { stats, lvl, weak, tipList, plan: planW, share };
   }, [a, mode, data, version]);
 
   return (
@@ -86,15 +90,16 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', t('Evolução')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')]]} />
-        <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />
+          options={[['evolucao', t('Evolução')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ['rival', t('Rival')]]} />
+        {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
-      {!r && !err && <p className="empty">{t('Carregando…')}</p>}
+      {!r && !err && tab !== 'rival' && <p className="empty">{t('Carregando…')}</p>}
       {r && tab === 'evolucao' && (ent.can('evolution_chart') ? <Evolution a={a} r={r} mode={mode} /> : <Locked />)}
       {r && tab === 'fracos' && (ent.can('weakness') ? <Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /> : <Locked />)}
       {r && tab === 'dicas' && (ent.can('tips') ? <Tips r={r} mode={mode} /> : <Locked />)}
       {r && tab === 'plano' && (ent.can('training_plan') ? <Plan r={r} /> : <Locked />)}
+      {tab === 'rival' && (ent.can('rival') ? <Rival /> : <Locked />)}
     </div>
   );
 }
@@ -176,6 +181,35 @@ function Evolution({ a, r, mode }) {
   );
 }
 
+// ---------- Gráficos de setor: onde você passa e onde você quebra ----------
+// cor fixa por padrão (a cor segue o padrão, nunca a posição), paleta validada para fundo escuro
+const PATTERN_COLOR = { twist: '#338ced', drill: '#e76624', run: '#00a888', bracket: '#d28e05', jump: '#e24d8b', jack: '#0aac23', doublestep: '#9887ef', footswitch: '#eb6263' };
+function slicesOf(counts) {
+  const total = Object.values(counts).reduce((a, v) => a + v, 0);
+  if (!total) return [];
+  const big = Object.entries(counts).filter(([, v]) => v / total >= 0.04).sort((a, b) => b[1] - a[1]);
+  const rest = total - big.reduce((a, [, v]) => a + v, 0);
+  return [...big.map(([p, v]) => ({ key: p, name: dimName(p), value: v, color: PATTERN_COLOR[p] })),
+    ...(rest > 0 ? [{ key: 'other', name: t('Outros'), value: rest, color: '#6b6f78' }] : [])];
+}
+function ShareDonuts({ share }) {
+  const pass = slicesOf(share.pass), fail = slicesOf(share.fail);
+  if (!pass.length && !fail.length) return null;
+  const n = (x) => x.reduce((a, s) => a + s.value, 0);
+  return (
+    <section className="card">
+      <h3>{t('Onde você passa e onde você quebra')}</h3>
+      <p className="muted small">{t('Cada chart conta no padrão que mais pesa nele. Um padrão com fatia maior nas quebras do que nos passes é um ponto fraco; o contrário, um ponto forte.')}</p>
+      <div className="donut-pair">
+        <div><h4 className="center">{t('Passes')}</h4><Donut slices={pass} label={t('Passes')} center={[fmtNum(n(pass)), t('passes')]} /></div>
+        <div><h4 className="center">{t('Quebras')}</h4>{fail.length ? <Donut slices={fail} label={t('Quebras')} center={[fmtNum(n(fail)), t('quebras')]} /> : <p className="muted small center">{t('Nenhuma quebra registrada perto do seu nível.')}</p>}</div>
+      </div>
+      <ChartTable head={[t('Padrão'), t('Passes'), t('Quebras')]}
+        rows={PATTERNS.filter((p) => share.pass[p] || share.fail[p]).map((p) => [dimName(p), share.pass[p] || 0, share.fail[p] || 0])} />
+    </section>
+  );
+}
+
 // ---------- Pontos fracos ----------
 function Weak({ r, mode, hasOther, otherName }) {
   const list = r.weak;
@@ -183,6 +217,7 @@ function Weak({ r, mode, hasOther, otherName }) {
   return (
     <>
       <LevelSummary lvl={r.lvl} mode={mode} />
+      <ShareDonuts share={r.share} />
       <section className="card">
         <h3>{t('Pontos fracos e fortes por padrão')}</h3>
         <p className="muted small">

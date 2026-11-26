@@ -153,3 +153,99 @@ export function ChartTable({ head, rows }) {
     </details>
   );
 }
+
+/**
+ * Gráfico de setor (rosca). slices: [{ key, name, value, color }]. Mostra % em cada fatia grande,
+ * legenda com valores e tooltip ao passar o dedo/mouse.
+ */
+export function Donut({ slices, label, center, fmtV = (v) => v }) {
+  const [hover, setHover] = useState(null);
+  const total = slices.reduce((a, s) => a + s.value, 0);
+  if (!total) return null;
+  const R = 80, r = 50, C = 100;
+  let a0 = -Math.PI / 2;
+  const arcs = slices.filter((s) => s.value > 0).map((s) => {
+    const frac = s.value / total;
+    const a1 = a0 + frac * Math.PI * 2;
+    const gap = slices.length > 1 ? 0.012 : 0; // respiro de ~2px entre fatias
+    const s0 = a0 + gap, s1 = a1 - gap;
+    const large = s1 - s0 > Math.PI ? 1 : 0;
+    const p = (rad, ang) => `${C + rad * Math.cos(ang)},${C + rad * Math.sin(ang)}`;
+    const d = frac >= 0.999
+      ? `M${C - R},${C}A${R},${R} 0 1 1 ${C + R},${C}A${R},${R} 0 1 1 ${C - R},${C}M${C - r},${C}A${r},${r} 0 1 0 ${C + r},${C}A${r},${r} 0 1 0 ${C - r},${C}Z`
+      : `M${p(R, s0)}A${R},${R} 0 ${large} 1 ${p(R, s1)}L${p(r, s1)}A${r},${r} 0 ${large} 0 ${p(r, s0)}Z`;
+    const mid = (a0 + a1) / 2;
+    const out = { ...s, d, frac, lx: C + ((R + r) / 2) * Math.cos(mid), ly: C + ((R + r) / 2) * Math.sin(mid) };
+    a0 = a1;
+    return out;
+  });
+  const hs = hover != null ? arcs[hover] : null;
+  return (
+    <figure className="donut" aria-label={label}>
+      <svg viewBox="0 0 200 200" role="img" onPointerLeave={() => setHover(null)}>
+        {arcs.map((s, i) => (
+          <path key={s.key} d={s.d} fill={s.color} className={hover === i ? 'on' : ''} onPointerEnter={() => setHover(i)} onClick={() => setHover(i)} />
+        ))}
+        {arcs.map((s) => s.frac >= 0.08 && (
+          <text key={`t${s.key}`} x={s.lx} y={s.ly + 4} textAnchor="middle" className="donut-pct">{Math.round(s.frac * 100)}%</text>
+        ))}
+        <text x={C} y={C - 2} textAnchor="middle" className="donut-c1">{hs ? `${Math.round(hs.frac * 100)}%` : center?.[0]}</text>
+        <text x={C} y={C + 16} textAnchor="middle" className="donut-c2">{hs ? hs.name : center?.[1]}</text>
+      </svg>
+      <ul className="donut-legend">
+        {arcs.map((s, i) => (
+          <li key={s.key} className={hover === i ? 'on' : ''} onPointerEnter={() => setHover(i)}>
+            <i style={{ background: s.color }} /> <span>{s.name}</span> <b>{fmtV(s.value)}</b>
+          </li>
+        ))}
+      </ul>
+    </figure>
+  );
+}
+
+/** Barras lado a lado (você x outra pessoa). bars: [{ key, label, values: [a, b] }]; series: [{ name, color }]. */
+export function GroupedBars({ bars, series, fmtV = (v) => v, label }) {
+  const [hover, setHover] = useState(null);
+  if (!bars.length) return null;
+  const max = Math.max(1, ...bars.flatMap((b) => b.values));
+  const ticks = niceTicks(0, max, 3);
+  const top = ticks[ticks.length - 1];
+  const iw = W - PAD.l - PAD.r, ih = H - PAD.t - PAD.b;
+  const gap = iw / bars.length;
+  const bw = Math.min(16, (gap * 0.8) / series.length);
+  const sy = (v) => PAD.t + ih - (v / top) * ih;
+  const hb = hover != null ? bars[hover] : null;
+  const every = Math.ceil(bars.length / 14);
+  return (
+    <figure className="mchart" aria-label={label}>
+      <div className="mchart-legend">{series.map((s) => <span key={s.name}><i style={{ background: s.color }} /> {s.name}</span>)}</div>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" onPointerLeave={() => setHover(null)}>
+        {ticks.map((v) => (
+          <g key={v}>
+            <line x1={PAD.l} x2={W - PAD.r} y1={sy(v)} y2={sy(v)} className="grid" />
+            <text x={PAD.l - 6} y={sy(v) + 4} className="axis" textAnchor="end">{fmtV(v)}</text>
+          </g>
+        ))}
+        {bars.map((b, i) => {
+          const cx = PAD.l + gap * i + gap / 2;
+          const x0 = cx - (bw * series.length + 2 * (series.length - 1)) / 2;
+          return (
+            <g key={b.key} className={hover === i ? 'bar on' : 'bar'} onPointerEnter={() => setHover(i)} onClick={() => setHover(i)}>
+              <rect x={PAD.l + gap * i} y={PAD.t} width={gap} height={ih} fill="transparent" />
+              {b.values.map((v, k) => v > 0 && (
+                <rect key={k} x={x0 + k * (bw + 2)} y={sy(v)} width={bw} height={Math.max(1, sy(0) - sy(v))} rx="3" fill={series[k].color} />
+              ))}
+              {i % every === 0 && <text x={cx} y={H - 6} className="axis" textAnchor="middle">{b.label}</text>}
+            </g>
+          );
+        })}
+      </svg>
+      {hb && (
+        <div className="mchart-tip" style={{ left: `${((PAD.l + gap * hover + gap / 2) / W) * 100}%` }}>
+          <b>{hb.label}</b>
+          {series.map((s, k) => <span key={s.name}><i style={{ background: s.color }} /> {s.name}: {fmtV(hb.values[k])}</span>)}
+        </div>
+      )}
+    </figure>
+  );
+}

@@ -11,7 +11,7 @@ import MiniChat from '../components/MiniChat.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
 import { entitlements } from '../lib/plans.js';
 
-function Avatar({ p, size = 44 }) {
+export function Avatar({ p, size = 44 }) {
   return (
     <span className="q-avatar" style={{ width: size, height: size }}>
       {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : (p.nickname || '?').slice(0, 2)}

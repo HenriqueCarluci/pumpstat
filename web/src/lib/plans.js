@@ -13,6 +13,7 @@ export const FEATURES = [
   { id: 'auto_sync', label: 'Sincronização automática' },
   { id: 'push', label: 'Notificação com o app fechado', soon: true },
   { id: 'training_plan', label: 'Plano de treino semanal e metas' },
+  { id: 'rival', label: 'Rival: comparação completa com um amigo' },
   { id: 'weakness', label: 'Pontos fracos por padrão' },
 ];
 export const LIMITS = [

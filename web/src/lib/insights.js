@@ -383,3 +383,27 @@ export function playsPerWeek(prog, mode) {
   }
   return [...map.values()].sort((a, b) => a.at - b.at);
 }
+
+// ---------- composição por padrão (gráficos de setor) ----------
+/** Padrão principal de um chart (o de maior % entre os 8 padrões), ou null sem estilo. */
+export function mainPattern(prog, c) {
+  const st = styleOf(prog, c);
+  if (!st) return null;
+  let best = null, v = 0;
+  for (const p of PATTERNS) if ((st.pct[p] || 0) > v) { v = st.pct[p]; best = p; }
+  return v >= 10 ? best : null;
+}
+
+/** Passes e quebras perto do nível do jogador, agrupados pelo padrão principal de cada chart. */
+export function patternShare(attempts, prog, mode, lvl) {
+  const pass = {}, fail = {};
+  if (!lvl) return { pass, fail };
+  for (const r of attempts) {
+    if (r.chart.mode !== mode || r.chart.level < lvl.ceiling - 4 || r.chart.level > lvl.ceiling + 1) continue;
+    const p = mainPattern(prog, r.chart);
+    if (!p) continue;
+    if (r.passes) pass[p] = (pass[p] || 0) + r.passes;
+    if (r.fails) fail[p] = (fail[p] || 0) + r.fails;
+  }
+  return { pass, fail };
+}
