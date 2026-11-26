@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
+import MyTeam from './pages/MyTeam.jsx';
+import Tour from './components/Tour.jsx';
 import Tier from './pages/Tier.jsx';
 import { useState } from 'react';
 import { PlanMatrix } from './pages/AdminExtra.jsx';
@@ -24,7 +26,15 @@ const FAKE = {
       mk(4, true, 'invite', 'Bora um x1?', 'accepted'), mk(5, false, 'message', 'fechou', 'accepted'), mk(6, true, 'message', 'https://www.youtube.com/watch?v=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'pending')]; })(),
   is_online: true, compare_player: [[4864, 900000, 'AA', 'FG', false, 950000, 'AAA', 'TG', false], [5769, 961200, 'AAA+', 'TG', false, 940000, 'AA+', 'FG', false]],
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null }], socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
-  countries_of: [['amigo', 'BR']], teams_of: {},
+  countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: {},
+  my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua' },
+    week: { plays: 132, passes: 97, active: 4 },
+    members: [
+      { id: 'amigo', me: false, friend: true, nickname: 'PUMPKING', title: 'Twist Master', pumbility: 16565.7, max_s: 22, max_d: 24, clears: 812, online: true, joined: '2026-10-01' },
+      { id: 'eu', me: true, friend: false, nickname: 'HENRIQUE', title: 'Drill Expert', pumbility: 14104.2, max_s: 20, max_d: 21, clears: 540, online: true, joined: '2026-11-20' },
+      { id: 'm2', me: false, friend: false, nickname: 'NEONSTEP', title: null, pumbility: 12950, max_s: 19, max_d: 22, clears: 301, online: false, joined: '2026-09-01' },
+      { id: 'm3', me: false, friend: true, nickname: 'AKIRA_PIU_LONGNAME', title: 'Bracket Lv.10', pumbility: 9020.5, max_s: 18, max_d: null, clears: 120, online: false, joined: '2026-08-01' },
+    ] },
 };
 const realFetch = window.fetch.bind(window);
 window.fetch = async (url, opts) => {
@@ -55,6 +65,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

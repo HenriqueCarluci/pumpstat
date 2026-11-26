@@ -1193,3 +1193,54 @@ a.q-city:hover { color: var(--text); }
 .qs-msg { margin: -4px 0 0; color: var(--neon); }
 @keyframes qs-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes qs-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Meu Time */
+.mt-hero { display: flex; align-items: center; gap: 14px; }
+.mt-hero .team-logo { border-radius: 14px; flex: none; }
+.mt-logo-ph { width: 64px; height: 64px; border-radius: 14px; background: var(--panel2); display: grid; place-items: center; color: var(--neon); flex: none; }
+.mt-hero-info { min-width: 0; flex: 1; }
+.mt-hero-info h2 { margin: 0; font-size: 20px; overflow-wrap: anywhere; }
+.mt-hero-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.mt-hero-tags .tag { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit; }
+.mt-hero-tags .tag.on { color: var(--neon); }
+.mt-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 10px 0; }
+@media (min-width: 760px) { .mt-stats { grid-template-columns: repeat(5, minmax(0, 1fr)); } .mt-stat.wide { grid-column: auto; } }
+.mt-stat { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.mt-stat.wide { grid-column: 1 / -1; }
+.mt-stat small { color: var(--muted); font-size: 11.5px; }
+.mt-stat b { font: 800 18px var(--num); }
+.mt-stat span { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-list { list-style: none; padding: 0; margin: 10px 0; display: flex; flex-direction: column; gap: 6px; }
+.mt-row { display: grid; grid-template-columns: 34px 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px;
+  border-radius: 14px; background: var(--panel); border: 1px solid var(--line); color: inherit; text-decoration: none; }
+a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
+.mt-list li.me .mt-row { border-color: rgba(140, 255, 58, .5); background: rgba(140, 255, 58, .06); }
+.mt-rank { font: 800 15px var(--num); color: var(--muted); display: inline-flex; align-items: center; gap: 2px; }
+.mt-rank.r1 { color: var(--gold); } .mt-rank.r2 { color: #cfd6e4; } .mt-rank.r3 { color: #e39b5b; }
+.mt-main { min-width: 0; }
+.mt-nick { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.mt-nick b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mt-levels { display: flex; align-items: center; gap: 6px; margin-top: 3px; flex-wrap: wrap; }
+.mt-pumb { text-align: right; display: flex; flex-direction: column; }
+.mt-pumb small { font-size: 9.5px; color: var(--muted); letter-spacing: .04em; }
+.mt-pumb b { font: 800 16px var(--num); color: var(--neon); }
+
+/* Tutorial guiado */
+.tour-backdrop { position: fixed; inset: 0; z-index: 80; background: rgba(0, 0, 0, .6); display: grid; place-items: center; padding: 16px; }
+.tour-float { position: fixed; left: 0; right: 0; bottom: calc(76px + var(--safe-b)); z-index: 75; display: flex; justify-content: center; padding: 0 12px; pointer-events: none; }
+@media (min-width: 760px) { .tour-float { bottom: 96px; } }
+.tour-card { pointer-events: auto; width: min(480px, 100%); background: var(--panel); border: 1px solid rgba(140, 255, 58, .45); border-radius: 18px;
+  padding: 14px 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, .55); display: flex; flex-direction: column; gap: 10px; animation: qs-up .2s ease; }
+.tour-card p { margin: 0; line-height: 1.45; }
+.tour-card.welcome { text-align: center; align-items: center; padding: 22px 20px; }
+.tour-card.welcome h3 { margin: 0; }
+.tour-ico { color: var(--neon); }
+.tour-top { display: flex; align-items: center; gap: 8px; }
+.tour-top b { flex: 1; font-size: 16px; }
+.tour-ico-wrap { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: rgba(140, 255, 58, .14); color: var(--neon); flex: none; }
+.tour-dots { display: flex; gap: 5px; justify-content: center; }
+.tour-dots span { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .2s; }
+.tour-dots span.on { width: 18px; background: var(--neon); }
+.tour-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+.tour-actions .btn { min-height: 44px; }

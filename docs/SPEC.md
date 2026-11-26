@@ -245,3 +245,10 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Ajustes → "País" (opcional; sugere pelo idioma do aparelho). `user_settings.country` (051), `set_my_country`, `my_country`, `countries_of(ids)`.
 - Bandeira ao lado do nick em Amigos, perfil/comparação, Online e placar dos Desafios (`lib/country.jsx`: busca em lote com cache, como os times).
 - SVGs em `web/public/flags` do pacote flag-icons (MIT, licença junto).
+
+## Meu Time
+- `/time` (atalho na Início, liga com o recurso "Times"). `my_team(version)` (052): time, participantes com nick, título, avatar, PUMBILITY, maior nível passado em S e D, clears, online (respeita a visibilidade), e a semana do time (jogadas, passes, quantos jogaram — só o total).
+- Tela: cabeçalho do time, quadros (maior Double, maior Single, maior e média de PUMBILITY, semana), ranking ordenável (PUMBILITY, maior Double, maior Single, clears); amigos abrem a comparação.
+
+## Tutorial guiado
+- No primeiro acesso (por aparelho) pergunta se quer o tour; em Ajustes → "Ver tutorial". `lib/tour.js` (passos; os de recursos desligados são pulados) e `components/Tour.jsx` (cartão acima da barra de baixo, navega pelas telas).

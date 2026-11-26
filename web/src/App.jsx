@@ -31,6 +31,8 @@ import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Subscription from './pages/Subscription.jsx';
 import Training from './pages/Training.jsx';
+import MyTeam from './pages/MyTeam.jsx';
+import Tour from './components/Tour.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
@@ -229,6 +231,7 @@ function Shell() {
             <Route path="/planos" element={<Plans />} />
             <Route path="/assinatura" element={<Subscription />} />
             <Route path="/treino" element={<Training />} />
+            <Route path="/time" element={<MyTeam />} />
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />
@@ -238,6 +241,7 @@ function Shell() {
 
       <InviteToast />
       <FriendOnlineToast />
+      <Tour />
 
       <nav className="tabbar">
         <Tab to="/" icon={<HomeIcon size={21} />} label={t('Início')} />

@@ -1,3 +1,4 @@
+import { startTour } from '../lib/tour.js';
 import CountryPicker from '../components/CountryPicker.jsx';
 import { SocialsEditor } from '../components/Socials.jsx';
 import { useData } from '../App.jsx';
@@ -6,7 +7,7 @@ import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { Link } from 'react-router-dom';
-import { Crown, Lock, ShieldCheck, Trash2 } from '../components/Icons.jsx';
+import { Crown, Lock, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
 import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
@@ -58,6 +59,12 @@ export default function Settings() {
           </div>
         )}
       </section>}
+
+      <section className="card tour-settings">
+        <h3 className="ic-row"><Sparkles size={18} /> {t('Tutorial guiado')}</h3>
+        <p className="muted small">{t('Um tour rápido pelas telas principais do app.')}</p>
+        <button type="button" className="btn ghost" onClick={startTour}>{t('Ver tutorial')}</button>
+      </section>
 
       <section className="card">
         <h3>{t('Idioma')}</h3>
