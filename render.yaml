@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: pumpstat
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /collector.js
+        name: Cache-Control
+        value: no-cache
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN

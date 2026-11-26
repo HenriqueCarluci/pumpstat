@@ -1,0 +1,113 @@
+import { Link } from 'react-router-dom';
+import { chartLabel, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
+
+// Imagens oficiais do site da Phoenix 2 (carregadas direto do piugame.com).
+const IMG = 'https://piugame.com/l_img/p2';
+const GRADE_CODE = { 'SSS+': 'sss_p', SSS: 'sss', 'SS+': 'ss_p', SS: 'ss', 'S+': 's_p', S: 's', 'AAA+': 'aaa_p', AAA: 'aaa',
+  'AA+': 'aa_p', AA: 'aa', 'A+': 'a_p', A: 'a', B: 'b', C: 'c', D: 'd', F: 'f' };
+const imgProps = { alt: '', loading: 'lazy', referrerPolicy: 'no-referrer', draggable: false };
+
+/** Bolinha de nível no estilo do jogo (single vermelho, double verde, co-op amarelo). */
+export function Ball({ chart, size = 'md' }) {
+  const kind = chart.mode === 'S' ? 's' : chart.mode === 'D' ? 'd' : 'c';
+  const digits = String(chart.level).split('');
+  return (
+    <span className={`ball ${size}`} title={chartLabel(chart)} style={{ backgroundImage: `url(${IMG}/stepball/full/${kind}_bg.png)` }}>
+      <img className="ball-text" src={`${IMG}/stepball/full/${kind}_text.png`} {...imgProps} />
+      <span className="ball-num">
+        {kind === 'c' && <b className="ball-x">×</b>}
+        {digits.map((d, i) => <img key={i} src={`${IMG}/stepball/full/s_num_${d}.png`} {...imgProps} />)}
+      </span>
+    </span>
+  );
+}
+
+export function Grade({ grade, broken, size = 'md' }) {
+  if (!grade) return <span className={`grade-img none ${size}`}>—</span>;
+  const code = (broken ? 'x_' : '') + (GRADE_CODE[grade] || grade.toLowerCase());
+  return <img className={`grade-img ${size}`} src={`${IMG}/grade/${code}.png`} title={broken ? `${grade} (stage break)` : grade} {...imgProps} alt={grade} />;
+}
+
+export function Plate({ plate, size = 'md' }) {
+  if (!plate) return null;
+  return <img className={`plate-img ${size}`} src={`${IMG}/plate/${plate.toLowerCase()}.png`} title={PLATES[plate] || plate} {...imgProps} alt={plate} />;
+}
+
+/** Capa da música (banner 16:9 do jogo) ou um placeholder com as iniciais. */
+export function Jacket({ song, width = 96, className = '' }) {
+  const initials = (song.title || '?').replace(/[^\p{L}\p{N} ]/gu, '').split(' ').filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+  const hue = [...(song.title || '')].reduce((h, ch) => (h * 31 + ch.codePointAt(0)) % 360, 7);
+  return (
+    <div className={`jacket ${className}`} style={{ width, '--hue': hue }}>
+      {song.jacket ? <img src={song.jacket} {...imgProps} /> : <span>{initials}</span>}
+    </div>
+  );
+}
+
+/** Bolinha pequena de nível colorida pelo grade obtido (lista de músicas). */
+export function ChartPip({ chart }) {
+  const t = chart.score != null ? gradeTier(chart.grade) : 'none';
+  return (
+    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${t} ${chart.broken ? 'broken' : ''}`}
+      title={`${chartLabel(chart)}${chart.score != null ? ` · ${fmtScore(chart.score)} ${chart.grade || ''}` : ''}`}>
+      {chart.mode === 'C' ? `×${chart.level}` : chart.level}
+    </span>
+  );
+}
+
+export function SongRow({ song, filter }) {
+  const charts = filter ? song.charts.filter(filter) : song.charts;
+  return (
+    <Link to={`/musica/${song.id}`} className="songrow">
+      <Jacket song={song} width={92} />
+      <div className="songrow-main">
+        <div className="title">{song.title}</div>
+        <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${song.bpm} BPM` : ''}</div>
+        <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} />)}</div>
+      </div>
+    </Link>
+  );
+}
+
+/** Cartão no estilo "My Best Score" do site: capa ao fundo, bolinha, grade, score e plate. */
+export function ScoreCard({ chart, score, grade, plate, broken, date, to, extra }) {
+  const body = (
+    <>
+      <div className="sc-bg" style={chart.song.jacket ? { backgroundImage: `url(${chart.song.jacket})` } : undefined} />
+      <div className="sc-name">{chart.song.title}</div>
+      <div className="sc-row">
+        <Ball chart={chart} />
+        <div className="sc-grade">
+          <Grade grade={grade} broken={broken} />
+          <span className="sc-score">{fmtScore(score)}</span>
+        </div>
+        <div className="sc-plate">{plate ? <Plate plate={plate} /> : null}</div>
+      </div>
+      {extra}
+      {date && <div className="sc-date">{fmtDate(date)}</div>}
+    </>
+  );
+  return to ? <Link to={to} className="scorecard">{body}</Link> : <div className="scorecard">{body}</div>;
+}
+
+export function Stat({ label, value, sub }) {
+  return (
+    <div className="stat">
+      <div className="v">{value}</div>
+      <div className="l">{label}</div>
+      {sub && <div className="s">{sub}</div>}
+    </div>
+  );
+}
+
+export function timeAgo(iso) {
+  if (!iso) return 'nunca';
+  const d = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (d < 60) return 'agora';
+  if (d < 3600) return `há ${Math.floor(d / 60)} min`;
+  if (d < 86400) return `há ${Math.floor(d / 3600)} h`;
+  if (d < 86400 * 30) return `há ${Math.floor(d / 86400)} d`;
+  return new Date(iso).toLocaleDateString('pt-BR');
+}
+
+export const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '—');
