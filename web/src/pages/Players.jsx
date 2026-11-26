@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { TeamTag, useTeams } from '../lib/teams.jsx';
 import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
@@ -22,14 +23,22 @@ function Avatar({ p, size = 44 }) {
 export default function Players() {
   const { version, plan } = useData();
   const friendCap = entitlements(plan).limit('friends');
-  const [tab, setTab] = useState('friends');
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState(params.get('tab') || 'friends');
+  const [playing, setPlaying] = useState([]);
   const [list, setList] = useState(null);
   const [reqs, setReqs] = useState({ incoming: [], outgoing: [] });
+  const teamOf = useTeams([...(list || []).map((p) => p.id), ...playing.map((q) => q.user)]);
   const [err, setErr] = useState('');
   const load = () => {
     rpc('players', { p_version: version }).then(setList).catch((e) => setErr(tErr(e.message)));
     rpc('friend_requests').then(setReqs).catch(() => {});
+    rpc('friends_in_queue').then((r) => setPlaying(r || [])).catch(() => {});
   };
+  useEffect(() => {
+    const id = setInterval(() => { if (!document.hidden) rpc('friends_in_queue').then((r) => setPlaying(r || [])).catch(() => {}); }, 30000);
+    return () => clearInterval(id);
+  }, []);
   useEffect(() => { setList(null); load(); }, [version]); // eslint-disable-line
 
   const respond = async (id, accept) => { await rpc('respond_friend_request', { p_user: id, p_accept: accept }); load(); };
@@ -47,6 +56,24 @@ export default function Players() {
       {tab === 'friends' && (
         !list ? <p className="empty">{t('Carregando…')}</p> : (
           <>
+            {playing.length > 0 && (
+              <section className="playing-now">
+                <h3><span className="live-dot" /> {t('Jogando agora')}</h3>
+                {playing.map((q) => (
+                  <Link key={`${q.user}-${q.venue}-${q.machine}`} to={`/fila/${q.venue}`} className="pn-item">
+                    <Avatar p={q} size={36} />
+                    <span>
+                      <b>{q.nickname || t('Jogador')}</b><TeamTag team={teamOf(q.user)} />
+                      <small>{q.venue_name} · {q.machine}{q.city ? ` · ${q.city}` : ''}</small>
+                    </span>
+                    <span className="pn-pos">
+                      {q.position === 1 ? t('jogando') : t('{p}º na fila', { p: q.position })}
+                      <small>{q.status === 'away' ? t('volta já') : tn(q.total, '{n} na fila', '{n} na fila')}</small>
+                    </span>
+                  </Link>
+                ))}
+              </section>
+            )}
             {list.length <= 1 && <p className="muted small">{t('Você ainda não tem amigos no StepClub. Busque pelo nickname da Pump e mande uma solicitação: as notas só aparecem depois que a pessoa aprovar.')}</p>}
             <div className="players">
               {list.map((p, i) => {
@@ -57,7 +84,7 @@ export default function Players() {
                     <Avatar p={p} />
                     <span className="pinfo">
                       <span className="ptitle">{p.title}</span>
-                      <b>{p.nickname || t('Jogador')}</b>{p.me && <span className="tag">{t('você')}</span>}
+                      <b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>}
                       <small className="muted">{t('{n} recordes', { n: p.bests })}</small>
                     </span>
                     <span className="ppb">
@@ -160,6 +187,7 @@ export function ComparePlayer() {
   const [err, setErr] = useState('');
   const [filter, setFilter] = useState('both');
   const [mode, setMode] = useState('all');
+  const teamOf = useTeams([id]);
 
   useEffect(() => {
     setRows(null);
@@ -186,7 +214,7 @@ export function ComparePlayer() {
       <section className="card vs">
         <div className="vs-side"><b>{t('Você')}</b><span className="big up">{wins}</span></div>
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
-        <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><span className="big down">{losses}</span></div>
+        <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><TeamTag team={teamOf(id)} /><span className="big down">{losses}</span></div>
       </section>
       <MiniChat user={id} name={other?.nickname} />
       <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />

@@ -9,6 +9,7 @@ import { Chips } from './Songs.jsx';
 import { pbTier } from '../lib/piu.js';
 import { Check, ChevronRight, Gamepad2, MapPin, Swords } from '../components/Icons.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
+import { TeamTag, useTeams } from '../lib/teams.jsx';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
 
@@ -68,6 +69,7 @@ export default function Online() {
 }
 
 function OnlineRow({ p, open, onToggle, onSent }) {
+  const teamOf = useTeams([p.id]);
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -86,7 +88,7 @@ function OnlineRow({ p, open, onToggle, onSent }) {
           <i className="dot-on" />
         </span>
         <div className="online-info">
-          <div className="online-nick"><b>{p.nickname || t('Jogador')}</b>{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
+          <div className="online-nick"><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
           {p.title && <div className="online-title">{p.title}</div>}
           {(p.max?.S || p.max?.D) && (
             <div className="online-max" title={t('Maior nível já passado')}>

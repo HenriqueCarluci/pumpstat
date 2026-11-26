@@ -197,3 +197,14 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Dicas: muro de nível, charts travados (2+ quebras sem passar), ponto fraco/forte com charts para treinar, precisão (misses/greats), tendência das últimas 2 semanas e aviso de pouco histórico.
 - Plano de treino semanal (muda toda segunda, determinístico): 3 sessões com aquecimento, ponto fraco, consolidar, desafio e nota; metas com progresso calculado das jogadas da semana.
 - Recursos no admin: `evolution_chart`, `weakness`, `tips`, `training_plan`.
+
+## Release de novembro (notificações, times, fliperamas, votação de tier)
+- Notificações guardadas em `notifications` (gatilhos em amizades e convites/mensagens; pedidos e resultados de fliperama, time e votação), mais as calculadas (recordes dos amigos e músicas novas). Apagar uma (`dismiss_notification`) ou limpar todas (`clear_notifications`).
+- Amigos jogando agora: `friends_in_queue()` na tela de amigos (fliperama, máquina, posição), atualiza a cada 30 s.
+- Atualização rápida em Recentes: `POST /api/piu/sync` com `partial: true` lê só perfil e jogadas recentes; no banco, uma jogada passada acima do recorde vira o recorde (`ingest_for` com `partial`).
+- Cadastro de fliperamas pelos membros (`request_venue`), aprovado no admin (`admin_review_venue`, cria o fliperama e as máquinas).
+- Times: membro escolhe um time aprovado ou pede um novo (`request_team`); admin aprova (`admin_review_team`) e quem pediu entra no time. Sigla do time aparece em amigos, online e perfil (`teams_of`).
+- Votação de tier: quem passou o chart propõe (`propose_tier`); só quem passou vota (`vote_tier`); depois de X horas (admin: `community.tier_vote_hours`, padrão 48) aprova se houver mais votos a favor e o mínimo (`community.tier_vote_min`, padrão 3); aprovado vira o tier do clube. Página `/votacoes`.
+- Estilo das músicas novas da Phoenix 2: padrões do PIU Scores (`charts.skills`) e tags da comunidade entram nos pontos fracos e no plano de treino.
+- Planos: cada pessoa vê só o preço da sua região (pelo fuso do aparelho; idioma como reserva); o admin pode conferir as outras.
+- Página da música: notas dos amigos em cada chart, com a diferença para a sua; vindo do Tier, o chart clicado fica em destaque.

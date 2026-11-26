@@ -64,7 +64,7 @@ async function rpcAsUser(token, fn, args) {
   return body;
 }
 
-async function scrapeVersion(session, version, job) {
+async function scrapeVersion(session, version, job, partial = false) {
   const get = async (path) => {
     const { html, url } = await session.get(path);
     const doc = parseHtml(html);
@@ -74,6 +74,12 @@ async function scrapeVersion(session, version, job) {
   const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
   job.message = `${label}: lendo perfil…`;
   const profile = parseProfile(await get('/my_page/pumbility.php'));
+  if (partial) {
+    // atualização rápida: só o perfil e as jogadas recentes (o banco sobe o recorde quando uma jogada passa dele)
+    job.message = `${label}: jogadas recentes…`;
+    const recent = rowsOf(await get('/my_page/recently_played.php')).map(parseRow).filter(Boolean);
+    return { ...toPayload(version, profile, [], recent), partial: true, titles: [] };
+  }
 
   const first = await get('/my_page/my_best_score.php');
   const pages = lastPage(first);
@@ -123,7 +129,7 @@ async function rpcAsServer(fn, args) {
   return body;
 }
 
-async function runJob(job, { login, password, versions, token, saved, writer = userWriter(token) }) {
+async function runJob(job, { login, password, versions, token, saved, partial = false, writer = userWriter(token) }) {
   try {
     let session;
     if (saved) {
@@ -142,7 +148,7 @@ async function runJob(job, { login, password, versions, token, saved, writer = u
       const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
       job.message = `${label}: abrindo a sessão…`;
       await switchSite(session, SITES[version]);
-      const payload = await scrapeVersion(session, version, job);
+      const payload = await scrapeVersion(session, version, job, partial);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
       const { titles, ...scores } = payload;
       job.results[version] = { ...(await writer.scores(scores)), bests: payload.bests.length, plays: payload.plays.length };
@@ -213,7 +219,7 @@ const server = http.createServer(async (req, res) => {
     if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
-      const { login, password, versions, useSaved } = await readJson(req);
+      const { login, password, versions, useSaved, partial } = await readJson(req);
       let saved = null;
       if (useSaved) {
         if (!SESSION_KEY) return send(res, 400, { error: 'Sincronização rápida indisponível.', needLogin: true }, origin);
@@ -229,13 +235,13 @@ const server = http.createServer(async (req, res) => {
       const hist = (attempts.get(user.id) || []).filter((t) => now - t < 15 * 60_000);
       const lastOk = [...jobs.values()].filter((j) => j.userId === user.id && j.state === 'done').reduce((m, j) => Math.max(m, j.at), 0);
       if (hist.length >= 5) return send(res, 429, { error: 'Muitas tentativas. Espere alguns minutos e tente de novo.' }, origin);
-      if (now - lastOk < 2 * 60_000) return send(res, 429, { error: 'Você acabou de sincronizar. Tente de novo em 2 minutos.' }, origin);
+      if (now - lastOk < (partial ? 45_000 : 2 * 60_000)) return send(res, 429, { error: partial ? 'Você acabou de atualizar. Tente de novo em 1 minuto.' : 'Você acabou de sincronizar. Tente de novo em 2 minutos.' }, origin);
       attempts.set(user.id, [...hist, now]);
       const running = [...jobs.values()].find((j) => j.userId === user.id && j.state === 'running');
       if (running) return send(res, 409, { error: 'Já existe uma sincronização em andamento.', jobId: running.id }, origin);
       const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now() };
       jobs.set(job.id, job);
-      runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved });
+      runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved, partial: !!partial && !!saved });
       return send(res, 202, { jobId: job.id }, origin);
     }
 

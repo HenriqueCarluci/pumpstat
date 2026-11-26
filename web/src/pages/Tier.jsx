@@ -5,6 +5,7 @@ import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
 import { LegacyToggle } from './Song.jsx';
 import AdSlot from '../components/AdSlot.jsx';
+import { Vote } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
@@ -53,14 +54,17 @@ export default function Tier() {
         {best && <div className="tier-best"><span className="muted">{t('melhor')}</span><Grade grade={best.grade} size="sm" /></div>}
       </section>
 
-      {hasLegacy && <LegacyToggle />}
+      <div className="tier-tools">
+        {hasLegacy && <LegacyToggle />}
+        <Link to="/votacoes" className="chip-toggle"><Vote size={14} /> {t('Votações de tier')}</Link>
+      </div>
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
           <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
           <div className="tier-grid">
             {g.charts.map((c) => { const lg = legacy(c); return (
-              <Link key={c.id} to={`/musica/${c.song.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
+              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
                 <div className="tile-art">
                   <Jacket song={c.song} width="100%" />

@@ -1,11 +1,35 @@
+import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { ScoreCard } from '../components/ui.jsx';
-import { locale, t, tn } from '../lib/i18n.js';
+import { ScoreCard, timeAgo } from '../components/ui.jsx';
+import { locale, t, tMsg, tn } from '../lib/i18n.js';
+import { useSyncJob } from '../components/PiuConnect.jsx';
+import { RefreshCw } from '../components/Icons.jsx';
+
+/** Atualização rápida: busca só as jogadas recentes da versão aberta (sem reler todos os recordes). */
+function RefreshRecent() {
+  const { version, reload, data } = useData();
+  const { job, err, needLogin, start, running } = useSyncJob(() => reload());
+  const res = job?.state === 'done' ? job.results?.[version] : null;
+  return (
+    <div className="recent-refresh">
+      <div className="row-between">
+        <small className="muted">{t('Última sincronização: {when}', { when: timeAgo(data.lastSync) })}</small>
+        <button className="btn ghost" disabled={running} onClick={() => start({ useSaved: true, partial: true, versions: [version] })}>
+          <RefreshCw size={15} className={running ? 'spin' : ''} /> {running ? t('Atualizando…') : t('Atualizar')}
+        </button>
+      </div>
+      {running && <small className="muted">{tMsg(job?.message)}</small>}
+      {res && <small className="muted">{res.new_plays ? tn(res.new_plays, '{n} jogada nova', '{n} jogadas novas') : t('Nenhuma jogada nova.')}{res.new_bests ? ` · ${tn(res.new_bests, '{n} recorde novo', '{n} recordes novos')}` : ''}</small>}
+      {err && <div className="form-err">{err}</div>}
+      {needLogin && <p className="small">{t('Para atualizar, conecte sua conta da Pump uma vez em')} <Link to="/ajustes">{t('Ajustes')}</Link>.</p>}
+    </div>
+  );
+}
 
 export default function Recent() {
   const { data } = useData();
   if (!data.plays.length) {
-    return <div className="page"><p className="empty">{t('Nenhuma jogada registrada ainda. Sincronize em Ajustes.')}</p></div>;
+    return <div className="page"><RefreshRecent /><p className="empty">{t('Nenhuma jogada registrada ainda. Sincronize em Ajustes.')}</p></div>;
   }
   const byDay = new Map();
   for (const p of data.plays) {
@@ -15,6 +39,7 @@ export default function Recent() {
   }
   return (
     <div className="page">
+      <RefreshRecent />
       {[...byDay.entries()].map(([day, plays]) => (
         <section key={day}>
           <h3 className="group-h">{day} <span className="muted">· {tn(plays.length, '{n} jogada', '{n} jogadas')}</span></h3>

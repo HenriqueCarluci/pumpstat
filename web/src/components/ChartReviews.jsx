@@ -8,6 +8,7 @@ import { Check } from './Icons.jsx';
 import ReportBlock from './ReportBlock.jsx';
 import { ShieldCheck } from './Icons.jsx';
 import { useData } from '../App.jsx';
+import TierVote from './TierVote.jsx';
 
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
@@ -67,6 +68,7 @@ export default function ChartReviews({ chart, onSaved }) {
         </div>
       )}
       {info.club_tier != null && !plan?.admin && <div className="tag club-tag">{t('Tier do clube')}: {tierLabel(info.club_tier)}</div>}
+      <TierVote chart={chart} canPropose={info.can_review} clubTier={info.club_tier} onChange={() => { load(); onSaved?.(); }} />
       <div className="rv-summary">
         {info.votes > 0
           ? <span>{t('Comunidade:')} <b>{avgLabel(Number(info.avg))}</b> <span className="muted small">({tn(info.votes, '{n} voto', '{n} votos')})</span></span>

@@ -26,7 +26,11 @@ export default function Plans() {
       {!cfg.show_plans && <div className="banner">{t('Prévia: só administradores veem esta tela enquanto os planos estão em desenvolvimento.')}</div>}
       <h2 className="ic-row"><Crown size={20} /> {t('Planos do StepClub')}</h2>
       <p className="muted small">{t('Fila, amigos, chat e sincronização continuam grátis para todos. Os planos liberam análises e recursos extras.')}</p>
-      <Chips value={region} onChange={setRegion} options={REGIONS.map(([k, l]) => [k, t(l)])} />
+      {/* só o preço da região de quem vê; o admin pode conferir as outras */}
+      {plan?.admin && (
+        <div className="admin-preview small"><span className="muted">{t('Admin: ver o preço de outra região')}</span>
+          <Chips value={region} onChange={setRegion} options={REGIONS.map(([k, l]) => [k, t(l)])} /></div>
+      )}
       <Chips value={yearly ? 'y' : 'm'} onChange={(v) => setYearly(v === 'y')} options={[['m', t('Mensal')], ['y', t('Anual (−33%)')]]} />
 
       <div className="plan-cols">

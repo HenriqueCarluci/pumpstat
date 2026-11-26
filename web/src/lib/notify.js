@@ -1,7 +1,11 @@
-// Notificações do StepClub: amigos que bateram recorde, músicas novas e pedidos de amizade.
+// Notificações do StepClub: amizades, mensagens e convites, recordes dos amigos, músicas novas,
+// pedidos de fliperama e de time, votações de tier e, para o admin, pedidos esperando aprovação.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { rpc } from './api.js';
 import { fmtNum, t } from './i18n.js';
+import { TIER_VOTES } from './piu.js';
+
+const tierName = (v) => t((TIER_VOTES.find(([x]) => x === Number(v)) || [, '?'])[1]);
 
 const POLL_MS = 2 * 60 * 1000;
 
@@ -18,14 +22,48 @@ export function describe(n) {
       return t('{who} quer ser seu amigo no StepClub', { who });
     case 'friend_accepted':
       return t('{who} aceitou sua solicitação. Agora vocês veem as notas um do outro', { who });
+    case 'friend_new':
+      return t('Você e {who} agora são amigos no StepClub', { who });
+    case 'message':
+      return (n.count > 1 ? t('{who} te mandou {n} mensagens', { who, n: n.count }) : t('{who} te mandou uma mensagem', { who })) + (n.message ? `: “${n.message}”` : '');
+    case 'invite':
+      return (n.venue_name ? t('{who} te chamou para jogar em {place}', { who, place: n.venue_name }) : t('{who} te chamou para jogar', { who })) + (n.message ? `: “${n.message}”` : '');
+    case 'venue_approved':
+      return t('Seu cadastro do fliperama {name} foi aprovado e já está na lista de filas', { name: n.name });
+    case 'venue_rejected':
+      return t('Seu cadastro do fliperama {name} não foi aprovado', { name: n.name }) + (n.note ? `: ${n.note}` : '');
+    case 'team_approved':
+      return t('O time {name} foi aprovado e você já faz parte dele', { name: n.name });
+    case 'team_rejected':
+      return t('O time {name} não foi aprovado', { name: n.name }) + (n.note ? `: ${n.note}` : '');
+    case 'tier_vote_open':
+      return t('{who} propôs mudar o tier de {song} {chart} para {tier}. Vote!', { who, song: n.title, chart: `${n.mode}${n.level}`, tier: tierName(n.to) });
+    case 'tier_vote_result':
+      return n.result === 'approved'
+        ? t('Votação encerrada: {song} {chart} agora é {tier} no clube', { song: n.title, chart: `${n.mode}${n.level}`, tier: tierName(n.to) })
+        : t('Votação encerrada: o tier de {song} {chart} continua o mesmo', { song: n.title, chart: `${n.mode}${n.level}` });
+    case 'admin_venue_request':
+      return t('{who} pediu o cadastro do fliperama {name} ({city})', { who, name: n.name, city: n.city });
+    case 'admin_team_request':
+      return t('{who} pediu o cadastro do time {name}', { who, name: n.name });
     default:
       return t('Novidade no StepClub');
   }
 }
 const fmt = (v) => fmtNum(v);
 
-export const linkFor = (n) => (n.kind === 'friend_score' || n.kind === 'new_song' ? `/musica/${n.song}`
-  : n.kind === 'friend_request' ? '/jogadores' : `/jogador/${n.user}`);
+export function linkFor(n) {
+  switch (n.kind) {
+    case 'friend_score': case 'new_song': case 'tier_vote_open': case 'tier_vote_result': return `/musica/${n.song}`;
+    case 'friend_request': return '/jogadores?tab=requests';
+    case 'invite': return n.venue ? `/fila/${n.venue}` : '/online';
+    case 'venue_approved': return `/fila/${n.venue}`;
+    case 'venue_rejected': return '/fila';
+    case 'team_approved': case 'team_rejected': return '/ajustes';
+    case 'admin_venue_request': case 'admin_team_request': return '/admin?tab=approvals';
+    default: return n.user ? `/jogador/${n.user}` : '/';
+  }
+}
 
 export const canAlert = () => typeof window !== 'undefined' && 'Notification' in window;
 
@@ -58,6 +96,14 @@ export function useNotifications(enabled) {
     setState((s) => ({ ...s, unread: 0 }));
     try { await rpc('mark_notifications_seen'); } catch { /* ignora */ }
   }, []);
-  return { ...state, reload: load, markSeen };
+  const dismiss = useCallback(async (key) => {
+    setState((s) => ({ ...s, items: s.items.filter((n) => n.key !== key), unread: Math.max(0, s.unread - (s.items.find((n) => n.key === key)?.unread ? 1 : 0)) }));
+    try { await rpc('dismiss_notification', { p_key: key }); } catch { load(); }
+  }, [load]);
+  const clearAll = useCallback(async () => {
+    setState((s) => ({ ...s, items: [], unread: 0 }));
+    try { await rpc('clear_notifications'); } catch { load(); }
+  }, [load]);
+  return { ...state, reload: load, markSeen, dismiss, clearAll };
 }
-const key = (n) => `${n.kind}:${n.at}:${n.chart || n.song || n.user}`;
+const key = (n) => n.key || `${n.kind}:${n.at}:${n.chart || n.song || n.user}`;

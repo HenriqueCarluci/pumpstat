@@ -13,6 +13,7 @@ import { VERSIONS } from '../lib/piu.js';
 import { t, tErr } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
 import Feedback from '../components/Feedback.jsx';
+import TeamPicker from '../components/TeamPicker.jsx';
 
 export default function Settings() {
   const { data, version, reload, session, plan } = useData();
@@ -31,6 +32,8 @@ export default function Settings() {
           <PiuConnect compact onDone={() => reload()} />
         </details>
       </section>
+
+      <TeamPicker userId={session?.user?.id} />
 
       <section className="card plan-card">
         <div className="row-between">

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate } from '../components/ui.jsx';
@@ -21,6 +21,14 @@ export default function Song() {
   const { data, version, reload, plan } = useData();
   const song = data.songs.find((s) => String(s.id) === id);
   const styleOf = useStyles(song ? [song.id] : []);
+  const friendsOf = useFriendScores(song?.id, version);
+  const [params] = useSearchParams();
+  const focus = Number(params.get('c')) || null;
+  useEffect(() => {
+    if (!focus) return;
+    const el = document.getElementById(`chart-${focus}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [focus, song?.id]);
   if (!song) return <div className="page"><p className="empty">{t('Música não encontrada nesta versão.')}</p><Link to="/musicas">{t('Voltar')}</Link></div>;
 
   const other = version === 'phoenix2' ? VERSIONS.phoenix : VERSIONS.phoenix2;
@@ -50,7 +58,7 @@ export default function Song() {
       {groups.map(([label, charts]) => (
         <section key={label}>
           <h3 className="group-h">{label}</h3>
-          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} onReviewed={() => reload()} />)}
+          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} friends={friendsOf(c.id)} focus={focus === c.id} onReviewed={() => reload()} />)}
         </section>
       ))}
       <AdSlot place="song" />
@@ -91,7 +99,7 @@ export function LegacyToggle() {
   );
 }
 
-function ChartCard({ chart: c, version, other, style, onReviewed }) {
+function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed }) {
   const { plan } = useData();
   const [prefs] = usePrefs();
   const legacyMode = version === 'phoenix2';
@@ -115,7 +123,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
   };
 
   return (
-    <div className={`chartcard ${c.score != null ? 'played' : ''}`}>
+    <div id={`chart-${c.id}`} className={`chartcard ${c.score != null ? 'played' : ''} ${focus ? 'focus' : ''}`}>
       <div className="cc-top">
         <Ball chart={c} />
         <div className="cc-score">
@@ -131,6 +139,8 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
           {nxt && <div className="need">{t('+{n} p/ {g}', { n: fmtScore(nxt.need), g: nxt.grade })}</div>}
         </div>
       </div>
+
+      <FriendScores list={friends} mine={c} />
 
       <div className="cc-meta">
         {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
@@ -152,6 +162,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
         </button>
       )}
       {style && showStyle && <StyleBars style={style} locked={!ent.can('style_full')} />}
+      {!style && c.skills.length > 0 && <p className="muted tiny">{t('Música nova: a análise detalhada de estilo ainda não saiu; os padrões acima vêm do PIU Scores e já contam nos seus pontos fracos.')}</p>}
 
       {showOther && (
         <div className={`cc-other ${legacyMode ? 'legacy' : ''}`}>
@@ -193,6 +204,48 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
           )}
         </div>
       )}
+    </div>
+  );
+}
+
+/** Notas dos amigos em cada chart da música (uma chamada só para a música inteira). */
+function useFriendScores(songId, version) {
+  const [map, setMap] = useState(new Map());
+  useEffect(() => {
+    if (!songId) return undefined;
+    let alive = true;
+    rpc('song_friend_scores', { p_song: songId, p_version: version }).then((rows) => {
+      if (!alive) return;
+      const m = new Map();
+      for (const r of rows || []) { if (!m.has(r.chart)) m.set(r.chart, []); m.get(r.chart).push(r); }
+      setMap(m);
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [songId, version]);
+  return (chartId) => map.get(chartId) || null;
+}
+
+function FriendScores({ list, mine }) {
+  const [all, setAll] = useState(false);
+  if (!list?.length) return null;
+  const shown = all ? list : list.slice(0, 3);
+  const me = mine.score != null && !mine.broken ? mine.score : null;
+  return (
+    <div className="friend-scores">
+      <div className="fs-head small muted">{t('Amigos')}</div>
+      {shown.map((f) => {
+        const diff = me != null && f.score != null && !f.broken ? me - f.score : null;
+        return (
+          <Link key={f.user} to={`/jogador/${f.user}`} className="fs-row">
+            <span className="q-avatar" style={{ width: 24, height: 24 }}>{f.avatar ? <img src={f.avatar} alt="" referrerPolicy="no-referrer" /> : (f.nickname || '?').slice(0, 2)}</span>
+            <span className="fs-name">{(f.nickname || t('Jogador')).replace(/ #\d+$/, '')}</span>
+            <Grade grade={f.grade} broken={f.broken} size="xs" />
+            <b className="fs-score">{fmtScore(f.score)}</b>
+            {diff != null && <small className={diff >= 0 ? 'up' : 'down'}>{diff >= 0 ? '+' : '−'}{fmtScore(Math.abs(diff))}</small>}
+          </Link>
+        );
+      })}
+      {list.length > 3 && <button className="link small" onClick={() => setAll((x) => !x)}>{all ? t('Mostrar menos') : t('Ver todos ({n})', { n: list.length })}</button>}
     </div>
   );
 }

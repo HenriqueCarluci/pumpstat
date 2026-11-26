@@ -177,17 +177,30 @@ export function weaknesses(...sumsList) {
   }).filter(Boolean).sort((a, b) => b.index - a.index);
 }
 
-// Tags da comunidade do StepClub viram estilo quando o chart não tem dados do piucenter (músicas novas).
+// Sem estilo do piucenter (músicas novas da Phoenix 2), o estilo vem dos padrões do PIU Scores (c.skills)
+// e das tags que a comunidade do StepClub marca nos charts.
 const TAG_TO_DIM = { twist: 'twist', drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', doublestep: 'doublestep',
   footswitch: 'footswitch', stamina: 'stamina', speed: 'speed', gimmick: null };
+const BADGE_RULES = [
+  ['twist', (b) => /twist/.test(b) && !/without twist/.test(b)], ['drill', (b) => /drill/.test(b)], ['run', (b) => /\brun|stair/.test(b)],
+  ['bracket', (b) => /bracket/.test(b)], ['jump', (b) => /jump/.test(b)], ['jack', (b) => /jack/.test(b)],
+  ['doublestep', (b) => /double ?step/.test(b)], ['footswitch', (b) => /footswitch/.test(b)],
+  ['stamina', (b) => /sustain|stamina/.test(b)], ['speed', (b) => /burst/.test(b)],
+];
+export function badgeStyle(c) {
+  const pct = {};
+  for (const raw of c.skills || []) {
+    const b = String(raw).toLowerCase();
+    for (const [dim, test] of BADGE_RULES) if (test(b)) pct[dim] = Math.min(80, (pct[dim] || 0) + 50);
+  }
+  for (const tg of c.community?.tags || []) { const d = TAG_TO_DIM[Array.isArray(tg) ? tg[0] : tg]; if (d) pct[d] = Math.max(pct[d] || 0, 50); }
+  return Object.keys(pct).length ? pct : null;
+}
 export function styleOf(prog, c) {
   const st = prog.styles.get(c.id);
   if (st) return st;
-  const tags = c.community?.tags || [];
-  if (!tags.length) return null;
-  const pct = {};
-  for (const tg of tags) { const d = TAG_TO_DIM[tg]; if (d) pct[d] = 50; }
-  return Object.keys(pct).length ? { pct, nps: null, sustained: false, community: true } : null;
+  const pct = badgeStyle(c);
+  return pct ? { pct, nps: null, sustained: false, derived: true } : null;
 }
 
 /** Precisão nas jogadas passadas perto do nível do jogador (julgamentos). */

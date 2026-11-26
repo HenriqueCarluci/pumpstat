@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { ProposalCard } from '../components/TierVote.jsx';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
@@ -11,14 +12,16 @@ import { Chips } from './Songs.jsx';
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
   const { plan } = useData();
-  const [tab, setTab] = useState('users');
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState(params.get('tab') || 'users');
   if (!plan?.admin) return <div className="page"><p className="empty">{t('só administradores')}</p></div>;
   return (
     <div className="page admin">
       <h2>{t('Administração')}</h2>
       <Stats />
-      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')]]} />
+      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['approvals', t('Aprovações')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')]]} />
       {tab === 'users' && <Users />}
+      {tab === 'approvals' && <Approvals />}
       {tab === 'reports' && <Reports />}
       {tab === 'feedback' && <FeedbackList />}
       {tab === 'plans' && <PlansConfig />}
@@ -357,6 +360,127 @@ function AdsConfig() {
         <button className="btn" onClick={save}>{t('Salvar')}</button>
         {saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}
       </div>
+    </div>
+  );
+}
+
+/** Aprovações: fliperamas e times pedidos pelos membros, votações de tier abertas e regras da votação. */
+function Approvals() {
+  const [venues, setVenues] = useState(null);
+  const [teams, setTeams] = useState(null);
+  const [votes, setVotes] = useState([]);
+  const [err, setErr] = useState('');
+  const load = () => {
+    rpc('admin_venue_requests', { p_status: 'pending' }).then(setVenues).catch((e) => setErr(tErr(e.message)));
+    rpc('admin_teams', { p_status: 'pending' }).then(setTeams).catch((e) => setErr(tErr(e.message)));
+    rpc('tier_proposals_list', { p_charts: null }).then((l) => setVotes(l.filter((p) => p.status === 'open'))).catch(() => {});
+  };
+  useEffect(() => { load(); }, []);
+  return (
+    <div className="approvals">
+      {err && <div className="form-err">{err}</div>}
+      <h3>{t('Fliperamas')}</h3>
+      {venues && !venues.length && <p className="muted small">{t('Nenhum pedido esperando.')}</p>}
+      {(venues || []).map((r) => <VenueReview key={r.id} r={r} onDone={load} />)}
+
+      <h3>{t('Times')}</h3>
+      {teams && !teams.length && <p className="muted small">{t('Nenhum pedido esperando.')}</p>}
+      {(teams || []).map((x) => <TeamReview key={x.id} x={x} onDone={load} />)}
+
+      <h3>{t('Votações de tier abertas')}</h3>
+      {!votes.length && <p className="muted small">{t('Nenhuma votação aberta.')}</p>}
+      {votes.map((p) => <ProposalCard key={p.id} p={p} onChange={load} showChart />)}
+      <CommunityConfig />
+    </div>
+  );
+}
+
+function VenueReview({ r, onDone }) {
+  const [f, setF] = useState({ name: r.name, city: r.city, address: r.address || '', lat: r.latitude ?? '', lng: r.longitude ?? '',
+    machines: r.machines, machine_names: r.machine_names || '', note: '' });
+  const [err, setErr] = useState('');
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const review = async (approve) => {
+    setErr('');
+    const num = (v) => (v === '' || v == null ? null : Number(String(v).replace(',', '.')));
+    try {
+      await rpc('admin_review_venue', { p_id: r.id, p_approve: approve, p_name: f.name, p_city: f.city, p_address: f.address,
+        p_lat: num(f.lat), p_lng: num(f.lng), p_machines: Number(f.machines) || 1, p_machine_names: f.machine_names, p_note: f.note });
+      onDone();
+    } catch (e) { setErr(tErr(e.message)); }
+  };
+  const maps = f.lat !== '' && f.lng !== '' ? `https://www.google.com/maps?q=${f.lat},${f.lng}` : `https://www.google.com/maps/search/${encodeURIComponent(`${f.name} ${f.address} ${f.city}`)}`;
+  return (
+    <div className="card review-card">
+      <div className="small muted">{t('Pedido de {who} · {when}', { who: r.nickname || t('Jogador'), when: timeAgo(r.created_at) })}</div>
+      <div className="venue-form">
+        <input value={f.name} onChange={set('name')} placeholder={t('Nome do lugar')} />
+        <div className="row2"><input value={f.city} onChange={set('city')} placeholder={t('Cidade')} /><input type="number" min={1} max={20} value={f.machines} onChange={set('machines')} /></div>
+        <input value={f.address} onChange={set('address')} placeholder={t('Endereço')} />
+        <div className="row2"><input value={f.lat} onChange={set('lat')} placeholder="Latitude" /><input value={f.lng} onChange={set('lng')} placeholder="Longitude" /></div>
+        <input value={f.machine_names} onChange={set('machine_names')} placeholder={t('Nome das máquinas (opcional, separados por vírgula)')} />
+        {r.note && <p className="small">“{r.note}”</p>}
+        <a className="link small" href={maps} target="_blank" rel="noreferrer">{t('Conferir no mapa')}</a>
+        <input value={f.note} onChange={set('note')} placeholder={t('Recado para quem pediu (opcional)')} />
+      </div>
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row">
+        <button className="btn" onClick={() => review(true)}><Check size={14} /> {t('Aprovar')}</button>
+        <button className="btn ghost" onClick={() => review(false)}><X size={14} /> {t('Recusar')}</button>
+      </div>
+    </div>
+  );
+}
+
+function TeamReview({ x, onDone }) {
+  const [f, setF] = useState({ name: x.name, tag: x.tag || '', note: '' });
+  const [err, setErr] = useState('');
+  const review = async (approve) => {
+    setErr('');
+    try { await rpc('admin_review_team', { p_id: x.id, p_approve: approve, p_name: f.name, p_tag: f.tag, p_note: f.note }); onDone(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  return (
+    <div className="card review-card">
+      <div className="small muted">{t('Pedido de {who} · {when}', { who: x.nickname || t('Jogador'), when: timeAgo(x.created_at) })}{x.city ? ` · ${x.city}` : ''}</div>
+      <div className="team-form">
+        <div className="row2">
+          <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder={t('Nome do time')} />
+          <input value={f.tag} maxLength={5} onChange={(e) => setF({ ...f, tag: e.target.value.toUpperCase() })} placeholder={t('Sigla')} />
+        </div>
+        <input value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} placeholder={t('Recado para quem pediu (opcional)')} />
+      </div>
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row">
+        <button className="btn" onClick={() => review(true)}><Check size={14} /> {t('Aprovar')}</button>
+        <button className="btn ghost" onClick={() => review(false)}><X size={14} /> {t('Recusar')}</button>
+      </div>
+    </div>
+  );
+}
+
+/** Regras da votação de tier: prazo e mínimo de votos. */
+function CommunityConfig() {
+  const { reloadPlan } = useData();
+  const [cfg, setCfg] = useState(null);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => { rpc('app_config').then(setCfg).catch((e) => setErr(tErr(e.message))); }, []);
+  if (!cfg) return null;
+  const c = cfg.community || {};
+  const set = (k, v) => { setSaved(false); setCfg({ ...cfg, community: { ...c, [k]: v } }); };
+  const save = async () => {
+    try { await rpc('admin_set_config', { p_value: cfg }); setSaved(true); reloadPlan(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  return (
+    <div className="card">
+      <h3>{t('Regras da votação de tier')}</h3>
+      <div className="cfg-row"><span>{t('Horas que a votação fica aberta')}</span>
+        <input type="number" min={1} max={336} value={c.tier_vote_hours ?? 48} onChange={(e) => set('tier_vote_hours', Number(e.target.value) || 48)} /></div>
+      <div className="cfg-row"><span>{t('Mínimo de votos para valer')}</span>
+        <input type="number" min={1} max={50} value={c.tier_vote_min ?? 3} onChange={(e) => set('tier_vote_min', Number(e.target.value) || 3)} /></div>
+      <p className="muted tiny">{t('Aprova quando há mais votos a favor do que contra e o total chega ao mínimo. Votos só de quem passou o chart.')}</p>
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row"><button className="btn" onClick={save}>{t('Salvar')}</button>{saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}</div>
     </div>
   );
 }

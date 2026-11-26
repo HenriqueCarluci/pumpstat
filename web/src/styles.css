@@ -702,3 +702,63 @@ a.q-city:hover { color: var(--text); }
 .video-admin { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
 .video-admin input { flex: 1; min-width: 180px; }
 .video-admin-open { margin-top: 4px; }
+
+/* Notificações: limpar e apagar */
+.notif-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.notif-wrap { position: relative; }
+.notif-wrap .notif { padding-right: 40px; }
+.notif-x { position: absolute; top: 8px; right: 6px; background: none; border: 0; color: var(--muted); padding: 6px; border-radius: 8px; cursor: pointer; }
+.notif-x:hover { color: var(--text); background: rgba(255, 255, 255, 0.06); }
+.team-tag { display: inline-block; font: 700 10px var(--num); letter-spacing: 0.04em; padding: 1px 6px; border-radius: 6px; margin-left: 6px; vertical-align: 2px;
+  background: rgba(61, 143, 230, 0.16); color: #9cc8f5; border: 1px solid rgba(61, 143, 230, 0.4); }
+.playing-now { margin: 10px 0 14px; display: grid; gap: 6px; }
+.playing-now h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; font-size: 15px; }
+.playing-now .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #3fd68a; box-shadow: 0 0 0 3px rgba(63, 214, 138, 0.2); }
+.pn-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 12px; background: rgba(63, 214, 138, 0.07); border: 1px solid rgba(63, 214, 138, 0.25); color: inherit; text-decoration: none; }
+.pn-item small { display: block; color: var(--muted); }
+.pn-pos { text-align: right; font: 700 13px var(--num); }
+.team-card .team-tag { vertical-align: 1px; }
+.team-pick input, .team-form input, .venue-form input, .venue-form textarea { width: 100%; }
+.team-list { display: grid; gap: 6px; margin: 8px 0; max-height: 320px; overflow: auto; }
+.team-opt { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; text-align: left; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+.team-opt small { flex-basis: 100%; }
+.team-opt.on { border-color: #3d8fe6; background: rgba(61, 143, 230, 0.1); }
+.team-form, .venue-form { display: grid; gap: 8px; margin-top: 8px; }
+.team-form .row2, .venue-form .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.recent-refresh { display: grid; gap: 4px; margin-bottom: 10px; }
+.recent-refresh .row-between { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+@keyframes sc-spin { to { transform: rotate(360deg); } }
+.spin { animation: sc-spin 0.9s linear infinite; }
+.venue-req { margin-top: 14px; }
+.venue-mine { display: grid; gap: 4px; margin-top: 10px; }
+.venue-mine .vr-approved a { color: var(--neon2); }
+
+/* Votação de tier */
+.tier-vote { margin: 8px 0; display: grid; gap: 8px; }
+.proposal { border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: grid; gap: 6px; background: rgba(255, 255, 255, 0.02); }
+.proposal.open { border-color: rgba(61, 143, 230, 0.5); }
+.proposal-head { display: flex; gap: 6px; align-items: center; font-size: 14px; }
+.proposal-reason { margin: 0; font-size: 13px; color: var(--muted); }
+.proposal-bar { height: 6px; border-radius: 3px; background: rgba(217, 119, 46, 0.45); overflow: hidden; }
+.proposal-bar .yes { display: block; height: 100%; background: #3d8fe6; }
+.proposal-foot { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.proposal-foot .ok { color: var(--neon2); }
+.proposal-chart { display: grid; grid-template-columns: 56px auto 1fr; gap: 8px; align-items: center; color: inherit; text-decoration: none; }
+.proposal-form { display: grid; gap: 6px; }
+.proposal-form input { width: 100%; }
+.votes-page .proposal { margin-bottom: 10px; }
+.tier-tools { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.tier-tools .chip-toggle { text-decoration: none; }
+.admin-preview { display: grid; gap: 4px; margin: 6px 0; }
+.approvals h3 { margin-top: 16px; }
+.review-card { display: grid; gap: 8px; margin-bottom: 10px; }
+
+/* Notas dos amigos no chart */
+.friend-scores { display: grid; gap: 3px; margin: 8px 0 4px; padding: 6px 8px; border-radius: 10px; background: rgba(255, 255, 255, 0.03); }
+.fs-head { margin-bottom: 2px; }
+.fs-row { display: grid; grid-template-columns: 24px 1fr auto auto auto; gap: 8px; align-items: center; color: inherit; text-decoration: none; font-size: 13px; }
+.fs-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fs-score { font: 600 13px var(--num); }
+.fs-row .up { color: #7fb5f0; font-family: var(--num); }
+.fs-row .down { color: #e8a06a; font-family: var(--num); }
+.chartcard.focus { box-shadow: 0 0 0 2px #3d8fe6; }

@@ -42,8 +42,28 @@ export function entitlements(plan) {
   return { plan: mine, enforce, showPlans: !!cfg.show_plans || !!plan?.admin, can, limit, config: cfg };
 }
 
-/** Região de preço pelo idioma/país do aparelho. */
+const BR_TZ = ['Sao_Paulo', 'Fortaleza', 'Recife', 'Bahia', 'Belem', 'Manaus', 'Cuiaba', 'Campo_Grande', 'Porto_Velho', 'Boa_Vista',
+  'Rio_Branco', 'Araguaina', 'Maceio', 'Noronha', 'Santarem', 'Eirunepe'];
+const NOT_EU_TZ = ['Moscow', 'Minsk', 'Istanbul', 'Kirov', 'Volgograd', 'Samara', 'Ulyanovsk', 'Saratov', 'Astrakhan', 'Kaliningrad', 'Simferopol',
+  'London', 'Belfast', 'Guernsey', 'Isle_of_Man', 'Jersey', 'Zurich', 'Oslo', 'Belgrade', 'Sarajevo', 'Skopje', 'Podgorica', 'Tirane', 'Chisinau', 'Kiev', 'Kyiv'];
+
+/** Região pelo fuso horário do aparelho (onde a pessoa está), ou null se não der para saber. */
+function regionByTimeZone() {
+  let tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch { return null; }
+  const [area, city = ''] = tz.split('/');
+  if (area === 'America' && BR_TZ.includes(city)) return 'BR';
+  if (area === 'America' && /^(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Boise|Juneau|Adak|Nome|Sitka|Yakutat|Metlakatla|Menominee|Indiana|Kentucky|North_Dakota)/.test(tz.slice(8))) return 'US';
+  if (tz === 'Pacific/Honolulu') return 'US';
+  if (area === 'Europe') return NOT_EU_TZ.includes(city) ? 'WORLD' : 'EU';
+  if (area === 'Atlantic' && ['Azores', 'Madeira', 'Canary'].includes(city)) return 'EU';
+  return tz ? 'WORLD' : null;
+}
+
+/** Região de preço: onde a pessoa está (fuso do aparelho) e, sem isso, o país do idioma. */
 export function priceRegion() {
+  const byTz = regionByTimeZone();
+  if (byTz) return byTz;
   const langs = (navigator.languages || [navigator.language || '']).map((l) => l.toUpperCase());
   const region = (langs.find((l) => l.includes('-')) || '').split('-')[1] || '';
   if (region === 'BR' || langs[0]?.startsWith('PT-BR')) return 'BR';
