@@ -7,6 +7,8 @@ import Tier from './pages/Tier.jsx';
 import { useState } from 'react';
 import { PlanMatrix } from './pages/AdminExtra.jsx';
 import { Attempts } from './pages/Training.jsx';
+import { Flag } from './lib/country.jsx';
+function F() { return <div className="page"><div className="card">{['BR','US','KR','JP','MX','CL','AR','PT','FR','GB'].map((c) => <div key={c} style={{ padding: 6 }}><Flag cc={c} /><b>Jogador {c}</b></div>)}</div></div>; }
 const D = 86400000; const now = Date.now();
 const hist = [700000, 720000, 740000, 760000, 780000, 905000, 912000].map((sc, i) => ({ at: now - (20 - i * 3) * D, score: sc, grade: sc > 900000 ? 'AA' : 'A', broken: sc < 900000, miss: 30 - i * 3 }));
 function A() { return <div className="page"><div className="train-item"><Attempts x={{ history: hist, added: now - 10 * D, clearedInTraining: true, cleared: true, triesSince: 3, failsSince: 1 }} /></div></div>; }
@@ -33,6 +35,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

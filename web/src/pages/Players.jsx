@@ -1,3 +1,4 @@
+import { Flag, useCountries } from '../lib/country.jsx';
 import { SocialLinks } from '../components/Socials.jsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -30,6 +31,7 @@ export default function Players() {
   const [list, setList] = useState(null);
   const [reqs, setReqs] = useState({ incoming: [], outgoing: [] });
   const teamOf = useTeams([...(list || []).map((p) => p.id), ...playing.map((q) => q.user)]);
+  const ccOf = useCountries([...(list || []).map((p) => p.id), ...playing.map((q) => q.user)]);
   const [err, setErr] = useState('');
   const load = () => {
     rpc('players', { p_version: version }).then(setList).catch((e) => setErr(tErr(e.message)));
@@ -64,7 +66,7 @@ export default function Players() {
                   <Link key={`${q.user}-${q.venue}-${q.machine}`} to={`/fila/${q.venue}`} className="pn-item">
                     <Avatar p={q} size={36} />
                     <span>
-                      <b>{q.nickname || t('Jogador')}</b><TeamTag team={teamOf(q.user)} />
+                      <Flag cc={ccOf(q.user)} /><b>{q.nickname || t('Jogador')}</b><TeamTag team={teamOf(q.user)} />
                       <small>{q.venue_name} · {q.machine}{q.city ? ` · ${q.city}` : ''}</small>
                     </span>
                     <span className="pn-pos">
@@ -85,7 +87,7 @@ export default function Players() {
                     <Avatar p={p} />
                     <span className="pinfo">
                       <span className="ptitle">{p.title}</span>
-                      <b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>}
+                      <Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>}
                       <small className="muted">{t('{n} recordes', { n: p.bests })}</small>
                     </span>
                     <span className="ppb">
@@ -189,6 +191,7 @@ export function ComparePlayer() {
   const [filter, setFilter] = useState('both');
   const [mode, setMode] = useState('all');
   const teamOf = useTeams([id]);
+  const ccOf = useCountries([id]);
 
   useEffect(() => {
     setRows(null);
@@ -215,7 +218,7 @@ export function ComparePlayer() {
       <section className="card vs">
         <div className="vs-side"><b>{t('Você')}</b><span className="big up">{wins}</span></div>
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
-        <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><TeamTag team={teamOf(id)} /><span className="big down">{losses}</span></div>
+        <div className="vs-side">{other && <Avatar p={other} size={36} />}<b className="vs-nick"><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</b><TeamTag team={teamOf(id)} /><span className="big down">{losses}</span></div>
       </section>
       <SocialLinks userId={id} />
       <MiniChat user={id} name={other?.nickname} />

@@ -1144,3 +1144,8 @@ a.q-city:hover { color: var(--text); }
 .social.tiktok b { color: #6ff0e8; } .social.x b { color: #e8e8e8; } .social.discord b { color: #8ea1ff; }
 .se-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin: 8px 0; }
 .socials-edit select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); }
+
+/* Bandeira do país */
+.flag { display: inline-block; vertical-align: -2px; border-radius: 3px; object-fit: cover; margin-right: 6px; box-shadow: 0 0 0 1px rgba(255,255,255,.15); flex: none; }
+.vs-nick { display: inline-flex; align-items: center; }
+.country-pick select { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); max-width: 100%; }

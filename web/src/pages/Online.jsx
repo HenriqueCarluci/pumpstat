@@ -1,3 +1,4 @@
+import { Flag, useCountries } from '../lib/country.jsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
@@ -73,6 +74,7 @@ export default function Online() {
 
 function OnlineRow({ p, open, onToggle, onSent }) {
   const teamOf = useTeams([p.id]);
+  const ccOf = useCountries([p.id]);
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -91,7 +93,7 @@ function OnlineRow({ p, open, onToggle, onSent }) {
           <StatusDot status={p.status || 'online'} className="av-dot" />
         </span>
         <div className="online-info">
-          <div className="online-nick"><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
+          <div className="online-nick"><Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
           {p.title && <div className="online-title">{p.title}</div>}
           {(p.status === 'away' || p.status === 'busy') && <div className={`small st-label st-${p.status}`}>{p.status === 'away' ? t('Ausente') : t('Ocupado')}</div>}
           {(p.max?.S || p.max?.D) && (

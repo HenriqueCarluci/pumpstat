@@ -1,3 +1,4 @@
+import CountryPicker from '../components/CountryPicker.jsx';
 import { SocialsEditor } from '../components/Socials.jsx';
 import { useData } from '../App.jsx';
 import { usePrefs } from '../lib/prefs.js';
@@ -35,6 +36,7 @@ export default function Settings() {
       </section>
 
       {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
+      <CountryPicker />
       <SocialsEditor />
 
       {(ent.showPlans || plan?.admin) && <section className="card plan-card">

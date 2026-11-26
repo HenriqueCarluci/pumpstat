@@ -1,4 +1,5 @@
 // Desafios do mês: metas para qualquer nível, com brindes do clube.
+import { Flag, useCountries } from '../lib/country.jsx';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
@@ -43,6 +44,7 @@ function ChallengeCard({ c, onChange }) {
   const [board, setBoard] = useState(null);
   const [open, setOpen] = useState(false);
   const teamOf = useTeams((board || []).map((b) => b.id));
+  const ccOf = useCountries((board || []).map((b) => b.id));
   const pct = c.progress != null ? Math.min(100, (c.progress / c.goal) * 100) : 0;
   const done = c.progress != null && c.progress >= c.goal;
 
@@ -97,7 +99,7 @@ function ChallengeCard({ c, onChange }) {
           {board?.map((b) => (
             <div key={b.id} className={`ch-row ${b.me ? 'me' : ''}`}>
               <Avatar p={b} size={28} />
-              <span className="ch-name">{b.nickname || t('Jogador')}<TeamTag team={teamOf(b.id)} /></span>
+              <span className="ch-name"><Flag cc={ccOf(b.id)} />{b.nickname || t('Jogador')}<TeamTag team={teamOf(b.id)} /></span>
               <span className="ch-bar"><span style={{ width: `${Math.min(100, (b.progress / c.goal) * 100)}%` }} /></span>
               <b className="ch-n">{b.done ? <Check size={14} /> : `${b.progress}/${c.goal}`}</b>
             </div>

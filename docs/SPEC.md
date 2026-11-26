@@ -240,3 +240,8 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Ajustes → "Redes sociais": Instagram, Twitch, YouTube, TikTok, X e Discord (só o nome de usuário; aceita colar o link). "Quem pode ver": só amigos (padrão), todos ou ninguém.
 - `user_socials` (050), `my_socials()`, `set_socials(p)` (normaliza e valida o nome), `socials_of(user)` (respeita visibilidade, amizade e bloqueio).
 - No perfil do jogador (/jogador/:id) aparecem como botões que abrem a rede; Discord copia o usuário.
+
+## País (bandeira no perfil)
+- Ajustes → "País" (opcional; sugere pelo idioma do aparelho). `user_settings.country` (051), `set_my_country`, `my_country`, `countries_of(ids)`.
+- Bandeira ao lado do nick em Amigos, perfil/comparação, Online e placar dos Desafios (`lib/country.jsx`: busca em lote com cache, como os times).
+- SVGs em `web/public/flags` do pacote flag-icons (MIT, licença junto).

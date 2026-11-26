@@ -535,3 +535,7 @@ Quem pode ver | Who can see | Quién puede ver | 공개 범위 | 公開範囲 | 
 Só meus amigos | Only my friends | Solo mis amigos | 친구만 | フレンドのみ | Seulement mes amis | Solo i miei amici
 Todos os jogadores | All players | Todos los jugadores | 모든 플레이어 | 全プレイヤー | Tous les joueurs | Tutti i giocatori
 Ninguém (esconder) | Nobody (hide) | Nadie (ocultar) | 아무도 (숨김) | 非公開 | Personne (masquer) | Nessuno (nascondi)
+País | Country | País | 국가 | 国 | Pays | Paese
+A bandeira aparece ao lado do seu nick para os outros jogadores. Opcional. | The flag shows next to your nickname for other players. Optional. | La bandera aparece junto a tu nick para los demás jugadores. Opcional. | 다른 플레이어에게 닉네임 옆에 국기가 표시됩니다. 선택 사항. | 他のプレイヤーにニックネームの横に国旗が表示されます。任意。 | Le drapeau s'affiche à côté de votre pseudo pour les autres joueurs. Facultatif. | La bandiera appare accanto al tuo nick per gli altri giocatori. Facoltativo.
+Não mostrar | Don't show | No mostrar | 표시 안 함 | 表示しない | Ne pas afficher | Non mostrare
+país inválido | invalid country | país inválido | 잘못된 국가 | 無効な国 | pays invalide | paese non valido
