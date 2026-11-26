@@ -1272,3 +1272,7 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .tier-grid.size-sm .tile-train { top: 2px; right: 2px; }
 .tier-grid.size-sm .tile-new ~ .tile-train { top: 16px; }
 .tier-grid.size-sm .tile-special { top: 2px; left: 2px; }
+/* comparação: os dois lados no mesmo padrão (foto, bandeira, nick, time) */
+.vs-side { min-width: 0; }
+.vs-side .vs-nick { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; justify-content: center; }
+.vs-you { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; }

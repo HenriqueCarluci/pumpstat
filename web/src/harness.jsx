@@ -31,7 +31,7 @@ const FAKE = {
   is_online: true, compare_player: [[4864, 900000, 'AA', 'FG', false, 950000, 'AAA', 'TG', false], [5769, 961200, 'AAA+', 'TG', false, 940000, 'AA+', 'FG', false]],
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null }], socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
   my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
-  countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: {},
+  countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: { eu: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' }, amigo: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' } },
   my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua' },
     week: { plays: 132, passes: 97, active: 4 },
     members: [
@@ -64,9 +64,9 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
     special: id === 4864 ? { g: ['speed', 'stop'], gimmick: true, off: false, note: null, admin: true } : undefined };
 });
 song.charts = charts;
-const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: null, lastSync: null, pumbilityHistory: [] };
+const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
 const plan = { plan: 'plus', admin: new URLSearchParams(location.search).has('admin'), config: { toggles: {} } };
-const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'x' } }, notifications: { list: [] }, presence: {} };
+const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { list: [] }, presence: {} };
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>

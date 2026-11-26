@@ -184,14 +184,16 @@ function hl(name, term) {
 /** Comparação chart a chart entre você e outro jogador. */
 export function ComparePlayer() {
   const { id } = useParams();
-  const { data, version } = useData();
+  const { data, version, session } = useData();
+  const myId = session?.user?.id;
+  const me = { nickname: data.profile?.nickname, avatar: data.profile?.avatar_url, title: data.profile?.title };
   const [rows, setRows] = useState(null);
   const [other, setOther] = useState(null);
   const [err, setErr] = useState('');
   const [filter, setFilter] = useState('both');
   const [mode, setMode] = useState('all');
-  const teamOf = useTeams([id]);
-  const ccOf = useCountries([id]);
+  const teamOf = useTeams([id, myId]);
+  const ccOf = useCountries([id, myId]);
 
   useEffect(() => {
     setRows(null);
@@ -216,9 +218,21 @@ export function ComparePlayer() {
   return (
     <div className="page compare">
       <section className="card vs">
-        <div className="vs-side"><b>{t('Você')}</b><span className="big up">{wins}</span></div>
+        <div className="vs-side">
+          <Avatar p={me} size={36} />
+          <b className="vs-nick"><Flag cc={ccOf(myId)} />{me.nickname || t('Você')}</b>
+          <TeamTag team={teamOf(myId)} />
+          <small className="muted vs-you">{t('você')}</small>
+          <span className="big up">{wins}</span>
+        </div>
         <div className="vs-mid">vs<small>{t('{n} charts em comum', { n: both.length })}</small></div>
-        <div className="vs-side">{other && <Avatar p={other} size={36} />}<b className="vs-nick"><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</b><TeamTag team={teamOf(id)} /><span className="big down">{losses}</span></div>
+        <div className="vs-side">
+          <Avatar p={other || {}} size={36} />
+          <b className="vs-nick"><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</b>
+          <TeamTag team={teamOf(id)} />
+          <small className="muted vs-you">{t('amigo')}</small>
+          <span className="big down">{losses}</span>
+        </div>
       </section>
       <SocialLinks userId={id} />
       <MiniChat user={id} name={other?.nickname} />
