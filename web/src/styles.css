@@ -976,3 +976,5 @@ a.q-city:hover { color: var(--text); }
 .tier-grid.size-lg .tile-grade.g-size-lg .grade-img.md { height: 64px; }
 .tier-size { display: inline-flex; }
 .tier-size button { min-width: 34px; }
+.guest-queue { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+.guest-hint { margin: 4px 0 8px; }
