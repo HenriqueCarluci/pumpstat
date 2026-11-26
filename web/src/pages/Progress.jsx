@@ -7,6 +7,7 @@ import {
 } from '../lib/insights.js';
 import Rival from './Rival.jsx';
 import TopPlayed from '../components/TopPlayed.jsx';
+import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
@@ -349,12 +350,15 @@ function Plan({ r }) {
         <section key={i} className="card session">
           <h3>{t('Sessão {n}', { n: i + 1 })}</h3>
           {s.map((it) => (
-            <Link key={it.chart.id} to={`/musica/${it.chart.song.id}`} className={`plan-item ${p.played.has(it.chart.id) ? 'done' : ''}`}>
-              <span className={`kind k-${it.kind}`}>{t(KIND[it.kind])}</span>
-              <Ball chart={it.chart} size="sm" />
-              <span className="ttl">{it.chart.song.title}</span>
-              {p.played.has(it.chart.id) ? <Check size={16} className="ok" /> : it.chart.score != null && !it.chart.broken ? <small className="muted">{fmtScore(it.chart.score)}</small> : null}
-            </Link>
+            <div key={it.chart.id} className={`plan-row ${p.played.has(it.chart.id) ? 'done' : ''}`}>
+              <Link to={`/musica/${it.chart.song.id}?c=${it.chart.id}`} className={`plan-item ${p.played.has(it.chart.id) ? 'done' : ''}`}>
+                <span className={`kind k-${it.kind}`}>{t(KIND[it.kind])}</span>
+                <Ball chart={it.chart} size="sm" />
+                <span className="ttl">{it.chart.song.title}</span>
+                {p.played.has(it.chart.id) ? <Check size={16} className="ok" /> : it.chart.score != null && !it.chart.broken ? <small className="muted">{fmtScore(it.chart.score)}</small> : null}
+              </Link>
+              <TrainingAddChip chart={it.chart} />
+            </div>
           ))}
         </section>
       ))}

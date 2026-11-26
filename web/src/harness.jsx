@@ -5,6 +5,9 @@ import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import MyTeam from './pages/MyTeam.jsx';
 import Tour from './components/Tour.jsx';
+import { TrainingAddChip } from './components/TrainingToggle.jsx';
+import { Ball as B2 } from './components/ui.jsx';
+function P() { return <div className="page"><section className="card session">{charts.slice(0, 4).map((c, i) => <div key={c.id} className="plan-row"><a className="plan-item" href="#"><span className="kind">{['Aquecimento','Ponto fraco','Consolidar','Desafio'][i]}</span><B2 chart={c} size="sm" /><span className="ttl">{c.song.title} {c.mode}{c.level}</span></a><TrainingAddChip chart={c} /></div>)}</section></div>; }
 import Tier from './pages/Tier.jsx';
 import { useState } from 'react';
 import { PlanMatrix } from './pages/AdminExtra.jsx';
@@ -26,6 +29,7 @@ const FAKE = {
       mk(4, true, 'invite', 'Bora um x1?', 'accepted'), mk(5, false, 'message', 'fechou', 'accepted'), mk(6, true, 'message', 'https://www.youtube.com/watch?v=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'pending')]; })(),
   is_online: true, compare_player: [[4864, 900000, 'AA', 'FG', false, 950000, 'AAA', 'TG', false], [5769, 961200, 'AAA+', 'TG', false, 940000, 'AA+', 'FG', false]],
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null }], socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
+  my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
   countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: {},
   my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua' },
     week: { plays: 132, passes: 97, active: 4 },
@@ -65,6 +69,6 @@ const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: asy
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/plano" element={<P />} /><Route path="/jogador/:id" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

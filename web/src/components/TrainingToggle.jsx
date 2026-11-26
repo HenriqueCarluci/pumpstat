@@ -31,3 +31,28 @@ export default function TrainingToggle({ chart, compact = false, action = false 
     </button>
   );
 }
+
+/**
+ * Botão pequeno para listas (ex.: plano de treino): adiciona ao Meu treino;
+ * se o chart já está lá, só informa ("Já no Meu treino") para não duplicar.
+ */
+export function TrainingAddChip({ chart }) {
+  const { plan } = useData();
+  const list = useTraining();
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  if (!isOn(plan, 'training')) return null;
+  if (list?.has(chart.id)) {
+    return <span className="train-chip in" title={t('Este chart já está no Meu treino')}><BookmarkCheck size={14} /> {t('Já no Meu treino')}</span>;
+  }
+  const add = async () => {
+    setBusy(true); setErr('');
+    try { await setTraining(chart.id, true); } catch (e) { setErr(tErr(e.message)); } finally { setBusy(false); }
+  };
+  return (
+    <button type="button" className="train-chip" disabled={busy || !list} onClick={add} title={err || t('Adicionar ao Meu treino')}
+      aria-label={`${t('Adicionar ao Meu treino')}: ${chart.song.title}`}>
+      <BookmarkPlus size={14} /> {err ? t('Tentar de novo') : t('Treinar')}
+    </button>
+  );
+}
