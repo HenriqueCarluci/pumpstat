@@ -2,7 +2,7 @@
 export {
   Bell, Check, CheckCheck, ChevronDown, ChevronRight, ChevronUp, CircleCheck, Gamepad2, Home as HomeIcon, ListOrdered,
   MapPin, MessageCircle, Music2, PencilLine, Play, RefreshCw, Settings as SettingsIcon, SkipForward, Swords, Tag,
-  Target, ArrowUpToLine, Users, X, LayoutGrid, History, Radio, LifeBuoy,
+  Target, ArrowUpToLine, Users, X, LayoutGrid, History, Radio, LifeBuoy, Crown, ShieldCheck, ShieldOff, UserX, UserCheck,
 } from 'lucide-react';
 
 /** Marca do StepClub: o painel central do pad com uma seta, em gradiente. */

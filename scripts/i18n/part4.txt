@@ -125,3 +125,56 @@ E-mail para resposta | Reply-to e-mail | E-mail para respuesta | 답변 받을 �
 Incluir informações do aparelho e da tela (ajuda a resolver problemas) | Include device and screen info (helps fix problems) | Incluir información del dispositivo y la pantalla (ayuda a resolver problemas) | 기기와 화면 정보 포함 (문제 해결에 도움) | 端末と画面の情報を含める (不具合の解決に役立ちます) | Inclure les infos de l'appareil et de l'écran (aide à résoudre les problèmes) | Includi informazioni su dispositivo e schermata (aiuta a risolvere i problemi)
 Enviando… | Sending… | Enviando… | 보내는 중… | 送信中… | Envoi… | Invio…
 muitas mensagens na última hora. Tente mais tarde | too many messages in the last hour. Try later | demasiados mensajes en la última hora. Inténtalo más tarde | 지난 1시간 동안 메시지가 너무 많습니다. 나중에 다시 시도하세요 | この1時間のメッセージが多すぎます。後でお試しください | trop de messages dans la dernière heure. Réessayez plus tard | troppi messaggi nell'ultima ora. Riprova più tardi
+Administração | Admin | Administración | 관리 | 管理 | Administration | Amministrazione
+Usuários | Users | Usuarios | 사용자 | ユーザー | Utilisateurs | Utenti
+Suporte | Support | Soporte | 지원 | サポート | Support | Supporto
+Novos (7 dias) | New (7 days) | Nuevos (7 días) | 신규 (7일) | 新規 (7日) | Nouveaux (7 jours) | Nuovi (7 giorni)
+Ativos (7 dias) | Active (7 days) | Activos (7 días) | 활성 (7일) | アクティブ (7日) | Actifs (7 jours) | Attivi (7 giorni)
+Com conta da Pump | With Pump account | Con cuenta de Pump | Pump 계정 연결 | Pump 連携済み | Avec compte Pump | Con account Pump
+Suporte em aberto | Open support | Soporte abierto | 미해결 문의 | 未対応の問い合わせ | Support ouvert | Supporto aperto
+Bloqueados | Blocked | Bloqueados | 차단됨 | ブロック中 | Bloqués | Bloccati
+Buscar por e-mail ou nickname… | Search by e-mail or nickname… | Buscar por e-mail o nickname… | 이메일 또는 닉네임 검색… | メールアドレスかニックネームで検索… | Rechercher par e-mail ou pseudo… | Cerca per e-mail o nickname…
+Grátis | Free | Gratis | 무료 | 無料 | Gratuit | Gratis
+vitalício | lifetime | vitalicio | 평생 | 永久 | à vie | a vita
+loja | store | tienda | 스토어 | ストア | boutique | store
+até {d} | until {d} | hasta {d} | {d}까지 | {d}まで | jusqu'au {d} | fino al {d}
+Sem conta da Pump | No Pump account | Sin cuenta de Pump | Pump 계정 없음 | Pump 未連携 | Sans compte Pump | Senza account Pump
+bloqueado | blocked | bloqueado | 차단됨 | ブロック中 | bloqué | bloccato
+Conta criada | Account created | Cuenta creada | 가입일 | 登録日 | Compte créé | Account creato
+Último login | Last sign-in | Último inicio de sesión | 마지막 로그인 | 最終ログイン | Dernière connexion | Ultimo accesso
+Última sincronização | Last sync | Última sincronización | 마지막 동기화 | 最終同期 | Dernière synchronisation | Ultima sincronizzazione
+Título | Title | Título | 칭호 | 称号 | Titre | Titolo
+Liberar StepClub+ (cortesia) | Grant StepClub+ (complimentary) | Liberar StepClub+ (cortesía) | StepClub+ 무료 제공 | StepClub+ を無償付与 | Offrir StepClub+ | Regala StepClub+
+Motivo (opcional), ex.: membro do clube | Reason (optional), e.g. club member | Motivo (opcional), ej.: miembro del club | 사유 (선택), 예: 클럽 회원 | 理由 (任意) 例: クラブ会員 | Motif (facultatif), ex. : membre du club | Motivo (facoltativo), es.: membro del club
+30 dias | 30 days | 30 días | 30일 | 30日 | 30 jours | 30 giorni
+3 meses | 3 months | 3 meses | 3개월 | 3か月 | 3 mois | 3 mesi
+1 ano | 1 year | 1 año | 1년 | 1年 | 1 an | 1 anno
+Vitalício | Lifetime | Vitalicio | 평생 | 永久 | À vie | A vita
+Remover o StepClub+ deste usuário? | Remove StepClub+ from this user? | ¿Quitar StepClub+ a este usuario? | 이 사용자의 StepClub+를 해제할까요? | このユーザーの StepClub+ を解除しますか? | Retirer StepClub+ à cet utilisateur ? | Rimuovere StepClub+ a questo utente?
+Remover plano | Remove plan | Quitar plan | 플랜 해제 | プラン解除 | Retirer le plan | Rimuovi piano
+Conta | Account | Cuenta | 계정 | アカウント | Compte | Account
+Desbloquear | Unblock | Desbloquear | 차단 해제 | ブロック解除 | Débloquer | Sblocca
+Bloquear | Block | Bloquear | 차단 | ブロック | Bloquer | Blocca
+Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo. | Block this account? They'll be signed out and won't be able to sign in again. | ¿Bloquear esta cuenta? La persona sale de la app y no puede volver a entrar. | 이 계정을 차단할까요? 앱에서 로그아웃되고 다시 로그인할 수 없습니다. | このアカウントをブロックしますか? ログアウトされ、再ログインできなくなります。 | Bloquer ce compte ? La personne est déconnectée et ne pourra plus se connecter. | Bloccare questo account? La persona esce dall'app e non può più accedere.
+Tirar o acesso de administrador? | Remove admin access? | ¿Quitar el acceso de administrador? | 관리자 권한을 해제할까요? | 管理者権限を外しますか? | Retirer l'accès administrateur ? | Rimuovere l'accesso da amministratore?
+Tirar admin | Remove admin | Quitar admin | 관리자 해제 | 管理者を外す | Retirer admin | Rimuovi admin
+Dar acesso de administrador? A pessoa poderá gerenciar planos e usuários. | Give admin access? They'll be able to manage plans and users. | ¿Dar acceso de administrador? Podrá gestionar planes y usuarios. | 관리자 권한을 줄까요? 플랜과 사용자를 관리할 수 있게 됩니다. | 管理者権限を付与しますか? プランとユーザーを管理できるようになります。 | Donner l'accès administrateur ? La personne pourra gérer les plans et les utilisateurs. | Dare l'accesso da amministratore? Potrà gestire piani e utenti.
+Tornar admin | Make admin | Hacer admin | 관리자로 지정 | 管理者にする | Rendre admin | Rendi admin
+Ver perfil | View profile | Ver perfil | 프로필 보기 | プロフィールを見る | Voir le profil | Vedi profilo
+Em aberto | Open | Abiertas | 미해결 | 未対応 | Ouvertes | Aperte
+Resolvidas | Resolved | Resueltas | 해결됨 | 対応済み | Résolues | Risolte
+Todas | All | Todas | 전체 | すべて | Toutes | Tutte
+Nenhuma mensagem aqui. | No messages here. | No hay mensajes aquí. | 메시지가 없습니다. | メッセージはありません。 | Aucun message ici. | Nessun messaggio qui.
+responder para | reply to | responder a | 답장 주소 | 返信先 | répondre à | rispondere a
+Responder por e-mail | Reply by e-mail | Responder por e-mail | 이메일로 답장 | メールで返信 | Répondre par e-mail | Rispondi via e-mail
+Marcar como resolvida | Mark as resolved | Marcar como resuelta | 해결됨으로 표시 | 対応済みにする | Marquer comme résolue | Segna come risolta
+Reabrir | Reopen | Reabrir | 다시 열기 | 再オープン | Rouvrir | Riapri
+Plano grátis | Free plan | Plan gratuito | 무료 플랜 | 無料プラン | Plan gratuit | Piano gratuito
+Acesso vitalício. | Lifetime access. | Acceso vitalicio. | 평생 이용권입니다. | 永久アクセスです。 | Accès à vie. | Accesso a vita.
+Ativo até {d}. | Active until {d}. | Activo hasta {d}. | {d}까지 이용 가능합니다. | {d}まで有効です。 | Actif jusqu'au {d}. | Attivo fino al {d}.
+Assinatura ativa. | Subscription active. | Suscripción activa. | 구독 중입니다. | サブスクリプション有効。 | Abonnement actif. | Abbonamento attivo.
+Os recursos do StepClub+ chegam em breve. | StepClub+ features are coming soon. | Las funciones de StepClub+ llegan pronto. | StepClub+ 기능이 곧 추가됩니다. | StepClub+ の機能はまもなく登場します。 | Les fonctionnalités StepClub+ arrivent bientôt. | Le funzioni StepClub+ arriveranno presto.
+só administradores | admins only | solo administradores | 관리자 전용 | 管理者のみ | administrateurs uniquement | solo amministratori
+você não pode bloquear a si mesmo | you can't block yourself | no puedes bloquearte a ti mismo | 자기 자신은 차단할 수 없습니다 | 自分自身はブロックできません | vous ne pouvez pas vous bloquer vous-même | non puoi bloccare te stesso
+remova o acesso de administrador antes de bloquear | remove admin access before blocking | quita el acceso de administrador antes de bloquear | 차단하기 전에 관리자 권한을 해제하세요 | ブロックする前に管理者権限を外してください | retirez l'accès administrateur avant de bloquer | rimuovi l'accesso da amministratore prima di bloccare
+você não pode remover o próprio acesso | you can't remove your own access | no puedes quitar tu propio acceso | 자신의 권한은 해제할 수 없습니다 | 自分の権限は外せません | vous ne pouvez pas retirer votre propre accès | non puoi rimuovere il tuo accesso

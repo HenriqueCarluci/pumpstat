@@ -160,3 +160,10 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 ## Ajuda e feedback (Ajustes)
 - Formulário com tipo (dúvida, problema, sugestão, outro), mensagem, e-mail para resposta e, opcionalmente, dados do aparelho e da tela.
 - Sempre salva na tabela `feedback` (`submit_feedback`, até 5 por hora). A API (`POST /api/feedback`) manda o e-mail pelo FormSubmit para o endereço configurado em `FEEDBACK_WEBHOOK` no Render (`https://formsubmit.co/ajax/<destino>`); sem a variável, fica só no banco. No primeiro envio o FormSubmit manda um e-mail de ativação para o destino.
+
+## Administração (`#/admin`, só para `app_admins`)
+- Dono: conta CARLUCI (Henrique), com StepClub+ vitalício.
+- Resumo: usuários, novos e ativos em 7 dias, online, com conta da Pump, assinantes, suporte em aberto e bloqueados (`admin_stats`).
+- Usuários (`admin_users`): busca por e-mail ou nick; liberar StepClub+ como cortesia (30 dias, 3 meses, 1 ano ou vitalício, com motivo), remover plano, bloquear/desbloquear conta (`auth.users.banned_until`, derruba as sessões) e dar/tirar acesso de admin.
+- Suporte (`admin_feedback`): mensagens do formulário, responder por e-mail e marcar como resolvida.
+- Planos: tabela `subscriptions` (fonte `store`, `comp` ou `lifetime`); `my_plan()` diz o plano e se o usuário é admin. Assinaturas da loja entram com `source = 'store'` quando o pagamento for ligado.

@@ -2,7 +2,9 @@ import { useData } from '../App.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
-import { timeAgo } from '../components/ui.jsx';
+import { fmtDate, timeAgo } from '../components/ui.jsx';
+import { Link } from 'react-router-dom';
+import { Crown, ShieldCheck } from '../components/Icons.jsx';
 import { signOut } from '../lib/auth.js';
 import { VERSIONS } from '../lib/piu.js';
 import { t } from '../lib/i18n.js';
@@ -10,7 +12,7 @@ import LangPicker from '../components/LangPicker.jsx';
 import Feedback from '../components/Feedback.jsx';
 
 export default function Settings() {
-  const { data, version, reload, session } = useData();
+  const { data, version, reload, session, plan } = useData();
   const [prefs, setPrefs] = usePrefs();
 
   return (
@@ -23,6 +25,18 @@ export default function Settings() {
           <summary className="small">{t('Entrar com outra conta AM.PASS')}</summary>
           <PiuConnect compact onDone={() => reload()} />
         </details>
+      </section>
+
+      <section className="card plan-card">
+        <div className="row-between">
+          <h3 className="ic-row">{plan?.plan === 'plus' ? <><Crown size={18} /> StepClub+</> : t('Plano grátis')}</h3>
+          {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
+        </div>
+        <p className="muted small">
+          {plan?.plan === 'plus'
+            ? (plan.source === 'lifetime' ? t('Acesso vitalício.') : plan.expires_at ? t('Ativo até {d}.', { d: fmtDate(plan.expires_at) }) : t('Assinatura ativa.'))
+            : t('Os recursos do StepClub+ chegam em breve.')}
+        </p>
       </section>
 
       <section className="card">

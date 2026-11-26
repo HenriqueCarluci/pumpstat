@@ -22,6 +22,7 @@ import { useNotifications } from './lib/notify.js';
 import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
+import Admin from './pages/Admin.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
 
@@ -133,10 +134,13 @@ function DataApp({ session, ingestKey }) {
 
   const notifications = useNotifications(!!session);
   const presence = usePresence(!!session);
+  const [plan, setPlan] = useState(null);
+  const reloadPlan = useCallback(() => rpc('my_plan').then(setPlan).catch(() => {}), []);
+  useEffect(() => { reloadPlan(); }, [reloadPlan]);
   // acorda a API e deixa ela atualizar o catálogo (no máximo 1x por dia)
   useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications, presence }),
-    [version, data, loading, error, reload, session, ingestKey, notifications, presence]);
+  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications, presence, plan, reloadPlan }),
+    [version, data, loading, error, reload, session, ingestKey, notifications, presence, plan, reloadPlan]);
 
   return (
     <DataCtx.Provider value={ctx}>
@@ -194,6 +198,7 @@ function Shell() {
             <Route path="/recomendacoes" element={<Recommend />} />
             <Route path="/notificacoes" element={<Notifications />} />
             <Route path="/online" element={<Online />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}
