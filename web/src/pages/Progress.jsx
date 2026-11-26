@@ -6,6 +6,7 @@ import {
   chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, PATTERNS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
 } from '../lib/insights.js';
 import Rival from './Rival.jsx';
+import TopPlayed from '../components/TopPlayed.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
@@ -86,12 +87,13 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', t('Evolução')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
+          options={[['evolucao', t('Evolução')], ['top', t('Mais jogadas')], ['fracos', t('Pontos fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
         {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
       {!r && !err && tab !== 'rival' && <p className="empty">{t('Carregando…')}</p>}
       {r && tab === 'evolucao' && (ent.can('evolution_chart') ? <Evolution a={a} r={r} mode={mode} /> : <Locked />)}
+      {a && tab === 'top' && <TopPlayed plays={a.prog.plays} mode={mode} />}
       {r && tab === 'fracos' && (ent.can('weakness') ? <Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /> : <Locked />)}
       {r && tab === 'dicas' && (ent.can('tips') ? <Tips r={r} mode={mode} /> : <Locked />)}
       {r && tab === 'plano' && (ent.can('training_plan') ? <Plan r={r} /> : <Locked />)}

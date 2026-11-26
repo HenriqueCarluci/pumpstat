@@ -978,3 +978,23 @@ a.q-city:hover { color: var(--text); }
 .tier-size button { min-width: 34px; }
 .guest-queue { margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
 .guest-hint { margin: 4px 0 8px; }
+
+/* Músicas mais jogadas (Progresso) */
+.top-played .tp-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.top-played .tp-head h3 { margin: 0; }
+.tp-list { list-style: none; margin: 10px 0 6px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.tp-row { display: grid; grid-template-columns: 22px 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 8px;
+  border-radius: 12px; color: inherit; text-decoration: none; background: var(--panel2); }
+.tp-row:hover { background: rgba(140, 255, 58, .08); }
+.tp-rank { font: 800 15px var(--num); color: var(--muted); text-align: center; }
+.tp-list li:nth-child(-n+3) .tp-rank { color: var(--neon); }
+.tp-main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.tp-title { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tp-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.06); overflow: hidden; }
+.tp-bar span { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--neon2), var(--neon)); }
+.tp-charts { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.tp-chart { display: inline-flex; align-items: center; gap: 2px; }
+.tp-chart small { font-size: 11px; color: var(--muted); }
+.tp-side { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 52px; }
+.tp-side b { font: 800 18px var(--num); }
+.tp-side small { font-size: 11px; }
