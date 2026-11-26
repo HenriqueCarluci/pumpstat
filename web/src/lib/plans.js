@@ -15,6 +15,7 @@ export const FEATURES = [
   { id: 'training_plan', label: 'Plano de treino semanal e metas' },
   { id: 'rival', label: 'Rival: comparação completa com um amigo' },
   { id: 'weakness', label: 'Pontos fracos por padrão' },
+  { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar' },
 ];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
@@ -34,6 +35,7 @@ export const TOGGLES = [
   { id: 'teams', label: 'Times', group: 'Social' },
   { id: 'tier_votes', label: 'Votação de tier', group: 'Comunidade' },
   { id: 'venue_requests', label: 'Cadastro e exclusão de fliperama pelos membros', group: 'Comunidade' },
+  { id: 'training', label: 'Meu treino', group: 'Treino' },
 ];
 export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
 

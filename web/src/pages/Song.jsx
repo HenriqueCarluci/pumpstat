@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import TrainingToggle from '../components/TrainingToggle.jsx';
 import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
@@ -197,6 +198,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
       <div className="cc-actions">
         {c.achievedAt && <span className="muted">{t('Recorde em {d}', { d: fmtDate(c.achievedAt) })}</span>}
         <span className="spacer" />
+        <TrainingToggle chart={c} />
         <a href={yt} target="_blank" rel="noreferrer" className="link ic-row"><Play size={13} fill="currentColor" /> YouTube</a>
         <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? t('Fechar') : `${t('Avaliar')}${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
         <button className="link" onClick={() => setRank((r) => !r)}>{rank ? t('Fechar') : t('Ranking')}</button>

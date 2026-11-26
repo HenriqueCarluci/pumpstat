@@ -433,3 +433,40 @@ Plano não encontrado na Google Play. Tente de novo mais tarde. | Plan not found
 A assinatura pelo app ainda não está disponível. | In-app subscription isn't available yet. | La suscripción en la app aún no está disponible. | 앱 내 구독은 아직 이용할 수 없습니다. | アプリ内の購読はまだ利用できません。 | L'abonnement dans l'app n'est pas encore disponible. | L'abbonamento nell'app non è ancora disponibile.
 cobrança não configurada | billing not configured | cobro no configurado | 결제가 설정되지 않음 | 課金が未設定 | facturation non configurée | pagamenti non configurati
 não autorizado | not authorized | no autorizado | 권한 없음 | 権限がありません | non autorisé | non autorizzato
+Tirar do Meu treino | Remove from My training | Quitar de Mi entrenamiento | 내 연습에서 빼기 | マイ練習から外す | Retirer de Mon entraînement | Togli da Il mio allenamento
+Adicionar ao Meu treino | Add to My training | Añadir a Mi entrenamiento | 내 연습에 추가 | マイ練習に追加 | Ajouter à Mon entraînement | Aggiungi a Il mio allenamento
+No treino | In training | En el entreno | 연습 중 | 練習中 | À l'entraînement | In allenamento
+Treinar | Train | Entrenar | 연습하기 | 練習する | S'entraîner | Allenati
+Meu treino | My training | Mi entrenamiento | 내 연습 | マイ練習 | Mon entraînement | Il mio allenamento
+Você passa {r}% dos {m}{L} que já jogou | You clear {r}% of the {m}{L} you've played | Pasas el {r}% de los {m}{L} que ya jugaste | 플레이한 {m}{L} 중 {r}%를 클리어 | プレイした{m}{L}の{r}%をクリア | Vous passez {r} % des {m}{L} déjà joués | Superi il {r}% dei {m}{L} che hai giocato
+Acima do seu maior nível passado ({m}{L}) | Above your highest cleared level ({m}{L}) | Por encima de tu mayor nivel pasado ({m}{L}) | 최고 클리어 레벨({m}{L})보다 높음 | 最高クリアレベル({m}{L})より上 | Au-dessus de votre plus haut niveau passé ({m}{L}) | Sopra il tuo livello più alto superato ({m}{L})
+Perto do seu nível ({m}{L}) | Close to your level ({m}{L}) | Cerca de tu nivel ({m}{L}) | 내 레벨({m}{L})과 가까움 | 自分のレベル({m}{L})に近い | Proche de votre niveau ({m}{L}) | Vicino al tuo livello ({m}{L})
+Fácil para o nível (tier) | Easy for the level (tier) | Fácil para el nivel (tier) | 레벨 대비 쉬움 (티어) | レベルの中で易しい(ティア) | Facile pour le niveau (tier) | Facile per il livello (tier)
+Difícil para o nível (tier) | Hard for the level (tier) | Difícil para el nivel (tier) | 레벨 대비 어려움 (티어) | レベルの中で難しい(ティア) | Difficile pour le niveau (tier) | Difficile per il livello (tier)
+Tem muito {p}, seu ponto fraco | Lots of {p}, your weak spot | Tiene mucho {p}, tu punto débil | {p}가 많음 (약점) | {p}が多い(苦手) | Beaucoup de {p}, votre point faible | Molto {p}, il tuo punto debole
+Tem muito {p}, seu ponto forte | Lots of {p}, your strong spot | Tiene mucho {p}, tu punto fuerte | {p}가 많음 (강점) | {p}が多い(得意) | Beaucoup de {p}, votre point fort | Molto {p}, il tuo punto forte
+Tem gimmick | Has gimmicks | Tiene gimmick | 기믹 있음 | ギミックあり | Avec gimmicks | Ha gimmick
+Marque as músicas que quer passar com o botão "Treinar" na página de cada música. Aqui você vê a chance de passar cada uma e o que treinar antes. | Mark the songs you want to clear with the "Train" button on each song page. Here you see your chance of clearing each one and what to practice first. | Marca las canciones que quieres pasar con el botón "Entrenar" en la página de cada canción. Aquí ves la probabilidad de pasar cada una y qué entrenar antes. | 각 곡 페이지의 "연습하기" 버튼으로 클리어하고 싶은 곡을 표시하세요. 여기서 곡마다 클리어 확률과 먼저 연습할 것을 볼 수 있습니다. | 各曲ページの「練習する」ボタンでクリアしたい曲を追加。ここでクリアできる確率と先に練習すべきことが分かります。 | Ajoutez les morceaux à passer avec le bouton « S'entraîner » sur chaque page. Vous voyez ici vos chances de passer chacun et quoi travailler avant. | Segna i brani che vuoi superare con il pulsante "Allenati" nella pagina di ogni brano. Qui vedi la probabilità di superarli e cosa allenare prima.
+Seu treino está vazio. | Your training list is empty. | Tu entrenamiento está vacío. | 연습 목록이 비어 있습니다. | 練習リストは空です。 | Votre liste d'entraînement est vide. | Il tuo allenamento è vuoto.
+Escolher pelo Tier | Pick from the Tier | Elegir por el Tier | 티어에서 고르기 | ティアから選ぶ | Choisir dans le Tier | Scegli dal Tier
+Ver recomendadas | See recommended | Ver recomendadas | 추천 보기 | おすすめを見る | Voir les recommandés | Vedi i consigliati
+Mais perto de passar | Closest to clearing | Más cerca de pasar | 클리어에 가장 가까움 | 最もクリアに近い | Le plus proche de passer | Il più vicino a superare
+Mais longe | Furthest away | Más lejos | 가장 멀음 | 最も遠い | Le plus loin | Il più lontano
+Foco de treino | Training focus | Foco del entreno | 연습 포인트 | 練習の重点 | Axe d'entraînement | Focus dell'allenamento
+Chance | Chance | Probabilidad | 확률 | 確率 | Chance | Probabilità
+Já passou! | Already cleared! | ¡Ya lo pasaste! | 이미 클리어! | クリア済み! | Déjà passé ! | Già superato!
+Faltam {n} pontos para {g}. | {n} points to {g}. | Faltan {n} puntos para {g}. | {g}까지 {n}점 남음. | {g}まであと{n}点。 | Encore {n} points pour {g}. | Mancano {n} punti per {g}.
+Para treinar {p} antes: | To practice {p} first: | Para entrenar {p} antes: | 먼저 {p} 연습: | 先に{p}を練習: | Pour travailler {p} avant : | Per allenare {p} prima:
+Para chegar lá, passe antes: | To get there, clear these first: | Para llegar, pasa antes: | 그 전에 클리어할 곡: | その前にクリアしたい曲: | Pour y arriver, passez d'abord : | Per arrivarci, supera prima:
+A chance de passar e o que treinar fazem parte dos planos pagos. | Your clear chance and what to practice are part of the paid plans. | La probabilidad de pasar y qué entrenar son parte de los planes de pago. | 클리어 확률과 연습 추천은 유료 요금제에 포함됩니다. | クリア確率と練習内容は有料プランの機能です。 | Les chances de passer et quoi travailler font partie des offres payantes. | Probabilità di superamento e cosa allenare fanno parte dei piani a pagamento.
+A chance é uma estimativa: junta quanto você passa nesse nível, o tier do chart, os padrões dele comparados com seus pontos fortes e fracos e as vezes que você já quebrou nele. | The chance is an estimate: it combines how often you clear that level, the chart's tier, its patterns compared with your strong and weak spots, and how many times you've failed it. | La probabilidad es una estimación: junta cuánto pasas ese nivel, el tier del chart, sus patrones comparados con tus puntos fuertes y débiles y las veces que ya fallaste en él. | 확률은 추정치입니다. 해당 레벨 클리어율, 차트 티어, 강점·약점과 비교한 패턴, 이 차트에서 실패한 횟수를 합쳐 계산합니다. | 確率は推定です。そのレベルのクリア率、譜面のティア、得意・苦手と比べたパターン、その譜面での失敗回数を組み合わせています。 | La chance est une estimation : elle combine votre taux de réussite à ce niveau, le tier du chart, ses patterns comparés à vos points forts et faibles, et vos échecs dessus. | La probabilità è una stima: combina quanto superi quel livello, il tier del chart, i suoi pattern rispetto ai tuoi punti forti e deboli e le volte che ci hai fallito.
+Quebrou {n} vez | Failed {n} time | Fallaste {n} vez | {n}번 실패 | {n}回失敗 | Échoué {n} fois | Fallito {n} volta
+Quebrou {n} vezes | Failed {n} times | Fallaste {n} veces | {n}번 실패 | {n}回失敗 | Échoué {n} fois | Fallito {n} volte
+em {n} música | in {n} song | en {n} canción | {n}곡 | {n}曲 | dans {n} morceau | in {n} brano
+em {n} músicas | in {n} songs | en {n} canciones | {n}곡 | {n}曲 | dans {n} morceaux | in {n} brani
+Meu treino: chance de passar e o que treinar | My training: clear chance and what to practice | Mi entrenamiento: probabilidad de pasar y qué entrenar | 내 연습: 클리어 확률과 연습할 것 | マイ練習: クリア確率と練習内容 | Mon entraînement : chances de passer et quoi travailler | Il mio allenamento: probabilità e cosa allenare
+seu treino já tem 60 músicas; tire alguma antes de adicionar outra | your training list already has 60 songs; remove one before adding another | tu entrenamiento ya tiene 60 canciones; quita alguna antes de añadir otra | 연습 목록에 이미 60곡이 있습니다. 하나를 빼고 추가하세요 | 練習リストはすでに60曲です。追加する前にどれかを外してください | votre liste a déjà 60 morceaux ; retirez-en un avant d'en ajouter | il tuo allenamento ha già 60 brani; togline uno prima di aggiungerne altri
+Já passou | Cleared | Ya pasado | 클리어함 | クリア済み | Passé | Superato
+Perto de passar | Close to clearing | Cerca de pasar | 거의 클리어 | クリア目前 | Presque passé | Quasi superato
+Dá para tentar | Worth a try | Vale la pena intentar | 도전해볼 만함 | 挑戦できる | À tenter | Da provare
+Precisa treinar | Needs practice | Necesita entrenar | 연습 필요 | 練習が必要 | À travailler | Serve allenamento

@@ -283,7 +283,7 @@ function easiest(data, attempts, mode, level, n) {
 }
 
 /** Charts com muito de um padrão numa faixa de níveis (para treinar o ponto fraco). */
-function byPattern(data, attempts, prog, mode, [lo, hi], p, n, unplayedOnly = false) {
+export function byPattern(data, attempts, prog, mode, [lo, hi], p, n, unplayedOnly = false) {
   const done = new Set(attempts.filter((r) => r.cleared).map((r) => r.chart.id));
   return data.charts.filter((c) => c.mode === mode && c.level >= lo && c.level <= hi
       && (styleOf(prog, c)?.pct[p] || 0) >= 20 && (!unplayedOnly || !done.has(c.id)))
