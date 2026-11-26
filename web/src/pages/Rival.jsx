@@ -51,7 +51,7 @@ export default function Rival() {
     if (!rows || !p2) return null;
     const items = rows.map(([id, ms, mg, mp, mb, os, og, op, ob]) => ({
       chart: p2.byId.get(id), me: { score: ms, grade: mg, plate: mp, broken: mb }, them: { score: os, grade: og, plate: op, broken: ob },
-    })).filter((x) => x.chart && x.chart.mode !== 'C');
+    })).filter((x) => x.chart && (x.chart.mode === 'S' || x.chart.mode === 'D'));
     let win = 0, loss = 0, tie = 0;
     const behind = [], ahead = [], onlyThem = [];
     for (const x of items) {

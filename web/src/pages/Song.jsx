@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { ChartRanking } from './Players.jsx';
-import { Ball, fmtDate, Grade, Jacket, Plate } from '../components/ui.jsx';
+import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
 import { chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { topStyles, useStyles, videoUrl } from '../lib/style.js';
@@ -33,7 +33,7 @@ export default function Song() {
 
   const other = version === 'phoenix2' ? VERSIONS.phoenix : VERSIONS.phoenix2;
   const hasLegacy = version === 'phoenix2' && song.charts.some((c) => c.otherScore != null);
-  const groups = [['S', 'Single'], ['D', 'Double'], ['C', 'Co-op']]
+  const groups = [['S', 'Single'], ['D', 'Double'], ['HD', 'Half-Double'], ['C', 'Co-op']]
     .map(([m, label]) => [label, song.charts.filter((c) => c.mode === m)])
     .filter(([, cs]) => cs.length);
 
@@ -47,7 +47,10 @@ export default function Song() {
           <div className="tags">
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
+            {song.rise && <RiseBadge />}
           </div>
+          {song.rise && <p className="small muted rise-note">{t('Música do PUMP IT UP R!SE. Na Phoenix 2 ela só aparece para quem ligou a conta Steam do R!SE ao AM.PASS.')}</p>}
+          {plan?.admin && <RiseAdmin song={song} onChange={reload} />}
           <a className="btn yt" href={videoUrl('s', song.id, song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
           {plan?.admin && <VideoAdmin vkey={`s:${song.id}`} />}
         </div>
@@ -57,7 +60,8 @@ export default function Song() {
 
       {groups.map(([label, charts]) => (
         <section key={label}>
-          <h3 className="group-h">{label}</h3>
+          <h3 className="group-h">{label}{label === 'Half-Double' && <RiseBadge small />}</h3>
+          {label === 'Half-Double' && <p className="small muted rise-note">{t('Charts de 6 painéis do canal R!SE MIX. Só aparecem na Phoenix 2 com a conta Steam do R!SE ligada ao AM.PASS e não contam para o PUMBILITY.')}</p>}
           {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} friends={friendsOf(c.id)} focus={focus === c.id} onReviewed={() => reload()} />)}
         </section>
       ))}
@@ -67,6 +71,25 @@ export default function Song() {
 }
 
 const ytId = (s) => (String(s || '').trim().match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/|\/live\/)([\w-]{11})/) || String(s || '').trim().match(/^([\w-]{11})$/) || [])[1] || null;
+
+/** Admin: marca a música como do R!SE (só abre com a conta Steam ligada). */
+function RiseAdmin({ song, onChange }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const flip = async () => {
+    setBusy(true); setErr('');
+    try { await rpc('admin_set_song_rise', { p_song: song.id, p_rise: !song.rise }); await onChange?.(); } catch (e) { setErr(e.message); }
+    setBusy(false);
+  };
+  return (
+    <p className="small">
+      <button className="link small muted" disabled={busy} onClick={flip}>
+        {song.rise ? t('Admin: tirar marca de música do R!SE') : t('Admin: marcar como música do R!SE')}
+      </button>
+      {err && <span className="form-err"> {err}</span>}
+    </p>
+  );
+}
 
 /** Admin: corrige o vídeo do YouTube de um chart ou música (cola o link). */
 function VideoAdmin({ vkey }) {

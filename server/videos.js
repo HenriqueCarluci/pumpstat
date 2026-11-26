@@ -26,7 +26,7 @@ export function pickVideo(items, info) {
     const hit = words.filter((w) => n.includes(` ${w} `)).length;
     return words.length > 0 && hit / words.length >= 0.75;
   };
-  const lv = info.mode ? new RegExp(`(^|[^a-z0-9])(${info.mode === 'S' ? 's|sp|single' : info.mode === 'D' ? 'd|dp|double' : 'co ?op|coop'})[ ._-]?0?${info.level}([^0-9]|$)`, 'i') : null;
+  const lv = info.mode ? new RegExp(`(^|[^a-z0-9])(${info.mode === 'S' ? 's|sp|single' : info.mode === 'D' ? 'd|dp|double' : info.mode === 'HD' ? 'hd|half ?double' : 'co ?op|coop'})[ ._-]?0?${info.level}([^0-9]|$)`, 'i') : null;
   for (const it of items) {
     const title = it.snippet?.title || '';
     if (!hasSong(title)) continue;

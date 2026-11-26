@@ -124,6 +124,8 @@ export const DIFF_PT = {
 
 export const fmtScore = (n) => (n == null ? '—' : n.toLocaleString(locale()));
 export const chartLabel = (c) => (c.mode === 'C' ? `CO-OP x${c.level}` : `${c.mode}${c.level}`);
+/** Charts que só abrem com o PUMP IT UP R!SE ligado ao AM.PASS (Half-Double ou música do R!SE). */
+export const needsRise = (c) => c.mode === 'HD' || !!c.song?.rise;
 
 // ---------- faixas de PUMBILITY da Phoenix 2 ----------
 // Corte de cada faixa; cada uma tem 5 LVs (500 pts em BRONZE/SILVER, 200 pts nas demais).

@@ -210,3 +210,6 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Página da música: notas dos amigos em cada chart, com a diferença para a sua; vindo do Tier, o chart clicado fica em destaque.
 - Progresso → Pontos fracos: gráficos de setor de passes e quebras pelo padrão principal de cada chart (cor fixa por padrão).
 - Progresso → Rival (Phoenix 2): um amigo escolhido (`set_my_rival`/`my_rival`); PUMBILITY, maior S/D, charts passados, confronto direto (setor), clears por nível lado a lado e listas "onde ele está na frente", "só ele passou" e "onde você está na frente".
+- Times: logo (`logo_url`, servido de /teams/) e Instagram; Team L'Aqua (São Paulo) pré-cadastrado pelo admin.
+- R!SE: o leitor do site oficial entende o Half-Double (`hd`) como modo `HD` e ignora tipos desconhecidos em vez de gravar como Co-op. Charts HD aparecem em grupo próprio (azul, selo R!SE) e não entram em PUMBILITY nem no Progresso. `songs.rise` marca músicas que só abrem com a conta Steam ligada (admin marca na página da música); filtro "R!SE" em Músicas.
+- Aviso de amigo online (estilo MSN): o `heartbeat` devolve os amigos online; o app mostra um cartão no canto quando um amigo aparece entre um batimento e outro (desligável em Configurações).

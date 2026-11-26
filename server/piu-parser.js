@@ -22,6 +22,8 @@ export function kstToIso(s) {
   return m ? `${m[1]}T${m[2]}+09:00` : null;
 }
 
+const MODES = { s: 'S', d: 'D', c: 'C', hd: 'HD' };
+
 export function parseRow(row) {
   const song = text(row.querySelector('.song_name p') || row.querySelector('.song_name'));
   const ball = row.querySelector('.stepBall_in');
@@ -32,6 +34,10 @@ export function parseRow(row) {
     .filter(Boolean).join('');
   const level = int(digits);
   if (level == null) return null;
+  // s/d/c = Single/Double/Co-op; hd = Half-Double do R!SE (canal R!SE MIX, conta Steam ligada).
+  // Qualquer outro tipo fica de fora para não ser salvo no modo errado.
+  const mode = MODES[kind];
+  if (!mode) return null;
   const gradeCode = imgCode(row, 'grade');
   const broken = !!gradeCode && gradeCode.startsWith('x_');
   const g = broken ? gradeCode.slice(2) : gradeCode;
@@ -39,7 +45,7 @@ export function parseRow(row) {
   const scoreEl = row.querySelector('.etc_con .num') || row.querySelector('.li_in.ac .tx') || row.querySelector('.num');
   const out = {
     song,
-    mode: kind === 's' ? 'S' : kind === 'd' ? 'D' : 'C',
+    mode,
     level,
     broken,
     score: int(text(scoreEl)),

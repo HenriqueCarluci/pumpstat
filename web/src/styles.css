@@ -806,3 +806,43 @@ a.q-city:hover { color: var(--text); }
 .rival-item .up { color: #7fb5f0; font-family: var(--num); }
 .rival-item .down { color: #e8a06a; font-family: var(--num); }
 .rival-pick { width: 100%; text-align: left; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+
+/* logo do time */
+.team-logo { border-radius: 50%; object-fit: cover; background: #fff; flex: none; vertical-align: middle; }
+.team-tag.has-logo { display: inline-flex; align-items: center; gap: 4px; padding-left: 2px; }
+.team-mine { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.team-mine .team-tag { margin-left: 0; }
+.team-opt .team-logo { margin-right: 2px; }
+
+/* R!SE e Half-Double */
+.pip.halfdouble { border-color: #3d7ee0; color: #9cc4ff; }
+.pip.halfdouble:not(.t-none) { background: #3d7ee0; }
+.rise-badge { display: inline-flex; align-items: center; font: 800 11px var(--num); letter-spacing: 0.06em; padding: 2px 7px; border-radius: 6px; margin-left: 6px;
+  color: #0b1020; background: linear-gradient(90deg, #7ee8fa, #b48cff); vertical-align: 2px; cursor: help; }
+.rise-badge.sm { font-size: 9px; padding: 1px 5px; }
+.rise-note { margin: 4px 0 8px; }
+
+/* aviso "amigo ficou online" (estilo MSN) */
+.fo-stack { position: fixed; right: 16px; bottom: 16px; z-index: 70; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; pointer-events: none; }
+@media (max-width: 760px) { .fo-stack { right: 10px; bottom: 84px; } }
+.fo-toast { pointer-events: auto; width: 250px; border-radius: 10px; overflow: hidden; cursor: pointer;
+  background: linear-gradient(180deg, #f4f8ff 0%, #dfe9fb 100%); color: #10213f; border: 1px solid #8fb1e8;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45); animation: fo-up 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+.fo-toast.leaving { animation: fo-down 0.45s ease-in both; }
+.fo-bar { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; font-size: 11px; font-weight: 700; color: #fff;
+  background: linear-gradient(90deg, #2f6fd6, #5a9bf0); }
+.fo-brand { letter-spacing: 0.02em; }
+.fo-x { background: none; border: 0; color: #fff; cursor: pointer; padding: 0; display: inline-flex; opacity: 0.85; }
+.fo-x:hover { opacity: 1; }
+.fo-body { display: flex; align-items: center; gap: 10px; padding: 10px 12px 12px; }
+.fo-avatar { position: relative; width: 44px; height: 44px; border-radius: 8px; background: #b9cdf0; display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; text-transform: uppercase; border: 2px solid #3ee06f; flex: none; }
+.fo-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+.fo-dot { position: absolute; right: -4px; bottom: -4px; width: 12px; height: 12px; border-radius: 50%; background: #3ee06f; border: 2px solid #f4f8ff; }
+.fo-text { display: grid; line-height: 1.25; min-width: 0; }
+.fo-text b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fo-text span { font-size: 13px; color: #33507f; }
+.fo-text small { font-size: 11px; color: #4c6894; margin-top: 2px; }
+@keyframes fo-up { from { transform: translateY(120%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fo-down { from { transform: translateY(0); opacity: 1; } to { transform: translateY(120%); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .fo-toast, .fo-toast.leaving { animation-duration: 0.01s; } }

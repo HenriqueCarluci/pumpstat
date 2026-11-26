@@ -25,6 +25,7 @@ import { useNotifications } from './lib/notify.js';
 import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
+import FriendOnlineToast from './components/FriendOnlineToast.jsx';
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Privacy from './pages/Privacy.jsx';
@@ -217,6 +218,7 @@ function Shell() {
       </main>
 
       <InviteToast />
+      <FriendOnlineToast />
 
       <nav className="tabbar">
         <Tab to="/" icon={<HomeIcon size={21} />} label={t('Início')} />

@@ -50,8 +50,8 @@ export async function fetchVersion(version) {
 
 function shape(raw) {
   const songs = new Map();
-  for (const [id, title, artist, bpm, songType, jacket] of raw.songs || []) {
-    songs.set(id, { id, title, artist, bpm, songType, jacket, charts: [] });
+  for (const [id, title, artist, bpm, songType, jacket, rise] of raw.songs || []) {
+    songs.set(id, { id, title, artist, bpm, songType, jacket, rise: !!rise, charts: [] });
   }
   const charts = [];
   const byId = new Map();
@@ -75,6 +75,8 @@ function shape(raw) {
   }
   for (const s of songs.values()) {
     s.charts.sort((a, b) => order(a) - order(b));
+    // Half-Double só existe no canal R!SE MIX (conta Steam ligada)
+    s.hasHD = s.charts.some((c) => c.mode === 'HD');
     s.played = s.charts.some((c) => c.score != null);
   }
   const plays = (raw.plays || []).map((p) => ({
@@ -92,6 +94,6 @@ function shape(raw) {
     pumbilityHistory: raw.pumbility_history || [],
   };
 }
-const order = (c) => ({ S: 0, D: 1000, C: 2000 })[c.mode] + c.level;
+const order = (c) => ({ S: 0, D: 1000, HD: 2000, C: 3000 })[c.mode] + c.level;
 
 export const chartHistory = (chartId) => rpc('chart_history', { p_chart_id: chartId });

@@ -8,7 +8,7 @@ import { History, X } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { adsConfig } from '../lib/ads.js';
-import { legacyOf } from '../lib/piu.js';
+import { legacyOf, needsRise } from '../lib/piu.js';
 
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]/gu, '');
 
@@ -35,7 +35,7 @@ export default function Songs() {
   };
 
   const chartFilter = useMemo(() => (c) =>
-    (mode === 'all' || c.mode === mode) &&
+    (mode === 'all' || c.mode === mode || (mode === 'rise' && needsRise(c))) &&
     (c.mode === 'C' || (c.level >= minL && c.level <= maxL)) &&
     (status === 'all' || (status === 'played' ? c.score != null : status === 'unplayed' ? c.score == null
       : status === 'legacy' ? c.score == null && c.otherScore != null
@@ -63,7 +63,7 @@ export default function Songs() {
       </div>
       <div className="filters">
         <Chips value={mode} onChange={(v) => set('m', v === 'all' ? '' : v)}
-          options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double'], ['C', 'Co-op']]} />
+          options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double'], ...(isP2 ? [['HD', 'Half-Double']] : []), ['C', 'Co-op'], ...(isP2 ? [['rise', 'R!SE']] : [])]} />
         <Chips value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
           options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['improve', t('Sem PG')],
             ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />

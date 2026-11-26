@@ -33,7 +33,12 @@ export function useTeams(ids) {
 
 export const forgetTeam = (id) => cache.delete(id);
 
+export function TeamLogo({ team, size = 16 }) {
+  if (!team?.logo) return null;
+  return <img className="team-logo" src={team.logo} alt="" width={size} height={size} loading="lazy" />;
+}
+
 export function TeamTag({ team }) {
   if (!team) return null;
-  return <span className="team-tag" title={team.name}>{team.tag || team.name}</span>;
+  return <span className={`team-tag ${team.logo ? 'has-logo' : ''}`} title={team.name}>{team.logo && <TeamLogo team={team} size={14} />}{team.tag || team.name}</span>;
 }

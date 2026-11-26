@@ -8,9 +8,9 @@ const GRADE_CODE = { 'SSS+': 'sss_p', SSS: 'sss', 'SS+': 'ss_p', SS: 'ss', 'S+':
   'AA+': 'aa_p', AA: 'aa', 'A+': 'a_p', A: 'a', B: 'b', C: 'c', D: 'd', F: 'f' };
 const imgProps = { alt: '', loading: 'lazy', referrerPolicy: 'no-referrer', draggable: false };
 
-/** Bolinha de nível no estilo do jogo (single vermelho, double verde, co-op amarelo). */
+/** Bolinha de nível no estilo do jogo (single vermelho, double verde, half-double azul, co-op amarelo). */
 export function Ball({ chart, size = 'md' }) {
-  const kind = chart.mode === 'S' ? 's' : chart.mode === 'D' ? 'd' : 'c';
+  const kind = chart.mode === 'S' ? 's' : chart.mode === 'D' ? 'd' : chart.mode === 'HD' ? 'hd' : 'c';
   const digits = String(chart.level).split('');
   return (
     <span className={`ball ${size}`} title={chartLabel(chart)} style={{ backgroundImage: `url(${IMG}/stepball/full/${kind}_bg.png)` }}>
@@ -19,6 +19,17 @@ export function Ball({ chart, size = 'md' }) {
         {kind === 'c' && <b className="ball-x">×</b>}
         {digits.map((d, i) => <img key={i} src={`${IMG}/stepball/full/s_num_${d}.png`} {...imgProps} />)}
       </span>
+    </span>
+  );
+}
+
+/** Selo do R!SE: música ou chart que precisa do PUMP IT UP R!SE (Steam) ligado ao AM.PASS. */
+export function RiseBadge({ small, full = true }) {
+  return (
+    <span className={`rise-badge ${small ? 'sm' : ''}`}
+      title={full ? t('Música do R!SE: precisa do PUMP IT UP R!SE (Steam) ligado ao seu AM.PASS')
+        : t('Tem charts Half-Double do R!SE: precisam do PUMP IT UP R!SE (Steam) ligado ao seu AM.PASS')}>
+      R!SE
     </span>
   );
 }
@@ -51,7 +62,7 @@ export function ChartPip({ chart, legacy }) {
   const title = chart.score != null ? ` · ${fmtScore(chart.score)} ${chart.grade || ''}`
     : legacy ? ` · ${t('Legado Phoenix')}: ${fmtScore(legacy.score)} ${legacy.grade || ''}` : '';
   return (
-    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : 'coop'} t-${gt} ${chart.broken ? 'broken' : ''} ${legacy ? 'legacy' : ''}`}
+    <span className={`pip ${chart.mode === 'S' ? 'single' : chart.mode === 'D' ? 'double' : chart.mode === 'HD' ? 'halfdouble' : 'coop'} t-${gt} ${chart.broken ? 'broken' : ''} ${legacy ? 'legacy' : ''}`}
       title={`${chartLabel(chart)}${title}`}>
       {chart.mode === 'C' ? `×${chart.level}` : chart.level}
     </span>
@@ -64,7 +75,7 @@ export function SongRow({ song, filter, legacy }) {
     <Link to={`/musica/${song.id}`} className="songrow">
       <Jacket song={song} width={92} />
       <div className="songrow-main">
-        <div className="title">{song.title}</div>
+        <div className="title">{song.title}{(song.rise || song.hasHD) && <RiseBadge small full={song.rise} />}</div>
         <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${song.bpm} BPM` : ''}</div>
         <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} legacy={legacy ? legacy(c) : null} />)}</div>
       </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { rpc } from '../lib/api.js';
-import { forgetTeam } from '../lib/teams.jsx';
+import { forgetTeam, TeamLogo } from '../lib/teams.jsx';
 import { t, tErr } from '../lib/i18n.js';
 import { Check, Users } from './Icons.jsx';
 
@@ -34,7 +34,8 @@ export default function TeamPicker({ userId }) {
     <section className="card team-card">
       <h3 className="ic-row"><Users size={18} /> {t('Seu time')}</h3>
       {data.mine
-        ? <p><b>{data.mine.name}</b>{data.mine.tag && <span className="team-tag">{data.mine.tag}</span>}</p>
+        ? <p className="team-mine">{data.mine.logo && <TeamLogo team={data.mine} size={40} />}<b>{data.mine.name}</b>{data.mine.tag && <span className="team-tag">{data.mine.tag}</span>}
+            {data.mine.instagram && <a className="small" href={`https://instagram.com/${data.mine.instagram}`} target="_blank" rel="noreferrer">@{data.mine.instagram}</a>}</p>
         : <p className="muted small">{t('Você ainda não está em nenhum time.')}</p>}
       {data.pending && (
         <p className="small muted">
@@ -61,7 +62,7 @@ export default function TeamPicker({ userId }) {
           <div className="team-list">
             {list.map((x) => (
               <button key={x.id} className={`team-opt ${data.mine?.id === x.id ? 'on' : ''}`} onClick={() => pick(x.id)}>
-                <b>{x.name}</b>{x.tag && <span className="team-tag">{x.tag}</span>}
+                {x.logo && <TeamLogo team={x} size={28} />}<b>{x.name}</b>{x.tag && <span className="team-tag">{x.tag}</span>}
                 <small className="muted">{[x.city, t('{n} membros', { n: x.members })].filter(Boolean).join(' · ')}</small>
               </button>
             ))}

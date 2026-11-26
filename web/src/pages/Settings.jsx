@@ -65,6 +65,13 @@ export default function Settings() {
             <small className="muted">{t('Nos charts que você ainda não jogou na Phoenix 2, mostra a nota da Phoenix marcada como P1. Ela não entra nas contagens, filtros de grade nem no PUMBILITY da Phoenix 2.')}</small>
           </span>
         </label>
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={prefs.friendOnline !== false} onChange={(e) => setPrefs({ friendOnline: e.target.checked })} />
+          <span>
+            <b>{t('Avisar quando um amigo ficar online')}</b><br />
+            <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o StepClub enquanto você está com ele aberto.')}</small>
+          </span>
+        </label>
       </section>
 
       <section className="card">
