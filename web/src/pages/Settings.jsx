@@ -60,6 +60,9 @@ export default function Settings() {
         <p className="muted small">{t('Tamanho da nota sobre a capa da música na tela de Tier')}</p>
         <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
           options={[['sm', t('Pequena')], ['md', t('Média')], ['lg', t('Grande')]]} />
+        <p className="muted small">{t('Tamanho das capas no Tier: menor mostra mais músicas por linha')}</p>
+        <Chips value={prefs.tierSize || 'md'} onChange={(v) => setPrefs({ tierSize: v })}
+          options={[['sm', t('Pequenas')], ['md', t('Médias')], ['lg', t('Grandes')]]} />
         <label className="check legacy-pref">
           <input type="checkbox" checked={!!prefs.legacyP1} onChange={(e) => setPrefs({ legacyP1: e.target.checked })} />
           <span>

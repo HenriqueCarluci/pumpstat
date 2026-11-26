@@ -13,7 +13,8 @@ import { t } from '../lib/i18n.js';
 
 export default function Tier() {
   const { data, version, plan } = useData();
-  const [prefs] = usePrefs();
+  const [prefs, setPrefs] = usePrefs();
+  const sizeLabel = { sm: t('Capas pequenas'), md: t('Capas médias'), lg: t('Capas grandes') };
   const legacy = (c) => legacyOf(c, version, prefs.legacyP1);
   const [params, setParams] = useSearchParams();
   const mode = params.get('m') || 'D';
@@ -57,13 +58,16 @@ export default function Tier() {
 
       <div className="tier-tools">
         {hasLegacy && <LegacyToggle />}
+        <div className="seg sm tier-size" role="group" aria-label={t('Tamanho das capas')} title={t('Tamanho das capas: menor mostra mais músicas por linha')}>
+          {[['sm', 'P'], ['md', 'M'], ['lg', 'G']].map(([k, l]) => <button key={k} className={(prefs.tierSize || 'md') === k ? 'on' : ''} onClick={() => setPrefs({ tierSize: k })} aria-label={sizeLabel[k]}>{l}</button>)}
+        </div>
         {isOn(plan, 'tier_votes') && <Link to="/votacoes" className="chip-toggle"><Vote size={14} /> {t('Votações de tier')}</Link>}
       </div>
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
           <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
-          <div className="tier-grid">
+          <div className={`tier-grid size-${prefs.tierSize || 'md'}`}>
             {g.charts.map((c) => { const lg = legacy(c); return (
               <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>

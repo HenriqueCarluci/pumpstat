@@ -9,11 +9,11 @@ import { isOn } from '../lib/plans.js';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp } from '../components/Icons.jsx';
+import { ChevronDown, ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp } from '../components/Icons.jsx';
+import Panel, { usePanelOpen } from '../components/Panel.jsx';
 
 export default function Home() {
   const { data, version, reload, presence, plan } = useData();
-  const [showTop, setShowTop] = useState(false);
   const [mode, setMode] = useState('D');
 
   const stats = useMemo(() => {
@@ -91,8 +91,7 @@ export default function Home() {
       </section>
       <AdSlot place="home" />
 
-      <section className="card">
-        <h3>{t('Grades')}</h3>
+      <Panel id="home-grades" title={t('Grades')} maxHeight={300}>
         <div className="gradebars">
           {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
             <Link key={g} to={`/musicas?g=${encodeURIComponent(g)}&o=best`} className="gb" title={t('Ver músicas com {g}', { g })}>
@@ -103,15 +102,12 @@ export default function Home() {
           ))}
           {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
         </div>
-      </section>
+      </Panel>
 
-      <section className="card">
-        <div className="row-between">
-          <h3>{t('Progresso por nível')}</h3>
-          <div className="seg sm">
-            {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
-          </div>
-        </div>
+      <Panel id="home-levels" title={t('Progresso por nível')} maxHeight={320}
+        extra={<div className="seg sm">
+          {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
+        </div>}>
         <div className="levels">
           {levels.map((l) => (
             <Link key={l.lv} to={`/tier?m=${mode}&l=${l.lv}`} className="lvl">
@@ -122,14 +118,10 @@ export default function Home() {
             </Link>
           ))}
         </div>
-      </section>
+      </Panel>
 
-      <section className="card">
-        <div className="row-between">
-          <h3>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></h3>
-          <button className="link" onClick={() => setShowTop((s) => !s)}>{showTop ? t('Ocultar') : t('Mostrar')}</button>
-        </div>
-        {showTop && (
+      <Panel id="home-top50" title={<>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></>} defaultOpen={false} maxHeight={420}>
+        {(
           <ol className="toplist">
             {stats.pb.top.map(({ chart: c, value }) => (
               <li key={c.id}>
@@ -145,18 +137,17 @@ export default function Home() {
             ))}
           </ol>
         )}
-      </section>
+      </Panel>
 
       {data.plays.length > 0 && (
-        <section className="card">
-          <div className="row-between"><h3>{t('Últimas jogadas')}</h3><Link className="link" to="/recentes">{t('Ver todas')}</Link></div>
+        <Panel id="home-recent" title={t('Últimas jogadas')} extra={<Link className="link" to="/recentes">{t('Ver todas')}</Link>}>
           <div className="cards">
             {data.plays.slice(0, 4).map((pl, i) => (
               <ScoreCard key={i} chart={pl.chart} score={pl.score} grade={pl.grade} plate={pl.plate}
                 broken={pl.broken} date={pl.playedAt} to={`/musica/${pl.chart.song.id}`} />
             ))}
           </div>
-        </section>
+        </Panel>
       )}
     </div>
   );
@@ -207,9 +198,19 @@ function TierCard({ version, points, estimated, history, charts }) {
           </div>
         </>
       )}
-      {ideas.length > 0 && (
-        <div className="ideas">
-          <div className="ideas-h">{t('Como subir')}</div>
+      {ideas.length > 0 && <Ideas ideas={ideas} />}
+    </section>
+  );
+}
+
+function Ideas({ ideas }) {
+  const [open, toggle] = usePanelOpen('home-ideas', false);
+  return (
+        <div className={`ideas ${open ? 'open' : 'closed'}`}>
+          <button className="ideas-h panel-toggle" onClick={toggle} aria-expanded={open}>
+            <ChevronDown size={16} className="panel-chev" /> {t('Como subir')} <span className="muted small">({ideas.length})</span>
+          </button>
+          {open && <div className="panel-body scroll" style={{ maxHeight: 300 }}>
           {ideas.map((i, k) => (
             i.kind === 'grade' ? (
               <Link key={k} to={`/musica/${i.chart.song.id}`} className="idea">
@@ -226,8 +227,7 @@ function TierCard({ version, points, estimated, history, charts }) {
             )
           ))}
           <Link to="/recomendacoes" className="link">{t('Ver músicas recomendadas para subir')} <ChevronRight size={14} /></Link>
+          </div>}
         </div>
-      )}
-    </section>
   );
 }

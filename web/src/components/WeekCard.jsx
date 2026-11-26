@@ -9,6 +9,7 @@ import { DIM_LABEL } from '../pages/Progress.jsx';
 import { isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball } from './ui.jsx';
+import Panel from './Panel.jsx';
 import { CalendarCheck, Check, ChevronRight, Flame, Swords, Trophy, X } from './Icons.jsx';
 
 const SEEN_KEY = 'stepclub:week-summary-seen';
@@ -68,15 +69,14 @@ export default function WeekCard() {
   return (
     <>
       {showSummary && <LastWeek s={a.last} streak={streak} onClose={closeSummary} />}
-      {(on.missions || streak) && <section className="card week-card">
-        <div className="row-between">
-          <h3 className="ic-row">{on.missions ? <><Trophy size={18} /> {t('Missões da semana')}</> : <><Flame size={18} /> {t('Sequência de semanas')}</>}</h3>
-          {streak && (
-            <span className={`streak ${streak.streak ? 'on' : ''}`} title={t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}>
-              <Flame size={16} /> {tn(streak.streak, '{n} semana', '{n} semanas')}
-            </span>
-          )}
-        </div>
+      {(on.missions || streak) && <Panel id="home-missions" className="week-card"
+        title={<span className="ic-row">{on.missions ? <><Trophy size={18} /> {t('Missões da semana')}</> : <><Flame size={18} /> {t('Sequência de semanas')}</>}
+          {on.missions && <span className="muted small"> {now.done}/{now.total}</span>}</span>}
+        extra={streak && (
+          <span className={`streak ${streak.streak ? 'on' : ''}`} title={t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}>
+            <Flame size={16} /> {tn(streak.streak, '{n} semana', '{n} semanas')}
+          </span>
+        )}>
         {on.missions && <>
         <p className="muted small">
           {fmtDay(now.ws)}–{fmtDay(end)} · {t('{d} de {n} completas', { d: now.done, n: now.total })}
@@ -97,7 +97,7 @@ export default function WeekCard() {
         {on.missions && now.done === now.total && <p className="small mission-all"><Trophy size={14} /> {t('Semana completa! Novas missões na segunda.')}</p>}
         {on.missions && <p className="muted small">{t('As missões se completam sozinhas quando você sincroniza.')} <Link to="/progresso?v=plano">{t('Ver plano de treino')} <ChevronRight size={12} /></Link></p>}
         {!on.missions && streak && <p className="muted small">{t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}</p>}
-      </section>}
+      </Panel>}
     </>
   );
 }
