@@ -44,6 +44,12 @@ export function describe(n) {
         : t('Votação encerrada: o tier de {song} {chart} continua o mesmo', { song: n.title, chart: `${n.mode}${n.level}` });
     case 'admin_venue_request':
       return t('{who} pediu o cadastro do fliperama {name} ({city})', { who, name: n.name, city: n.city });
+    case 'venue_removed':
+      return t('Seu pedido foi aprovado: o fliperama {name} saiu da lista', { name: n.name });
+    case 'venue_removal_rejected':
+      return t('Seu pedido para tirar o fliperama {name} da lista não foi aprovado', { name: n.name }) + (n.note ? `: ${n.note}` : '');
+    case 'admin_venue_removal':
+      return t('{who} pediu para tirar o fliperama {name} ({city}) da lista', { who, name: n.name, city: n.city }) + (n.reason ? `: “${n.reason}”` : '');
     case 'admin_team_request':
       return t('{who} pediu o cadastro do time {name}', { who, name: n.name });
     default:
@@ -58,9 +64,9 @@ export function linkFor(n) {
     case 'friend_request': return '/jogadores?tab=requests';
     case 'invite': return n.venue ? `/fila/${n.venue}` : '/online';
     case 'venue_approved': return `/fila/${n.venue}`;
-    case 'venue_rejected': return '/fila';
+    case 'venue_rejected': case 'venue_removed': case 'venue_removal_rejected': return '/fila';
     case 'team_approved': case 'team_rejected': return '/ajustes';
-    case 'admin_venue_request': case 'admin_team_request': return '/admin?tab=approvals';
+    case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     default: return n.user ? `/jogador/${n.user}` : '/';
   }
 }

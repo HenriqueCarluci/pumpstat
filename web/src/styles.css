@@ -762,3 +762,8 @@ a.q-city:hover { color: var(--text); }
 .fs-row .up { color: #7fb5f0; font-family: var(--num); }
 .fs-row .down { color: #e8a06a; font-family: var(--num); }
 .chartcard.focus { box-shadow: 0 0 0 2px #3d8fe6; }
+.venue-req-btns { display: grid; gap: 6px; justify-items: center; }
+.venue-form select { width: 100%; }
+.review-card.removal { border-color: rgba(217, 119, 46, 0.5); }
+.review-card .warn { color: #e8a06a; }
+.inactive-venues { margin: 6px 0 12px; }

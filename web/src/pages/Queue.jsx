@@ -63,6 +63,7 @@ export default function Queue() {
         <div>
           <Link to="/fila" className="q-city">‹ {venue.venue.city}</Link>
           <h1>{venue.venue.name}</h1>
+          {venue.venue.active === false && <div className="banner">{t('Este fliperama saiu da lista do StepClub (fechou ou não tem mais Pump).')}</div>}
           {venue.venue.address && (
             <a className="q-addr" target="_blank" rel="noreferrer"
               href={`https://www.google.com/maps/search/?api=1&query=${venue.venue.latitude && venue.venue.longitude ? `${venue.venue.latitude},${venue.venue.longitude}` : encodeURIComponent(venue.venue.address)}`}>

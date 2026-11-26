@@ -381,7 +381,8 @@ function Approvals() {
       {err && <div className="form-err">{err}</div>}
       <h3>{t('Fliperamas')}</h3>
       {venues && !venues.length && <p className="muted small">{t('Nenhum pedido esperando.')}</p>}
-      {(venues || []).map((r) => <VenueReview key={r.id} r={r} onDone={load} />)}
+      {(venues || []).map((r) => (r.kind === 'remove' ? <VenueRemovalReview key={r.id} r={r} onDone={load} /> : <VenueReview key={r.id} r={r} onDone={load} />))}
+      <InactiveVenues />
 
       <h3>{t('Times')}</h3>
       {teams && !teams.length && <p className="muted small">{t('Nenhum pedido esperando.')}</p>}
@@ -429,6 +430,46 @@ function VenueReview({ r, onDone }) {
         <button className="btn ghost" onClick={() => review(false)}><X size={14} /> {t('Recusar')}</button>
       </div>
     </div>
+  );
+}
+
+function VenueRemovalReview({ r, onDone }) {
+  const [note, setNote] = useState('');
+  const [err, setErr] = useState('');
+  const review = async (approve) => {
+    setErr('');
+    try { await rpc('admin_review_venue_removal', { p_id: r.id, p_approve: approve, p_note: note }); onDone(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  return (
+    <div className="card review-card removal">
+      <div className="small muted">{t('Pedido de exclusão de {who} · {when}', { who: r.nickname || t('Jogador'), when: timeAgo(r.created_at) })}</div>
+      <div><b>{r.name}</b> · {r.city}{r.target_slug && <> · <Link to={`/fila/${r.target_slug}`}>{t('ver fila')}</Link></>}</div>
+      {r.note && <p className="small">“{r.note}”</p>}
+      {r.queue_entries > 0 && <p className="small warn">{t('Tem {n} pessoa(s) na fila agora; ao tirar da lista, a fila é esvaziada.', { n: r.queue_entries })}</p>}
+      <input value={note} onChange={(e) => setNote(e.target.value)} placeholder={t('Recado para quem pediu (opcional)')} />
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row">
+        <button className="btn" onClick={() => review(true)}><Check size={14} /> {t('Tirar da lista')}</button>
+        <button className="btn ghost" onClick={() => review(false)}><X size={14} /> {t('Manter')}</button>
+      </div>
+    </div>
+  );
+}
+
+/** Fliperamas fora da lista (excluídos por pedido): o admin pode reativar. */
+function InactiveVenues() {
+  const [list, setList] = useState([]);
+  const load = () => rpc('admin_inactive_venues').then(setList).catch(() => {});
+  useEffect(() => { load(); }, []);
+  if (!list.length) return null;
+  const reactivate = async (id) => { await rpc('admin_set_venue_active', { p_venue: id, p_active: true }).catch(() => {}); load(); };
+  return (
+    <details className="small inactive-venues">
+      <summary>{t('Fora da lista ({n})', { n: list.length })}</summary>
+      {list.map((v) => (
+        <div key={v.id} className="row-between"><span>{v.name} · {v.city}</span><button className="link" onClick={() => reactivate(v.id)}>{t('Reativar')}</button></div>
+      ))}
+    </details>
   );
 }
 
