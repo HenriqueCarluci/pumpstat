@@ -113,6 +113,24 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
+    // Diagnóstico temporário: estrutura pública da página de login (sem credenciais)
+    if (url.pathname === '/debug/login-page') {
+      const base = SITES[url.searchParams.get('v') || 'phoenix2'];
+      const s = new PiuSession(base);
+      const hops = [];
+      const orig = s.store.bind(s);
+      s.store = (u, r) => { hops.push({ url: u, status: r.status, location: r.headers.get('location') }); orig(u, r); };
+      const page = await s.get(url.searchParams.get('path') || '/login.php');
+      const doc = parseHtml(page.html);
+      const forms = [...doc.querySelectorAll('form')].map((f) => ({
+        id: f.getAttribute('id'), action: f.getAttribute('action'), method: f.getAttribute('method'),
+        inputs: [...f.querySelectorAll('input,select,button')].map((i) => `${i.getAttribute('name') || i.getAttribute('id') || i.tagName}:${i.getAttribute('type') || ''}${i.getAttribute('type') === 'hidden' ? '=' + (i.getAttribute('value') || '').slice(0, 60) : ''}`),
+      }));
+      const scripts = [...doc.querySelectorAll('script')].map((x) => x.getAttribute('src') || x.textContent)
+        .flatMap((t) => (t.match(/[^\n]{0,120}(login|ajax|\.post\(|fetch\(|AM_PASS|sns)[^\n]{0,220}/gi) || []))
+        .filter((t) => !/\\u[0-9a-f]{4}/i.test(t)).slice(0, 40);
+      return send(res, 200, { final: page.url, status: page.status, hops, cookies: [...s.cookies].map(([h, j]) => [h, [...j.keys()]]), forms, scripts }, origin);
+    }
 
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
