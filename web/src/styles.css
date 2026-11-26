@@ -550,3 +550,8 @@ a.q-city:hover { color: var(--text); }
 .mc-msg .read { color: #42c6ff; vertical-align: -2px; }
 .v-arrows { display: inline-flex; gap: 6px; }
 .online-av svg { opacity: .8; }
+.feedback { display: grid; gap: 8px; }
+.feedback textarea { width: 100%; resize: vertical; font: inherit; padding: 10px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.25); color: inherit; }
+.feedback .check { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; opacity: .85; }
+.feedback-done { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; color: inherit; }
+.feedback-done > svg { color: #3ee06f; }

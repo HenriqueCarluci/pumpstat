@@ -31,6 +31,7 @@ function unseal(b64) {
 
 const jobs = new Map(); // jobId -> { userId, state, message, progress, results, error, at }
 const attempts = new Map(); // userId -> [timestamps]
+const feedbackSent = new Map(); // userId -> [timestamps]
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const parseHtml = (html) => new DOMParser().parseFromString(html, 'text/html');
 
@@ -193,6 +194,35 @@ const server = http.createServer(async (req, res) => {
       jobs.set(job.id, job);
       runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved });
       return send(res, 202, { jobId: job.id }, origin);
+    }
+
+    // ajuda/feedback: a mensagem já foi salva no Supabase; aqui só avisamos o suporte por e-mail.
+    // FEEDBACK_WEBHOOK é o endpoint do FormSubmit (https://formsubmit.co/ajax/<destino>), configurado no Render.
+    if (req.method === 'POST' && url.pathname === '/api/feedback') {
+      const hook = process.env.FEEDBACK_WEBHOOK;
+      if (!hook) return send(res, 202, { emailed: false }, origin);
+      const now = Date.now();
+      const sent = (feedbackSent.get(user.id) || []).filter((x) => now - x < 3600_000);
+      if (sent.length >= 5) return send(res, 429, { error: 'muitas mensagens na última hora. Tente mais tarde' }, origin);
+      feedbackSent.set(user.id, [...sent, now]);
+      const { id, kind, message, contact, meta } = await readJson(req);
+      const label = { question: 'Dúvida', bug: 'Problema', idea: 'Sugestão', other: 'Outro' }[kind] || 'Mensagem';
+      const m2 = meta && typeof meta === 'object' ? meta : {};
+      const r = await fetch(hook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', Origin: 'https://stepclub.onrender.com', Referer: 'https://stepclub.onrender.com/' },
+        body: JSON.stringify({
+          _subject: `StepClub · ${label} #${Number(id) || ''}`, _template: 'table', _captcha: 'false',
+          _replyto: String(contact || user.email || ''),
+          Tipo: label, Mensagem: String(message || '').slice(0, 2000), 'Responder para': String(contact || '—'),
+          Conta: user.email || user.id, 'ID no banco': Number(id) || '—',
+          Tela: m2.page || '—', Idioma: m2.lang || '—', 'Versão do jogo': m2.version || '—',
+          Aparelho: m2.ua || '—', 'Tamanho da tela': m2.screen || '—', Build: m2.build || '—',
+        }),
+      }).catch(() => null);
+      const ok = !!r && r.ok;
+      if (ok && id) await rpcAsUser(token, 'feedback_emailed', { p_id: Number(id) }).catch(() => {});
+      return send(res, 200, { emailed: ok }, origin);
     }
 
     const m = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)$/);

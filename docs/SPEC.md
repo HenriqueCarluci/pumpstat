@@ -156,3 +156,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Fila
 - Entrar e voltar de "ausente" sempre pedem a localização, inclusive para administradores. O raio só é conferido onde o local tem coordenadas.
+
+## Ajuda e feedback (Ajustes)
+- Formulário com tipo (dúvida, problema, sugestão, outro), mensagem, e-mail para resposta e, opcionalmente, dados do aparelho e da tela.
+- Sempre salva na tabela `feedback` (`submit_feedback`, até 5 por hora). A API (`POST /api/feedback`) manda o e-mail pelo FormSubmit para o endereço configurado em `FEEDBACK_WEBHOOK` no Render (`https://formsubmit.co/ajax/<destino>`); sem a variável, fica só no banco. No primeiro envio o FormSubmit manda um e-mail de ativação para o destino.

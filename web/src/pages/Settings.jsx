@@ -7,6 +7,7 @@ import { signOut } from '../lib/auth.js';
 import { VERSIONS } from '../lib/piu.js';
 import { t } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
+import Feedback from '../components/Feedback.jsx';
 
 export default function Settings() {
   const { data, version, reload, session } = useData();
@@ -34,6 +35,12 @@ export default function Settings() {
         <p className="muted small">{t('Tamanho da nota sobre a capa da música na tela de Tier')}</p>
         <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
           options={[['sm', t('Pequena')], ['md', t('Média')], ['lg', t('Grande')]]} />
+      </section>
+
+      <section className="card">
+        <h3>{t('Ajuda e feedback')}</h3>
+        <p className="muted small">{t('Encontrou um problema, tem uma dúvida ou uma ideia? Mande para o suporte.')}</p>
+        <Feedback />
       </section>
 
       <section className="card">

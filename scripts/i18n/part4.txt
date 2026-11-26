@@ -109,3 +109,19 @@ só dá para mandar mensagem para amigos | you can only message friends | solo p
 escreva uma mensagem | write a message | escribe un mensaje | 메시지를 입력하세요 | メッセージを入力してください | écrivez un message | scrivi un messaggio
 espere alguns segundos antes de mandar outra | wait a few seconds before sending another | espera unos segundos antes de enviar otro | 몇 초 후에 다시 보내세요 | 数秒待ってから送ってください | attendez quelques secondes avant d'en envoyer un autre | aspetta qualche secondo prima di inviarne un altro
 Para entrar na fila, permita o acesso à localização. | To join the queue, allow location access. | Para entrar en la fila, permite el acceso a la ubicación. | 대기열에 들어가려면 위치 접근을 허용하세요. | 列に並ぶには位置情報へのアクセスを許可してください。 | Pour rejoindre la file, autorisez l'accès à la position. | Per entrare in coda, consenti l'accesso alla posizione.
+Ajuda e feedback | Help and feedback | Ayuda y comentarios | 도움말 및 피드백 | ヘルプとフィードバック | Aide et avis | Aiuto e feedback
+Encontrou um problema, tem uma dúvida ou uma ideia? Mande para o suporte. | Found a problem, have a question or an idea? Send it to support. | ¿Encontraste un problema, tienes una duda o una idea? Envíala al soporte. | 문제를 발견했거나 질문이나 아이디어가 있나요? 지원팀에 보내 주세요. | 不具合・質問・アイデアがあればサポートに送ってください。 | Un problème, une question ou une idée ? Envoyez-le au support. | Hai trovato un problema, hai un dubbio o un'idea? Mandalo al supporto.
+Falar com o suporte | Contact support | Contactar soporte | 지원팀에 문의 | サポートに問い合わせ | Contacter le support | Contatta il supporto
+Mensagem enviada | Message sent | Mensaje enviado | 메시지를 보냈습니다 | 送信しました | Message envoyé | Messaggio inviato
+Obrigado! Vamos responder no e-mail informado. | Thanks! We'll reply to the e-mail you provided. | ¡Gracias! Responderemos al e-mail indicado. | 감사합니다! 입력한 이메일로 답변드릴게요. | ありがとうございます。入力したメールアドレスに返信します。 | Merci ! Nous répondrons à l'e-mail indiqué. | Grazie! Risponderemo all'e-mail indicata.
+Sobre o que é? | What's it about? | ¿Sobre qué es? | 어떤 내용인가요? | 内容は? | De quoi s'agit-il ? | Di cosa si tratta?
+Dúvida | Question | Duda | 질문 | 質問 | Question | Domanda
+Problema | Problem | Problema | 문제 | 不具合 | Problème | Problema
+Sugestão | Suggestion | Sugerencia | 제안 | 提案 | Suggestion | Suggerimento
+Outro | Other | Otro | 기타 | その他 | Autre | Altro
+O que aconteceu? Em qual tela? O que você esperava? | What happened? On which screen? What did you expect? | ¿Qué pasó? ¿En qué pantalla? ¿Qué esperabas? | 무슨 일이 있었나요? 어느 화면인가요? 무엇을 기대했나요? | 何が起きましたか? どの画面ですか? どうなると思っていましたか? | Que s'est-il passé ? Sur quel écran ? Qu'attendiez-vous ? | Cosa è successo? In quale schermata? Cosa ti aspettavi?
+Conte com detalhes como podemos ajudar. | Tell us in detail how we can help. | Cuéntanos con detalle cómo podemos ayudar. | 어떻게 도와드릴지 자세히 알려 주세요. | どう手伝えるか詳しく教えてください。 | Dites-nous en détail comment vous aider. | Raccontaci nei dettagli come possiamo aiutarti.
+E-mail para resposta | Reply-to e-mail | E-mail para respuesta | 답변 받을 이메일 | 返信先メールアドレス | E-mail de réponse | E-mail per la risposta
+Incluir informações do aparelho e da tela (ajuda a resolver problemas) | Include device and screen info (helps fix problems) | Incluir información del dispositivo y la pantalla (ayuda a resolver problemas) | 기기와 화면 정보 포함 (문제 해결에 도움) | 端末と画面の情報を含める (不具合の解決に役立ちます) | Inclure les infos de l'appareil et de l'écran (aide à résoudre les problèmes) | Includi informazioni su dispositivo e schermata (aiuta a risolvere i problemi)
+Enviando… | Sending… | Enviando… | 보내는 중… | 送信中… | Envoi… | Invio…
+muitas mensagens na última hora. Tente mais tarde | too many messages in the last hour. Try later | demasiados mensajes en la última hora. Inténtalo más tarde | 지난 1시간 동안 메시지가 너무 많습니다. 나중에 다시 시도하세요 | この1時間のメッセージが多すぎます。後でお試しください | trop de messages dans la dernière heure. Réessayez plus tard | troppi messaggi nell'ultima ora. Riprova più tardi
