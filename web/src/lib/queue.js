@@ -2,6 +2,7 @@
 import { rpc } from './api.js';
 import { accessToken } from './auth.js';
 import { SUPABASE_KEY, SUPABASE_URL } from './config.js';
+import { isNative, nativePosition } from './native.js';
 
 /** Token deste aparelho: identifica a vaga de quem entra na fila sem conta. */
 export function deviceToken() {
@@ -29,7 +30,14 @@ export const recentEvents = (machineIds) =>
   machineIds.length ? rest(`queue_events?machine_id=in.(${machineIds.join(',')})&order=at.desc&limit=8`) : Promise.resolve([]);
 
 /** Posição atual do aparelho (para o check-in). */
-export function getPosition() {
+export async function getPosition() {
+  if (isNative) {
+    try { return await nativePosition(); } catch (e) {
+      throw new Error(e.code === 1 || /denied|permission/i.test(e.message || '')
+        ? 'Permita o acesso à localização para fazer check-in (o StepClub só confere se você está no fliperama).'
+        : 'Não consegui pegar sua localização. Tente de novo perto de uma janela ou com o GPS ligado.');
+    }
+  }
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) return reject(new Error('Este aparelho não informa a localização.'));
     navigator.geolocation.getCurrentPosition(

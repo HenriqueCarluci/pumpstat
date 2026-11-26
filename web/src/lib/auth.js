@@ -1,5 +1,6 @@
 // Login com e-mail e senha via Supabase Auth (REST, sem SDK).
 import { SUPABASE_KEY, SUPABASE_URL } from './config.js';
+import { AUTH_REDIRECT, isNative, openExternal } from './native.js';
 
 const STORE = 'pumpstat:session';
 let session = read();
@@ -56,8 +57,9 @@ export async function signUp(email, password) {
 
 /** Login com Google (mesmo fluxo do Fênix Analyzer: Supabase OAuth). Volta com #access_token na URL. */
 export function signInWithGoogle() {
-  const redirect = encodeURIComponent(window.location.origin + window.location.pathname);
-  window.location.href = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`;
+  // no app nativo o Google não deixa logar dentro da webview: abre no navegador do sistema e volta pelo link do app
+  const redirect = encodeURIComponent(isNative ? AUTH_REDIRECT : window.location.origin + window.location.pathname);
+  openExternal(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`);
 }
 
 export async function resetPassword(email) {
@@ -89,6 +91,22 @@ export async function accessToken() {
 }
 
 /** Sessão vinda do link de confirmação/recuperação (#access_token=... na URL). */
+/** Login que volta pelo link do app (com.henriquecarluci.stepclub://auth#access_token=...). */
+export function sessionFromHash(h) {
+  if (h.includes('error_description=')) return { error: new URLSearchParams(h.replace(/^#\/?/, '')).get('error_description') };
+  if (!h.includes('access_token=')) return null;
+  const p = new URLSearchParams(h.replace(/^#\/?/, ''));
+  return {
+    session: store({
+      email: emailFromJwt(p.get('access_token')),
+      access_token: p.get('access_token'),
+      refresh_token: p.get('refresh_token'),
+      expires_in: +(p.get('expires_in') || 3600),
+    }),
+    type: p.get('type'),
+  };
+}
+
 export function sessionFromUrl() {
   const h = window.location.hash;
   if (h.includes('error_description=')) {

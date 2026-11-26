@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">StepClub</string>
+    <string name="title_activity_main">StepClub</string>
+    <string name="package_name">com.henriquecarluci.stepclub</string>
+    <string name="custom_url_scheme">com.henriquecarluci.stepclub</string>
+</resources>

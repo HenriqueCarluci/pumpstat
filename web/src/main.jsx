@@ -4,6 +4,7 @@ import App from './App.jsx';
 import { getLang, loadLang, onLang } from './lib/i18n.js';
 import './styles.css';
 import { watchUpdates } from './lib/updater.js';
+import { isNative } from './lib/native.js';
 
 // trocar o idioma remonta o app inteiro com os textos novos
 function Root() {
@@ -14,5 +15,5 @@ function Root() {
   return <App key={lang} />;
 }
 
-watchUpdates();
+if (!isNative) watchUpdates(); // no app nativo os arquivos vêm dentro do pacote
 createRoot(document.getElementById('root')).render(<React.StrictMode><Root /></React.StrictMode>);
