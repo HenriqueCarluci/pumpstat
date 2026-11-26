@@ -38,11 +38,13 @@ export function cachedVersion(version) {
 }
 
 export async function fetchVersion(version) {
-  const [raw, community] = await Promise.all([
+  const [raw, community, fresh] = await Promise.all([
     rpc('app_data', { p_version: version }),
     rpc('community_charts', { p_version: version }).catch(() => []),
+    rpc('new_songs', { p_version: version }).catch(() => []),
   ]);
   raw.community = community;
+  raw.new_songs = fresh;
   memo.set(version, raw);
   store(CACHE_PREFIX + version, raw);
   return shape(raw);
@@ -77,6 +79,8 @@ function shape(raw) {
       c.special = { g: special.g || [], gimmick: !!special.gimmick, off: !!special.off, note: special.note || null, admin: !!special.admin };
     }
   }
+  // músicas novas da versão (não estavam na anterior)
+  for (const id of raw.new_songs || []) { const s = songs.get(id); if (s) s.isNew = true; }
   for (const s of songs.values()) {
     s.charts.sort((a, b) => order(a) - order(b));
     // Half-Double só existe no canal R!SE MIX (conta Steam ligada)

@@ -1079,10 +1079,18 @@ a.q-city:hover { color: var(--text); }
 .tile-special { position: absolute; top: 4px; left: 4px; width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center;
   background: rgba(14, 15, 18, .85); color: #cdb6ff; border: 1px solid rgba(167, 123, 255, .5); }
 .tier-special { border-top: 1px dashed rgba(167, 123, 255, .35); padding-top: 8px; margin-top: 14px; }
-.tier-special .tier-label b { color: #cdb6ff; display: inline-flex; }
+.tier-special .tier-label { background: #a77bff; color: #120a24; }
+.tier-special .tier-label b { display: inline-flex; }
 .tier-special-note { margin: 2px 0 8px; }
 .special-admin { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
 .special-admin[open] { background: var(--panel2); border-radius: 12px; padding: 8px 10px; }
 .special-admin input[type="text"] { width: 100%; }
 .gimmick-types { margin-top: -4px; }
 .gimmick-types small { width: 100%; }
+
+/* músicas novas da versão */
+.tile-new { position: absolute; top: 4px; right: 4px; padding: 1px 5px; border-radius: 6px; background: var(--neon); color: #0b0c0e;
+  font: 800 9.5px/1.4 var(--num); letter-spacing: .04em; box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+.tag.new { background: var(--neon); color: #0b0c0e; border-color: transparent; font-weight: 800; }
+.new-toggle.on { border-color: rgba(140, 255, 58, .6); color: var(--neon); background: rgba(140, 255, 58, .1); border-style: solid; }
+.tile-legacy ~ .tile-special { top: 26px; }

@@ -47,6 +47,7 @@ export default function Song() {
           <h1>{song.title}</h1>
           <div className="muted">{song.artist || t('Artista desconhecido')}</div>
           <div className="tags">
+            {song.isNew && <span className="tag new">NEW</span>}
             {song.bpm && <span className="tag">{song.bpm} BPM</span>}
             {song.songType && <span className="tag">{song.songType}</span>}
             {song.rise && <RiseBadge />}

@@ -41,7 +41,9 @@ export default function Tier() {
     if (prefs.tierMode !== mode || last[mode] !== level) setPrefs({ tierMode: mode, tierLast: { ...last, [mode]: level } });
   }, [mode, level]);
 
-  const charts = data.charts.filter((c) => c.mode === mode && c.level === level);
+  const hasNew = data.songs.some((x) => x.isNew);
+  const onlyNew = hasNew && params.get('n') === '1';
+  const charts = data.charts.filter((c) => c.mode === mode && c.level === level && (!onlyNew || c.song.isNew));
   // charts com gimmick ou fora da curva ficam numa seção própria, fora do ranking normal
   const specials = charts.filter(isSpecial).sort((a, b) => a.song.title.localeCompare(b.song.title));
   const groups = TIERS.map((x) => ({
@@ -69,6 +71,7 @@ export default function Tier() {
                   )}
                   {lg && <div className="tile-legacy" title={t('Legado Phoenix')}>P1</div>}
                   {c.plate && <div className="tile-plate"><Plate plate={c.plate} size="xs" /></div>}
+                  {c.song.isNew && <div className="tile-new">NEW</div>}
                   {isSpecial(c) && <div className="tile-special" title={hasGimmick(c) ? t('Gimmick') : t('Fora da curva')}>{hasGimmick(c) ? <Zap size={12} /> : <Shuffle size={12} />}</div>}
                 </div>
                 <div className="tile-name">{c.song.title}</div>
@@ -99,6 +102,12 @@ export default function Tier() {
       </section>
 
       <div className="tier-tools">
+        {hasNew && (
+          <button type="button" className={`chip-toggle new-toggle ${onlyNew ? 'on' : ''}`} aria-pressed={onlyNew}
+            onClick={() => { const p = new URLSearchParams(params); if (onlyNew) p.delete('n'); else p.set('n', '1'); setParams(p, { replace: true }); }}>
+            <Sparkles size={14} /> {t('Só músicas novas')}
+          </button>
+        )}
         {hasLegacy && <LegacyToggle />}
         <div className="seg sm tier-size" role="group" aria-label={t('Tamanho das capas')} title={t('Tamanho das capas: menor mostra mais músicas por linha')}>
           {[['sm', 'P'], ['md', 'M'], ['lg', 'G']].map(([k, l]) => <button key={k} className={(prefs.tierSize || 'md') === k ? 'on' : ''} onClick={() => setPrefs({ tierSize: k })} aria-label={sizeLabel[k]}>{l}</button>)}
@@ -114,6 +123,8 @@ export default function Tier() {
           </div>
         </section>
       ))}
+      {onlyNew && !charts.length && <p className="empty">{t('Nenhuma música nova neste nível.')}</p>}
+
       {specials.length > 0 && (
         <section className="tier tier-special">
           <div className="tier-label"><b><Sparkles size={18} /></b><span>{t('Especiais')}</span><em>{specials.filter((c) => c.score != null && !c.broken).length}/{specials.length}</em></div>
