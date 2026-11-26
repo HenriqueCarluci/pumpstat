@@ -82,7 +82,19 @@ export const TIERS = [
 ];
 const LABEL_TIER = { VeryHard: 'top', Hard: 'high', Underrated: 'high', Medium: 'mid', Easy: 'low', Overrated: 'low', VeryEasy: 'bottom' };
 
+const TIER_NUM = { top: 2, high: 1, mid: 0, low: -1, bottom: -2 };
+/** Tier do chart: dados do PIU Scores misturados com os votos da comunidade do StepClub
+ *  (o PIU Scores pesa como 3 votos; sem dados dele, vale só a comunidade). */
 export function chartTier(c) {
+  const base = baseTier(c);
+  const cm = c.community;
+  if (!cm || !cm.votes || cm.avg == null) return base;
+  const v = base in TIER_NUM ? (TIER_NUM[base] * 3 + cm.avg * cm.votes) / (3 + cm.votes) : cm.avg;
+  return v >= 1.5 ? 'top' : v >= 0.5 ? 'high' : v > -0.5 ? 'mid' : v > -1.5 ? 'low' : 'bottom';
+}
+export const TIER_VOTES = [[2, 'Topo do nível'], [1, 'Difícil'], [0, 'Médio'], [-1, 'Fácil'], [-2, 'Muito fácil']];
+
+function baseTier(c) {
   if (c.scoringLevel != null && c.mode !== 'C') {
     const d = c.scoringLevel - c.level;
     if (Math.abs(d) <= 1.5) {

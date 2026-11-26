@@ -7,10 +7,11 @@ import { chartHistory } from '../lib/api.js';
 import { chartLabel, chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { topStyles, useStyles, youtubeUrl } from '../lib/style.js';
 import StyleBars from '../components/StyleBars.jsx';
+import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
 
 export default function Song() {
   const { id } = useParams();
-  const { data, version } = useData();
+  const { data, version, reload } = useData();
   const song = data.songs.find((s) => String(s.id) === id);
   const styleOf = useStyles(song ? [song.id] : []);
   if (!song) return <div className="page"><p className="empty">Música não encontrada nesta versão.</p><Link to="/musicas">Voltar</Link></div>;
@@ -38,15 +39,16 @@ export default function Song() {
       {groups.map(([label, charts]) => (
         <section key={label}>
           <h3 className="group-h">{label}</h3>
-          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} />)}
+          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} onReviewed={() => reload()} />)}
         </section>
       ))}
     </div>
   );
 }
 
-function ChartCard({ chart: c, version, other, style }) {
+function ChartCard({ chart: c, version, other, style, onReviewed }) {
   const [showStyle, setShowStyle] = useState(false);
+  const [reviews, setReviews] = useState(false);
   const [hist, setHist] = useState(null);
   const [open, setOpen] = useState(false);
   const [rank, setRank] = useState(false);
@@ -84,6 +86,11 @@ function ChartCard({ chart: c, version, other, style }) {
         {c.stepArtist && <span className="tag">✎ {c.stepArtist}</span>}
         {c.notes ? <span className="tag">{c.notes} notas</span> : null}
         {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
+        {c.community?.tags?.length > 0 && (
+          <span className="tag community" title="Tags marcadas pela comunidade do StepClub">
+            👥 {c.community.tags.map((t) => REVIEW_TAGS.find(([k]) => k === t)?.[1] || t).join(' · ')}
+          </span>
+        )}
       </div>
       {style && (
         <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title="Ver estilo do chart">
@@ -105,10 +112,12 @@ function ChartCard({ chart: c, version, other, style }) {
         {c.achievedAt && <span className="muted">Recorde em {fmtDate(c.achievedAt)}</span>}
         <span className="spacer" />
         <a href={yt} target="_blank" rel="noreferrer" className="link">▶ YouTube</a>
+        <button className="link" onClick={() => setReviews((r) => !r)}>{reviews ? 'Fechar' : `Avaliar${c.community?.votes ? ` (${c.community.votes})` : ''}`}</button>
         <button className="link" onClick={() => setRank((r) => !r)}>{rank ? 'Fechar' : 'Ranking'}</button>
         <button className="link" onClick={toggle}>{open ? 'Fechar' : 'Histórico'}</button>
       </div>
 
+      {reviews && <div className="cc-hist"><ChartReviews chart={c} onSaved={onReviewed} /></div>}
       {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}
       {open && (
         <div className="cc-hist">

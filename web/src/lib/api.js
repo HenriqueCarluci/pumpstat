@@ -38,7 +38,11 @@ export function cachedVersion(version) {
 }
 
 export async function fetchVersion(version) {
-  const raw = await rpc('app_data', { p_version: version });
+  const [raw, community] = await Promise.all([
+    rpc('app_data', { p_version: version }),
+    rpc('community_charts', { p_version: version }).catch(() => []),
+  ]);
+  raw.community = community;
   memo.set(version, raw);
   store(CACHE_PREFIX + version, raw);
   return shape(raw);
@@ -64,6 +68,10 @@ function shape(raw) {
     s.charts.push(c);
     charts.push(c);
     byId.set(c.id, c);
+  }
+  for (const [chartId, avg, votes, tags] of raw.community || []) {
+    const c = byId.get(chartId);
+    if (c) c.community = { avg: avg == null ? null : Number(avg), votes, tags: tags || [] };
   }
   for (const s of songs.values()) {
     s.charts.sort((a, b) => order(a) - order(b));

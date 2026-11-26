@@ -474,3 +474,18 @@ a.q-city:hover { color: var(--text); }
 .ta-list { margin-top: 6px; display: grid; gap: 4px; }
 .ta-empty { padding: 8px; }
 .typeahead mark { background: rgba(66,198,255,.35); color: inherit; border-radius: 3px; }
+
+/* avaliações da comunidade */
+.reviews { display: grid; gap: 10px; }
+.rv-summary { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.rv-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.rv-form { display: grid; gap: 6px; padding: 10px; border-radius: 10px; background: rgba(255,255,255,.04); }
+.rv-label { font-size: 12px; opacity: .8; }
+.rv-form textarea { width: 100%; resize: vertical; font: inherit; padding: 8px; border-radius: 8px; border: 1px solid rgba(255,255,255,.15); background: rgba(0,0,0,.25); color: inherit; }
+.rv-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.rv-comments { display: grid; gap: 8px; }
+.rv-c { display: grid; grid-template-columns: 32px 1fr; gap: 8px; }
+.rv-c-head { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rv-c-head a { color: inherit; }
+.rv-c-text { white-space: pre-wrap; word-break: break-word; font-size: 14px; }
+.tag.community { border-color: #42c6ff; color: #9fe2ff; }

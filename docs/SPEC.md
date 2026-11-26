@@ -133,3 +133,8 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - `chart_styles` (por música + modo + nível): % das notas em twist, drill, corrida, bracket, pulo, jack, doublestep e footswitch, calculado das anotações de pé esquerdo/direito do piucenter.com (`scripts/chart-style.js`), mais NPS, ritmo e as 3 skills de destaque.
 - Cobertura: ~99% dos charts da Phoenix e ~81% da Phoenix 2 (charts novos da P2 ainda não estão no piucenter).
 - Link do YouTube na música e em cada chart (busca "pump it up <música> <S/D nível>").
+
+## Avaliação da comunidade
+- Botão "Avaliar" em cada chart. Só quem passou o chart (recorde sem stage break) pode avaliar: voto de tier (muito fácil → topo do nível), tags de estilo (twist, drill, corrida, bracket, pulo, jack, doublestep, footswitch, gimmick, stamina, hold, técnico) e comentário de até 500 caracteres.
+- O tier mostrado no app mistura o PIU Scores (peso de 3 votos) com a média dos votos (`community_charts`). As tags mais marcadas aparecem no card do chart.
+- Comentários são visíveis para todos os usuários logados; a nota de quem comentou só aparece para amigos.
