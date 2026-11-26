@@ -69,9 +69,9 @@ function shape(raw) {
     charts.push(c);
     byId.set(c.id, c);
   }
-  for (const [chartId, avg, votes, tags] of raw.community || []) {
+  for (const [chartId, avg, votes, tags, club] of raw.community || []) {
     const c = byId.get(chartId);
-    if (c) c.community = { avg: avg == null ? null : Number(avg), votes, tags: tags || [] };
+    if (c) c.community = { avg: avg == null ? null : Number(avg), votes, tags: tags || [], club: club == null ? null : Number(club) };
   }
   for (const s of songs.values()) {
     s.charts.sort((a, b) => order(a) - order(b));

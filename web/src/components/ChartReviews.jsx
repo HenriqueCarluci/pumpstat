@@ -5,6 +5,9 @@ import { TIER_VOTES } from '../lib/piu.js';
 import { Grade, timeAgo } from './ui.jsx';
 import { t, tErr, tn } from '../lib/i18n.js';
 import { Check } from './Icons.jsx';
+import ReportBlock from './ReportBlock.jsx';
+import { ShieldCheck } from './Icons.jsx';
+import { useData } from '../App.jsx';
 
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
@@ -23,6 +26,10 @@ export default function ChartReviews({ chart, onSaved }) {
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const { plan } = useData();
+  const setClub = async (v) => {
+    try { await rpc('admin_set_chart_tier', { p_chart: chart.id, p_tier: v }); await load(); onSaved?.(); } catch (e) { setErr(tErr(e.message)); }
+  };
   const load = async () => {
     try {
       const r = await rpc('chart_reviews_for', { p_chart: chart.id });
@@ -49,6 +56,17 @@ export default function ChartReviews({ chart, onSaved }) {
   if (!info) return <p className="muted small">{err || t('Carregando avaliações…')}</p>;
   return (
     <div className="reviews">
+      {plan?.admin && (
+        <div className="club-tier">
+          <div className="rv-label ic-row"><ShieldCheck size={13} /> {t('Tier do clube (admin): vale acima dos votos e do PIU Scores')}</div>
+          <div className="chips">
+            {TIER_VOTES.map(([v, l]) => (
+              <button key={v} className={info.club_tier === v ? 'on' : ''} onClick={() => setClub(info.club_tier === v ? null : v)}>{t(l)}</button>
+            ))}
+          </div>
+        </div>
+      )}
+      {info.club_tier != null && !plan?.admin && <div className="tag club-tag">{t('Tier do clube')}: {tierLabel(info.club_tier)}</div>}
       <div className="rv-summary">
         {info.votes > 0
           ? <span>{t('Comunidade:')} <b>{avgLabel(Number(info.avg))}</b> <span className="muted small">({tn(info.votes, '{n} voto', '{n} votos')})</span></span>
@@ -96,6 +114,7 @@ export default function ChartReviews({ chart, onSaved }) {
                   <span className="muted small">{timeAgo(c.at)}</span>
                 </div>
                 <div className="rv-c-text">{c.comment}</div>
+                {!c.me && <ReportBlock compact user={c.user} name={c.nickname} context={{ where: 'comentário', chart: chart.id, comment: c.comment }} onBlocked={load} />}
               </div>
             </div>
           ))}

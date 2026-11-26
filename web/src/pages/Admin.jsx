@@ -5,6 +5,7 @@ import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck } from '../components/Icons.jsx';
+import { FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER } from '../lib/plans.js';
 import { Chips } from './Songs.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
@@ -16,8 +17,11 @@ export default function Admin() {
     <div className="page admin">
       <h2>{t('Administração')}</h2>
       <Stats />
-      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['feedback', t('Suporte')]]} />
-      {tab === 'users' ? <Users /> : <FeedbackList />}
+      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')]]} />
+      {tab === 'users' && <Users />}
+      {tab === 'reports' && <Reports />}
+      {tab === 'feedback' && <FeedbackList />}
+      {tab === 'plans' && <PlansConfig />}
     </div>
   );
 }
@@ -27,7 +31,7 @@ function Stats() {
   useEffect(() => { rpc('admin_stats').then(setS).catch(() => {}); }, []);
   if (!s) return null;
   const items = [['Usuários', s.users], ['Novos (7 dias)', s.new_7d], ['Ativos (7 dias)', s.active_7d], ['Online agora', s.online],
-    ['Com conta da Pump', s.linked], ['StepClub+', s.plus], ['Suporte em aberto', s.feedback_open], ['Bloqueados', s.banned]];
+    ['Com conta da Pump', s.linked], ['Plus', s.plus], ['Pro', s.pro], ['Suporte em aberto', s.feedback_open], ['Denúncias em aberto', s.reports_open], ['Bloqueados', s.banned]];
   return (
     <div className="admin-stats">
       {items.map(([l, v]) => <div key={l} className="stat"><div className="v">{fmtNum(v)}</div><div className="l">{t(l)}</div></div>)}
@@ -69,11 +73,12 @@ function UserRow({ u, open, onToggle, onChange }) {
     try { await rpc(fn, args); await onChange(); } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };
-  const plus = u.plan === 'plus';
+  const plus = u.plan !== 'free';
+  const [give, setGive] = useState('plus');
   const planText = !plus ? t('Grátis')
-    : u.plan_source === 'lifetime' ? `StepClub+ · ${t('vitalício')}`
-      : u.plan_source === 'store' ? `StepClub+ · ${t('loja')}`
-        : `StepClub+ · ${t('até {d}', { d: fmtDate(u.plan_expires) })}`;
+    : u.plan_source === 'lifetime' ? `${PLAN_LABEL[u.plan]} · ${t('vitalício')}`
+      : u.plan_source === 'store' ? `${PLAN_LABEL[u.plan]} · ${t('loja')}`
+        : `${PLAN_LABEL[u.plan]} · ${t('até {d}', { d: fmtDate(u.plan_expires) })}`;
   return (
     <div className={`admin-user ${u.banned ? 'banned' : ''}`}>
       <button className="admin-user-head" onClick={onToggle}>
@@ -97,17 +102,20 @@ function UserRow({ u, open, onToggle, onChange }) {
             <span>{t('Última sincronização')}: {u.last_sync ? fmtDate(u.last_sync) : '—'}</span>
             {u.pumbility != null && <span>PUMBILITY: {fmtNum(Math.round(u.pumbility))}</span>}
             {u.title && <span>{t('Título')}: {u.title}</span>}
+            <span>{t('Amigos')}: {u.friends}</span>
+            {u.reports > 0 && <span className="warn-text">{t('Denúncias')}: {u.reports}</span>}
           </div>
-          <div className="rv-label">{t('Liberar StepClub+ (cortesia)')}</div>
+          <div className="rv-label">{t('Liberar plano (cortesia)')}</div>
+          <div className="chips">{['plus', 'pro'].map((p) => <button key={p} className={give === p ? 'on' : ''} onClick={() => setGive(p)}>{PLAN_LABEL[p]}</button>)}</div>
           <input placeholder={t('Motivo (opcional), ex.: membro do clube')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} />
           <div className="chips">
             {[[30, '30 dias'], [90, '3 meses'], [365, '1 ano'], [null, 'Vitalício']].map(([d, l]) => (
-              <button key={l} disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'plus', p_days: d, p_note: note || null })}>
+              <button key={l} disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: give, p_days: d, p_note: note || null })}>
                 <Crown size={13} /> {t(l)}
               </button>
             ))}
             {plus && u.plan_source !== 'store' && (
-              <button disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'free' }, t('Remover o StepClub+ deste usuário?'))}>{t('Remover plano')}</button>
+              <button disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'free' }, t('Remover o plano deste usuário?'))}>{t('Remover plano')}</button>
             )}
           </div>
           <div className="rv-label">{t('Conta')}</div>
@@ -162,4 +170,115 @@ function FeedbackList() {
       </div>
     </>
   );
+}
+
+const REASON = { spam: 'Spam', abuse: 'Ofensa ou assédio', cheating: 'Trapaça nas notas', inappropriate: 'Conteúdo impróprio', other: 'Outro' };
+
+function Reports() {
+  const [status, setStatus] = useState('open');
+  const [list, setList] = useState(null);
+  const load = () => rpc('admin_reports', { p_status: status }).then(setList).catch(() => setList([]));
+  useEffect(() => { setList(null); load(); }, [status]); // eslint-disable-line
+  const mark = async (id, s) => { await rpc('admin_report_status', { p_id: id, p_status: s }); load(); };
+  const ban = async (r) => {
+    if (!window.confirm(t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))) return;
+    await rpc('admin_set_banned', { p_user: r.reported, p_banned: true }); await mark(r.id, 'done');
+  };
+  return (
+    <>
+      <Chips value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
+      {list && !list.length && <p className="empty">{t('Nenhuma denúncia aqui.')}</p>}
+      <div className="admin-feedback">
+        {(list || []).map((r) => (
+          <div key={r.id} className={`card fb ${r.status}`}>
+            <div className="row-between">
+              <span className="tag warn">{t(REASON[r.reason] || r.reason)} #{r.id}</span>
+              <small className="muted">{fmtDate(r.at)}</small>
+            </div>
+            <p className="small"><b>{r.reported_nick || r.reported_email || '—'}</b> · {t('{n} denúncias no total', { n: r.reports_total })}{r.reported_banned ? ` · ${t('bloqueado')}` : ''}</p>
+            {r.details && <p className="fb-msg">{r.details}</p>}
+            {r.context?.comment && <p className="fb-msg muted">“{r.context.comment}”</p>}
+            <small className="muted">{t('Denunciado por')} {r.reporter_nick || '—'}{r.context?.where ? ` · ${r.context.where}` : ''}</small>
+            <div className="bm-row">
+              {!r.reported_banned && <button className="btn ghost danger" onClick={() => ban(r)}><UserX size={15} /> {t('Bloquear conta')}</button>}
+              {r.status === 'open'
+                ? <button className="btn" onClick={() => mark(r.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
+                : <button className="btn ghost" onClick={() => mark(r.id, 'open')}>{t('Reabrir')}</button>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/** Configuração dos planos: mostrar a tela, cobrança ativa, plano mínimo de cada recurso e limites. */
+function PlansConfig() {
+  const { reloadPlan } = useData();
+  const [cfg, setCfg] = useState(null);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => { rpc('app_config').then(setCfg).catch((e) => setErr(tErr(e.message))); }, []);
+  if (!cfg) return <p className="empty">{err || t('Carregando…')}</p>;
+  const set = (fn) => { setSaved(false); setCfg((c) => { const n = structuredClone(c); fn(n); return n; }); };
+  const save = async () => {
+    setErr('');
+    try { await rpc('admin_set_config', { p_value: cfg }); setSaved(true); reloadPlan(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  const regions = Object.keys(cfg.prices || {});
+  return (
+    <div className="plans-config">
+      <label className="check"><input type="checkbox" checked={!!cfg.show_plans} onChange={(e) => set((c) => { c.show_plans = e.target.checked; })} />
+        <span><b>{t('Mostrar a tela de planos para todos')}</b><br /><small className="muted">{t('Desligado: só administradores veem a prévia em Ajustes → Ver planos.')}</small></span></label>
+      <label className="check"><input type="checkbox" checked={!!cfg.enforce} onChange={(e) => set((c) => { c.enforce = e.target.checked; })} />
+        <span><b>{t('Cobrança ativa (aplicar limites e recursos pagos)')}</b><br /><small className="muted">{t('Desligado: todo mundo tem tudo liberado, como na fase de desenvolvimento. Administradores nunca têm limites.')}</small></span></label>
+
+      <h3>{t('Plano mínimo de cada recurso')}</h3>
+      {FEATURES.map((f) => (
+        <div key={f.id} className="cfg-row">
+          <span>{t(f.label)}{f.soon && <em className="soon"> · {t('em breve')}</em>}</span>
+          <select value={cfg.features?.[f.id] || 'free'} onChange={(e) => set((c) => { c.features = { ...(c.features || {}), [f.id]: e.target.value }; })}>
+            {PLAN_ORDER.map((p) => <option key={p} value={p}>{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</option>)}
+          </select>
+        </div>
+      ))}
+
+      <h3>{t('Limites por plano')}</h3>
+      <p className="muted small">{t('Deixe em branco para sem limite.')}</p>
+      <div className="cfg-grid">
+        <span />{PLAN_ORDER.map((p) => <b key={p}>{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</b>)}
+        {LIMITS.map((l) => (
+          <FragmentRow key={l.id} label={t(l.label)}>
+            {PLAN_ORDER.map((p) => (
+              <input key={p} type="number" min="0" value={cfg.limits?.[p]?.[l.id] ?? ''}
+                onChange={(e) => set((c) => { c.limits = c.limits || {}; c.limits[p] = { ...(c.limits[p] || {}) }; if (e.target.value === '') delete c.limits[p][l.id]; else c.limits[p][l.id] = Number(e.target.value); })} />
+            ))}
+          </FragmentRow>
+        ))}
+      </div>
+
+      <h3>{t('Preços por região')}</h3>
+      <div className="cfg-grid prices">
+        <span />{['plus', 'plus_year', 'pro', 'pro_year'].map((k) => <b key={k}>{k.replace('_year', ' / ' + t('ano'))}</b>)}
+        {regions.map((r) => (
+          <FragmentRow key={r} label={`${r} (${cfg.prices[r].currency})`}>
+            {['plus', 'plus_year', 'pro', 'pro_year'].map((k) => (
+              <input key={k} type="number" step="0.01" min="0" value={cfg.prices[r][k] ?? ''}
+                onChange={(e) => set((c) => { c.prices[r] = { ...c.prices[r], [k]: e.target.value === '' ? null : Number(e.target.value) }; })} />
+            ))}
+          </FragmentRow>
+        ))}
+      </div>
+
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row">
+        <button className="btn" onClick={save}>{t('Salvar')}</button>
+        {saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}
+      </div>
+    </div>
+  );
+}
+
+function FragmentRow({ label, children }) {
+  return <><span className="cfg-label">{label}</span>{children}</>;
 }

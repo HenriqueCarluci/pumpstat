@@ -7,6 +7,8 @@ import { fmtScore, pbTier, VERSIONS } from '../lib/piu.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
+import ReportBlock from '../components/ReportBlock.jsx';
+import { entitlements } from '../lib/plans.js';
 
 function Avatar({ p, size = 44 }) {
   return (
@@ -18,7 +20,8 @@ function Avatar({ p, size = 44 }) {
 
 /** Amigos (notas visíveis só depois da aprovação), busca por nickname e solicitações. */
 export default function Players() {
-  const { version } = useData();
+  const { version, plan } = useData();
+  const friendCap = entitlements(plan).limit('friends');
   const [tab, setTab] = useState('friends');
   const [list, setList] = useState(null);
   const [reqs, setReqs] = useState({ incoming: [], outgoing: [] });
@@ -39,6 +42,7 @@ export default function Players() {
         ['requests', `${t('Solicitações')}${reqs.incoming.length ? ` (${reqs.incoming.length})` : ''}`],
       ]} />
       {err && <div className="form-err">{err}</div>}
+      {friendCap != null && <p className="muted small">{t('{n} de {max} amigos no seu plano', { n: plan?.friends ?? 0, max: friendCap })}</p>}
 
       {tab === 'friends' && (
         !list ? <p className="empty">{t('Carregando…')}</p> : (
@@ -185,6 +189,7 @@ export function ComparePlayer() {
         <div className="vs-side">{other && <Avatar p={other} size={36} />}<b>{other?.nickname || t('Jogador')}</b><span className="big down">{losses}</span></div>
       </section>
       <MiniChat user={id} name={other?.nickname} />
+      <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />
       <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />
       <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
       <div className="cmp-list">

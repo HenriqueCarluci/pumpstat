@@ -99,7 +99,30 @@ async function scrapeVersion(session, version, job) {
   return { ...toPayload(version, profile, bests, plays), titles };
 }
 
-async function runJob(job, { login, password, versions, token, saved }) {
+// grava os dados: com o token do usuário (sincronização manual) ou com a chave do servidor (automática)
+const userWriter = (token) => ({
+  scores: (payload) => ingestMe(token, payload),
+  titles: (version, titles) => rpcAsUser(token, 'ingest_titles_me', { p_version: version, p_titles: titles }),
+  session: (blob) => rpcAsUser(token, 'save_piu_session', { p_blob: blob }),
+});
+const serverWriter = (userId) => ({
+  scores: (payload) => rpcAsServer('ingest_auto', { p_user: userId, p_payload: payload }),
+  titles: (version, titles) => rpcAsServer('ingest_titles_auto', { p_user: userId, p_version: version, p_titles: titles }),
+  session: null, // a sessão renovada é gravada em auto_sync_done
+});
+
+async function rpcAsServer(fn, args) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_key: process.env.INGEST_KEY, ...args }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.message || `Supabase ${res.status}`);
+  return body;
+}
+
+async function runJob(job, { login, password, versions, token, saved, writer = userWriter(token) }) {
   try {
     let session;
     if (saved) {
@@ -121,12 +144,13 @@ async function runJob(job, { login, password, versions, token, saved }) {
       const payload = await scrapeVersion(session, version, job);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
       const { titles, ...scores } = payload;
-      job.results[version] = { ...(await ingestMe(token, scores)), bests: payload.bests.length, plays: payload.plays.length };
-      if (titles.length) job.results[version].titles = await rpcAsUser(token, 'ingest_titles_me', { p_version: version, p_titles: titles });
+      job.results[version] = { ...(await writer.scores(scores)), bests: payload.bests.length, plays: payload.plays.length };
+      if (titles.length) job.results[version].titles = await writer.titles(version, titles);
       job.progress = Object.keys(job.results).length / versions.length;
     }
-    if (SESSION_KEY) {
-      try { session.base = SITES.phoenix2; await rpcAsUser(token, 'save_piu_session', { p_blob: seal(session.toJSON()) }); } catch { /* opcional */ }
+    job.session = session;
+    if (SESSION_KEY && writer.session) {
+      try { session.base = SITES.phoenix2; await writer.session(seal(session.toJSON())); } catch { /* opcional */ }
     }
     job.state = 'done';
     job.message = 'Pronto!';
@@ -164,7 +188,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
     // o app chama isto ao abrir; no máximo uma atualização do catálogo por dia
-    if (url.pathname === '/api/catalog/tick') { catalogTick(); return send(res, 202, { ok: true }, origin); }
+    if (url.pathname === '/api/catalog/tick') { catalogTick(); autoSyncTick(); return send(res, 202, { ok: true }, origin); }
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
     if (!user?.id) return send(res, 401, { error: 'Faça login no StepClub.' }, origin);
@@ -237,6 +261,34 @@ const server = http.createServer(async (req, res) => {
     return send(res, 500, { error: e.message, cause: e.cause?.code || e.cause?.message }, origin);
   }
 });
+
+// ---------- sincronização automática (quem tem sessão salva; Pro quando a cobrança estiver ativa) ----------
+let autoBusy = false;
+async function autoSyncTick() {
+  if (autoBusy || !process.env.INGEST_KEY || !SESSION_KEY) return;
+  autoBusy = true;
+  try {
+    const list = await rpcAsServer('auto_sync_candidates', { p_limit: 4, p_hours: 6 });
+    for (const c of list) {
+      let saved = null;
+      try { saved = unseal(c.blob); } catch { await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: null, p_error: 'session_expired' }).catch(() => {}); continue; }
+      const job = { id: `auto-${c.user}`, userId: c.user, state: 'running', message: '', progress: 0, results: {}, at: Date.now() };
+      await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, writer: serverWriter(c.user) });
+      let blob = null;
+      if (job.state === 'done' && job.session) { try { job.session.base = SITES.phoenix2; blob = seal(job.session.toJSON()); } catch { /* ignora */ } }
+      const error = job.state === 'done' ? null : (job.needLogin ? 'session_expired' : job.error);
+      await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: blob, p_error: error }).catch(() => {});
+      console.log('auto-sync', c.user.slice(0, 8), job.state, error || '');
+      await sleep(5000); // devagar com o piugame
+    }
+  } catch (e) {
+    console.error('auto-sync:', e.message);
+  } finally {
+    autoBusy = false;
+  }
+}
+setTimeout(autoSyncTick, 60_000).unref();
+setInterval(autoSyncTick, 15 * 60_000).unref();
 
 let catalogBusy = false;
 function catalogTick() {

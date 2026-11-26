@@ -23,6 +23,8 @@ import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
 import Admin from './pages/Admin.jsx';
+import Plans from './pages/Plans.jsx';
+import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
 
@@ -56,6 +58,7 @@ export default function App() {
   if (!session) {
     // a fila do clube é pública: quem chega pelo QR/link não precisa de conta
     if (isQueueHash()) return <PublicQueue />;
+    if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> StepClub</a></header><main className="content"><Privacy /></main></div>;
     return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
   return (
@@ -199,6 +202,8 @@ function Shell() {
             <Route path="/notificacoes" element={<Notifications />} />
             <Route path="/online" element={<Online />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/planos" element={<Plans />} />
+            <Route path="/privacidade" element={<Privacy />} />
             <Route path="*" element={<Home />} />
           </Routes>
         )}

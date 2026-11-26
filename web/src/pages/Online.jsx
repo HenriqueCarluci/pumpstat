@@ -8,6 +8,7 @@ import { Ball } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
 import { pbTier } from '../lib/piu.js';
 import { Check, ChevronRight, Gamepad2, MapPin, Swords } from '../components/Icons.jsx';
+import ReportBlock from '../components/ReportBlock.jsx';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
 
@@ -113,6 +114,7 @@ function OnlineRow({ p, open, onToggle, onSent }) {
             <button className="btn" disabled={busy || !msg.trim()} onClick={() => send()}>{t('Enviar')}</button>
           </div>
           {err && <div className="form-err">{err}</div>}
+          <ReportBlock compact user={p.id} name={p.nickname} context={{ where: 'online' }} onBlocked={onSent} />
         </div>
       )}
       {err && !open && <div className="form-err">{err}</div>}

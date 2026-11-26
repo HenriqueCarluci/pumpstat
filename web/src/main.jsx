@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
-import { getLang, onLang } from './lib/i18n.js';
+import { getLang, loadLang, onLang } from './lib/i18n.js';
 import './styles.css';
 import { watchUpdates } from './lib/updater.js';
 
 // trocar o idioma remonta o app inteiro com os textos novos
 function Root() {
   const [lang, setLang] = useState(getLang);
-  useEffect(() => onLang(setLang), []);
+  const [ready, setReady] = useState(getLang() === 'pt');
+  useEffect(() => { loadLang().finally(() => setReady(true)); return onLang(setLang); }, []);
+  if (!ready) return null;
   return <App key={lang} />;
 }
 

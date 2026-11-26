@@ -167,3 +167,24 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Usuários (`admin_users`): busca por e-mail ou nick; liberar StepClub+ como cortesia (30 dias, 3 meses, 1 ano ou vitalício, com motivo), remover plano, bloquear/desbloquear conta (`auth.users.banned_until`, derruba as sessões) e dar/tirar acesso de admin.
 - Suporte (`admin_feedback`): mensagens do formulário, responder por e-mail e marcar como resolvida.
 - Planos: tabela `subscriptions` (fonte `store`, `comp` ou `lifetime`); `my_plan()` diz o plano e se o usuário é admin. Assinaturas da loja entram com `source = 'store'` quando o pagamento for ligado.
+
+## Planos (Grátis / Plus / Pro) — em desenvolvimento
+- Configuração em `app_settings.plans` (editada em Administração → Planos): `show_plans` (tela de planos visível para todos; admin sempre vê a prévia), `enforce` (aplica limites e recursos pagos; desligado = tudo liberado), plano mínimo de cada recurso, limites por plano (amigos, recomendações, meses de histórico) e preços por região (BR, US, EU, WORLD).
+- Padrão: Plus R$ 6,90 / US$ 4,99 (EUA e Europa) / US$ 2,99 (outros); Pro R$ 12,90 / US$ 9,99 / US$ 5,99; anual com ~33% de desconto. Amigos: grátis 15, Plus 50, Pro sem limite.
+- Já aplicado quando `enforce` ligar: limite de amigos (servidor), recomendações visíveis, meses de histórico e estilo do chart completo. Sincronização automática respeita o plano mínimo do recurso `auto_sync`.
+- Cortesia no admin: Plus ou Pro por 30 dias, 3 meses, 1 ano ou vitalício.
+
+## Moderação e requisitos das lojas
+- Bloquear e denunciar usuários (perfil do amigo, comentários de charts, lista de online). Bloqueio desfaz a amizade e impede convites, mensagens, busca e online entre os dois. Denúncias aparecem em Administração → Denúncias, com opção de bloquear a conta.
+- Excluir a própria conta em Ajustes (digitando EXCLUIR); apaga a conta e todos os dados ligados.
+- Política de privacidade pública em `#/privacidade` (PT e EN), com link no login e em Ajustes.
+
+## Tier do clube
+- Admin define o tier de um chart (em "Avaliar"), que vale acima dos votos e do PIU Scores (`chart_tier_overrides`).
+
+## Sincronização automática
+- A API sincroniza, a cada 15 min (e quando o app é aberto), até 4 contas com sessão salva, ativas nos últimos 21 dias e sem sincronizar há 6 h (`auto_sync_candidates`, `ingest_auto`, `auto_sync_done` com a chave do servidor). Sessão expirada é apagada e a pessoa entra com a senha de novo. O usuário liga/desliga em Ajustes.
+- No plano gratuito do Render a API dorme; para rodar o dia todo, a API precisa do plano Starter.
+
+## Idiomas
+- Cada dicionário é baixado só quando o idioma é escolhido (import dinâmico).

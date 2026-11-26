@@ -1,11 +1,7 @@
 // Idiomas do StepClub. O texto em português é a própria chave: t('Músicas') → 'Songs' em inglês.
 // Variáveis entre chaves: t('{n} recordes', { n: 12 }). Sem tradução, fica o português.
-import en from './locales/en.json';
-import es from './locales/es.json';
-import ko from './locales/ko.json';
-import ja from './locales/ja.json';
-import fr from './locales/fr.json';
-import it from './locales/it.json';
+// cada idioma vira um arquivo separado e só é baixado quando escolhido
+const LOADERS = import.meta.glob('./locales/*.json', { import: 'default' });
 
 export const LANGS = [
   { id: 'pt', name: 'Português', locale: 'pt-BR' },
@@ -16,7 +12,7 @@ export const LANGS = [
   { id: 'fr', name: 'Français', locale: 'fr-FR' },
   { id: 'it', name: 'Italiano', locale: 'it-IT' },
 ];
-const DICTS = { en, es, ko, ja, fr, it };
+const DICTS = {};
 const KEY = 'stepclub:lang';
 
 function detect() {
@@ -39,8 +35,16 @@ function applyDocument() {
 export const getLang = () => current;
 export const locale = () => LANGS.find((l) => l.id === current).locale;
 
-export function setLang(id) {
+/** Baixa o dicionário do idioma (se ainda não estiver carregado). */
+export async function loadLang(id = current) {
+  if (id === 'pt' || DICTS[id]) return;
+  const load = LOADERS[`./locales/${id}.json`];
+  if (load) DICTS[id] = await load();
+}
+
+export async function setLang(id) {
   if (!LANGS.some((l) => l.id === id) || id === current) return;
+  try { await loadLang(id); } catch { return; }
   current = id;
   try { localStorage.setItem(KEY, id); } catch { /* ignora */ }
   applyDocument();

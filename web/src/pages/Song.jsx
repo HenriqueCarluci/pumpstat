@@ -10,6 +10,8 @@ import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronDown, ChevronUp, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { entitlements } from '../lib/plans.js';
+import { Crown } from '../components/Icons.jsx';
 
 export default function Song() {
   const { id } = useParams();
@@ -49,6 +51,10 @@ export default function Song() {
 }
 
 function ChartCard({ chart: c, version, other, style, onReviewed }) {
+  const { plan } = useData();
+  const ent = entitlements(plan);
+  const months = ent.can('history_full') ? null : ent.limit('history_months');
+  const histCut = months ? new Date(Date.now() - months * 30.4 * 86400000) : null;
   const [showStyle, setShowStyle] = useState(false);
   const [reviews, setReviews] = useState(false);
   const [hist, setHist] = useState(null);
@@ -101,7 +107,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
           <span className="muted small">{showStyle ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
         </button>
       )}
-      {style && showStyle && <StyleBars style={style} />}
+      {style && showStyle && <StyleBars style={style} locked={!ent.can('style_full')} />}
 
       {c.otherScore != null && (
         <div className="cc-other">
@@ -125,7 +131,7 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
         <div className="cc-hist">
           {!hist && <p className="muted">{t('Carregando…')}</p>}
           {hist && !hist.plays.length && !hist.bests.length && <p className="muted">{t('Sem histórico registrado ainda.')}</p>}
-          {hist?.plays?.map((p, i) => (
+          {hist?.plays?.filter((p) => !histCut || new Date(p[0]) >= histCut).map((p, i) => (
             <div key={i} className="hrow">
               <span className="muted">{fmtDate(p[0])}</span>
               <span className="sc">{fmtScore(p[1])}</span>
@@ -134,6 +140,9 @@ function ChartCard({ chart: c, version, other, style, onReviewed }) {
               <span className="judg">{p[4]}/{p[5]}/{p[6]}/{p[7]}/<b>{p[8]}</b></span>
             </div>
           ))}
+          {histCut && hist?.plays?.some((p) => new Date(p[0]) < histCut) && (
+            <div className="muted small ic-row"><Crown size={13} /> {t('Histórico completo no Plus (grátis: últimos {n} meses).', { n: months })}</div>
+          )}
           {hist?.bests?.length > 0 && (
             <div className="muted small">{t('Evolução do recorde:')} {hist.bests.map((b) => fmtScore(b[1])).join(' → ')}</div>
           )}

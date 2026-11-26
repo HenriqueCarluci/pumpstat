@@ -59,6 +59,7 @@ export default function Login({ notice }) {
             </button>
           </>
         )}
+        <a className="link small privacy-link" href="#/privacidade">{t('Política de privacidade')}</a>
         <div className="login-links">
           {mode !== 'in' && <button className="link" onClick={() => setMode('in')}>{t('Já tenho conta')}</button>}
           {mode !== 'up' && <button className="link" onClick={() => setMode('up')}>{t('Criar conta')}</button>}

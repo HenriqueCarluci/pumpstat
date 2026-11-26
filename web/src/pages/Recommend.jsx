@@ -7,13 +7,18 @@ import { recommendations } from '../lib/recommend.js';
 import { topStyles, useStyles } from '../lib/style.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t } from '../lib/i18n.js';
+import { entitlements } from '../lib/plans.js';
+import { Crown } from '../components/Icons.jsx';
 
 export default function Recommend() {
-  const { data, version } = useData();
+  const { data, version, plan } = useData();
   const [mode, setMode] = useState('all');
   const [tab, setTab] = useState('fresh');
   const rec = useMemo(() => recommendations(version, data.charts), [version, data]);
-  const list = (tab === 'fresh' ? rec.fresh : rec.improve).filter((r) => mode === 'all' || r.chart.mode === mode).slice(0, 40);
+  const ent = entitlements(plan);
+  const full = (tab === 'fresh' ? rec.fresh : rec.improve).filter((r) => mode === 'all' || r.chart.mode === mode).slice(0, 40);
+  const cap = ent.can('recommendations_all') ? null : ent.limit('recommendations');
+  const list = cap != null ? full.slice(0, cap) : full;
   const styleOf = useStyles(list.map((r) => r.chart.songId));
 
   return (
@@ -55,6 +60,13 @@ export default function Recommend() {
           );
         })}
       </div>
+      {cap != null && full.length > cap && (
+        <div className="card upsell">
+          <b className="ic-row"><Crown size={16} /> {t('Mais {n} recomendações no Plus', { n: full.length - cap })}</b>
+          <p className="muted small">{t('No plano grátis aparecem as {n} primeiras.', { n: cap })}</p>
+          {ent.showPlans && <Link className="btn" to="/planos">{t('Ver planos')}</Link>}
+        </div>
+      )}
     </div>
   );
 }

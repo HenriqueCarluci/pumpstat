@@ -38,7 +38,7 @@ for f in sorted(glob.glob('supabase/migrations/*.sql')):
     for m in re.finditer(r"raise exception '((?:''|[^'])+)'", s): add(m.group(1).replace("''", "'"))
 JUNK = {'top', 'high', 'mid', 'low', 'bottom', 'twist', 'drill', 'run', 'bracket', 'jump', 'jack', 'doublestep', 'footswitch',
         'application/json', 'null', 'not found', 'payload grande demais', 'chave de ingestão inválida', 'chave inválida',
-        'chave de sincronização inválida', 'formato do export do PIU Scores mudou'}
+        'chave de sincronização inválida', 'formato do export do PIU Scores mudou', 'session_expired'}
 keys = [k for k in keys if k not in JUNK and '%' not in k]
 json.dump(keys, open(sys.argv[1], 'w', encoding='utf-8'), ensure_ascii=False, indent=0)
 print(len(keys))

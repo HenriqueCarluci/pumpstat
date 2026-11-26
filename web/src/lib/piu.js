@@ -89,6 +89,8 @@ const TIER_NUM = { top: 2, high: 1, mid: 0, low: -1, bottom: -2 };
 export function chartTier(c) {
   const base = baseTier(c);
   const cm = c.community;
+  // tier do clube (definido pelo admin) vale acima de tudo
+  if (cm?.club != null) return ['bottom', 'low', 'mid', 'high', 'top'][cm.club + 2];
   if (!cm || !cm.votes || cm.avg == null) return base;
   const v = base in TIER_NUM ? (TIER_NUM[base] * 3 + cm.avg * cm.votes) / (3 + cm.votes) : cm.avg;
   return v >= 1.5 ? 'top' : v >= 0.5 ? 'high' : v > -0.5 ? 'mid' : v > -1.5 ? 'low' : 'bottom';

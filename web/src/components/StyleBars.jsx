@@ -2,9 +2,11 @@ import { STYLE_KEYS, tagPt } from '../lib/style.js';
 import { t } from '../lib/i18n.js';
 
 /** Barras com o % de notas em cada padrão do chart. */
-export default function StyleBars({ style, compact = false }) {
+export default function StyleBars({ style, compact = false, locked = false }) {
   if (!style) return null;
-  const keys = STYLE_KEYS.filter((k) => !compact || style.pct[k.id] >= 3);
+  const keys = locked
+    ? [...STYLE_KEYS].sort((a, b) => (style.pct[b.id] || 0) - (style.pct[a.id] || 0)).slice(0, 3)
+    : STYLE_KEYS.filter((k) => !compact || style.pct[k.id] >= 3);
   return (
     <div className={`stylebars ${compact ? 'compact' : ''}`}>
       {!compact && (
@@ -25,7 +27,8 @@ export default function StyleBars({ style, compact = false }) {
           </div>
         );
       })}
-      {!compact && style.tags?.length > 0 && (
+      {locked && <div className="muted small">{t('Os 3 padrões principais. Todos os padrões e as skills de destaque ficam no Plus.')}</div>}
+      {!compact && !locked && style.tags?.length > 0 && (
         <div className="sb-tags">{t('Destaques:')} {style.tags.map((x) => <span key={x} className="tag skill">{t(tagPt(x))}</span>)}</div>
       )}
       {!compact && <div className="muted tiny">{t('% das notas em cada padrão. Um passo pode contar em mais de um. Fonte: anotações do piucenter.com.')}</div>}
