@@ -66,9 +66,25 @@
           bar(Math.min(1, (i + 600) / body.length));
           msg(mix + ': ' + Math.min(body.length, i + 600) + '/' + body.length + ' charts');
         }
-        done.push(mix + ' ' + body.length);
+        done.push(mix + ': ' + body.length + ' charts');
       }
-      msg('<b>Catálogo atualizado.</b><br>' + done.join(' · ') + ' charts' +
+      // capas de reserva do PIU Scores para músicas que ainda não têm a imagem oficial
+      msg('Procurando capas que faltam…');
+      const H = { apikey: CFG.anon, 'Content-Type': 'application/json' };
+      const base = CFG.url.replace(/\/$/, '');
+      const missing = await (await fetch(base + '/rest/v1/songs?select=title&jacket_url=is.null&limit=2000', { headers: H })).json();
+      const test = (src) => new Promise((r) => { const i = new Image(); i.onload = () => r(i.naturalWidth > 10 ? src : null); i.onerror = () => r(null); i.src = src; });
+      const cands = (t) => [...new Set([t.replace(/[^A-Za-z0-9]/g, ''), t.replace(/\s+/g, ''), t.replace(/[^\p{L}\p{N}]/gu, '')])]
+        .filter(Boolean).map((x) => 'https://piuimages.arroweclip.se/songs/' + encodeURIComponent(x) + '.png');
+      const found = [];
+      for (const m of missing) {
+        for (const u of cands(m.title)) { const ok = await test(u); if (ok) { found.push([m.title, ok]); break; } }
+      }
+      if (found.length) {
+        await fetch(base + '/rest/v1/rpc/fill_jackets', { method: 'POST', headers: H, body: JSON.stringify({ p_key: CFG.key, p_items: found }) });
+      }
+      done.push(found.length + ' capas novas');
+      msg('<b>Catálogo atualizado.</b><br>' + done.join(' · ') +
         (CFG.app ? '<br><a href="' + CFG.app + '" style="color:#7fb4ff">Abrir o PumpStat →</a>' : ''));
       addClose();
     } catch (e) { fail('Erro: ' + e.message); }
