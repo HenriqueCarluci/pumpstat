@@ -4,7 +4,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
-import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck } from '../components/Icons.jsx';
+import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck, X } from '../components/Icons.jsx';
 import { FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER } from '../lib/plans.js';
 import { Chips } from './Songs.jsx';
 
@@ -17,11 +17,12 @@ export default function Admin() {
     <div className="page admin">
       <h2>{t('Administração')}</h2>
       <Stats />
-      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')]]} />
+      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')]]} />
       {tab === 'users' && <Users />}
       {tab === 'reports' && <Reports />}
       {tab === 'feedback' && <FeedbackList />}
       {tab === 'plans' && <PlansConfig />}
+      {tab === 'ads' && <AdsConfig />}
     </div>
   );
 }
@@ -281,4 +282,81 @@ function PlansConfig() {
 
 function FragmentRow({ label, children }) {
   return <><span className="cfg-label">{label}</span>{children}</>;
+}
+
+const newAd = () => ({ id: `ad${Date.now().toString(36)}`, title: '', text: '', url: '', image: '', cta: t('Saiba mais'), active: true, until: null });
+
+/** Anúncios do plano grátis: liga/desliga, rede (anúncios próprios ou AdSense) e os anúncios próprios com o relatório. */
+function AdsConfig() {
+  const { reloadPlan } = useData();
+  const [cfg, setCfg] = useState(null);
+  const [stats, setStats] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => {
+    rpc('app_config').then(setCfg).catch((e) => setErr(tErr(e.message)));
+    rpc('admin_ad_stats', { p_days: 30 }).then((s) => setStats(s || {})).catch(() => {});
+  }, []);
+  if (!cfg) return <p className="empty">{err || t('Carregando…')}</p>;
+  const ads = cfg.ads || {};
+  const set = (fn) => { setSaved(false); setCfg((c) => { const n = structuredClone(c); n.ads = n.ads || {}; fn(n.ads); return n; }); };
+  const setAd = (i, patch) => set((a) => { a.house[i] = { ...a.house[i], ...patch }; });
+  const save = async () => {
+    setErr('');
+    if (ads.provider === 'adsense' && !/^ca-pub-\d+$/.test(ads.adsense_client || '')) { setErr(t('O ID do AdSense precisa ter o formato ca-pub-0000000000000000.')); return; }
+    try { await rpc('admin_set_config', { p_value: cfg }); setSaved(true); reloadPlan(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  return (
+    <div className="plans-config ads-config">
+      <label className="check"><input type="checkbox" checked={!!ads.enabled} onChange={(e) => set((a) => { a.enabled = e.target.checked; })} />
+        <span><b>{t('Mostrar anúncios no plano grátis')}</b><br /><small className="muted">{t('Plus e Pro nunca veem anúncios. Aparecem no início, na lista de músicas, na página da música e no Tier; nunca na fila, no chat ou nos ajustes.')}</small></span></label>
+      <label className="check"><input type="checkbox" checked={!!ads.show_admin} onChange={(e) => set((a) => { a.show_admin = e.target.checked; })} />
+        <span><b>{t('Mostrar também para administradores')}</b><br /><small className="muted">{t('Para conferir como fica antes de ligar para todos.')}</small></span></label>
+
+      <h3>{t('Rede de anúncios')}</h3>
+      <Chips value={ads.provider || 'house'} onChange={(v) => set((a) => { a.provider = v; })}
+        options={[['house', t('Só anúncios próprios')], ['adsense', 'Google AdSense']]} />
+      {ads.provider === 'adsense' && (
+        <div className="row2">
+          <input type="text" placeholder="ca-pub-0000000000000000" value={ads.adsense_client || ''} onChange={(e) => set((a) => { a.adsense_client = e.target.value.trim(); })} />
+          <input type="text" placeholder={t('ID do bloco de anúncio')} value={ads.adsense_slot || ''} onChange={(e) => set((a) => { a.adsense_slot = e.target.value.trim(); })} />
+          <small className="muted">{t('O AdSense só funciona no site. No app do celular aparecem os anúncios próprios.')}</small>
+        </div>
+      )}
+      <div className="cfg-row">
+        <span>{t('Um anúncio a cada quantas músicas na lista')}</span>
+        <input type="number" min="4" max="50" value={ads.every_n ?? 12} onChange={(e) => set((a) => { a.every_n = Number(e.target.value) || 12; })} />
+      </div>
+
+      <h3>{t('Anúncios próprios')}</h3>
+      <p className="muted small">{t('Patrocinadores, fliperamas parceiros, o clube e o Plus. Link interno começa com #/ (ex.: #/planos).')}</p>
+      {(ads.house || []).map((a, i) => {
+        const st = stats[a.id];
+        return (
+          <div key={a.id} className="house-ad">
+            <div className="cfg-row">
+              <label className="check"><input type="checkbox" checked={a.active !== false} onChange={(e) => setAd(i, { active: e.target.checked })} /> <span>{t('Ativo')}</span></label>
+              <span className="ad-stats">{st ? t('{v} visualizações · {c} cliques · {p} pessoas (30 dias)', { v: st.views, c: st.clicks, p: st.people }) : t('Sem dados nos últimos 30 dias')}</span>
+              <button className="link" onClick={() => set((x) => { x.house.splice(i, 1); })} title={t('Remover')}><X size={14} /></button>
+            </div>
+            <input type="text" placeholder={t('Título')} value={a.title || ''} onChange={(e) => setAd(i, { title: e.target.value })} />
+            <textarea rows={2} placeholder={t('Texto')} value={a.text || ''} onChange={(e) => setAd(i, { text: e.target.value })} />
+            <div className="row2">
+              <input type="text" placeholder={t('Link (https://… ou #/planos)')} value={a.url || ''} onChange={(e) => setAd(i, { url: e.target.value.trim() })} />
+              <input type="text" placeholder={t('Texto do botão')} value={a.cta || ''} onChange={(e) => setAd(i, { cta: e.target.value })} />
+              <input type="text" placeholder={t('Imagem (URL, opcional)')} value={a.image || ''} onChange={(e) => setAd(i, { image: e.target.value.trim() })} />
+              <label className="small muted">{t('Até')} <input type="date" value={a.until ? a.until.slice(0, 10) : ''} onChange={(e) => setAd(i, { until: e.target.value ? `${e.target.value}T23:59:59-03:00` : null })} /></label>
+            </div>
+          </div>
+        );
+      })}
+      <button className="btn ghost" onClick={() => set((a) => { a.house = [...(a.house || []), newAd()]; })}>{t('Adicionar anúncio')}</button>
+
+      {err && <div className="form-err">{err}</div>}
+      <div className="bm-row">
+        <button className="btn" onClick={save}>{t('Salvar')}</button>
+        {saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}
+      </div>
+    </div>
+  );
 }

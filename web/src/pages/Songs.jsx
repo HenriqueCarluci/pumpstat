@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { SongRow } from '../components/ui.jsx';
@@ -6,12 +6,15 @@ import { locale, t, tn } from '../lib/i18n.js';
 import { Grade } from '../components/ui.jsx';
 import { History, X } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
+import AdSlot from '../components/AdSlot.jsx';
+import { adsConfig } from '../lib/ads.js';
 import { legacyOf } from '../lib/piu.js';
 
 const norm = (s) => (s || '').toLowerCase().normalize('NFKD').replace(/[^\p{L}\p{N}]/gu, '');
 
 export default function Songs() {
-  const { data, version } = useData();
+  const { data, version, plan } = useData();
+  const ads = adsConfig(plan);
   const [prefs, setPrefs] = usePrefs();
   const isP2 = version === 'phoenix2';
   const showLegacy = isP2 && prefs.legacyP1;
@@ -99,7 +102,12 @@ export default function Songs() {
         {showLegacy && <span className="legacy-note"> · <span className="pip legacy t-a single">P1</span> {t('= recorde legado da Phoenix, ainda sem nota na Phoenix 2')}</span>}
       </div>
       <div className="songlist">
-        {list.slice(0, 400).map((s) => <SongRow key={s.id} song={s} filter={chartFilter} legacy={showLegacy ? legacy : null} />)}
+        {list.slice(0, 400).map((s, i) => (
+          <Fragment key={s.id}>
+            {ads.show && i > 0 && i % ads.everyN === 0 && <AdSlot place="songs" seed={i / ads.everyN} />}
+            <SongRow song={s} filter={chartFilter} legacy={showLegacy ? legacy : null} />
+          </Fragment>
+        ))}
         {list.length > 400 && <p className="muted center">{t('Mostrando 400. Refine a busca para ver o resto.')}</p>}
       </div>
     </div>

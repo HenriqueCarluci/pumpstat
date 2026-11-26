@@ -11,6 +11,7 @@ import ChartReviews, { REVIEW_TAGS } from '../components/ChartReviews.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronDown, ChevronUp, History, PencilLine, Play, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
+import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
 import { Crown } from '../components/Icons.jsx';
 
@@ -50,6 +51,7 @@ export default function Song() {
           {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} onReviewed={() => reload()} />)}
         </section>
       ))}
+      <AdSlot place="song" />
     </div>
   );
 }

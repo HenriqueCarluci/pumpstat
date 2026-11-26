@@ -11,6 +11,7 @@ const REGIONS = [['BR', 'Brasil'], ['US', 'EUA'], ['EU', 'Europa'], ['WORLD', 'O
 export default function Plans() {
   const { plan } = useData();
   const ent = entitlements(plan);
+  const cfgAds = !!ent.config?.ads?.enabled;
   const [region, setRegion] = useState(priceRegion);
   const [yearly, setYearly] = useState(false);
   if (!ent.showPlans) return <div className="page"><p className="empty">{t('Os planos ainda não estão disponíveis.')}</p></div>;
@@ -36,6 +37,9 @@ export default function Plans() {
             {ent.plan === p ? <span className="tag">{t('Seu plano')}</span>
               : p !== 'free' && <button className="btn" disabled title={t('Em breve nas lojas')}>{t('Em breve')}</button>}
             <ul>
+              {cfgAds && (
+                <li className={p === 'free' ? 'off' : ''}>{p === 'free' ? <X size={14} /> : <Check size={14} />} {t('Sem anúncios')}</li>
+              )}
               {LIMITS.map((l) => {
                 const v = lim(p, l.id);
                 return <li key={l.id}><Check size={14} /> {t(l.label)}: <b>{v == null || v === '' ? t('sem limite') : v}</b></li>;

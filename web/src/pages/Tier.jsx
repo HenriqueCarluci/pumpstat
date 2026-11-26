@@ -4,6 +4,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { chartTier, fmtScore, gradeRank, legacyOf, TIERS } from '../lib/piu.js';
 import { LegacyToggle } from './Song.jsx';
+import AdSlot from '../components/AdSlot.jsx';
 import { Chips } from './Songs.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { t } from '../lib/i18n.js';
@@ -80,6 +81,7 @@ export default function Tier() {
           </div>
         </section>
       ))}
+      <AdSlot place="tier" />
       <p className="muted small center">{t('Dificuldade relativa dentro do nível segundo o PIU Scores e os votos da comunidade do StepClub.')}</p>
     </div>
   );

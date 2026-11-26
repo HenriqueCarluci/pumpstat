@@ -1,3 +1,4 @@
+import AdSlot from '../components/AdSlot.jsx';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
@@ -80,6 +81,7 @@ export default function Home() {
         <Stat label={t('Clears')} value={stats.clears.length} />
         <Stat label={t('Média')} value={stats.avg ? fmtScore(stats.avg) : '—'} />
       </section>
+      <AdSlot place="home" />
 
       <section className="card">
         <h3>{t('Grades')}</h3>
