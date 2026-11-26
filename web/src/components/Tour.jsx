@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
-import { endTour, goTour, markTourAsked, startTour, TOUR_STEPS, useTour } from '../lib/tour.js';
+import { endTour, goTour, markTourAsked, startTour, syncTourSeen, TOUR_STEPS, useTour } from '../lib/tour.js';
 import { t } from '../lib/i18n.js';
 import {
   Dumbbell, HomeIcon, LayoutGrid, ListOrdered, Music2, RefreshCw, SettingsIcon, Shield, Sparkles, TrendingUp, Users, X,
@@ -18,9 +18,10 @@ export default function Tour() {
   const steps = TOUR_STEPS.filter((s) => !s.toggle || isOn(plan, s.toggle));
   const step = tour.step >= 0 ? steps[tour.step] : null;
   useEffect(() => { if (step) navigate(step.route); }, [tour.step]); // eslint-disable-line
+  useEffect(() => { if (plan) syncTourSeen(!!plan.tour_seen); }, [plan?.tour_seen, !!plan]); // eslint-disable-line
 
   if (!session) return null;
-  if (!tour.asked && tour.step < 0) {
+  if (!tour.asked && tour.step < 0 && plan && !plan.tour_seen) {
     return (
       <div className="tour-backdrop" role="presentation">
         <div className="tour-card welcome" role="dialog" aria-modal="true" aria-labelledby="tour-w">

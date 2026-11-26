@@ -1,12 +1,16 @@
 // Tutorial guiado: passa pelas telas principais com um cartão explicando cada uma.
 // No primeiro acesso o app pergunta se a pessoa quer fazer; dá para refazer em Ajustes.
 import { useEffect, useState } from 'react';
+import { rpc } from './api.js';
 
 const KEY = 'stepclub:tour';
 let state = { step: -1, asked: false };
 try { state = { ...state, ...JSON.parse(localStorage.getItem(KEY) || '{}'), step: -1 }; } catch { /* ignore */ }
 const listeners = new Set();
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ asked: state.asked })); } catch { /* ignore */ } };
+// guarda também na conta, para o convite não voltar em outro aparelho
+let synced = false;
+const remember = () => { if (synced) return; synced = true; rpc('set_tour_seen').catch(() => { synced = false; }); };
 const emit = () => listeners.forEach((fn) => fn({ ...state }));
 
 export function useTour() {
@@ -14,10 +18,16 @@ export function useTour() {
   useEffect(() => { listeners.add(setS); return () => listeners.delete(setS); }, []);
   return s;
 }
-export const startTour = () => { state = { ...state, step: 0, asked: true }; save(); emit(); };
+export const startTour = () => { state = { ...state, step: 0, asked: true }; save(); remember(); emit(); };
 export const goTour = (step) => { state = { ...state, step }; emit(); };
-export const endTour = () => { state = { ...state, step: -1, asked: true }; save(); emit(); };
-export const markTourAsked = () => { state = { ...state, asked: true }; save(); emit(); };
+export const endTour = () => { state = { ...state, step: -1, asked: true }; save(); remember(); emit(); };
+export const markTourAsked = () => { state = { ...state, asked: true }; save(); remember(); emit(); };
+/** A conta já viu o tutorial (my_plan.tour_seen): não convida de novo neste aparelho. */
+export const syncTourSeen = (seen) => {
+  if (seen) { synced = true; if (!state.asked) { state = { ...state, asked: true }; save(); emit(); } return; }
+  // já viu neste aparelho antes de a conta guardar isso: marca na conta agora
+  if (state.asked) remember();
+};
 
 /** Passos do tour (os de recursos desligados pelo admin são pulados). */
 export const TOUR_STEPS = [
