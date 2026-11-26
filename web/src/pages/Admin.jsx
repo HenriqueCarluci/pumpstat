@@ -245,6 +245,14 @@ function PlansConfig() {
       <label className="check"><input type="checkbox" checked={!!cfg.sales?.enabled} onChange={(e) => set((c) => { c.sales = { ...(c.sales || {}), enabled: e.target.checked }; })} />
         <span><b>{t('Venda de assinaturas ligada (botão Assinar)')}</b><br /><small className="muted">{t('Desligado: os planos aparecem com "Em breve". Ligue só depois de criar as assinaturas no Play Console.')}</small></span></label>
 
+      <h3>{t('Cobrança (RevenueCat)')}</h3>
+      <div className="cfg-row">
+        <span>{t('Chave pública do app Android (começa com goog_)')}</span>
+        <input type="text" maxLength={80} placeholder="goog_…" value={cfg.sales?.rc_key ?? ''}
+          onChange={(e) => set((c) => { c.sales = { ...(c.sales || {}), rc_key: e.target.value.trim() }; })} />
+      </div>
+      <p className="muted small">{t('É a chave pública do SDK (pode ficar no app). A chave secreta e o segredo do webhook ficam só no servidor.')}</p>
+
       <h3>{t('Produtos na Google Play')}</h3>
       <p className="muted small">{t('Uma assinatura por plano no Play Console, cada uma com dois planos básicos (mensal e anual). Use os mesmos IDs daqui.')}</p>
       <div className="cfg-grid products">

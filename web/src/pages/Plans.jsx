@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { purchase, salesState, storeUrl, yearlySaving } from '../lib/billing.js';
+import { purchase, salesState, storeUrl, waitForPlan, yearlySaving } from '../lib/billing.js';
 import { locale, t, tErr } from '../lib/i18n.js';
 import { entitlements, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
 import { Check, Crown, X } from '../components/Icons.jsx';
@@ -11,7 +11,7 @@ const REGIONS = [['BR', 'Brasil'], ['US', 'EUA'], ['EU', 'Europa'], ['WORLD', 'O
 
 /** Vitrine dos planos. Só aparece para todos quando o admin liga "mostrar planos". */
 export default function Plans() {
-  const { plan } = useData();
+  const { plan, reloadPlan } = useData();
   const ent = entitlements(plan);
   const cfgAds = !!ent.config?.ads?.enabled;
   const [region, setRegion] = useState(priceRegion);
@@ -27,7 +27,10 @@ export default function Plans() {
   const save = Math.max(yearlySaving(prices, 'plus') || 0, yearlySaving(prices, 'pro') || 0);
   const buy = async (p) => {
     setErr(''); setBusy(p);
-    try { await purchase(cfg, p, yearly ? 'year' : 'month'); } catch (e) { setErr(tErr(e.message)); } finally { setBusy(''); }
+    try {
+      const bought = await purchase(cfg, p, yearly ? 'year' : 'month', plan);
+      if (bought) setErr((await waitForPlan(reloadPlan, p)) ? '' : t('Pagamento recebido. Seu plano aparece em instantes; se não aparecer, use "Restaurar compras" em Minha assinatura.'));
+    } catch (e) { setErr(tErr(e.message)); } finally { setBusy(''); }
   };
   const action = (p) => {
     if (sales === 'ready') return <button className="btn" disabled={!!busy} onClick={() => buy(p)}>{busy === p ? t('Abrindo…') : t('Assinar')}</button>;

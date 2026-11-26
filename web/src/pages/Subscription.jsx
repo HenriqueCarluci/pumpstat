@@ -38,7 +38,9 @@ export default function Subscription() {
         <p className="small">
           {!paid && t('Você está no plano grátis. Fila, amigos, chat, Tier e sincronização continuam liberados.')}
           {paid && plan.source === 'trial' && exp && t('Seu teste acaba em {d} ({n}). Depois a conta volta para o plano grátis, sem cobrança.', { d: fmt(exp), n: tn(days, '{n} dia', '{n} dias') })}
-          {paid && plan.source === 'store' && (exp ? t('Renova em {d}. Se cancelar, o plano vale até essa data.', { d: fmt(exp) }) : t('Assinatura ativa.'))}
+          {paid && plan.source === 'store' && (plan.will_renew === false
+            ? (exp ? t('Renovação cancelada: o plano vale até {d}.', { d: fmt(exp) }) : t('Renovação cancelada.'))
+            : (exp ? t('Renova em {d}. Se cancelar, o plano vale até essa data.', { d: fmt(exp) }) : t('Assinatura ativa.')))}
           {paid && plan.source === 'comp' && (exp ? t('Cortesia até {d}.', { d: fmt(exp) }) : t('Cortesia sem prazo.'))}
           {paid && plan.source === 'lifetime' && t('Acesso vitalício.')}
         </p>

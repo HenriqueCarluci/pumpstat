@@ -30,6 +30,7 @@ import StatusPicker from './components/StatusPicker.jsx';
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Subscription from './pages/Subscription.jsx';
+import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
@@ -149,8 +150,15 @@ function DataApp({ session, ingestKey }) {
   const notifications = useNotifications(!!session);
   const presence = usePresence(!!session);
   const [plan, setPlan] = useState(null);
-  const reloadPlan = useCallback(() => rpc('my_plan').then(setPlan).catch(() => {}), []);
+  const reloadPlan = useCallback(() => rpc('my_plan').then((p) => { setPlan(p); return p; }).catch(() => null), []);
   useEffect(() => { reloadPlan(); }, [reloadPlan]);
+  // cobrança pela Google Play (só no app Android, com a venda ligada pelo admin)
+  const billingUser = session?.user?.id;
+  const salesOn = !!plan?.config?.sales?.enabled;
+  useEffect(() => {
+    if (!salesOn || !billingUser) return;
+    initBilling(plan?.config, billingUser).then((ok) => { if (ok) setPlan((p) => (p ? { ...p } : p)); });
+  }, [salesOn, billingUser]); // eslint-disable-line
   // acorda a API e deixa ela atualizar o catálogo (no máximo 1x por dia)
   useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
   const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications, presence, plan, reloadPlan }),

@@ -1,7 +1,7 @@
 // PIU Stats API — entra no piugame.com com o login do usuário, lê os recordes e grava no Supabase
 // usando o token do próprio usuário (RPC ingest_me). A senha da Pump nunca é gravada.
 import http from 'node:http';
-import { createCipheriv, createDecipheriv, randomBytes, randomUUID } from 'node:crypto';
+import { createCipheriv, createDecipheriv, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
@@ -190,11 +190,42 @@ async function readJson(req) {
 
 const videoHits = new Map();
 
+// Webhook do RevenueCat (assinaturas da Google Play). O cabeçalho Authorization tem de ser igual a
+// REVENUECAT_WEBHOOK_AUTH (o mesmo valor configurado no painel do RevenueCat).
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function sameSecret(a, b) {
+  const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
+  return x.length > 0 && x.length === y.length && timingSafeEqual(x, y);
+}
+async function revenueCatWebhook(req) {
+  const secret = process.env.REVENUECAT_WEBHOOK_AUTH;
+  if (!secret || !process.env.INGEST_KEY) return [503, { error: 'cobrança não configurada' }];
+  if (!sameSecret(req.headers.authorization, secret)) return [401, { error: 'não autorizado' }];
+  let raw = '';
+  for await (const chunk of req) { raw += chunk; if (raw.length > 64_000) return [413, { error: 'payload grande demais' }]; }
+  const ev = (raw ? JSON.parse(raw) : {}).event || {};
+  // o app identifica o usuário pelo id da conta; ids anônimos do RevenueCat são ignorados
+  const user = [ev.app_user_id, ...(ev.aliases || [])].find((id) => UUID_RE.test(String(id || '')));
+  const out = await rpcAsServer('billing_event', {
+    p_event_id: ev.id ? String(ev.id) : null,
+    p_user: user || null,
+    p_type: String(ev.type || '?'),
+    p_product: ev.new_product_id || ev.product_id || null,
+    p_expires: ev.expiration_at_ms ? new Date(Number(ev.expiration_at_ms)).toISOString() : null,
+    p_payload: { type: ev.type, store: ev.store, environment: ev.environment, period: ev.period_type, price: ev.price, currency: ev.currency },
+  });
+  return [200, out];
+}
+
 const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin;
   const url = new URL(req.url, 'http://x');
   try {
     if (req.method === 'OPTIONS') return send(res, 204, null, origin);
+    if (req.method === 'POST' && url.pathname === '/api/billing/revenuecat') {
+      const [code, body] = await revenueCatWebhook(req);
+      return send(res, code, body, origin);
+    }
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
     // o app chama isto ao abrir; no máximo uma atualização do catálogo por dia
     if (url.pathname === '/api/catalog/tick') { catalogTick(); autoSyncTick(); return send(res, 202, { ok: true }, origin); }
