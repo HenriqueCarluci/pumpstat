@@ -11,6 +11,7 @@ import { ShieldCheck } from './Icons.jsx';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
 import TierVote from './TierVote.jsx';
+import { img } from '../lib/imgStore.js';
 
 export const REVIEW_TAGS = [
   ['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'],
@@ -126,7 +127,7 @@ export default function ChartReviews({ chart, onSaved }) {
         <div className="rv-comments">
           {info.comments.map((c, i) => (
             <div key={i} className="rv-c">
-              <span className="q-avatar" style={{ width: 32, height: 32 }}>{c.avatar ? <img src={c.avatar} alt="" referrerPolicy="no-referrer" /> : (c.nickname || '?').slice(0, 2)}</span>
+              <span className="q-avatar" style={{ width: 32, height: 32 }}>{c.avatar ? <img src={img(c.avatar)} alt="" referrerPolicy="no-referrer" /> : (c.nickname || '?').slice(0, 2)}</span>
               <div>
                 <div className="rv-c-head">
                   {c.me ? <b>{t('Você')}</b> : <Link to={`/jogador/${c.user}`}><b>{c.nickname || t('Jogador')}</b></Link>}

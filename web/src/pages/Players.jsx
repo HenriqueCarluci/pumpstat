@@ -19,11 +19,12 @@ import { chartTagLabel, tagColor } from '../lib/tags.js';
 import LiveBadge from '../components/LiveBadge.jsx';
 import PlayerSearch from '../components/PlayerSearch.jsx';
 import { useLives } from '../lib/lives.js';
+import { img } from '../lib/imgStore.js';
 
 export function Avatar({ p, size = 44 }) {
   return (
     <span className="q-avatar" style={{ width: size, height: size }}>
-      {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : (p.nickname || '?').slice(0, 2)}
+      {p.avatar ? <img src={img(p.avatar)} alt="" referrerPolicy="no-referrer" /> : (p.nickname || '?').slice(0, 2)}
     </span>
   );
 }
@@ -99,7 +100,7 @@ export default function Players() {
                       <small className="muted">{t('{n} recordes', { n: p.bests })}</small>
                     </span>
                     <span className="ppb">
-                      {tier?.icon && <img src={tier.icon} alt="" referrerPolicy="no-referrer" />}
+                      {tier?.icon && <img src={img(tier.icon)} alt="" referrerPolicy="no-referrer" />}
                       <b>{p.pumbility != null ? fmtNum(Math.round(p.pumbility)) : '—'}</b>
                     </span>
                   </Link>
@@ -241,7 +242,7 @@ export function PlayerProfile() {
           <Badges userId={id} />
         </div>
         <div className="pp-pb">
-          {tier?.icon && <img src={tier.icon} alt="" referrerPolicy="no-referrer" />}
+          {tier?.icon && <img src={img(tier.icon)} alt="" referrerPolicy="no-referrer" />}
           <b>{fmtNum(Math.round(total))}</b>
           <small className="muted">PUMBILITY{tier?.name && tier.lv ? ` · ${tier.name} ${tier.lv}` : ''}</small>
         </div>

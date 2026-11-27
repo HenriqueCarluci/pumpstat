@@ -15,6 +15,7 @@ import { isOn } from '../lib/plans.js';
 import { StatusDot } from '../components/StatusPicker.jsx';
 import LiveBadge from '../components/LiveBadge.jsx';
 import { useLives } from '../lib/lives.js';
+import { img } from '../lib/imgStore.js';
 
 const MATCH = { close: ['Bom x1', 'x1-close'], near: ['Nível parecido', 'x1-near'] };
 
@@ -109,14 +110,14 @@ function OnlineRow({ p, live, open, onToggle, onSent }) {
     <div className={`online-row${match ? ` m-${p.match}` : ''}`}>
       <div className="online-main">
         <Link to={`/jogador/${p.id}`} className="q-avatar online-av" aria-label={t('Ver perfil de {n}', { n: p.nickname || t('Jogador') })}>
-          {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : <Gamepad2 size={20} />}
+          {p.avatar ? <img src={img(p.avatar)} alt="" referrerPolicy="no-referrer" /> : <Gamepad2 size={20} />}
           <StatusDot status={p.status || 'online'} className="av-dot" />
         </Link>
         <div className="online-info">
           <div className="online-nick"><Flag cc={ccOf(p.id)} /><Link to={`/jogador/${p.id}`} className="online-nick-link"><b>{p.nickname || t('Jogador')}</b></Link></div>
           {p.title && <div className="online-title">{p.title}</div>}
           <div className="online-stats">
-            {tier && <span className="online-pb" title="PUMBILITY">{tier.icon && <img src={tier.icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}
+            {tier && <span className="online-pb" title="PUMBILITY">{tier.icon && <img src={img(tier.icon)} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}
             {(p.max?.S || p.max?.D) && (
               <span className="online-max" title={t('Maior nível já passado') + (p.max.version === 'phoenix' ? ' (Phoenix)' : '')}>
                 {p.max.S && <Ball chart={{ mode: 'S', level: p.max.S }} size="sm" />}

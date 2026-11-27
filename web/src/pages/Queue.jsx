@@ -10,6 +10,7 @@ import { ArrowUpToLine, Bell, MapPin, SkipForward, UserPlus, X, Zap } from '../c
 import { isNative } from '../lib/native.js';
 import { APP_SCHEME } from '../lib/config.js';
 import { disablePush, enablePush, pushStatus, refreshPush } from '../lib/push.js';
+import { img } from '../lib/imgStore.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
@@ -317,7 +318,7 @@ export function Person({ entry, big }) {
   const initials = entry.display_name.slice(0, 2).toUpperCase();
   return (
     <span className={`q-person ${big ? 'big' : ''}`}>
-      <span className="q-avatar">{entry.avatar_url ? <img src={entry.avatar_url} alt="" referrerPolicy="no-referrer" /> : initials}</span>
+      <span className="q-avatar">{entry.avatar_url ? <img src={img(entry.avatar_url)} alt="" referrerPolicy="no-referrer" /> : initials}</span>
       <span className="q-name">{entry.display_name}{entry.is_guest && <small className="q-guest-of">{entry.guest_label ? t('convidado de {n}', { n: entry.guest_label }) : t('convidado')}</small>}</span>
       {entry.turns > 0 && <span className="q-turns">{t('{n}× jogou', { n: entry.turns })}</span>}
     </span>

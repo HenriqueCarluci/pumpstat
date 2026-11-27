@@ -3,6 +3,10 @@
 import { rpc } from './api.js';
 import { staticImageUrls } from '../components/ui.jsx';
 import { reportDiag } from './errors.js';
+import { Capacitor } from '@capacitor/core';
+import { initImgStore, isStored, saveImg } from './imgStore.js';
+
+const native = Capacitor.isNativePlatform();
 
 const MODE = 'pumpstat:jackets';
 const DONE = 'pumpstat:jackets-done';
@@ -32,7 +36,11 @@ async function avatarUrls(version) {
   } catch { return []; }
 }
 
-export const pendingJackets = (data) => { const done = readDone(); return jacketUrls(data).filter((u) => !done.has(key(u))); };
+/** O que ainda falta: no app conta o que está salvo de verdade na pasta; no site, o que já foi aquecido no cache. */
+export const pendingJackets = (data) => {
+  if (native) return jacketUrls(data).filter((u) => !isStored(u));
+  const done = readDone(); return jacketUrls(data).filter((u) => !done.has(key(u)));
+};
 
 let running = null;
 /** Baixa as imagens que faltam, 6 por vez. onProgress(feitas, total). */
@@ -45,20 +53,25 @@ export function downloadJackets(data, onProgress) {
   let ok = 0;
   const failed = [];
   const emit = () => listeners.forEach((fn) => fn(n, total));
-  const one = (u, done) => new Promise((res) => {
-    const im = new Image();
-    im.referrerPolicy = 'no-referrer';
-    im.decoding = 'async';
-    const tm = setTimeout(() => { failed.push(`${u} (timeout)`); im.src = ''; res(); }, 20000);
-    im.onload = () => { clearTimeout(tm); ok += 1; done.add(key(u)); res(); };
-    im.onerror = () => { clearTimeout(tm); failed.push(u); res(); };
-    im.src = u;
-  });
+  // no app: baixa e salva o arquivo; no site: só aquece o cache do navegador
+  const one = (u, done) => (native
+    ? saveImg(u).then((saved) => { if (saved) { ok += 1; done.add(key(u)); } else failed.push(u); })
+      .catch((e) => { failed.push(`${u} (${e?.message || e})`); })
+    : new Promise((res) => {
+      const im = new Image();
+      im.referrerPolicy = 'no-referrer';
+      im.decoding = 'async';
+      const tm = setTimeout(() => { failed.push(`${u} (timeout)`); im.src = ''; res(); }, 20000);
+      im.onload = () => { clearTimeout(tm); ok += 1; done.add(key(u)); res(); };
+      im.onerror = () => { clearTimeout(tm); failed.push(u); res(); };
+      im.src = u;
+    }));
   const promise = (async () => {
     const t0 = Date.now();
-    const done = readDone();
+    if (native) await initImgStore();
+    const done = native ? new Set() : readDone();
     const extra = await avatarUrls(data?.version);
-    const urls = [...new Set([...jacketUrls(data), ...extra])].filter((u) => !done.has(key(u)));
+    const urls = [...new Set([...jacketUrls(data), ...extra])].filter((u) => (native ? !isStored(u) : !done.has(key(u))));
     total = urls.length;
     emit();
     const queue = [...urls];
@@ -66,11 +79,11 @@ export function downloadJackets(data, onProgress) {
       while (queue.length && !ctl.stop) {
         await one(queue.shift(), done);
         n += 1; emit();
-        if (n % 20 === 0) saveDone(done);
+        if (!native && n % 20 === 0) saveDone(done);
       }
     };
     await Promise.all(Array.from({ length: 6 }, worker));
-    saveDone(done);
+    if (!native) saveDone(done);
     running = null;
     const res = { at: new Date().toISOString(), total, ok, fail: failed.length, sec: Math.round((Date.now() - t0) / 1000), stopped: ctl.stop };
     try { localStorage.setItem(LAST, JSON.stringify(res)); } catch { /* ignore */ }

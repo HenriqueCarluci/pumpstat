@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { chartLabel, fmtBpm, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
+import { img } from '../lib/imgStore.js';
 
 // Imagens oficiais do site da Phoenix 2 (carregadas direto do piugame.com).
 const IMG = 'https://piugame.com/l_img/p2';
@@ -17,6 +18,8 @@ export function staticImageUrls() {
     ...Object.keys(PLATES).map((p) => `${IMG}/plate/${p.toLowerCase()}.png`),
     ...['s', 'd', 'hd', 'c'].flatMap((k) => [`${IMG}/stepball/full/${k}_bg.png`, `${IMG}/stepball/full/${k}_text.png`]),
     ...[...'0123456789'].map((d) => `${IMG}/stepball/full/s_num_${d}.png`),
+    // ícones de faixa da PUMBILITY (8 faixas × 5 LVs)
+    ...Array.from({ length: 40 }, (_, i) => `https://piugame.com/l_img/pumbility/pumbility_${i + 1}.png`),
   ];
 }
 export const plateImgUrl = (plate) => (plate ? `${IMG}/plate/${plate.toLowerCase()}.png` : null);
@@ -26,11 +29,11 @@ export function Ball({ chart, size = 'md' }) {
   const kind = chart.mode === 'S' ? 's' : chart.mode === 'D' ? 'd' : chart.mode === 'HD' ? 'hd' : 'c';
   const digits = String(chart.level).split('');
   return (
-    <span className={`ball ${size}`} title={chartLabel(chart)} style={{ backgroundImage: `url(${IMG}/stepball/full/${kind}_bg.png)` }}>
-      <img className="ball-text" src={`${IMG}/stepball/full/${kind}_text.png`} {...imgProps} />
+    <span className={`ball ${size}`} title={chartLabel(chart)} style={{ backgroundImage: `url(${img(`${IMG}/stepball/full/${kind}_bg.png`)})` }}>
+      <img className="ball-text" src={img(`${IMG}/stepball/full/${kind}_text.png`)} {...imgProps} />
       <span className="ball-num">
         {kind === 'c' && <b className="ball-x">×</b>}
-        {digits.map((d, i) => <img key={i} src={`${IMG}/stepball/full/s_num_${d}.png`} {...imgProps} />)}
+        {digits.map((d, i) => <img key={i} src={img(`${IMG}/stepball/full/s_num_${d}.png`)} {...imgProps} />)}
       </span>
     </span>
   );
@@ -50,12 +53,12 @@ export function RiseBadge({ small, full = true }) {
 export function Grade({ grade, broken, size = 'md' }) {
   if (!grade) return <span className={`grade-img none ${size}`}>—</span>;
   const code = (broken ? 'x_' : '') + (GRADE_CODE[grade] || grade.toLowerCase());
-  return <img className={`grade-img ${size}`} src={`${IMG}/grade/${code}.png`} title={broken ? `${grade} (stage break)` : grade} {...imgProps} alt={grade} />;
+  return <img className={`grade-img ${size}`} src={img(`${IMG}/grade/${code}.png`)} title={broken ? `${grade} (stage break)` : grade} {...imgProps} alt={grade} />;
 }
 
 export function Plate({ plate, size = 'md' }) {
   if (!plate) return null;
-  return <img className={`plate-img ${size}`} src={`${IMG}/plate/${plate.toLowerCase()}.png`} title={PLATES[plate] || plate} {...imgProps} alt={plate} />;
+  return <img className={`plate-img ${size}`} src={img(`${IMG}/plate/${plate.toLowerCase()}.png`)} title={PLATES[plate] || plate} {...imgProps} alt={plate} />;
 }
 
 /** Capa da música (banner 16:9 do jogo) ou um placeholder com as iniciais. */
@@ -65,7 +68,8 @@ export function Jacket({ song, width = 96, className = '' }) {
   // 0 carregando, 1 ok, 2 falhou (tenta de novo uma vez; se falhar de novo fica a capa com as iniciais, sem o ícone de imagem quebrada)
   const [st, setSt] = useState(0);
   const [retry, setRetry] = useState(0);
-  const src = song.jacket && (retry ? `${song.jacket}${song.jacket.includes('?') ? '&' : '?'}r=${retry}` : song.jacket);
+  // 1ª tentativa: arquivo salvo no aparelho (se houver); se falhar, a imagem da Pump
+  const src = song.jacket && (retry ? `${song.jacket}${song.jacket.includes('?') ? '&' : '?'}r=${retry}` : img(song.jacket));
   const fail = () => { if (retry < 1) setTimeout(() => setRetry((r) => r + 1), 1200); else setSt(2); };
   return (
     <div className={`jacket ${className} ${src && st === 0 ? 'loading' : ''}`} style={{ width, '--hue': hue }}>
@@ -138,7 +142,7 @@ export function PipLegend({ legacy }) {
 export function ScoreCard({ chart, score, grade, plate, broken, date, to, extra }) {
   const body = (
     <>
-      <div className="sc-bg" style={chart.song.jacket ? { backgroundImage: `url(${chart.song.jacket})` } : undefined} />
+      <div className="sc-bg" style={chart.song.jacket ? { backgroundImage: `url(${img(chart.song.jacket)})` } : undefined} />
       <div className="sc-name">{chart.song.title}</div>
       <div className="sc-row">
         <Ball chart={chart} />

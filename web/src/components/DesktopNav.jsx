@@ -7,6 +7,7 @@ import { isOn } from '../lib/plans.js';
 import { t } from '../lib/i18n.js';
 import { Ball, Jacket } from './ui.jsx';
 import { LockBadge } from './PlanLock.jsx';
+import { img } from '../lib/imgStore.js';
 import {
   Bell, CalendarCheck, Dumbbell, History, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon, Shield,
   ShieldCheck, Tag, Target, TrendingUp, Trophy, Users, Vote,
@@ -129,7 +130,7 @@ export function SearchDialog({ onClose }) {
                 onMouseEnter={() => setSel(i)} onClick={() => go(r)}>
                 {r.kind === 'song' && <><Jacket song={r.song} width={40} /><span className="sr-t"><b>{r.song.title}</b><small>{r.song.artist}</small></span>
                   <span className="sr-lv">{r.song.charts.filter((c) => c.mode === 'S' || c.mode === 'D').slice(-4).map((c) => <Ball key={c.id} chart={c} size="sm" />)}</span></>}
-                {r.kind === 'player' && <><span className="sr-av">{r.player.avatar ? <img src={r.player.avatar} alt="" referrerPolicy="no-referrer" /> : (r.player.nickname || '?')[0]}</span>
+                {r.kind === 'player' && <><span className="sr-av">{r.player.avatar ? <img src={img(r.player.avatar)} alt="" referrerPolicy="no-referrer" /> : (r.player.nickname || '?')[0]}</span>
                   <span className="sr-t"><b>{r.player.nickname}</b><small>{r.player.title || ''}</small></span></>}
                 {r.kind === 'page' && <><span className="sr-ico">{r.icon}</span><span className="sr-t"><b>{r.label}</b></span></>}
               </button>

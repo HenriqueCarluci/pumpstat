@@ -6,6 +6,7 @@ import { usePrefs } from '../lib/prefs.js';
 import { isOn } from '../lib/plans.js';
 import { t } from '../lib/i18n.js';
 import { MapPin, X } from './Icons.jsx';
+import { img } from '../lib/imgStore.js';
 
 const SHOW_MS = 7000;
 const LEAVE_MS = 450;
@@ -68,7 +69,7 @@ export default function FriendOnlineToast() {
           </div>
           <div className="fo-body">
             <span className="fo-avatar">
-              {f.avatar ? <img src={f.avatar} alt="" referrerPolicy="no-referrer" /> : (f.nickname || '?').slice(0, 2)}
+              {f.avatar ? <img src={img(f.avatar)} alt="" referrerPolicy="no-referrer" /> : (f.nickname || '?').slice(0, 2)}
               <i className="fo-dot" />
             </span>
             <div className="fo-text">

@@ -6,6 +6,7 @@ import { canAlert, describe, externalLink, linkFor, twitchUrl } from '../lib/not
 import { Chips } from './Songs.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronRight, X } from '../components/Icons.jsx';
+import { img } from '../lib/imgStore.js';
 
 export default function Notifications() {
   const { notifications: nt } = useData();
@@ -45,7 +46,7 @@ export default function Notifications() {
           <div key={n.key} className={`notif-wrap ${n.unread ? 'unread' : ''}`}>
           <NotifLink n={n} className={`notif ${n.unread ? 'unread' : ''}`}>
             {n.jacket ? <Jacket song={{ title: n.title, jacket: n.jacket }} width={64} />
-              : <span className="q-avatar" style={{ width: 44, height: 44 }}>{n.avatar ? <img src={n.avatar} alt="" referrerPolicy="no-referrer" /> : (n.nickname || '?').slice(0, 2)}</span>}
+              : <span className="q-avatar" style={{ width: 44, height: 44 }}>{n.avatar ? <img src={img(n.avatar)} alt="" referrerPolicy="no-referrer" /> : (n.nickname || '?').slice(0, 2)}</span>}
             <div className="notif-main">
               <div>{describe(n)}</div>
               <small className="muted">{timeAgo(n.at)}{n.kind === 'friend_score' && n.version === 'phoenix' ? ' · Phoenix' : ''}{n.kind === 'friend_live' ? ` · ${t('Twitch')}` : ''}</small>

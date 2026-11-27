@@ -9,6 +9,7 @@ import { Donut, GroupedBars, SERIES } from '../components/MiniChart.jsx';
 import { Avatar } from './Players.jsx';
 import { Chips } from './Songs.jsx';
 import { Swords } from '../components/Icons.jsx';
+import { img } from '../lib/imgStore.js';
 
 const cleared = (x) => x.score != null && !x.broken;
 const VS = 'phoenix2';
@@ -120,7 +121,7 @@ export default function Rival() {
         <div className="rv-side">
           <Avatar p={me || {}} size={48} />
           <b>{t('Você')}</b>
-          <span className="rv-pb">{tierA?.icon && <img src={tierA.icon} alt="" referrerPolicy="no-referrer" />}{pb[0] != null ? fmtNum(Math.round(pb[0])) : '—'}</span>
+          <span className="rv-pb">{tierA?.icon && <img src={img(tierA.icon)} alt="" referrerPolicy="no-referrer" />}{pb[0] != null ? fmtNum(Math.round(pb[0])) : '—'}</span>
         </div>
         <div className="rv-mid">
           <Swords size={22} />
@@ -129,7 +130,7 @@ export default function Rival() {
         <div className="rv-side">
           <Link to={`/jogador/${rival}`}><Avatar p={them || {}} size={48} /></Link>
           <b>{name}</b>
-          <span className="rv-pb">{tierB?.icon && <img src={tierB.icon} alt="" referrerPolicy="no-referrer" />}{pb[1] != null ? fmtNum(Math.round(pb[1])) : '—'}</span>
+          <span className="rv-pb">{tierB?.icon && <img src={img(tierB.icon)} alt="" referrerPolicy="no-referrer" />}{pb[1] != null ? fmtNum(Math.round(pb[1])) : '—'}</span>
         </div>
         <button className="link small rv-change" onClick={() => setPicking(true)}>{t('Trocar rival')}</button>
       </section>

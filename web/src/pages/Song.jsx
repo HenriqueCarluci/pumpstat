@@ -18,6 +18,7 @@ import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
 import { Crown } from '../components/Icons.jsx';
+import { img } from '../lib/imgStore.js';
 
 export default function Song() {
   const { id } = useParams();
@@ -293,7 +294,7 @@ export function FriendScores({ list, mine }) {
         const diff = me != null && f.score != null && !f.broken ? me - f.score : null;
         return (
           <Link key={f.user} to={`/jogador/${f.user}`} className="fs-row">
-            <span className="q-avatar" style={{ width: 24, height: 24 }}>{f.avatar ? <img src={f.avatar} alt="" referrerPolicy="no-referrer" /> : (f.nickname || '?').slice(0, 2)}</span>
+            <span className="q-avatar" style={{ width: 24, height: 24 }}>{f.avatar ? <img src={img(f.avatar)} alt="" referrerPolicy="no-referrer" /> : (f.nickname || '?').slice(0, 2)}</span>
             <span className="fs-name">{(f.nickname || t('Jogador')).replace(/ #\d+$/, '')}</span>
             <Grade grade={f.grade} broken={f.broken} size="xs" />
             <b className="fs-score">{fmtScore(f.score)}</b>

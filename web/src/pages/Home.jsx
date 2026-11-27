@@ -17,6 +17,7 @@ import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
 import AndroidTestCard from '../components/AndroidTestCard.jsx';
 import JacketCacheCard from '../components/JacketCacheCard.jsx';
 import { entitlements, isOn } from '../lib/plans.js';
+import { img } from '../lib/imgStore.js';
 
 export default function Home() {
   const { data, version, reload, session, plan } = useData();
@@ -91,7 +92,7 @@ export default function Home() {
       <div className="h-col h-main">
         <div className="h-blk o1">
           <Link to={session?.user?.id ? `/jogador/${session.user.id}` : '/'} className="card profile profile-link" title={t('Ver meu perfil')}>
-            <div className="avatar">{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
+            <div className="avatar">{p?.avatar_url ? <img src={img(p.avatar_url)} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
             <div className="pinfo">
               <div className="ptitle">{p?.title || t('Sem título')}</div>
               <div className="pname">{p?.nickname || t('Faça a primeira sincronização')}</div>
@@ -225,7 +226,7 @@ function TierCard({ version, points, estimated, history, charts, canTips }) {
   return (
     <section className="card pumb tier-card">
       <div className="tier-top">
-        {tier.icon ? <img className="tier-icon" src={tier.icon} alt="" referrerPolicy="no-referrer" /> : <div className="tier-icon none">PB</div>}
+        {tier.icon ? <img className="tier-icon" src={img(tier.icon)} alt="" referrerPolicy="no-referrer" /> : <div className="tier-icon none">PB</div>}
         <div className="pumb-main">
           <div className="l">PUMBILITY · {t(tier.name)}{tier.lv ? ` LV.${tier.lv}` : ''}</div>
           <div className="v">{fmt(points)}</div>

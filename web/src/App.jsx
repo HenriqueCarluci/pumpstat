@@ -6,6 +6,7 @@ import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
 import { initNative, isNative } from './lib/native.js';
 import { downloadJackets, jacketMode } from './lib/jacketCache.js';
+import { initImgStore } from './lib/imgStore.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
 import './lib/topbar.js';
@@ -209,6 +210,15 @@ function DataApp({ session, ingestKey }) {
     return () => clearTimeout(h);
   }, [data, warm]);
 
+  // no app, antes da primeira tela, lê a pasta de imagens salvas (para as telas já usarem os arquivos locais)
+  const [imgReady, setImgReady] = useState(!isNative);
+  useEffect(() => {
+    if (!isNative) return undefined;
+    const h = setTimeout(() => setImgReady(true), 1500);
+    initImgStore().finally(() => { clearTimeout(h); setImgReady(true); });
+    return () => clearTimeout(h);
+  }, []);
+
   // no app, quem escolheu "baixar todas as capas" completa o que faltar em segundo plano (as novas também)
   useEffect(() => {
     if (!isNative || !warm || !data || jacketMode() !== 'all') return undefined;
@@ -254,8 +264,8 @@ function DataApp({ session, ingestKey }) {
   const viewNotifications = useMemo(() => (viewPlan?.realAdmin
     ? { ...notifications, items: notifications.items.filter((n) => !String(n.kind).startsWith('admin_')), unread: notifications.items.filter((n) => n.unread && !String(n.kind).startsWith('admin_')).length }
     : notifications), [viewPlan, notifications]);
-  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, planReady: planReady && (warm || !!error), reloadPlan, home, reloadHome }),
-    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, planReady, warm, reloadPlan, home, reloadHome]);
+  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, planReady: planReady && imgReady && (warm || !!error), reloadPlan, home, reloadHome }),
+    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, planReady, imgReady, warm, reloadPlan, home, reloadHome]);
 
   return (
     <DataCtx.Provider value={ctx}>

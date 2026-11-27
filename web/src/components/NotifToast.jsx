@@ -8,6 +8,7 @@ import { isOn } from '../lib/plans.js';
 import { describe, externalLink, linkFor, twitchUrl } from '../lib/notify.js';
 import { t, tn } from '../lib/i18n.js';
 import { Bell, X } from './Icons.jsx';
+import { img } from '../lib/imgStore.js';
 
 const SHOW_MS = 7000;
 const LEAVE_MS = 350;
@@ -72,8 +73,8 @@ export default function NotifToast() {
         return (
           <div key={c.key} className={`nt-toast ${live ? 'live' : ''} ${c.leaving ? 'leaving' : ''}`} role="status" onClick={() => open(c)}>
             <span className="nt-pic">
-              {n.jacket ? <img src={n.jacket} alt="" referrerPolicy="no-referrer" />
-                : n.avatar ? <img src={n.avatar} alt="" referrerPolicy="no-referrer" />
+              {n.jacket ? <img src={img(n.jacket)} alt="" referrerPolicy="no-referrer" />
+                : n.avatar ? <img src={img(n.avatar)} alt="" referrerPolicy="no-referrer" />
                   : n.nickname ? n.nickname.slice(0, 2) : <Bell size={18} />}
               {live && <i className="nt-live">{t('AO VIVO')}</i>}
             </span>

@@ -24,6 +24,7 @@ import { QuizCard } from '../components/QuizModal.jsx';
 import AndroidTestCard from '../components/AndroidTestCard.jsx';
 import JacketCacheCard from '../components/JacketCacheCard.jsx';
 import { clearUserCaches, TestMode } from '../components/PlanLock.jsx';
+import { img } from '../lib/imgStore.js';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
 
@@ -215,7 +216,7 @@ function AccountCard() {
   return (
     <section className="card set-account">
       <div className="set-id">
-        <span className="q-avatar" style={{ width: 52, height: 52 }}>{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : (p?.nickname || session.email || '?').slice(0, 2)}</span>
+        <span className="q-avatar" style={{ width: 52, height: 52 }}>{p?.avatar_url ? <img src={img(p.avatar_url)} alt="" referrerPolicy="no-referrer" /> : (p?.nickname || session.email || '?').slice(0, 2)}</span>
         <div className="set-id-txt">
           <b>{p?.nickname || t('Sem conta da Pump')}</b>
           <small className="muted">{session.email}</small>
