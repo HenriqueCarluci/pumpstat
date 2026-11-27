@@ -74,8 +74,18 @@ function Team() {
   return (
     <div className="admin-team">
       <div className="card admin-roles">
-        {ADMIN_ROLES.map(([id, l, d]) => <p key={id} className="small"><b>{t(l)}</b> · <span className="muted">{t(d)}</span></p>)}
-        <div className="perm-matrix-wrap">
+        {/* celular: um cartão por perfil com o que ele pode; computador: a tabela */}
+        <div className="role-cards">
+          {ADMIN_ROLES.map(([id, l, d]) => (
+            <div key={id} className="role-card">
+              <b>{t(l)}</b>
+              <small className="muted">{t(d)}</small>
+              <div className="role-perms">{ADMIN_PERMS.filter(([p]) => ROLE_PERMS[id].includes(p)).map(([p, pl]) => <span key={p} className="tag">{t(pl)}</span>)}</div>
+            </div>
+          ))}
+        </div>
+        <div className="role-desc">{ADMIN_ROLES.map(([id, l, d]) => <p key={id} className="small"><b>{t(l)}</b> · <span className="muted">{t(d)}</span></p>)}</div>
+        <div className="perm-matrix-wrap roles-table">
           <table className="perm-matrix">
             <thead><tr><th>{t('Permissão')}</th>{ADMIN_ROLES.map(([id, l]) => <th key={id}>{t(l)}</th>)}</tr></thead>
             <tbody>
@@ -145,7 +155,29 @@ function PermMatrix() {
       {!list && !err && <p className="muted small">{t('Carregando…')}</p>}
       {list && !people.length && <p className="muted small">{t('Ainda não há ninguém na equipe além do dono.')}</p>}
       {people.length > 0 && (
-        <div className="perm-matrix-wrap">
+        <div className="pm-cards">
+          {people.map((m) => (
+            <div key={m.id} className="pm-card">
+              <div className="pm-card-h"><b>{m.nickname || m.email}</b><small className="muted">{t(roleLabel(m.role))}</small>
+                {Object.keys(m.overrides || {}).length > 0 && <button type="button" className="btn ghost sm" disabled={!!busy} onClick={() => reset(m)}>{t('Padrão')}</button>}</div>
+              <div className="pm-chips">
+                {perms.map(([p, l]) => {
+                  const has = (m.perms || []).includes(p);
+                  const custom = p in (m.overrides || {});
+                  return (
+                    <button key={p} type="button" className={`pm-chip ${has ? 'yes' : 'no'} ${custom ? 'custom' : ''}`} disabled={!!busy}
+                      aria-pressed={has} title={t(l)} onClick={() => flip(m, p)}>
+                      {busy === `${m.id}:${p}` ? '…' : has ? '✓' : '—'} {t(SHORT[p])}{custom && <i />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {people.length > 0 && (
+        <div className="perm-matrix-wrap pm-table">
           <table className="perm-matrix perm-edit">
             <thead><tr><th>{t('Pessoa')}</th>{perms.map(([p, l]) => <th key={p} title={t(l)}><span>{t(SHORT[p])}</span></th>)}<th /></tr></thead>
             <tbody>
