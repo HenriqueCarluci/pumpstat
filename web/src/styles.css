@@ -2315,10 +2315,11 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 
 /* ---------- celular: a página rola dentro do app, não a janela ----------
    No iPhone (e às vezes no Android) a janela "estica" no fim da rolagem e a barra do navegador encolhe/cresce,
-   e a barra de baixo (position: fixed) descola do fundo. Com a janela parada e a rolagem num contêiner,
-   não há o que empurrar a barra. No desktop continua a rolagem normal da janela. */
+   e uma barra de baixo com position: fixed descola do fundo. Aqui o app ocupa a tela inteira (fixed, inset 0),
+   o conteúdo rola em .shell-scroll e a barra fica no fim do layout, sem flutuar. No desktop nada muda. */
 html.app-shell:not(.desk), html.app-shell:not(.desk) body { height: 100%; overflow: hidden; overscroll-behavior: none; }
-html.app-shell:not(.desk) #root { height: 100%; }
-html.app-shell:not(.desk) .app.shell { height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto;
+html.app-shell:not(.desk) .app.shell { position: fixed; inset: 0; display: flex; flex-direction: column; min-height: 0; padding-bottom: 0; }
+html.app-shell:not(.desk) .shell-scroll { flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto;
   overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
-html.app-shell:not(.desk) .tabbar { transform: none; will-change: auto; }
+html.app-shell:not(.desk) .shell-scroll > :last-child { margin-bottom: 0; }
+html.app-shell:not(.desk) .tabbar { position: relative; left: auto; right: auto; bottom: auto; flex: none; transform: none; will-change: auto; }

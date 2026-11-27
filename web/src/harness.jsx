@@ -198,9 +198,9 @@ function HShell({ children }) {
   const [q, setQ] = useState(false);
   const open = () => setQ(true);
   useSearchHotkey(desk ? open : () => {});
-  return <div className="app">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
+  return <div className="app shell"><div className="shell-scroll">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
     <header className="topbar">{desk && <button type="button" className="top-search" onClick={open}><span>Buscar música, artista, jogador ou página…</span><kbd>Ctrl K</kbd></button>}<span className="brand">PIU Stats</span></header>
-    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour /><NotifToast />{children}</div>;
+    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour /><NotifToast />{children}</div><nav className="tabbar"><a>Início</a><a>Músicas</a><a>Tier</a><a>Fila</a><a>Ajustes</a></nav></div>;
 }
 
 createRoot(document.getElementById('root')).render(

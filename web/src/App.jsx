@@ -216,7 +216,8 @@ function Shell() {
   if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
 
   return (
-    <div className="app shell" ref={scroller}>
+    <div className="app shell">
+      <div className="shell-scroll" ref={scroller}>
       {desk && <Sidebar onSearch={openSearch} />}
       {search && <SearchDialog onClose={() => setSearch(false)} />}
       <header className="topbar">
@@ -287,6 +288,7 @@ function Shell() {
       <AdminSignupToast />
       <NotifToast />
       <QuizPrompt /><Tour />
+      </div>
 
       <nav className="tabbar">
         <Tab to="/" icon={<HomeIcon size={21} />} label={t('Início')} />
