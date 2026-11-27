@@ -1,5 +1,25 @@
 // Login com e-mail e senha via Supabase Auth (REST, sem SDK).
-import { SUPABASE_KEY, SUPABASE_URL } from './config.js';
+import { SUPABASE_AUTH_URL, SUPABASE_KEY, SUPABASE_URL } from './config.js';
+
+// Endereço do login: o subdomínio piustats.supabase.co quando existir; enquanto não existir (o DNS falha na hora), o padrão.
+// Depois que o subdomínio é ativado, o endereço padrão para de atender o login, por isso o subdomínio vem primeiro.
+let authBase = SUPABASE_AUTH_URL;
+const probe = () => fetch(`${SUPABASE_AUTH_URL}/auth/v1/health`, { headers: { apikey: SUPABASE_KEY } })
+  .then(() => { authBase = SUPABASE_AUTH_URL; }).catch(() => { authBase = SUPABASE_URL; });
+const ready = SUPABASE_AUTH_URL === SUPABASE_URL ? Promise.resolve() : probe();
+/** fetch no /auth/v1 com o endereço que estiver valendo (tenta o outro se a rede falhar). */
+async function authFetch(path, init) {
+  await ready;
+  try {
+    return await fetch(`${authBase}/auth/v1/${path}`, init);
+  } catch (e) {
+    const other = authBase === SUPABASE_AUTH_URL ? SUPABASE_URL : SUPABASE_AUTH_URL;
+    if (other === authBase) throw e;
+    const r = await fetch(`${other}/auth/v1/${path}`, init);
+    authBase = other;
+    return r;
+  }
+}
 import { AUTH_REDIRECT, isNative, openExternal } from './native.js';
 
 const STORE = 'pumpstat:session';
@@ -46,7 +66,7 @@ export const getSession = () => session;
 export const onSession = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
 
 async function call(path, body) {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/${path}`, {
+  const res = await authFetch(path, {
     method: 'POST',
     headers: { apikey: SUPABASE_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -89,10 +109,11 @@ export async function signUp(email, password) {
 }
 
 /** Login com Google (mesmo fluxo do Fênix Analyzer: Supabase OAuth). Volta com #access_token na URL. */
-export function signInWithGoogle() {
+export async function signInWithGoogle() {
+  await ready;
   // no app nativo o Google não deixa logar dentro da webview: abre no navegador do sistema e volta pelo link do app
   const redirect = encodeURIComponent(isNative ? AUTH_REDIRECT : window.location.origin + window.location.pathname);
-  openExternal(`${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${redirect}`);
+  openExternal(`${authBase}/auth/v1/authorize?provider=google&redirect_to=${redirect}`);
 }
 
 export async function resetPassword(email) {
@@ -104,7 +125,7 @@ export function signOut() {
   const s = session;
   save(null);
   if (s) {
-    fetch(`${SUPABASE_URL}/auth/v1/logout`, { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${s.access_token}` } }).catch(() => {});
+    authFetch('logout', { method: 'POST', headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${s.access_token}` } }).catch(() => {});
   }
 }
 
@@ -177,7 +198,7 @@ export function sessionFromUrl() {
 
 export async function updatePassword(password) {
   const token = await accessToken();
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+  const res = await authFetch('user', {
     method: 'PUT',
     headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ password }),
