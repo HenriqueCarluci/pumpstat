@@ -30,3 +30,13 @@ export function watchErrors() {
   window.addEventListener('error', (e) => reportError(e.error || e.message, `${e.filename || ''}:${e.lineno || ''}`));
   window.addEventListener('unhandledrejection', (e) => reportError(e.reason, 'promise'));
 }
+
+/** Diagnóstico (não é erro): vai para o mesmo registro do admin com a origem "diag", para depurar o app no celular. */
+export function reportDiag(message, extra) {
+  try {
+    rpc('log_client_error', { p: {
+      message: `diag: ${String(message).slice(0, 480)}`, source: 'diag', stack: extra ? JSON.stringify(extra).slice(0, 2000) : '',
+      route: window.location.hash.slice(0, 200), build: BUILD, platform: platform(), ua: navigator.userAgent.slice(0, 300),
+    } }).catch(() => {});
+  } catch { /* ignore */ }
+}

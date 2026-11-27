@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useData } from '../App.jsx';
-import { downloadJackets, jacketMode, jacketModeChosen, jacketsRunning, jacketUrls, pendingJackets, setJacketMode, stopJackets } from '../lib/jacketCache.js';
+import { downloadJackets, lastJacketRun, jacketMode, jacketModeChosen, jacketsRunning, jacketUrls, pendingJackets, setJacketMode, stopJackets } from '../lib/jacketCache.js';
 import { t } from '../lib/i18n.js';
 import { isNative } from '../lib/native.js';
 import { ImagePlus } from './Icons.jsx';
@@ -25,10 +25,12 @@ export default function JacketCacheCard({ where = 'settings' }) {
 
   const pick = (m) => {
     setJacketMode(m); setMode(m); setChosen(true);
-    if (m === 'all') downloadJackets(data, (n, tot) => setProg([n, tot])).then(() => setProg(null));
+    if (m === 'all') start();
     else stopJackets();
   };
   const left = prog ? prog[1] - prog[0] : pending;
+  const last = lastJacketRun();
+  const start = () => downloadJackets(data, (n, tot) => setProg([n, tot])).then(() => setProg(null));
   return (
     <section className="card jcache">
       <h3 className="ic-row"><ImagePlus size={18} /> {t('Imagens do app')}</h3>
@@ -47,8 +49,14 @@ export default function JacketCacheCard({ where = 'settings' }) {
           <small className="muted">{t('Baixando imagens: {n} de {t}', { n: prog[0], t: prog[1] })}</small>
         </div>
       ) : (
-        <small className="muted">{left ? t('Faltam {n} imagens. Elas baixam sozinhas quando o app abre.', { n: left }) : t('Todas as imagens já estão no aparelho ({n}).', { n: total })}</small>
+        <div className="jcache-prog">
+          <small className="muted">{left ? t('Faltam {n} imagens. Elas baixam sozinhas quando o app abre.', { n: left }) : t('Todas as imagens já estão no aparelho ({n}).', { n: total })}</small>
+          {left > 0 && <button type="button" className="btn ghost" onClick={start}>{t('Baixar agora')}</button>}
+        </div>
       ))}
+      {mode === 'all' && last && !prog && (
+        <small className="muted tiny">{t('Última vez: {ok} baixadas, {f} com erro ({s}s).', { ok: last.ok, f: last.fail, s: last.sec })}</small>
+      )}
     </section>
   );
 }

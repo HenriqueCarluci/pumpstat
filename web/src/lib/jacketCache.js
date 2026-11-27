@@ -2,6 +2,7 @@
 // por padrão baixam conforme aparecem; no app dá para baixar todas de uma vez e elas ficam no cache do aparelho.
 import { rpc } from './api.js';
 import { staticImageUrls } from '../components/ui.jsx';
+import { reportDiag } from './errors.js';
 
 const MODE = 'pumpstat:jackets';
 const DONE = 'pumpstat:jackets-done';
@@ -12,6 +13,8 @@ export const setJacketMode = (m) => { try { localStorage.setItem(MODE, m); } cat
 
 const readDone = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE) || '[]')); } catch { return new Set(); } };
 const saveDone = (set) => { try { localStorage.setItem(DONE, JSON.stringify([...set])); } catch { /* ignore */ } };
+const LAST = 'pumpstat:jackets-last';
+export const lastJacketRun = () => { try { return JSON.parse(localStorage.getItem(LAST) || 'null'); } catch { return null; } };
 const key = (u) => u.replace(/^https?:\/\/[^/]+\//, '');
 
 /** Tudo o que dá para saber sem ir ao servidor: capas da versão atual, imagens fixas do jogo e a sua foto. */
@@ -39,16 +42,20 @@ export function downloadJackets(data, onProgress) {
   const ctl = { stop: false };
   let n = 0;
   let total = 0;
+  let ok = 0;
+  const failed = [];
   const emit = () => listeners.forEach((fn) => fn(n, total));
   const one = (u, done) => new Promise((res) => {
     const im = new Image();
     im.referrerPolicy = 'no-referrer';
     im.decoding = 'async';
-    im.onload = () => { done.add(key(u)); res(); };
-    im.onerror = () => res();
+    const tm = setTimeout(() => { failed.push(`${u} (timeout)`); im.src = ''; res(); }, 20000);
+    im.onload = () => { clearTimeout(tm); ok += 1; done.add(key(u)); res(); };
+    im.onerror = () => { clearTimeout(tm); failed.push(u); res(); };
     im.src = u;
   });
   const promise = (async () => {
+    const t0 = Date.now();
     const done = readDone();
     const extra = await avatarUrls(data?.version);
     const urls = [...new Set([...jacketUrls(data), ...extra])].filter((u) => !done.has(key(u)));
@@ -65,7 +72,10 @@ export function downloadJackets(data, onProgress) {
     await Promise.all(Array.from({ length: 6 }, worker));
     saveDone(done);
     running = null;
-    return { done: n, total };
+    const res = { at: new Date().toISOString(), total, ok, fail: failed.length, sec: Math.round((Date.now() - t0) / 1000), stopped: ctl.stop };
+    try { localStorage.setItem(LAST, JSON.stringify(res)); } catch { /* ignore */ }
+    if (total) reportDiag(`imagens: ${ok} ok, ${failed.length} falharam de ${total} em ${res.sec}s`, { ...res, avatars: extra.length, sample: failed.slice(0, 5), online: navigator.onLine, conn: navigator.connection?.effectiveType || null });
+    return { done: n, total, ok, fail: failed.length };
   })();
   running = { promise, listeners, ctl };
   return promise;
