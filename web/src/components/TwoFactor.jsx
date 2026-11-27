@@ -96,6 +96,7 @@ function EnrollForm({ onDone, onCancel }) {
       {enroll?.qr && <img className="mfa-qr" src={enroll.qr} alt={t('QR code do autenticador')} />}
       {enroll?.secret && <p className="muted small mfa-secret">{t('Ou digite a chave no app:')} <code>{enroll.secret}</code></p>}
       <CodeInput value={code} onChange={setCode} autoFocus />
+      <p className="mfa-warn small">{t('Atenção: ao ativar, sua conta é desconectada dos outros aparelhos, abas e do app na tela inicial. Neles, faça login de novo (com a senha e o código). Aqui você continua conectado.')}</p>
       {err && <div className="form-err">{err}</div>}
       <div className="card-actions">
         <button className="btn" disabled={busy || !enroll}>{busy ? t('Aguarde…') : t('Confirmar e ativar')}</button>
@@ -149,6 +150,7 @@ export function MfaInvite() {
             <span className="mfa-ic on"><Check size={24} /></span>
             <h3 id="mfa-inv-title">{t('Verificação ativada')}</h3>
             <p className="small">{t('A partir de agora, todo login pede o código do autenticador. Você pode desligar em Ajustes → Segurança.')}</p>
+            <p className="small muted">{t('Nos outros aparelhos e abas, a conta foi desconectada: faça login de novo neles.')}</p>
             <div className="tour-actions single"><button type="button" className="btn" onClick={close}>{t('Pronto')}</button></div>
           </>
         )}

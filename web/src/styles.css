@@ -2477,3 +2477,4 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
   .role-cards, .pm-cards { display: grid; gap: 8px; }
   .role-desc, .roles-table, .pm-table { display: none; }
 }
+.mfa-warn { margin: 0; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255, 209, 102, .35); background: rgba(255, 209, 102, .07); color: #ffe2a3; }
