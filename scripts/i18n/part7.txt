@@ -1370,3 +1370,15 @@ Quer melhorar | Wants to improve | Quiere mejorar | 늘리고 싶은 것 | 上�
 respostas inválidas | invalid answers | respuestas inválidas | 잘못된 답변 | 無効な回答 | réponses invalides | risposte non valide
 Single | Single | Single | Single | シングル | Single | Single
 Double | Double | Double | Double | ダブル | Double | Double
+Permissões por pessoa | Permissions per person | Permisos por persona | 사람별 권한 | 人ごとの権限 | Permissions par personne | Permessi per persona
+Cada pessoa começa com as permissões do perfil dela. Toque numa célula para dar ou tirar uma permissão só daquela pessoa; o ponto marca o que foi ajustado, e tocar de novo volta ao padrão. | Each person starts with their role's permissions. Tap a cell to give or remove a permission for that person only; the dot marks what was adjusted, and tapping again goes back to the default. | Cada persona empieza con los permisos de su perfil. Toca una celda para dar o quitar un permiso solo a esa persona; el punto marca lo ajustado y tocar de nuevo vuelve al estándar. | 각자 역할의 기본 권한으로 시작합니다. 칸을 누르면 그 사람에게만 권한을 주거나 뺍니다. 점은 조정된 항목이며 다시 누르면 기본값으로 돌아갑니다. | 各人は役割の権限から始まります。セルをタップするとその人だけに権限を付与・解除します。点は調整した項目で、もう一度タップすると標準に戻ります。 | Chaque personne commence avec les permissions de son rôle. Touchez une case pour donner ou retirer une permission à cette personne seulement ; le point marque ce qui a été ajusté, et toucher à nouveau revient à la valeur par défaut. | Ognuno parte dai permessi del proprio ruolo. Tocca una cella per dare o togliere un permesso solo a quella persona; il punto indica cosa è stato modificato e toccando di nuovo si torna al predefinito.
+Ainda não há ninguém na equipe além do dono. | There's no one on the team besides the owner yet. | Todavía no hay nadie en el equipo además del dueño. | 아직 소유자 외에 팀원이 없습니다. | まだオーナー以外のチームメンバーはいません。 | Il n'y a encore personne dans l'équipe à part le propriétaire. | Non c'è ancora nessuno nel team oltre al proprietario.
+Pessoa | Person | Persona | 사람 | 人 | Personne | Persona
+liberado | allowed | liberado | 허용 | 許可 | autorisé | consentito
+ajustado | adjusted | ajustado | 조정됨 | 調整済み | ajusté | modificato
+permissão inválida | invalid permission | permiso inválido | 잘못된 권한 | 無効な権限 | permission invalide | permesso non valido
+esta pessoa não está na equipe | this person isn't on the team | esta persona no está en el equipo | 이 사람은 팀원이 아닙니다 | この人はチームにいません | cette personne ne fait pas partie de l'équipe | questa persona non fa parte del team
+o dono já tem todas as permissões | the owner already has every permission | el dueño ya tiene todos los permisos | 소유자는 이미 모든 권한이 있습니다 | オーナーはすでにすべての権限を持っています | le propriétaire a déjà toutes les permissions | il proprietario ha già tutti i permessi
+Ver como | View as | Ver como | 대신 보기 | 代理表示 | Voir comme | Vedi come
+Números | Numbers | Números | 수치 | 数値 | Chiffres | Numeri
+Curadoria | Curation | Curaduría | 큐레이션 | 管理 | Curation | Curatela

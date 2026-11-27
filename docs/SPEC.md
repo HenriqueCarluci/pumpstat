@@ -319,3 +319,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 ## Questionário do jogador
 - No primeiro acesso (antes do convite do tutorial) o app pede 5 perguntas: tempo de jogo, frequência, objetivo, modo e até 3 coisas para melhorar. Dá para pular ("Depois"); fica em Ajustes → Seu perfil → "Seu jeito de jogar" para responder ou refazer (`save_quiz`, `skip_quiz`, `my_quiz`; `user_settings.quiz`).
 - Calibração: missões pesam a categoria do objetivo (`quizMul`), metas mais leves para iniciantes e um pouco mais puxadas para veteranos frequentes (`quizAdj`), dias de jogo pela frequência quando não há histórico e modo preferido quando o histórico é pequeno. Recomendadas abrem na aba do objetivo, no modo preferido, e mostram primeiro os charts com as skills escolhidas.
+
+## Permissões por pessoa (equipe)
+- Admin → Equipe → "Permissões por pessoa" (só o dono, permissão `roles`): matriz pessoa × permissão. Cada célula parte do padrão do perfil; tocar dá ou tira só para aquela pessoa (`admin_perm_overrides`), tocar de novo volta ao padrão; "Padrão" limpa os ajustes da pessoa.
+- `effective_perms` = permissões do perfil + ajustes; `has_admin_perm`, `my_plan().perms` e o alerta de conta nova usam ela. Não vale para donos, e gerenciar a equipe (`roles`) não pode ser dado por ajuste.

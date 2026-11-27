@@ -101,8 +101,75 @@ function Team() {
             : <span className="tag admin-tag">{t(roleLabel(m.role))}</span>}
         </div>
       ))}
+      {canAdmin(plan, 'roles') && <PermMatrix />}
       {canAdmin(plan, 'view_as') && <ViewAsHistory />}
     </div>
+  );
+}
+
+/**
+ * Dono: matriz de permissões por pessoa. Cada célula começa no padrão do perfil; tocar dá ou tira a permissão só para
+ * aquela pessoa (marcada com um ponto), e tocar de novo volta ao padrão.
+ */
+function PermMatrix() {
+  const [list, setList] = useState(null);
+  const [busy, setBusy] = useState(null);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_perm_matrix').then(setList).catch((e) => setErr(tErr(e.message)));
+  useEffect(() => { load(); }, []);
+  const perms = ADMIN_PERMS.filter(([p]) => p !== 'roles');
+  const SHORT = { plans: 'Planos', view_as: 'Ver como', stats: 'Números', health: 'Monitoramento', users: 'Usuários', ban: 'Bloquear',
+    reports: 'Denúncias', feedback: 'Suporte', charts: 'Curadoria', events: 'Desafios', venues: 'Fliperamas', ads: 'Anúncios', config: 'Recursos' };
+  const flip = async (m, p) => {
+    const def = (m.defaults || []).includes(p);
+    const has = (m.perms || []).includes(p);
+    // se já está ajustado, volta ao padrão; senão, inverte só para esta pessoa
+    const next = p in (m.overrides || {}) ? null : !has;
+    if (next !== null && next === def) return;
+    setBusy(`${m.id}:${p}`); setErr('');
+    try { await rpc('admin_set_perm_override', { p_user: m.id, p_perm: p, p_allow: next }); await load(); } catch (e) { setErr(tErr(e.message)); }
+    setBusy(null);
+  };
+  const reset = async (m) => {
+    setBusy(m.id); setErr('');
+    try { for (const p of Object.keys(m.overrides || {})) await rpc('admin_set_perm_override', { p_user: m.id, p_perm: p, p_allow: null }); await load(); } catch (e) { setErr(tErr(e.message)); }
+    setBusy(null);
+  };
+  const people = (list || []).filter((m) => m.role !== 'owner');
+  return (
+    <section className="card perm-custom">
+      <h3>{t('Permissões por pessoa')}</h3>
+      <p className="muted small">{t('Cada pessoa começa com as permissões do perfil dela. Toque numa célula para dar ou tirar uma permissão só daquela pessoa; o ponto marca o que foi ajustado, e tocar de novo volta ao padrão.')}</p>
+      {err && <div className="form-err">{err}</div>}
+      {!list && !err && <p className="muted small">{t('Carregando…')}</p>}
+      {list && !people.length && <p className="muted small">{t('Ainda não há ninguém na equipe além do dono.')}</p>}
+      {people.length > 0 && (
+        <div className="perm-matrix-wrap">
+          <table className="perm-matrix perm-edit">
+            <thead><tr><th>{t('Pessoa')}</th>{perms.map(([p, l]) => <th key={p} title={t(l)}><span>{t(SHORT[p])}</span></th>)}<th /></tr></thead>
+            <tbody>
+              {people.map((m) => (
+                <tr key={m.id}>
+                  <td><b>{m.nickname || m.email}</b><small className="muted">{t(roleLabel(m.role))}</small></td>
+                  {perms.map(([p, l]) => {
+                    const has = (m.perms || []).includes(p);
+                    const custom = p in (m.overrides || {});
+                    return (
+                      <td key={p}>
+                        <button type="button" className={`pm-cell ${has ? 'yes' : 'no'} ${custom ? 'custom' : ''}`} disabled={!!busy}
+                          aria-pressed={has} aria-label={`${t(l)}: ${has ? t('liberado') : t('bloqueado')}${custom ? ` (${t('ajustado')})` : ''}`}
+                          onClick={() => flip(m, p)}>{busy === `${m.id}:${p}` ? '…' : has ? '✓' : '—'}{custom && <i />}</button>
+                      </td>
+                    );
+                  })}
+                  <td>{Object.keys(m.overrides || {}).length > 0 && <button type="button" className="link small" disabled={!!busy} onClick={() => reset(m)}>{t('Padrão')}</button>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }
 

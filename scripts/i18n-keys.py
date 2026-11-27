@@ -25,6 +25,7 @@ pat = {
   'web/src/pages/Progress.jsx': [r"(?m)^  \w+: '([^']+)',$", r"\['(?:speed|stamina)', '([^']+)'\]", r"(?:warm|focus|consolidate|challenge|score): '([^']+)'"],
   'web/src/lib/plans.js': [r"label: '([^']+)'"],
   'web/src/lib/quiz.js': [r"q: '([^']+)'", r"hint: '([^']+)'", r"\['\w+', '([^']+)'\]"],
+  'web/src/pages/Admin.jsx': [r"(?:plans|view_as|stats|health|users|ban|reports|feedback|charts|events|venues|ads|config): '([^']+)'"],
   'web/src/components/QuizModal.jsx': [r"\w+: '([A-ZÀ-Ú][^']+)'"],
   'web/src/lib/admin.js': [r"\['\w+', '([A-ZÀ-Ú][^']+)'", r"', '([^']{20,})'\]"],
 }

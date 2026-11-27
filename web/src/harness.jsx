@@ -57,6 +57,8 @@ const FAKE = {
     { id: 20, status: 'soon', released_on: null, eta: '2026-12-01', eta_precision: 'month', tag: 'new', title: { pt: 'Planos Plus e Pro' }, body: { pt: 'Análises, treino e recursos sociais a mais, com preço de lançamento nos primeiros meses.' } },
     { id: 21, status: 'soon', released_on: null, tag: 'new', title: { pt: 'Sincronização automática' }, body: { pt: 'Suas notas atualizadas sozinhas depois de jogar.' } }],
   admin_set_preview: null,
+  admin_perm_matrix: [{ id: 'eu', role: 'owner', email: 'h@x.com', nickname: 'HENRIQUE', perms: [], defaults: [], overrides: {} }, { id: 'amigo', role: 'curator', email: 'pk@exemplo.com', nickname: 'PUMPKING', perms: ['charts', 'events'], defaults: ['charts'], overrides: { events: true } }, { id: 'm2', role: 'support', email: 'neon@exemplo.com', nickname: 'NEONSTEP', perms: ['feedback'], defaults: ['users', 'feedback'], overrides: { users: false } }],
+  admin_set_perm_override: null,
   admin_new_users: { day: 2, week: 9, notify: true, list: [{ id: 'n1', email: 'novo@exemplo.com', provider: 'google', created_at: new Date(Date.now() - 40 * 60e3).toISOString(), nickname: null }, { id: 'n2', email: 'x@exemplo.com', provider: 'email', created_at: new Date(Date.now() - 5 * 3600e3).toISOString(), nickname: 'NEONSTEP' }] },
   admin_feature_grants: [{ feature: 'player_stats', expires_at: '2027-02-25T00:00:00Z', note: 'membro do clube', active: true }],
   get admin_release_notes() { return FAKE.release_notes.map((n) => ({ ...n, published: true })).concat([{ id: 30, status: 'soon', tag: 'new', title: { pt: 'Competições no perfil (CBPIU e LBPIU)' }, body: {}, published: false, sort: 5 }]); },

@@ -2213,3 +2213,11 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .quiz-summary dt { color: var(--muted); }
 .quiz-summary dd { margin: 0; }
 .quiz-dots { margin-right: 30px; }
+.perm-edit th span { display: inline-block; max-width: 92px; white-space: normal; font-size: 10.5px; line-height: 1.2; }
+.perm-edit td:first-child { min-width: 130px; }
+.perm-edit td:first-child small { display: block; font-size: 11px; }
+.pm-cell { position: relative; width: 34px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel2, var(--panel));
+  color: var(--muted); font-weight: 700; cursor: pointer; }
+.pm-cell.yes { color: #39d98a; border-color: rgba(57, 217, 138, .4); background: rgba(57, 217, 138, .08); }
+.pm-cell.custom i { position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #ffd166; }
+.pm-cell:disabled { opacity: .6; cursor: default; }
