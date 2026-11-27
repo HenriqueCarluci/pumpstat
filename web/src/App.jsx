@@ -28,6 +28,7 @@ import { usePresence } from './lib/presence.js';
 import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
 import FriendOnlineToast from './components/FriendOnlineToast.jsx';
+import AdminSignupToast from './components/AdminSignupToast.jsx';
 import StatusPicker from './components/StatusPicker.jsx';
 import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
 import { useIsDesktop } from './lib/desktop.js';
@@ -268,6 +269,7 @@ function Shell() {
 
       <InviteToast />
       <FriendOnlineToast />
+      <AdminSignupToast />
       <Tour />
 
       <nav className="tabbar">

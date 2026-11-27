@@ -12,6 +12,7 @@ import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
 import { signOut } from '../lib/auth.js';
+import { canAdmin } from '../lib/admin.js';
 import { VERSIONS } from '../lib/piu.js';
 import { locale, t, tErr, tn } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
@@ -39,6 +40,7 @@ export default function Settings() {
   return (
     <div className="page settings">
       <AccountCard />
+      {canAdmin(plan, 'users') && <NewUsersCard />}
 
       <nav className="set-nav" aria-label={t('Seções dos ajustes')}>
         {GROUPS.map(([id, l]) => <button key={id} type="button" onClick={() => go(id)}>{t(l)}</button>)}
@@ -124,6 +126,42 @@ export default function Settings() {
         </div>
       </footer>
     </div>
+  );
+}
+
+/** Equipe: quem criou conta nos últimos dias e o liga/desliga do alerta de conta nova. */
+function NewUsersCard() {
+  const [d, setD] = useState(null);
+  const load = () => rpc('admin_new_users', { p_days: 7 }).then(setD).catch(() => setD(false));
+  useEffect(() => { load(); }, []);
+  if (d === false) return null;
+  const flip = async () => { await rpc('admin_set_new_user_alert', { p_on: !d.notify }); load(); };
+  return (
+    <section className="card set-newusers">
+      <div className="row-between">
+        <h3 className="ic-row"><ShieldCheck size={17} /> {t('Novos usuários')}</h3>
+        <Link to="/admin?tab=users" className="link small">{t('Ver todos')}</Link>
+      </div>
+      {!d ? <p className="muted small">{t('Carregando…')}</p> : <>
+        <div className="nu-stats">
+          <div><b>{d.day}</b><small className="muted">{t('nas últimas 24 h')}</small></div>
+          <div><b>{d.week}</b><small className="muted">{t('nos últimos 7 dias')}</small></div>
+        </div>
+        {d.list.length > 0 && (
+          <ul className="nu-list">
+            {d.list.slice(0, 5).map((u) => (
+              <li key={u.id}><span>{u.nickname || u.email}{u.nickname ? <small className="muted"> · {u.email}</small> : null}</span><small className="muted">{timeAgo(u.created_at)}</small></li>
+            ))}
+          </ul>
+        )}
+        {!d.list.length && <p className="muted small">{t('Ninguém criou conta nos últimos 7 dias.')}</p>}
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={!!d.notify} onChange={flip} />
+          <span><b>{t('Alertar quando alguém criar conta')}</b><br />
+            <small className="muted">{t('Aparece um aviso na tela e nas notificações (e no aparelho, se os avisos estiverem permitidos).')}</small></span>
+        </label>
+      </>}
+    </section>
   );
 }
 
