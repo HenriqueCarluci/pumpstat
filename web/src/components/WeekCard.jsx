@@ -73,9 +73,12 @@ function missionCharts(m, data, ctx) {
 }
 
 export default function WeekCard() {
-  const { data, version, plan, session } = useData();
+  const { data, version, setVersion, plan, session } = useData();
   const cfg = useMemo(() => missionConfig(plan), [plan]);
-  const on = { missions: isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: isOn(plan, 'week_summary') };
+  // a Phoenix 1 não recebe jogadas novas: missões e resumo da semana só valem na Phoenix 2
+  const p2 = version === 'phoenix2';
+  const on = { missions: p2 && isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: p2 && isOn(plan, 'week_summary') };
+  const p1Note = !p2 && isOn(plan, 'missions');
   const uid = session?.user?.id || 'anon';
   const ws = weekStart();
   const wk = weekKey(ws);
@@ -190,7 +193,8 @@ export default function WeekCard() {
   const showSummary = on.summary && last && !last.empty && seen !== lastKey;
   const closeSummary = () => { try { localStorage.setItem(SEEN_KEY, lastKey); } catch { /* ignora */ } setSeen(lastKey); };
 
-  if (!any || !base) return null;
+  if (p1Note && !on.streak) return <P1Note onSwitch={() => setVersion?.('phoenix2')} />;
+  if (!any || !base) return p1Note ? <P1Note onSwitch={() => setVersion?.('phoenix2')} /> : null;
   const ms = live?.missions || [];
   const done = ms.filter((m) => m.done).length;
   const total = ms.length;
@@ -285,8 +289,19 @@ export default function WeekCard() {
         {on.missions && total > 0 && done < total && pointsOn(cfg) && pointsFor(cfg, 'week') > 0 && <p className="muted tiny">{t('Complete todas para ganhar +{n} pts de bônus.', { n: pointsFor(cfg, 'week') })}</p>}
         {on.missions && <p className="muted small">{t('As missões se completam sozinhas quando você sincroniza.')} <Link to="/progresso?v=plano">{t('Ver plano de treino')} <ChevronRight size={12} /></Link></p>}
         {!on.missions && streak && <p className="muted small">{t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}</p>}
+        {p1Note && <p className="small p1-note">{t('As missões da semana valem só na Phoenix 2, porque a Phoenix 1 não recebe jogadas novas.')} <button className="link" onClick={() => setVersion?.('phoenix2')}>{t('Ver na Phoenix 2')}</button></p>}
       </Panel>}
     </>
+  );
+}
+
+function P1Note({ onSwitch }) {
+  return (
+    <section className="card week-card">
+      <h3 className="ic-row"><Trophy size={18} /> {t('Missões da semana')}</h3>
+      <p className="muted small">{t('As missões da semana valem só na Phoenix 2, porque a Phoenix 1 não recebe jogadas novas.')}</p>
+      <button className="btn ghost" onClick={onSwitch}>{t('Ver na Phoenix 2')}</button>
+    </section>
   );
 }
 

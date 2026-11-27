@@ -152,7 +152,7 @@ const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','f
   curator: ['stats','charts'], events: ['stats','events','venues'], support: ['stats','users','feedback'] };
 const adminRole = new URLSearchParams(location.search).get('admin');
 const plan = { plan: 'plus', admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {} } };
-const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
+const ctx = { version: new URLSearchParams(location.search).get('ver') || 'phoenix2', setVersion: (v) => { location.search = v === 'phoenix2' ? '' : `?ver=${v}`; }, data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
