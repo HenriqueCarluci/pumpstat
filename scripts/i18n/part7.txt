@@ -830,3 +830,6 @@ Editar tags | Edit tags | Editar tags | 태그 편집 | タグを編集 | Modifi
 tag desconhecida: % | unknown tag: % | tag desconocida: % | 알 수 없는 태그: % | 不明なタグ: % | tag inconnu : % | tag sconosciuto: %
 tags inválidas | invalid tags | tags inválidas | 잘못된 태그 | 無効なタグ | tags invalides | tag non validi
 chart não encontrado | chart not found | chart no encontrado | 차트를 찾을 수 없어요 | 譜面が見つかりません | chart introuvable | chart non trovato
+Tirar marca de R!SE | Remove R!SE mark | Quitar marca de R!SE | R!SE 표시 해제 | R!SEの印を外す | Retirer la marque R!SE | Togli il segno R!SE
+Marcar como R!SE | Mark as R!SE | Marcar como R!SE | R!SE로 표시 | R!SEとして印を付ける | Marquer comme R!SE | Segna come R!SE
+Gimmick e fora da curva | Gimmick and off-curve | Gimmick y fuera de la curva | 기믹과 이상치 | ギミックと規格外 | Gimmick et hors norme | Gimmick e fuori norma

@@ -6,7 +6,7 @@ import { ChartRanking } from './Players.jsx';
 import { FriendScores, useFriendScores } from './Song.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { cachedVersion, chartHistory, rpc } from '../lib/api.js';
-import { chartRating, chartTier, fmtScore, GRADE_ORDER, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
+import { chartRating, chartTier, fmtBpm, fmtScore, GRADE_ORDER, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { videoUrl } from '../lib/style.js';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialBadges } from '../components/Special.jsx';
@@ -174,7 +174,7 @@ export default function Chart() {
       <section className="card cp-info">
         <h3>{t('Detalhes')}</h3>
         <dl>
-          {song.bpm && <><dt>BPM</dt><dd>{song.bpm}</dd></>}
+          {song.bpm && <><dt>BPM</dt><dd>{fmtBpm(song.bpm)}</dd></>}
           <dt>{t('Artista')}</dt><dd>{song.artist || '—'}</dd>
           {c.stepArtist && <><dt>{t('Step')}</dt><dd className="ic-row"><PencilLine size={12} /> {c.stepArtist}</dd></>}
           {c.notes ? <><dt>{t('Notas')}</dt><dd>{fmtNum(c.notes)}</dd></> : null}

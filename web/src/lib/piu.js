@@ -207,3 +207,13 @@ export const TITLE_COLORS = [
   'linear-gradient(0deg,#fbf52d,#c28f26)', 'linear-gradient(0deg,#d7ffff,#6da3ef)', 'linear-gradient(0deg,#00a2ff,#004372)',
   'linear-gradient(0deg,#ff0000,#690000)', 'linear-gradient(0deg,#ca39ff,#591872)', 'linear-gradient(0deg,#5a5a5a,#2a2c2c)',
 ];
+
+/** BPM para mostrar: "100 ~ 100" vira "100"; "100 ~ 187" vira "100–187". */
+export function fmtBpm(b) {
+  if (b == null || b === '') return '';
+  const nums = String(b).match(/\d+(?:\.\d+)?/g) || [];
+  if (!nums.length) return String(b);
+  const vals = [...new Set(nums.map(Number))];
+  if (vals.length === 1) return String(vals[0]);
+  return `${Math.min(...vals)}–${Math.max(...vals)}`;
+}

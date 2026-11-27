@@ -5,7 +5,7 @@ import TrainingToggle from '../components/TrainingToggle.jsx';
 import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
-import { chartRating, chartTier, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
+import { chartRating, chartTier, fmtBpm, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { videoUrl } from '../lib/style.js';
 import { rpc } from '../lib/api.js';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
@@ -13,7 +13,7 @@ import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { t } from '../lib/i18n.js';
 import { canAdmin } from '../lib/admin.js';
-import { ChevronRight, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
+import { ChevronRight, History, PencilLine, Play, ShieldCheck, Star, Trophy, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -39,24 +39,43 @@ export default function Song() {
     .map(([m, label]) => [label, song.charts.filter((c) => c.mode === m)])
     .filter(([, cs]) => cs.length);
 
+  const range = (m) => {
+    const ls = song.charts.filter((c) => c.mode === m).map((c) => c.level);
+    if (!ls.length) return null;
+    const lo = Math.min(...ls), hi = Math.max(...ls);
+    return lo === hi ? `${lo}` : `${lo}–${hi}`;
+  };
+  const bpm = fmtBpm(song.bpm);
   return (
     <div className="page">
-      <section className="song-hero">
-        <Jacket song={song} width={220} className="hero-jacket" />
-        <div>
-          <h1>{song.title}</h1>
-          <div className="muted">{song.artist || t('Artista desconhecido')}</div>
-          <div className="tags">
-            {song.isNew && <span className="tag new">NEW</span>}
-            {song.bpm && <span className="tag">{song.bpm} BPM</span>}
-            {song.songType && <span className="tag">{song.songType}</span>}
-            {song.rise && <RiseBadge />}
+      <section className="song-hero card">
+        <div className="sh-top">
+          <Jacket song={song} width={220} className="hero-jacket" />
+          <div className="sh-info">
+            <h1>{song.title}</h1>
+            <div className="muted sh-artist">{song.artist || t('Artista desconhecido')}</div>
+            <div className="tags">
+              {song.isNew && <span className="tag new">NEW</span>}
+              {song.rise && <RiseBadge />}
+              {bpm && <span className="tag">{bpm} BPM</span>}
+              {song.songType && !/^arcade$/i.test(song.songType) && <span className="tag">{song.songType}</span>}
+            </div>
+            <div className="sh-levels">
+              {range('S') && <span className="ball-s-txt">Single {range('S')}</span>}
+              {range('D') && <span className="ball-d-txt">Double {range('D')}</span>}
+              {range('C') && <span className="muted">Co-op</span>}
+            </div>
           </div>
-          {song.rise && <p className="small muted rise-note">{t('Música do PUMP IT UP R!SE. Na Phoenix 2 ela só aparece para quem ligou a conta Steam do R!SE ao AM.PASS.')}</p>}
-          {canAdmin(plan, 'charts') && <RiseAdmin song={song} onChange={reload} />}
-          <a className="btn yt" href={videoUrl('s', song.id, song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
-          {canAdmin(plan, 'charts') && <VideoAdmin vkey={`s:${song.id}`} />}
         </div>
+        {song.rise && <p className="small muted rise-note">{t('Música do PUMP IT UP R!SE. Na Phoenix 2 ela só aparece para quem ligou a conta Steam do R!SE ao AM.PASS.')}</p>}
+        <a className="btn yt sh-yt" href={videoUrl('s', song.id, song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
+        {canAdmin(plan, 'charts') && (
+          <div className="team-tools">
+            <span className="tt-label"><ShieldCheck size={12} /> {t('Equipe')}</span>
+            <RiseAdmin song={song} onChange={reload} />
+            <VideoAdmin vkey={`s:${song.id}`} />
+          </div>
+        )}
       </section>
 
       {hasLegacy && <LegacyToggle />}
@@ -85,12 +104,12 @@ function RiseAdmin({ song, onChange }) {
     setBusy(false);
   };
   return (
-    <p className="small">
-      <button className="link small muted" disabled={busy} onClick={flip}>
-        {song.rise ? t('Admin: tirar marca de música do R!SE') : t('Admin: marcar como música do R!SE')}
+    <>
+      <button className="link small" disabled={busy} onClick={flip}>
+        {song.rise ? t('Tirar marca de R!SE') : t('Marcar como R!SE')}
       </button>
       {err && <span className="form-err"> {err}</span>}
-    </p>
+    </>
   );
 }
 
@@ -206,8 +225,13 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
         <button type="button" className={`cc-act ${open ? 'on' : ''}`} onClick={toggle} aria-expanded={open}><History size={16} /><span>{t('Histórico')}</span></button>
         <Link to={`/chart/${c.id}`} className="cc-act"><ChevronRight size={16} /><span>{t('Detalhes')}</span></Link>
       </div>
-      {canAdmin(plan, 'charts') && <VideoAdmin vkey={`c:${c.id}`} />}
-      {canAdmin(plan, 'charts') && <SpecialAdmin chart={c} onSaved={onReviewed} />}
+      {canAdmin(plan, 'charts') && (
+        <div className="team-tools">
+          <span className="tt-label"><ShieldCheck size={12} /> {t('Equipe')}</span>
+          <VideoAdmin vkey={`c:${c.id}`} />
+          <SpecialAdmin chart={c} onSaved={onReviewed} />
+        </div>
+      )}
 
       {reviews && <div className="cc-hist"><ChartReviews chart={c} onSaved={onReviewed} /></div>}
       {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}

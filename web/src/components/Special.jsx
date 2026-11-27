@@ -35,7 +35,7 @@ export function SpecialAdmin({ chart: c, onSaved }) {
   };
   return (
     <details className="special-admin">
-      <summary className="small">{t('Admin: gimmick e fora da curva')}</summary>
+      <summary className="small">{t('Gimmick e fora da curva')}</summary>
       <div className="chips">
         {GIMMICKS.map(([x, l]) => <button key={x} type="button" className={g.includes(x) ? 'on' : ''} onClick={() => flip(x)}>{t(l)}</button>)}
       </div>

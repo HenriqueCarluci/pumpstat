@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { chartLabel, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
+import { chartLabel, fmtBpm, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
 
 // Imagens oficiais do site da Phoenix 2 (carregadas direto do piugame.com).
@@ -78,7 +78,7 @@ export function SongRow({ song, filter, legacy }) {
       <Jacket song={song} width={92} />
       <div className="songrow-main">
         <div className="title">{song.title}{(song.rise || song.hasHD) && <RiseBadge small full={song.rise} />}</div>
-        <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${song.bpm} BPM` : ''}</div>
+        <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${fmtBpm(song.bpm)} BPM` : ''}</div>
         <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} legacy={legacy ? legacy(c) : null} />)}</div>
       </div>
     </Link>

@@ -1564,3 +1564,23 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .tag-admin-row .ta-name { font-size: 14px; border-left: 3px solid var(--c); padding-left: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tag-admin-row input[type=number] { width: 56px; padding: 4px 6px; }
 .tag-admin-row input[type=range] { width: 100%; accent-color: var(--c, #58a6f0); }
+
+/* cabeçalho da música */
+.song-hero.card { display: block; padding: 14px; }
+.song-hero .sh-top { display: flex; gap: 14px; align-items: center; }
+.song-hero .sh-info { min-width: 0; flex: 1; }
+.song-hero .sh-artist { margin-top: 2px; }
+.song-hero .sh-levels { display: flex; gap: 12px; margin-top: 8px; font-size: 13px; font-weight: 700; }
+.song-hero .sh-yt { display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; margin-top: 12px; }
+.song-hero .rise-note { margin: 10px 0 0; }
+/* ferramentas da equipe: discretas, numa linha só */
+.team-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,.1); font-size: 12.5px; }
+.team-tools .tt-label { display: inline-flex; align-items: center; gap: 4px; color: var(--muted, #9aa4b2); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.team-tools .link.small, .team-tools .video-admin-open { margin: 0; font-size: 12.5px; }
+.team-tools .special-admin { flex-basis: 100%; }
+.team-tools .special-admin summary { color: var(--neon); font-weight: 600; cursor: pointer; }
+.team-tools .video-admin { flex-basis: 100%; }
+@media (max-width: 700px) {
+  .song-hero .sh-top { align-items: flex-start; }
+  .song-hero .hero-jacket { width: 112px !important; flex: none; border-radius: 12px; }
+}
