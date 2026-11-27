@@ -94,9 +94,11 @@ export default function Home() {
                     <Link to={`/musica/${c.song.id}`}>
                       <Jacket song={c.song} width={64} />
                       <span className="t">{c.song.title}</span>
-                      <Ball chart={c} size="sm" />
-                      <Grade grade={c.grade} size="sm" />
-                      <Plate plate={c.plate} />
+                      <span className="tl-b">
+                        <Ball chart={c} size="sm" />
+                        <Grade grade={c.grade} size="sm" />
+                        <Plate plate={c.plate} />
+                      </span>
                       <span className="val">{value.toFixed(2)}</span>
                     </Link>
                   </li>

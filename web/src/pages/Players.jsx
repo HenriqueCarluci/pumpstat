@@ -94,7 +94,7 @@ export default function Players() {
                     <Avatar p={p} />
                     <span className="pinfo">
                       <span className="ptitle">{p.title}</span>
-                      <Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>} <LiveBadge live={lives.get(p.id)} />
+                      <span className="pname"><Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>}<LiveBadge live={lives.get(p.id)} /></span>
                       <small className="muted">{t('{n} recordes', { n: p.bests })}</small>
                     </span>
                     <span className="ppb">

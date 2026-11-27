@@ -173,12 +173,16 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
       <div className="cc-top">
         <Link to={`/chart/${c.id}`} className="cc-ball" title={t('Abrir a página deste nível')}><Ball chart={c} /></Link>
         <div className="cc-score">
-          <div className="sc">{fmtScore(c.score)}</div>
-          <div className="cc-badges">
-            <Grade grade={c.grade} broken={c.broken} />
-            <Plate plate={c.plate} />
-            {c.broken && <span className="tag warn">stage break</span>}
-          </div>
+          {c.score != null ? (
+            <>
+              <div className="sc">{fmtScore(c.score)}</div>
+              <div className="cc-badges">
+                <Grade grade={c.grade} broken={c.broken} />
+                <Plate plate={c.plate} />
+                {c.broken && <span className="tag warn">stage break</span>}
+              </div>
+            </>
+          ) : <div className="cc-none">{t('Você ainda não jogou este nível')}</div>}
         </div>
         <div className="cc-side">
           {rating > 0 && <div className="rating" title={t('Valor estimado no PUMBILITY')}>{rating.toFixed(2)}</div>}

@@ -19,7 +19,7 @@ export default function Titles() {
   useEffect(() => {
     setTitles(null);
     rpc('my_titles', { p_version: version, p_user: userId || null })
-      .then((r) => setTitles(r.map(([name, owned, color, condition, cur, target]) => ({ name, owned, color, condition, cur: cur == null ? null : +cur, target: target == null ? null : +target }))))
+      .then((r) => setTitles((r || []).map(([name, owned, color, condition, cur, target]) => ({ name, owned, color, condition, cur: cur == null ? null : +cur, target: target == null ? null : +target }))))
       .catch((e) => setErr(tErr(e.message)));
   }, [version, userId]);
 

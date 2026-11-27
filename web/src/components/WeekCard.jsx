@@ -335,15 +335,15 @@ function LastWeek({ s, streak, onClose }) {
         </div>
       )}
       {s.rival && s.showRival && (
-        <p className="small ic-row ws-rival">
-          <Swords size={14} />
-          {s.rival.delta != null && s.pb
+        <div className="small ws-rival">
+          <Swords size={15} />
+          <p>{s.rival.delta != null && s.pb
             ? (s.rival.delta > s.pb.delta
               ? t('{n} subiu {r} no PUMBILITY, mais que você ({v}). Hora de reagir!', { n: s.rival.nickname, r: signed(s.rival.delta), v: signed(s.pb.delta) })
               : t('Você subiu mais que {n} no PUMBILITY ({v} contra {r}).', { n: s.rival.nickname, r: signed(s.rival.delta), v: signed(s.pb.delta) }))
             : t('{n} fez {p} jogadas na semana.', { n: s.rival.nickname, p: s.rival.plays })}
-          <Link to="/progresso?v=rival">{t('Ver rival')}</Link>
-        </p>
+          {' '}<Link className="ws-rival-link" to="/progresso?v=rival">{t('Ver rival')} ›</Link></p>
+        </div>
       )}
     </section>
   );

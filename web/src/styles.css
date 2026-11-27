@@ -212,10 +212,12 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .cc-other { margin-top: 10px; font-size: 13px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; color: #cfd1d8; }
 .cc-other b { font-family: var(--num); }
 .up { color: var(--neon); font: 700 12px var(--num); } .down { color: #ff8a96; font: 700 12px var(--num); }
-/* rodapé do chart: data do recorde + 5 ações do mesmo tamanho (no celular, ícone em cima do texto) */
+/* rodapé do chart: data do recorde + 6 ações numa linha só (no celular, ícone em cima do texto) */
 .cc-date { font-size: 12px; margin-top: 10px; }
-.cc-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
-.cc-actions > .cc-act { flex-direction: row; min-height: 40px; gap: 5px; padding: 6px 4px; }
+.cc-actions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-top: 8px; }
+@media (max-width: 759px) { .cc-actions > .cc-act { min-height: 46px; gap: 3px; padding: 5px 1px; font-size: 10.5px; border-radius: 10px; } }
+@media (max-width: 350px) { .cc-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.cc-none { font: 600 13px var(--sans, inherit); color: var(--muted); }
 .cc-act { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 48px; padding: 6px 2px;
   border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: var(--text);
   font-family: inherit; font-size: 11.5px; font-weight: 600; line-height: 1.15;
@@ -440,6 +442,8 @@ a.q-city:hover { color: var(--text); }
 .player .rank, .cr-row .rank { font: 800 14px var(--num); color: var(--muted); text-align: center; }
 .player .pinfo { display: flex; flex-direction: column; min-width: 0; }
 .player .pinfo b { font: 800 15px var(--num); }
+.player .pname { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; min-width: 0; }
+.player .pname b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .player .ptitle { font-size: 11px; }
 .ppb { display: flex; align-items: center; gap: 6px; font-family: var(--num); }
 .ppb img { width: 34px; height: 34px; object-fit: contain; }
@@ -919,7 +923,10 @@ a.q-city:hover { color: var(--text); }
 .ws-grid small { color: var(--muted); font-size: 12px; }
 .ws-clears { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
 .ws-clear { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: inherit; text-decoration: none; padding: 2px 8px 2px 2px; border-radius: 999px; background: rgba(255, 255, 255, 0.05); }
-.ws-rival { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.ws-rival { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: start; margin-top: 10px; }
+.ws-rival > svg { margin-top: 2px; color: #ff8a96; }
+.ws-rival p { margin: 0; }
+.ws-rival-link { color: var(--neon); font-weight: 700; white-space: nowrap; text-decoration: none; }
 
 /* desafios do mês */
 .ch-banner { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;
@@ -1004,6 +1011,11 @@ a.q-city:hover { color: var(--text); }
 .panel-body.scroll::-webkit-scrollbar { width: 6px; }
 .panel-body.scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 3px; }
 .panel-extra { flex: none; }
+@media (max-width: 600px) {
+  /* no celular, o que fica à direita do título desce para a linha de baixo em vez de espremer o título */
+  .panel-h { flex-wrap: wrap; row-gap: 8px; }
+  .panel-h .panel-extra { margin-left: auto; }
+}
 .ideas .ideas-h.panel-toggle { width: 100%; }
 .ideas.open .panel-body { margin-top: 8px; display: grid; gap: 6px; }
 .ideas .ideas-h.panel-toggle { font: 700 11px var(--num); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
@@ -2363,15 +2375,18 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 /* Top 50 do PUMBILITY no celular: duas linhas, sem rolagem lateral; a barra de rolagem não cobre os números */
 .panel-body.scroll { overflow-x: hidden; padding-right: 12px; }
 .toplist li a > * { min-width: 0; }
+.toplist .tl-b { display: contents; }
 @media (max-width: 600px) {
-  .toplist li a { grid-template-columns: 18px 52px auto auto minmax(0, 1fr) auto; grid-template-areas: "r j t t t v" "r j b g p v"; column-gap: 8px; row-gap: 2px; }
-  .toplist li a::before { grid-area: r; }
-  .toplist .jacket { grid-area: j; width: 52px !important; }
-  .toplist .t { grid-area: t; }
-  .toplist .ball { grid-area: b; width: 30px; height: 30px; }
-  .toplist .grade-img { grid-area: g; height: 22px; width: auto; }
-  .toplist .plate-img { grid-area: p; height: 18px; justify-self: start; }
-  .toplist .val { grid-area: v; }
+  .toplist { gap: 4px; }
+  .toplist li a { grid-template-columns: 16px 46px minmax(0, 1fr) auto; grid-template-areas: "r j t v" "r j b v"; column-gap: 10px; row-gap: 3px; padding: 3px 0; }
+  .toplist li a::before { grid-area: r; font-size: 11px; }
+  .toplist .jacket { grid-area: j; width: 46px !important; }
+  .toplist .t { grid-area: t; font-size: 13px; line-height: 1.2; }
+  .toplist .tl-b { grid-area: b; display: flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; }
+  .toplist .tl-b .ball { width: 24px; height: 24px; }
+  .toplist .tl-b .grade-img { height: 17px; width: auto; }
+  .toplist .tl-b .plate-img { height: 13px; width: auto; }
+  .toplist .val { grid-area: v; font-size: 13px; }
 }
 
 /* confirmação do vínculo AM.PASS */
