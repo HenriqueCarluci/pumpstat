@@ -4,6 +4,7 @@ import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { initNative } from './lib/native.js';
+import './lib/topbar.js';
 import { VERSIONS } from './lib/piu.js';
 import Home from './pages/Home.jsx';
 import Songs from './pages/Songs.jsx';

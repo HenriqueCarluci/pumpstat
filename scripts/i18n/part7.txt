@@ -352,7 +352,7 @@ essa pessoa está ocupada agora. Mande uma mensagem ou tente mais tarde | this p
 Excluir sua conta do PIU Stats | Delete your PIU Stats account | Eliminar tu cuenta de PIU Stats | PIU Stats 계정 삭제 | PIU Stats アカウントの削除 | Supprimer votre compte PIU Stats | Elimina il tuo account PIU Stats
 Você pode apagar sua conta e todos os seus dados a qualquer momento, pelo app ou pelo site. | You can delete your account and all your data at any time, in the app or on the website. | Puedes borrar tu cuenta y todos tus datos en cualquier momento, desde la app o el sitio. | 앱이나 웹사이트에서 언제든지 계정과 모든 데이터를 삭제할 수 있습니다. | アプリまたはサイトからいつでもアカウントとすべてのデータを削除できます。 | Vous pouvez supprimer votre compte et toutes vos données à tout moment, dans l'app ou sur le site. | Puoi eliminare il tuo account e tutti i tuoi dati in qualsiasi momento, dall'app o dal sito.
 Como excluir | How to delete | Cómo eliminar | 삭제 방법 | 削除方法 | Comment supprimer | Come eliminare
-Abra o app PIU Stats ou o site stepclub.onrender.com e entre na sua conta. | Open the PIU Stats app or stepclub.onrender.com and sign in. | Abre la app PIU Stats o el sitio stepclub.onrender.com e inicia sesión. | PIU Stats 앱이나 stepclub.onrender.com에서 로그인하세요. | PIU Stats アプリか stepclub.onrender.com を開いてログインします。 | Ouvrez l'app PIU Stats ou le site stepclub.onrender.com et connectez-vous. | Apri l'app PIU Stats o il sito stepclub.onrender.com e accedi.
+Abra o app PIU Stats ou o site piustats.com.br e entre na sua conta. | Open the PIU Stats app or piustats.com.br and sign in. | Abre la app PIU Stats o el sitio piustats.com.br e inicia sesión. | PIU Stats 앱이나 piustats.com.br에서 로그인하세요. | PIU Stats アプリか piustats.com.br を開いてログインします。 | Ouvrez l'app PIU Stats ou le site piustats.com.br et connectez-vous. | Apri l'app PIU Stats o il sito piustats.com.br e accedi.
 Vá em Configurações e toque em "Excluir conta". | Go to Settings and tap "Delete account". | Ve a Configuración y toca "Eliminar cuenta". | 설정에서 "계정 삭제"를 누르세요. | 設定で「アカウントを削除」をタップします。 | Allez dans Réglages et touchez « Supprimer le compte ». | Vai in Impostazioni e tocca "Elimina account".
 Confirme digitando o texto pedido. A exclusão é imediata. | Confirm by typing the requested text. Deletion is immediate. | Confirma escribiendo el texto pedido. La eliminación es inmediata. | 요청한 문구를 입력해 확인하세요. 즉시 삭제됩니다. | 指定の文字を入力して確認します。削除はすぐに行われます。 | Confirmez en tapant le texte demandé. La suppression est immédiate. | Conferma digitando il testo richiesto. L'eliminazione è immediata.
 Sem acesso à conta? Fale com a gente pelo e-mail de contato da nossa página na Google Play, a partir do e-mail cadastrado, e excluímos em até 30 dias. | No access to your account? Email us at the contact address on our Google Play page, from your registered email, and we'll delete it within 30 days. | ¿Sin acceso a la cuenta? Escríbenos al correo de contacto de nuestra página en Google Play, desde el correo registrado, y la eliminamos en hasta 30 días. | 계정에 접근할 수 없나요? 가입한 이메일로 Google Play 페이지의 연락처 이메일에 보내 주시면 30일 이내에 삭제합니다. | アカウントにアクセスできない場合は、登録メールから Google Play ページの連絡先メールにご連絡ください。30 日以内に削除します。 | Plus d'accès au compte ? Écrivez-nous à l'adresse de contact de notre page Google Play, depuis l'e-mail inscrit, et nous le supprimons sous 30 jours. | Non hai accesso all'account? Scrivici all'email di contatto della nostra pagina Google Play, dall'email registrata, e lo eliminiamo entro 30 giorni.
@@ -849,3 +849,30 @@ Você está aqui | You are here | Estás aquí | 현재 위치 | 現在地 | Vou
 Mapa dos fliperamas com Pump | Map of arcades with Pump | Mapa de salones con Pump | Pump 오락실 지도 | Pumpがあるゲーセンの地図 | Carte des salles avec Pump | Mappa delle sale con Pump
 Esconder mapa | Hide map | Ocultar mapa | 지도 숨기기 | 地図を隠す | Masquer la carte | Nascondi mappa
 Ver no mapa | See on map | Ver en el mapa | 지도에서 보기 | 地図で見る | Voir sur la carte | Vedi sulla mappa
+Filtros | Filters | Filtros | 필터 | フィルター | Filtres | Filtri
+Nível {a}–{b} | Level {a}–{b} | Nivel {a}–{b} | 레벨 {a}–{b} | レベル {a}–{b} | Niveau {a}–{b} | Livello {a}–{b}
+Meu nível | My level | Mi nivel | 내 레벨 | 自分のレベル | Mon niveau | Il mio livello
+Para treinar | To practice | Para entrenar | 연습용 | 練習用 | À travailler | Da allenare
+Todos os níveis | All levels | Todos los niveles | 모든 레벨 | 全レベル | Tous les niveaux | Tutti i livelli
+Tipo de chart | Chart type | Tipo de chart | 채보 유형 | 譜面の種類 | Type de chart | Tipo di chart
+Suas jogadas | Your plays | Tus jugadas | 내 플레이 | あなたのプレイ | Vos parties | Le tue partite
+Não passados | Not cleared | Sin pasar | 미클리어 | 未クリア | Non validés | Non superati
+Mostrar recordes da Phoenix (legado P1) | Show Phoenix records (P1 legacy) | Mostrar récords de Phoenix (legado P1) | Phoenix 기록 보기 (P1 레거시) | Phoenix の記録を表示 (P1 レガシー) | Afficher les records Phoenix (héritage P1) | Mostra i record di Phoenix (eredità P1)
+Perto do meu nível | Near my level | Cerca de mi nivel | 내 레벨 근처 | 自分のレベルに近い順 | Proche de mon niveau | Vicino al mio livello
+Novas primeiro | New first | Nuevas primero | 신곡 먼저 | 新曲を先に | Nouveautés d'abord | Nuove prima
+Limpar filtros | Clear filters | Limpiar filtros | 필터 초기화 | フィルターをクリア | Effacer les filtres | Azzera filtri
+Ver resultados ({n}) | Show results ({n}) | Ver resultados ({n}) | 결과 보기 ({n}) | 結果を見る ({n}) | Voir les résultats ({n}) | Mostra risultati ({n})
+Remover filtro: {f} | Remove filter: {f} | Quitar filtro: {f} | 필터 제거: {f} | フィルターを解除: {f} | Retirer le filtre : {f} | Rimuovi filtro: {f}
+Legenda | Legend | Leyenda | 범례 | 凡例 | Légende | Legenda
+S ou melhor | S or better | S o mejor | S 이상 | S 以上 | S ou mieux | S o meglio
+Não jogou | Not played | Sin jugar | 플레이 안 함 | 未プレイ | Pas joué | Non giocato
+Recorde da Phoenix (P1) | Phoenix record (P1) | Récord de Phoenix (P1) | Phoenix 기록 (P1) | Phoenix の記録 (P1) | Record Phoenix (P1) | Record di Phoenix (P1)
+S = Single, D = Double. Toque num nível para abrir o chart. | S = Single, D = Double. Tap a level to open the chart. | S = Single, D = Double. Toca un nivel para abrir el chart. | S = 싱글, D = 더블. 레벨을 누르면 채보가 열립니다. | S = シングル、D = ダブル。レベルをタップすると譜面が開きます。 | S = Single, D = Double. Touchez un niveau pour ouvrir le chart. | S = Single, D = Double. Tocca un livello per aprire il chart.
+Nível mínimo | Minimum level | Nivel mínimo | 최소 레벨 | 最小レベル | Niveau minimum | Livello minimo
+Nível máximo | Maximum level | Nivel máximo | 최대 레벨 | 最大レベル | Niveau maximum | Livello massimo
+Ver perfil de {n} | See {n}'s profile | Ver perfil de {n} | {n} 프로필 보기 | {n} のプロフィールを見る | Voir le profil de {n} | Vedi il profilo di {n}
+Nenhuma música com esses filtros. | No songs match these filters. | Ninguna canción con estos filtros. | 이 필터에 맞는 곡이 없습니다. | この条件に合う曲はありません。 | Aucune chanson avec ces filtres. | Nessuna canzone con questi filtri.
+Reagir à mensagem | React to message | Reaccionar al mensaje | 메시지에 반응 | メッセージにリアクション | Réagir au message | Reagisci al messaggio
+Tirar reação | Remove reaction | Quitar reacción | 반응 취소 | リアクションを取り消す | Retirer la réaction | Rimuovi reazione
+faça login para reagir | sign in to react | inicia sesión para reaccionar | 로그인 후 반응할 수 있습니다 | リアクションするにはログインしてください | connectez-vous pour réagir | accedi per reagire
+você não pode reagir a esta mensagem | you can't react to this message | no puedes reaccionar a este mensaje | 이 메시지에는 반응할 수 없습니다 | このメッセージにはリアクションできません | vous ne pouvez pas réagir à ce message | non puoi reagire a questo messaggio

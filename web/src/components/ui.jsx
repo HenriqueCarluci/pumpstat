@@ -71,17 +71,49 @@ export function ChartPip({ chart, legacy }) {
   );
 }
 
+const MODE_ORDER = ['S', 'D', 'HD', 'C'];
+const MODE_TAG = { S: 'S', D: 'D', HD: 'HD', C: 'Co-op' };
+
+/** Linha da lista de músicas: os níveis vêm agrupados por modo e cada um abre o próprio chart. */
 export function SongRow({ song, filter, legacy }) {
   const charts = filter ? song.charts.filter(filter) : song.charts;
+  const groups = MODE_ORDER.map((m) => [m, charts.filter((c) => c.mode === m)]).filter(([, cs]) => cs.length);
   return (
-    <Link to={`/musica/${song.id}`} className="songrow">
+    <div className="songrow">
+      <Link to={`/musica/${song.id}`} className="songrow-link" aria-label={song.title} />
       <Jacket song={song} width={92} />
       <div className="songrow-main">
         <div className="title">{song.title}{(song.rise || song.hasHD) && <RiseBadge small full={song.rise} />}</div>
         <div className="sub">{song.artist || '—'}{song.bpm ? ` · ${fmtBpm(song.bpm)} BPM` : ''}</div>
-        <div className="pips">{charts.map((c) => <ChartPip key={c.id} chart={c} legacy={legacy ? legacy(c) : null} />)}</div>
+        <div className="pips">
+          {groups.map(([m, cs]) => (
+            <span key={m} className={`pip-grp g-${m}`}>
+              <em>{MODE_TAG[m]}</em>
+              {cs.map((c) => (
+                <Link key={c.id} to={`/chart/${c.id}`} className="pip-link"><ChartPip chart={c} legacy={legacy ? legacy(c) : null} /></Link>
+              ))}
+            </span>
+          ))}
+        </div>
       </div>
-    </Link>
+    </div>
+  );
+}
+
+/** Legenda das bolinhas de nível da lista de músicas. */
+export function PipLegend({ legacy }) {
+  const ex = (mode, extra = '', label) => (
+    <span className="pl-item"><span className={`pip ${mode} ${extra}`}>20</span>{label}</span>
+  );
+  return (
+    <div className="pip-legend">
+      {ex('single', 't-a', t('Passou'))}
+      {ex('single', 't-s', t('S ou melhor'))}
+      {ex('single', 't-a broken', t('Quebrou'))}
+      {ex('single', 't-none', t('Não jogou'))}
+      {legacy && ex('single', 't-a legacy', t('Recorde da Phoenix (P1)'))}
+      <p className="muted small">{t('S = Single, D = Double. Toque num nível para abrir o chart.')}</p>
+    </div>
   );
 }
 

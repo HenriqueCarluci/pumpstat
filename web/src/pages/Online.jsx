@@ -88,12 +88,12 @@ function OnlineRow({ p, open, onToggle, onSent }) {
   return (
     <div className="online-row">
       <div className="online-main">
-        <span className="q-avatar online-av">
+        <Link to={`/jogador/${p.id}`} className="q-avatar online-av" aria-label={t('Ver perfil de {n}', { n: p.nickname || t('Jogador') })}>
           {p.avatar ? <img src={p.avatar} alt="" referrerPolicy="no-referrer" /> : <Gamepad2 size={20} />}
           <StatusDot status={p.status || 'online'} className="av-dot" />
-        </span>
+        </Link>
         <div className="online-info">
-          <div className="online-nick"><Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
+          <div className="online-nick"><Flag cc={ccOf(p.id)} /><Link to={`/jogador/${p.id}`} className="online-nick-link"><b>{p.nickname || t('Jogador')}</b></Link><TeamTag team={teamOf(p.id)} />{p.pumbility != null && <span className="online-pb">{pbTier(p.pumbility).icon && <img src={pbTier(p.pumbility).icon} alt="" referrerPolicy="no-referrer" />}{fmtNum(Math.round(p.pumbility))}</span>}</div>
           {p.title && <div className="online-title">{p.title}</div>}
           {(p.status === 'away' || p.status === 'busy') && <div className={`small st-label st-${p.status}`}>{p.status === 'away' ? t('Ausente') : t('Ocupado')}</div>}
           {(p.max?.S || p.max?.D) && (

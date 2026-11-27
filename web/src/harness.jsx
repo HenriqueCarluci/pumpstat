@@ -44,7 +44,7 @@ import ChartPage from './pages/Chart.jsx';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
-  chat_with: (() => { const now = Date.now(); const mk = (i, mine, kind, message, status) => ({ id: i, mine, kind, message, status, at: new Date(now - (20 - i) * 3600e3).toISOString() });
+  chat_with: (() => { const now = Date.now(); const mk = (i, mine, kind, message, status) => ({ id: i, mine, kind, message, status, at: new Date(now - (20 - i) * 3600e3).toISOString(), reactions: i === 3 ? [{ e: '😂', mine: true }, { e: '😂', mine: false }] : i === 2 ? [{ e: '🔥', mine: false }] : [] });
     return [mk(1, false, 'message', 'eai, bora treinar sábado na Liberdade?', 'accepted'), mk(2, true, 'message', 'bora! que horas você chega?', 'accepted'),
       mk(3, false, 'message', 'umas 15h. vou tentar passar o D20 de Gargoyle que tá me matando kkkkkk preciso de um tempo enorme pra isso', 'accepted'),
       mk(4, true, 'invite', 'Bora um x1?', 'accepted'), mk(5, false, 'message', 'fechou', 'accepted'), mk(6, true, 'message', 'https://www.youtube.com/watch?v=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'pending')]; })(),

@@ -8,7 +8,7 @@ export default function DeleteInfo() {
       <p>{t('Você pode apagar sua conta e todos os seus dados a qualquer momento, pelo app ou pelo site.')}</p>
       <h3>{t('Como excluir')}</h3>
       <ol>
-        <li>{t('Abra o app PIU Stats ou o site stepclub.onrender.com e entre na sua conta.')}</li>
+        <li>{t('Abra o app PIU Stats ou o site piustats.com.br e entre na sua conta.')}</li>
         <li>{t('Vá em Configurações e toque em "Excluir conta".')}</li>
         <li>{t('Confirme digitando o texto pedido. A exclusão é imediata.')}</li>
       </ol>
