@@ -52,6 +52,8 @@ import { asPreviewUser } from './lib/plans.js';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
+  venue_data: { venue: { slug: 'laqua', name: "L'Aqua Liberdade", city: 'São Paulo', address: 'R. Galvão Bueno, 100', radius_m: 150, latitude: -23.56, longitude: -46.63 }, machines: [{ id: 1, name: 'Phoenix', avg_turn_sec: 1080 }], is_admin: false },
+  push_public_key: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',
   release_notes: [
     { id: 9, status: 'released', released_on: '2026-11-27', tag: 'new', title: { pt: 'Missões da semana personalizadas', en: 'Personalized weekly missions' }, body: { pt: 'Metas montadas pelo seu histórico, com charts nomeados, foco da semana, troca de missão, pontos e selos. Só na Phoenix 2.' } },
     { id: 8, status: 'released', released_on: '2026-11-27', tag: 'new', title: { pt: 'PIU Stats no computador' }, body: { pt: 'Em piustats.com.br o site tem cara de site: menu lateral, busca com Ctrl+K e páginas em colunas.' } },

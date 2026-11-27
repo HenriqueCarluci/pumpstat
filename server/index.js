@@ -8,6 +8,7 @@ import { getDispatcher, isSessionAlive, piuLogin, PiuSession, switchSite } from 
 import { normNick, parseAccounts, switchTo } from './piu-accounts.js';
 import { resolveVideo, searchUrl } from './videos.js';
 import { refreshCatalog } from './catalog.js';
+import { queuePush } from './push.js';
 
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
@@ -350,6 +351,8 @@ const server = http.createServer(async (req, res) => {
     }
     if (url.pathname === '/health') return send(res, 200, { ok: true }, origin);
     // o app chama isto ao abrir; no máximo uma atualização do catálogo por dia
+    // a fila mudou (aviso do banco) ou o app pediu: manda os avisos de "sua vez"; não recebe dados
+    if (req.method === 'POST' && url.pathname === '/api/push/queue-tick') { push.tick(); return send(res, 202, { ok: true }, origin); }
     if (url.pathname === '/api/catalog/tick') { catalogTick(); autoSyncTick(); return send(res, 202, { ok: true }, origin); }
     // link do YouTube: abre direto o vídeo do chart (c) ou da música (s); público, para funcionar num link comum
     const vm = url.pathname.match(/^\/api\/video\/([cs])\/(\d{1,9})$/);
@@ -537,6 +540,10 @@ async function autoSyncTick() {
 }
 setTimeout(autoSyncTick, 60_000).unref();
 setInterval(autoSyncTick, 15 * 60_000).unref();
+
+const push = queuePush(rpcAsServer);
+setTimeout(push.tick, 20_000).unref();
+setInterval(push.tick, 60_000).unref();
 
 let catalogBusy = false;
 function catalogTick() {

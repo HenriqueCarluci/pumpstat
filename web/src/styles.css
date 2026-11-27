@@ -1644,6 +1644,14 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .q-fast { border-color: rgba(140,255,58,.35); }
 .q-fast.hl { box-shadow: 0 0 0 2px var(--neon), 0 0 24px rgba(140,255,58,.25); }
 .q-fast h3 { margin: 0 0 4px; color: var(--neon); }
+.q-push { padding: 12px 14px; }
+.q-push.hl { border-color: rgba(140,255,58,.45); }
+.q-push-row { display: flex; align-items: center; gap: 12px; }
+.q-push-row > svg { flex: none; color: var(--neon); }
+.q-push-txt { flex: 1; min-width: 0; }
+.q-push-txt b { display: block; margin-bottom: 2px; }
+.q-push-row .btn { flex: none; min-width: 84px; }
+@media (max-width: 420px) { .q-push-row { flex-wrap: wrap; } .q-push-row .btn { width: 100%; } }
 .q-fast-btns { display: grid; gap: 8px; margin-top: 10px; }
 .q-fast-btns .btn { width: 100%; justify-content: center; }
 .q-fast-btns .btn small { font-weight: 500; opacity: .75; }

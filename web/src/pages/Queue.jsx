@@ -6,9 +6,10 @@ import {
 } from '../lib/queue.js';
 import { locale, t, tErr } from '../lib/i18n.js';
 import { rememberVenue } from '../lib/presence.js';
-import { ArrowUpToLine, MapPin, SkipForward, UserPlus, X, Zap } from '../components/Icons.jsx';
+import { ArrowUpToLine, Bell, MapPin, SkipForward, UserPlus, X, Zap } from '../components/Icons.jsx';
 import { isNative } from '../lib/native.js';
 import { APP_SCHEME } from '../lib/config.js';
+import { disablePush, enablePush, pushStatus, refreshPush } from '../lib/push.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
@@ -87,6 +88,7 @@ export default function Queue() {
       </header>
       {error && <div className="banner err">{error}</div>}
       <FastCheckin venue={venue} entries={entries} onChange={refresh} highlight={fromQr} slug={slug} />
+      <PushToggle entries={entries} />
       {venue.machines.map((m) => (
         <MachineQueue key={m.id} machine={m} isAdmin={venue.is_admin} checkin={needsCheckin(venue)}
           entries={entries.filter((e) => e.machine_id === m.id)} onChange={refresh} />
@@ -145,6 +147,53 @@ function FastCheckin({ venue, entries, onChange, highlight, slug }) {
             {busy === m.id ? t('Conferindo local…') : <>{venue.machines.length > 1 ? m.name : t('Entrar na fila')} <small>· {t('{n} na fila', { n: count(m) })}</small></>}
           </button>
         ))}
+      </div>
+      {err && <div className="form-err">{err}</div>}
+    </section>
+  );
+}
+
+/** Aviso no aparelho quando a pessoa (ou o convidado dela) é a próxima e quando chega a vez. Só liga se a pessoa quiser. */
+function PushToggle({ entries }) {
+  const uid = currentUserId();
+  const [st, setSt] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => { pushStatus().then((v) => { setSt(v); if (v === 'on') refreshPush(); }).catch(() => setSt('unsupported')); }, [uid]);
+  const ids = Object.values(myEntryIds());
+  const involved = entries.some((e) => (uid && (e.user_id === uid || e.guest_of === uid)) || ids.includes(e.id));
+  if (!st || st === 'unsupported') return null;
+  if (st === 'native' || st === 'ios-install' || st === 'denied') {
+    if (!involved) return null;
+    return (
+      <section className="card q-push">
+        <div className="q-push-row"><Bell size={18} /><div className="small muted">
+          {st === 'native' ? t('Os avisos de "sua vez" ainda não chegam pelo app Android. Por enquanto, abra a fila pelo navegador (piustats.com.br) para ativar.')
+            : st === 'ios-install' ? t('No iPhone, os avisos só funcionam com o PIU Stats na Tela de Início: toque em Compartilhar → Adicionar à Tela de Início e abra a fila por lá.')
+              : t('As notificações estão bloqueadas para o PIU Stats. Libere nas configurações do navegador para receber o aviso da sua vez.')}
+        </div></div>
+      </section>
+    );
+  }
+  const toggle = async () => {
+    setBusy(true); setErr('');
+    try {
+      if (st === 'on') await disablePush(); else await enablePush();
+      setSt(await pushStatus());
+    } catch (e) { setErr(tErr(e.message)); setSt(await pushStatus().catch(() => st)); }
+    setBusy(false);
+  };
+  return (
+    <section className={`card q-push ${st === 'off' && involved ? 'hl' : ''}`}>
+      <div className="q-push-row">
+        <Bell size={18} />
+        <div className="q-push-txt">
+          <b>{st === 'on' ? t('Aviso da sua vez ligado') : t('Avisar quando for a minha vez')}</b>
+          <div className="small muted">{t('Você recebe uma notificação quando for o próximo e quando chegar a sua vez (também vale para o seu convidado).')}</div>
+        </div>
+        <button className={`btn ${st === 'on' ? 'ghost' : ''}`} disabled={busy} onClick={toggle}>
+          {busy ? '…' : st === 'on' ? t('Desligar') : t('Ativar')}
+        </button>
       </div>
       {err && <div className="form-err">{err}</div>}
     </section>
