@@ -64,7 +64,7 @@ export default function Tier() {
   const hold = useLongPress(setQuick);
   const training = useTraining();
   const tile = (c) => { const lg = legacy(c); return (
-              <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} {...hold.bind(c.id, c)} draggable={false}
+              <Link key={c.id} to={`/chart/${c.id}`} {...hold.bind(c.id, c)} draggable={false}
                 className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''} ${hold.pressed === c.id ? 'pressing' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
                 <div className="tile-art">

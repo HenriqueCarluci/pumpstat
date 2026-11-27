@@ -11,8 +11,9 @@ import { rpc } from '../lib/api.js';
 import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
+import { chartTagLabel } from '../lib/tags.js';
 import { t } from '../lib/i18n.js';
-import { ChevronDown, ChevronUp, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
+import { ChevronDown, ChevronRight, ChevronUp, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -154,7 +155,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
   return (
     <div id={`chart-${c.id}`} className={`chartcard ${c.score != null ? 'played' : ''} ${focus ? 'focus' : ''}`}>
       <div className="cc-top">
-        <Ball chart={c} />
+        <Link to={`/chart/${c.id}`} className="cc-ball" title={t('Abrir a página deste nível')}><Ball chart={c} /></Link>
         <div className="cc-score">
           <div className="sc">{fmtScore(c.score)}</div>
           <div className="cc-badges">
@@ -177,7 +178,8 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
         {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
-        {c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
+        {(c.tags || []).map((x) => <span key={x} className="tag cp-tag">#{t(chartTagLabel(x))}</span>)}
+        {!(c.tags || []).length && c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
           <span className="tag community" title={t('Tags marcadas pela comunidade do PIU Stats')}>
             <Users size={12} /> {c.community.tags.map((x) => t(reviewTagLabel(x))).join(' · ')}
@@ -210,6 +212,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         </button>
         <button type="button" className={`cc-act ${rank ? 'on' : ''}`} onClick={() => setRank((r) => !r)} aria-expanded={rank}><Trophy size={16} /><span>{t('Ranking')}</span></button>
         <button type="button" className={`cc-act ${open ? 'on' : ''}`} onClick={toggle} aria-expanded={open}><History size={16} /><span>{t('Histórico')}</span></button>
+        <Link to={`/chart/${c.id}`} className="cc-act"><ChevronRight size={16} /><span>{t('Detalhes')}</span></Link>
       </div>
       {plan?.admin && <VideoAdmin vkey={`c:${c.id}`} />}
       {plan?.admin && <SpecialAdmin chart={c} onSaved={onReviewed} />}
@@ -242,7 +245,7 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
 }
 
 /** Notas dos amigos em cada chart da música (uma chamada só para a música inteira). */
-function useFriendScores(songId, version) {
+export function useFriendScores(songId, version) {
   const [map, setMap] = useState(new Map());
   useEffect(() => {
     if (!songId) return undefined;
@@ -258,7 +261,7 @@ function useFriendScores(songId, version) {
   return (chartId) => map.get(chartId) || null;
 }
 
-function FriendScores({ list, mine }) {
+export function FriendScores({ list, mine }) {
   const [all, setAll] = useState(false);
   if (!list?.length) return null;
   const shown = all ? list : list.slice(0, 3);

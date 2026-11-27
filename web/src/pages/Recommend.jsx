@@ -41,7 +41,7 @@ export default function Recommend() {
           const tier = TIERS.find((x) => x.id === chartTier(c));
           return (
             <div key={c.id} className="rec-wrap">
-            <Link to={`/musica/${c.songId}?c=${c.id}`} className="rec">
+            <Link to={`/chart/${c.id}`} className="rec">
               <Jacket song={c.song} width={84} />
               <div className="rec-main">
                 <div className="title">{c.song.title}</div>

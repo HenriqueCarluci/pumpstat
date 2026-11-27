@@ -17,6 +17,7 @@ import QueueTV from './pages/QueueTV.jsx';
 import Venues from './pages/Venues.jsx';
 import Titles from './pages/Titles.jsx';
 import Players, { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
+import Chart from './pages/Chart.jsx';
 import Votes from './pages/Votes.jsx';
 import Progress from './pages/Progress.jsx';
 import Recommend from './pages/Recommend.jsx';
@@ -213,6 +214,7 @@ function Shell() {
             <Route path="/" element={<Home />} />
             <Route path="/musicas" element={<Songs />} />
             <Route path="/musica/:id" element={<Song />} />
+            <Route path="/chart/:id" element={<Chart />} />
             <Route path="/tier" element={<Tier />} />
             <Route path="/recentes" element={<Recent />} />
             <Route path="/ajustes" element={<Settings />} />

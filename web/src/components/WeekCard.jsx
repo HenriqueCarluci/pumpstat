@@ -122,7 +122,7 @@ function LastWeek({ s, streak, onClose }) {
         <div className="ws-clears">
           <small className="muted">{t('Destaques')}</small>
           {s.topClears.map((c) => (
-            <Link key={c.id} to={`/musica/${c.songId}?c=${c.id}`} className="ws-clear"><Ball chart={c} size="sm" /><span>{c.song.title}</span></Link>
+            <Link key={c.id} to={`/chart/${c.id}`} className="ws-clear"><Ball chart={c} size="sm" /><span>{c.song.title}</span></Link>
           ))}
         </div>
       )}

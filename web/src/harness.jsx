@@ -23,6 +23,7 @@ function A() { return <div className="page"><div className="train-item"><Attempt
 function M() { const [cfg, setCfg] = useState({ features: { weakness: 'pro' }, limits: { free: { friends: 15, recommendations: 5, history_months: 3 }, plus: { friends: 50 } } }); const set = (fn) => setCfg((c) => { const n = structuredClone(c); fn(n); return n; }); return <div className="page"><PlanMatrix cfg={cfg} set={set} /></div>; }
 import './styles.css';
 import { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
+import ChartPage from './pages/Chart.jsx';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
@@ -30,6 +31,8 @@ const FAKE = {
     return [mk(1, false, 'message', 'eai, bora treinar sábado na Liberdade?', 'accepted'), mk(2, true, 'message', 'bora! que horas você chega?', 'accepted'),
       mk(3, false, 'message', 'umas 15h. vou tentar passar o D20 de Gargoyle que tá me matando kkkkkk preciso de um tempo enorme pra isso', 'accepted'),
       mk(4, true, 'invite', 'Bora um x1?', 'accepted'), mk(5, false, 'message', 'fechou', 'accepted'), mk(6, true, 'message', 'https://www.youtube.com/watch?v=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'pending')]; })(),
+  chart_stats: { players: 22, clears: 9, avg: 951200, grades: { 'SSS': 1, 'SS+': 2, 'S': 2, 'AAA+': 3, 'AA': 1 }, plays: 376, play_passes: 322 },
+  chart_history: { bests: [[0, 940000], [0, 961200]], plays: [['2026-11-25T18:00:00Z', 961200, 'AAA+', 'TG', 1000, 160, 20, 4, 25, false]] },
   is_online: true, compare_player: [[4864, 900000, 'AA', 'FG', false, 950000, 'AAA', 'TG', false], [5769, 961200, 'AAA+', 'TG', false, 940000, 'AA+', 'FG', false], [7487, 992311, 'SSS', 'MG', false, 996000, 'SSS+', 'UG', false], [5137, null, null, null, null, 930000, 'AA+', null, true], [6270, 975500, 'S+', 'RG', false, 981000, 'SS', 'SG', false], [8431, 998000, 'SSS+', 'PG', false, 970500, 'S', 'MG', false]],
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null, title: 'Twist Master', pumbility: 16565.7, bests: 812 }], socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
   team_report: (() => { const st = Math.floor(new Date('2026-11-23T03:00:00Z').getTime() / 1000);
@@ -82,13 +85,13 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
     special: id === 4864 ? { g: ['speed', 'stop'], gimmick: true, off: false, note: null, admin: true } : undefined };
 });
 song.charts = charts;
-charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; });
+charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; c.tags = [['twist', 'spin'], ['half', 'crossover'], ['gimmick', 'drill'], [], ['run'], ['jack']][i % 6]; });
 const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
 const plan = { plan: 'plus', admin: new URLSearchParams(location.search).has('admin'), config: { toggles: {} } };
 const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { list: [] }, presence: {} };
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

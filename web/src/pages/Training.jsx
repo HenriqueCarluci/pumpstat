@@ -137,8 +137,8 @@ export default function Training() {
         <>
           {canAnalyze && open.length > 0 && (
             <section className="train-summary">
-              {best && <div className="ts-box good"><small>{t('Mais perto de passar')}</small><Link to={`/musica/${best.chart.song.id}?c=${best.chart.id}`}>{best.chart.song.title} <Ball chart={best.chart} size="sm" /></Link><b>{best.chance}%</b></div>}
-              {hardest && hardest !== best && <div className="ts-box bad"><small>{t('Mais longe')}</small><Link to={`/musica/${hardest.chart.song.id}?c=${hardest.chart.id}`}>{hardest.chart.song.title} <Ball chart={hardest.chart} size="sm" /></Link><b>{hardest.chance}%</b></div>}
+              {best && <div className="ts-box good"><small>{t('Mais perto de passar')}</small><Link to={`/chart/${best.chart.id}`}>{best.chart.song.title} <Ball chart={best.chart} size="sm" /></Link><b>{best.chance}%</b></div>}
+              {hardest && hardest !== best && <div className="ts-box bad"><small>{t('Mais longe')}</small><Link to={`/chart/${hardest.chart.id}`}>{hardest.chart.song.title} <Ball chart={hardest.chart} size="sm" /></Link><b>{hardest.chance}%</b></div>}
               {focus && <div className="ts-box"><small>{t('Foco de treino')}</small><span>{dimName(focus[0])}</span><b>{tn(focus[1], 'em {n} música', 'em {n} músicas')}</b></div>}
             </section>
           )}
@@ -147,7 +147,7 @@ export default function Training() {
               <h3 className="ic-row"><Trophy size={18} /> {tn(wins.length, 'Você passou {n} música do treino', 'Você passou {n} músicas do treino')}</h3>
               <div className="ti-train-list">
                 {wins.map((x) => (
-                  <Link key={x.chart.id} to={`/musica/${x.chart.song.id}?c=${x.chart.id}`} className="ti-train-chip win">
+                  <Link key={x.chart.id} to={`/chart/${x.chart.id}`} className="ti-train-chip win">
                     <Ball chart={x.chart} size="sm" /> {x.chart.song.title}
                     <small className="muted">{new Date(x.clearedAt).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' })} · {tn(x.history.findIndex((a) => !a.broken) + 1, '{n}ª tentativa', '{n}ª tentativa')}</small>
                   </Link>
@@ -166,7 +166,7 @@ export default function Training() {
             {sorted.map((x) => (
               <li key={x.chart.id} className={`train-item ${x.cleared ? 'cleared' : ''}`}>
                 <div className="ti-head">
-                  <Link to={`/musica/${x.chart.song.id}?c=${x.chart.id}`} className="ti-song">
+                  <Link to={`/chart/${x.chart.id}`} className="ti-song">
                     <Jacket song={x.chart.song} width={52} />
                     <div>
                       <div className="ti-title">{x.chart.song.title}</div>
@@ -199,7 +199,7 @@ export default function Training() {
                         <small className="muted">{x.focus ? t('Para treinar {p} antes:', { p: dimName(x.focus) }) : t('Para chegar lá, passe antes:')}</small>
                         <div className="ti-train-list">
                           {x.train.map((c) => (
-                            <Link key={c.id} to={`/musica/${c.song.id}?c=${c.id}`} className="ti-train-chip"><Ball chart={c} size="sm" /> {c.song.title}</Link>
+                            <Link key={c.id} to={`/chart/${c.id}`} className="ti-train-chip"><Ball chart={c} size="sm" /> {c.song.title}</Link>
                           ))}
                         </div>
                       </div>

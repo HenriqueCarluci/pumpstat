@@ -182,7 +182,7 @@ function RivalList({ title, items, diff, hint, empty }) {
       {!items.length && <p className="muted small">{empty}</p>}
       <div className="rival-list">
         {items.map((x) => (
-          <Link key={x.chart.id} to={`/musica/${x.chart.song.id}?c=${x.chart.id}`} className="rival-item">
+          <Link key={x.chart.id} to={`/chart/${x.chart.id}`} className="rival-item">
             <Jacket song={x.chart.song} width={44} />
             <Ball chart={x.chart} size="sm" />
             <span className="ttl">{x.chart.song.title}</span>

@@ -353,7 +353,7 @@ function Plan({ r }) {
           <h3>{t('Sessão {n}', { n: i + 1 })}</h3>
           {s.map((it) => (
             <div key={it.chart.id} className={`plan-row ${p.played.has(it.chart.id) ? 'done' : ''}`}>
-              <Link to={`/musica/${it.chart.song.id}?c=${it.chart.id}`} className={`plan-item ${p.played.has(it.chart.id) ? 'done' : ''}`}>
+              <Link to={`/chart/${it.chart.id}`} className={`plan-item ${p.played.has(it.chart.id) ? 'done' : ''}`}>
                 <span className={`kind k-${it.kind}`}>{t(KIND[it.kind])}</span>
                 <Ball chart={it.chart} size="sm" />
                 <span className="ttl">{it.chart.song.title}</span>

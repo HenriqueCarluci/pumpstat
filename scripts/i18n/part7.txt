@@ -726,3 +726,45 @@ Barra cheia: passou. Parte vermelha: só tem recorde quebrado. | Solid bar: clea
 As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale. | The 50 scores that make up their PUMBILITY, with the points each one is worth. | Las 50 notas que suman su PUMBILITY, con los puntos que vale cada una. | PUMBILITY를 이루는 50개 기록과 각각의 점수입니다. | PUMBILITYを構成する50の記録と、それぞれのポイントです。 | Les 50 scores qui forment son PUMBILITY, avec les points de chacun. | I 50 punteggi che compongono il suo PUMBILITY, con i punti di ciascuno.
 Sem notas que contam para o PUMBILITY nesta versão. | No scores counting toward PUMBILITY in this version. | Sin notas que cuenten para el PUMBILITY en esta versión. | 이 버전에서 PUMBILITY에 반영되는 기록이 없습니다. | このバージョンでPUMBILITYに入る記録はありません。 | Aucun score ne compte pour le PUMBILITY dans cette version. | Nessun punteggio conta per il PUMBILITY in questa versione.
 Ver o perfil de {n} | See {n}'s profile | Ver el perfil de {n} | {n}의 프로필 보기 | {n}のプロフィールを見る | Voir le profil de {n} | Vedi il profilo di {n}
+Lateral | Side | Lateral | 사이드 | サイド | Latéral | Laterale
+Meia pista | Half | Media pista | 하프 | ハーフ | Demi-piste | Mezza pedana
+Crossover | Crossover | Crossover | 크로스오버 | クロスオーバー | Crossover | Crossover
+Mash | Mash | Mash | 매시 | マッシュ | Mash | Mash
+Twist alto | High-angle twist | Twist alto | 하이앵글 트위스트 | ハイアングルツイスト | Twist haut | Twist alto
+Twist horizontal | Horizontal twist | Twist horizontal | 수평 트위스트 | 水平ツイスト | Twist horizontal | Twist orizzontale
+Sem barra | No bar | Sin barra | 바 없이 | バーなし | Sans barre | Senza sbarra
+Rápido | Fast | Rápido | 빠름 | 速い | Rapide | Veloce
+Lento | Slow | Lento | 느림 | 遅い | Lent | Lento
+Atalho (cheat) | Cheat | Atajo (cheat) | 치트 | チート | Raccourci (cheat) | Scorciatoia (cheat)
+3 beat | 3 beat | 3 beat | 3비트 | 3ビート | 3 beat | 3 beat
+Escada | Stair | Escalera | 계단 | 階段 | Escalier | Scala
+Troca de pé | Switch | Cambio de pie | 스위치 | スイッチ | Changement de pied | Cambio piede
+Abertura de pernas | Leg split | Apertura de piernas | 다리 벌리기 | 開脚 | Grand écart | Spaccata
+12 beat | 12 beat | 12 beat | 12비트 | 12ビート | 12 beat | 12 beat
+24 beat | 24 beat | 24 beat | 24비트 | 24ビート | 24 beat | 24 beat
+32 beat | 32 beat | 32 beat | 32비트 | 32ビート | 32 beat | 32 beat
+Escada dupla | Double stairs | Escalera doble | 더블 계단 | ダブル階段 | Double escalier | Scala doppia
+Galope | Gallop | Galope | 갤럽 | ギャロップ | Galop | Galoppo
+Micro-desync | Micro-desync | Micro-desync | 마이크로 디싱크 | マイクロデシンク | Micro-désynchro | Micro-desync
+Giro | Spin | Giro | 스핀 | スピン | Tour | Giro
+Abrir chart | Open chart | Abrir chart | 차트 열기 | 譜面を開く | Ouvrir le chart | Apri chart
+Chart não encontrado nesta versão. | Chart not found in this version. | Chart no encontrado en esta versión. | 이 버전에 없는 차트입니다. | このバージョンに譜面がありません。 | Chart introuvable dans cette version. | Chart non trovato in questa versione.
+Outros níveis da música | Other levels of the song | Otros niveles de la canción | 이 곡의 다른 레벨 | この曲の他のレベル | Autres niveaux du morceau | Altri livelli del brano
+Seu recorde | Your record | Tu récord | 내 기록 | あなたの記録 | Votre record | Il tuo record
+{n} pontos no PUMBILITY | {n} PUMBILITY points | {n} puntos de PUMBILITY | PUMBILITY {n}점 | PUMBILITY {n}ポイント | {n} points de PUMBILITY | {n} punti PUMBILITY
+No PIU Stats | On PIU Stats | En PIU Stats | PIU Stats에서 | PIU Statsでは | Sur PIU Stats | Su PIU Stats
+Jogadores que passaram | Players who cleared | Jugadores que pasaron | 클리어한 플레이어 | クリアしたプレイヤー | Joueurs qui ont réussi | Giocatori che l'hanno superato
+Jogadas registradas que passaram | Recorded plays that cleared | Jugadas registradas que pasaron | 클리어한 기록된 플레이 | クリアした記録済みプレイ | Parties enregistrées réussies | Partite registrate superate
+Média de quem passou: {s} | Average of those who cleared: {s} | Promedio de quienes pasaron: {s} | 클리어한 사람 평균: {s} | クリアした人の平均: {s} | Moyenne de ceux qui ont réussi : {s} | Media di chi l'ha superato: {s}
+Entre na sua conta para ver os números da comunidade. | Sign in to see the community numbers. | Inicia sesión para ver los números de la comunidad. | 커뮤니티 통계를 보려면 로그인하세요. | コミュニティの数字を見るにはログインしてください。 | Connectez-vous pour voir les chiffres de la communauté. | Accedi per vedere i numeri della community.
+Tags | Tags | Etiquetas | 태그 | タグ | Tags | Tag
+Comunidade do PIU Stats: | PIU Stats community: | Comunidad de PIU Stats: | PIU Stats 커뮤니티: | PIU Statsコミュニティ: | Communauté PIU Stats : | Community di PIU Stats:
+Detalhes | Details | Detalles | 상세 | 詳細 | Détails | Dettagli
+Artista | Artist | Artista | 아티스트 | アーティスト | Artiste | Artista
+Step | Step | Step | 스텝 | ステップ | Step | Step
+Notas | Notes | Notas | 노트 | ノーツ | Notes | Note
+Nível efetivo | Effective level | Nivel efectivo | 체감 레벨 | 実質レベル | Niveau effectif | Livello effettivo
+Dificuldade de clear | Clear difficulty | Dificultad de clear | 클리어 난이도 | クリア難易度 | Difficulté de réussite | Difficoltà di superamento
+Avaliações e comentários | Ratings and comments | Valoraciones y comentarios | 평가와 댓글 | 評価とコメント | Avis et commentaires | Valutazioni e commenti
+Seu histórico | Your history | Tu historial | 내 기록 내역 | あなたの履歴 | Votre historique | La tua cronologia
+Abrir a página deste nível | Open this level's page | Abrir la página de este nivel | 이 레벨 페이지 열기 | このレベルのページを開く | Ouvrir la page de ce niveau | Apri la pagina di questo livello

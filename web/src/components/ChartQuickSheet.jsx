@@ -80,7 +80,7 @@ export function ChartQuickSheet({ chart: c, onClose }) {
         )}
         {msg && <p className="small center qs-msg">{msg}</p>}
         <div className="qs-row">
-          <Link className="btn ghost" to={`/musica/${c.song.id}?c=${c.id}`} onClick={onClose}><ExternalLink size={15} /> {t('Abrir música')}</Link>
+          <Link className="btn ghost" to={`/chart/${c.id}`} onClick={onClose}><ExternalLink size={15} /> {t('Abrir chart')}</Link>
           {trainingOn && <Link className="btn ghost" to="/treino" onClick={onClose}><Dumbbell size={15} /> {t('Meu treino')}</Link>}
         </div>
       </div>

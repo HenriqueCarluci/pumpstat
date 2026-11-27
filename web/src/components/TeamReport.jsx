@@ -90,7 +90,7 @@ export default function TeamReport() {
               <ol className="tr-top">
                 {r.top.map((x) => (
                   <li key={x.chart_id}>
-                    <Link to={`/musica/${x.song_id}?c=${x.chart_id}`}>
+                    <Link to={`/chart/${x.chart_id}`}>
                       <Ball chart={{ mode: x.mode, level: x.level }} size="sm" />
                       <span className="tr-title">{x.title}</span>
                       <span className="muted small">{t('{n}× · {p} passes · {k} jogadores', { n: x.plays, p: x.passes, k: x.players })}</span>
