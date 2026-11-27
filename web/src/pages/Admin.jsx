@@ -6,9 +6,9 @@ import { DEFAULT_PRODUCTS } from '../lib/billing.js';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
-import { Check, Crown, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
+import { Check, Crown, Eye, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
 import { FEATURES, PLAN_LABEL } from '../lib/plans.js';
-import { TestMode } from '../components/PlanLock.jsx';
+import { startViewAs, TestMode } from '../components/PlanLock.jsx';
 import ReleaseNotesAdmin from './ReleaseNotesAdmin.jsx';
 import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
 import { PlanMatrix } from './AdminExtra.jsx';
@@ -205,6 +205,13 @@ function UserRow({ u, open, onToggle, onChange }) {
               ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: false })}><UserCheck size={15} /> {t('Desbloquear')}</button>
               : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
+            {['owner', 'admin'].includes(plan.admin_role) && u.admin_role !== 'owner' && (
+              <button className="btn ghost" disabled={busy} onClick={async () => {
+                if (!window.confirm(t('Ver o app como {n} por 30 minutos? É só leitura: nada pode ser alterado, e conversas e notificações dessa pessoa ficam ocultas. O acesso fica registrado.', { n: u.nickname || u.email }))) return;
+                setBusy(true); setErr('');
+                try { await startViewAs(u.id, 30); } catch (e) { setErr(tErr(e.message)); setBusy(false); }
+              }}><Eye size={15} /> {t('Ver como esta pessoa')}</button>
+            )}
           </div>
           {err && <div className="form-err">{err}</div>}
         </div>

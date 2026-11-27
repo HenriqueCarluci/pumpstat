@@ -5,7 +5,8 @@ import { useData } from '../App.jsx';
 import { entitlements, PLAN_LABEL, setPreviewPlan } from '../lib/plans.js';
 import { isNative } from '../lib/native.js';
 import { t } from '../lib/i18n.js';
-import { Crown, FlaskConical, Lock } from './Icons.jsx';
+import { Crown, Eye, FlaskConical, Lock } from './Icons.jsx';
+import { clearCache, rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
 
 const planName = (p) => PLAN_LABEL[p] || p;
@@ -122,6 +123,42 @@ export function PreviewBanner() {
         ))}
         <button type="button" className="link" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>
       </span>
+    </div>
+  );
+}
+
+/** Limpa o que o app guarda do usuário no aparelho (para não misturar os dados ao entrar/sair do "ver como"). */
+export function clearUserCaches() {
+  clearCache();
+  try { Object.keys(localStorage).filter((k) => k.startsWith('pumpstat:missions:')).forEach((k) => localStorage.removeItem(k)); } catch { /* ignora */ }
+}
+
+/** Começa a ver o app como outra pessoa (só leitura). */
+export async function startViewAs(userId, minutes = 30) {
+  await rpc('admin_start_view_as', { p_user: userId, p_minutes: minutes });
+  clearUserCaches();
+  window.location.hash = '#/';
+  window.location.reload();
+}
+
+/** Faixa vermelha enquanto o admin vê o app como outra pessoa (só leitura). */
+export function ViewAsBanner() {
+  const { plan } = useData();
+  const v = plan?.view_as;
+  const left = useLeft(v?.expires_at);
+  const [busy, setBusy] = useState(false);
+  if (!v) return null;
+  const stop = async () => {
+    setBusy(true);
+    try { await rpc('admin_stop_view_as'); } catch { /* segue */ }
+    clearUserCaches();
+    window.location.hash = '#/admin?tab=users';
+    window.location.reload();
+  };
+  return (
+    <div className="viewas-banner" role="status">
+      <span className="ic-row"><Eye size={15} /> {t('Vendo como {u} · só leitura · faltam {t}', { u: v.email || t('usuário'), t: left })}</span>
+      <button type="button" className="link" disabled={busy} onClick={stop}>{t('Sair')}</button>
     </div>
   );
 }

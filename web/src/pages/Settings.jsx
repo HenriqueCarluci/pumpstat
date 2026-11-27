@@ -50,8 +50,10 @@ export default function Settings() {
         <section className="card">
           <h3>{t('Sincronizar com a Pump It Up')}</h3>
           <p className="muted small">{t('Última sincronização da {v}: {when}', { v: VERSIONS[version].name, when: timeAgo(data.lastSync) })}</p>
+          {plan?.view_as ? <p className="muted small">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p> : <>
           <QuickSync onDone={() => reload()} />
           <AutoSync />
+          </>}
           <details className="other-login">
             <summary className="small">{t('Entrar com outra conta AM.PASS')}</summary>
             <PiuConnect compact onDone={() => reload()} />

@@ -44,6 +44,7 @@ import './styles.css';
 import { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
 import ChartPage from './pages/Chart.jsx';
 import ReleaseNotesP from './pages/ReleaseNotes.jsx';
+import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
@@ -169,7 +170,8 @@ const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','f
 const adminRole = new URLSearchParams(location.search).get('admin');
 const previewQ = new URLSearchParams(location.search).get('preview');
 const trialQ = new URLSearchParams(location.search).get('trial');
-const plan = { plan: 'plus', source: trialQ ? 'trial' : 'admin', expires_at: trialQ ? new Date(Date.now() + Number(trialQ) * 86400e3 - 3600e3).toISOString() : '2027-01-01T00:00:00Z', preview: previewQ ? { plan: previewQ, expires_at: new Date(Date.now() + 47 * 60e3).toISOString() } : null, admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {}, trial_plan: 'plus', trial_days: 15, prices: { BR: { currency: 'BRL', plus: 6.9, pro: 12.9, plus_year: 59.9, pro_year: 109.9 }, WORLD: { currency: 'USD', plus: 2.49, pro: 4.99, plus_year: 19.99, pro_year: 39.99 } }, intro: { months: 2, prices: { BR: { plus: 5.9, pro: 9.9 }, WORLD: { plus: 1.99, pro: 3.99 } } } } };
+const viewQ = new URLSearchParams(location.search).get('viewas');
+const plan = { view_as: viewQ ? { admin: 'eu', target: 'amigo', email: 'pk@exemplo.com', expires_at: new Date(Date.now() + 28 * 60e3).toISOString() } : null, plan: 'plus', source: trialQ ? 'trial' : 'admin', expires_at: trialQ ? new Date(Date.now() + Number(trialQ) * 86400e3 - 3600e3).toISOString() : '2027-01-01T00:00:00Z', preview: previewQ ? { plan: previewQ, expires_at: new Date(Date.now() + 47 * 60e3).toISOString() } : null, admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {}, trial_plan: 'plus', trial_days: 15, prices: { BR: { currency: 'BRL', plus: 6.9, pro: 12.9, plus_year: 59.9, pro_year: 109.9 }, WORLD: { currency: 'USD', plus: 2.49, pro: 4.99, plus_year: 19.99, pro_year: 39.99 } }, intro: { months: 2, prices: { BR: { plus: 5.9, pro: 9.9 }, WORLD: { plus: 1.99, pro: 3.99 } } } } };
 const ctx = { version: new URLSearchParams(location.search).get('ver') || 'phoenix2', setVersion: (v) => { location.search = v === 'phoenix2' ? '' : `?ver=${v}`; }, data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
 
 function HShell({ children }) {
@@ -179,7 +181,7 @@ function HShell({ children }) {
   useSearchHotkey(desk ? open : () => {});
   return <div className="app">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
     <header className="topbar">{desk && <button type="button" className="top-search" onClick={open}><span>Buscar música, artista, jogador ou página…</span><kbd>Ctrl K</kbd></button>}<span className="brand">PIU Stats</span></header>
-    <Tour />{children}</div>;
+    <ViewAsBanner /><PreviewBanner /><Tour />{children}</div>;
 }
 
 createRoot(document.getElementById('root')).render(

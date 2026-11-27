@@ -32,7 +32,7 @@ import AdminSignupToast from './components/AdminSignupToast.jsx';
 import StatusPicker from './components/StatusPicker.jsx';
 import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
 import { useIsDesktop } from './lib/desktop.js';
-import { PreviewBanner } from './components/PlanLock.jsx';
+import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
 const noop = () => {};
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
@@ -219,6 +219,7 @@ function Shell() {
         </div>
       </header>
 
+      <ViewAsBanner />
       <PreviewBanner />
       {loading && <div className="loadbar" />}
       {error && (

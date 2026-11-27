@@ -306,3 +306,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Liberação de recursos por usuário
 - Admin → Usuários → "Recursos liberados": recurso + prazo (30 dias, 3 meses, 1 ano, sem prazo) + motivo, sem mudar o plano (`user_feature_grants`). Vale no app (`my_plan().grants`) e no servidor (`plan_can`), com ou sem a cobrança ligada.
+
+## Ver como usuário (só leitura)
+- Dono e admin geral: Admin → Usuários → "Ver como esta pessoa" (30 min). O gancho `check_request` (PostgREST `db_pre_request`) troca o `auth.uid()` dos pedidos do admin pelo da pessoa e só deixa passar leituras (GET nas tabelas e funções STABLE). Conversas (`chat_with`) e notificações ficam bloqueadas. Não dá para ver como o dono.
+- Faixa vermelha no topo com o tempo que falta e "Sair" (`admin_stop_view_as`, que roda como o admin). Cada acesso vai para `admin_view_as_log`. Política de privacidade atualizada.
