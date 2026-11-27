@@ -59,9 +59,8 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: repeat(5, 1fr);
-  padding: 6px 6px calc(6px + var(--safe-b)); background: rgba(20, 21, 24, 0.94); backdrop-filter: blur(14px); border-top: 1px solid var(--line);
-  /* camada própria: evita a barra "pular" durante a rolagem no WebView do Android */
-  transform: translateZ(0); will-change: transform; backface-visibility: hidden;
+  padding: 6px 6px calc(6px + var(--safe-b)); background: rgb(20, 21, 24); border-top: 1px solid var(--line);
+  /* sem transform/will-change: no Safari do iPhone isso faz a barra fixa "descolar" quando a barra do navegador anima */
 }
 .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; font-size: 11px; color: var(--muted); border-radius: 10px; }
 .tabbar a .ico { font-size: 18px; line-height: 1; }
@@ -2313,13 +2312,5 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .tag.on-st.away { border-color: #ffc83d; color: #ffd978; }
 .tag.on-st.busy { border-color: #ff6b6b; color: #ff9d9d; }
 
-/* ---------- celular: a página rola dentro do app, não a janela ----------
-   No iPhone (e às vezes no Android) a janela "estica" no fim da rolagem e a barra do navegador encolhe/cresce,
-   e uma barra de baixo com position: fixed descola do fundo. Aqui o app ocupa a tela inteira (fixed, inset 0),
-   o conteúdo rola em .shell-scroll e a barra fica no fim do layout, sem flutuar. No desktop nada muda. */
-html.app-shell:not(.desk), html.app-shell:not(.desk) body { height: 100%; overflow: hidden; overscroll-behavior: none; }
-html.app-shell:not(.desk) .app.shell { position: fixed; inset: 0; display: flex; flex-direction: column; min-height: 0; padding-bottom: 0; }
-html.app-shell:not(.desk) .shell-scroll { flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto;
-  overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
-html.app-shell:not(.desk) .shell-scroll > :last-child { margin-bottom: 0; }
-html.app-shell:not(.desk) .tabbar { position: relative; left: auto; right: auto; bottom: auto; flex: none; transform: none; will-change: auto; }
+/* .shell-scroll: invólucro do conteúdo do app (rolagem da janela, como sempre).
+   Tentativa de rolar dentro do app foi desfeita: no Safari do iPhone a tela ficava com um vão embaixo da barra. */

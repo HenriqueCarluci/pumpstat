@@ -203,11 +203,6 @@ function Shell() {
   const { version, setVersion, data, loading, error, reload, notifications } = useData();
   const loc = useLocation();
   const scroller = useRef(null);
-  // no celular a página rola dentro do app (não a janela): a barra de baixo fica presa no fundo
-  useEffect(() => {
-    document.documentElement.classList.add('app-shell');
-    return () => document.documentElement.classList.remove('app-shell');
-  }, []);
   useEffect(() => { window.scrollTo(0, 0); scroller.current?.scrollTo(0, 0); }, [loc.pathname]);
   const desk = useIsDesktop();
   const [search, setSearch] = useState(false);
