@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
+import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { initNative } from './lib/native.js';
@@ -34,12 +35,13 @@ import StatusPicker from './components/StatusPicker.jsx';
 import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
 import { useIsDesktop } from './lib/desktop.js';
 import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
-import { asPreviewUser } from './lib/plans.js';
+import { asPreviewUser, isOn } from './lib/plans.js';
 const noop = () => {};
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Subscription from './pages/Subscription.jsx';
 import Training from './pages/Training.jsx';
+import HomeTraining from './pages/HomeTraining.jsx';
 import MyTeam from './pages/MyTeam.jsx';
 import DayReport from './pages/DayReport.jsx';
 import Tour from './components/Tour.jsx';
@@ -184,11 +186,24 @@ function DataApp({ session, ingestKey }) {
   useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
   // modo de teste do admin: 100% da experiência do plano simulado (sem nada de administração)
   const viewPlan = useMemo(() => asPreviewUser(plan), [plan]);
+  // treino em casa (StepP1 / XSanity): só com o recurso ligado no admin e ativado pela pessoa
+  const homeAvail = isOn(viewPlan, 'home_import');
+  const [home, setHome] = useState(null); // { settings, best }
+  const reloadHome = useCallback(async () => {
+    if (!homeAvail || !session) { setHome(null); return; }
+    try {
+      const settings = await rpc('my_home_settings');
+      const best = settings?.on ? homeBest(await rpc('my_home_scores', { p_version: version })) : null;
+      setHome({ settings, best });
+    } catch { setHome(null); }
+  }, [homeAvail, session, version]);
+  useEffect(() => { reloadHome(); }, [reloadHome]);
+  const viewData = useMemo(() => (home?.settings?.on && home.best ? withHome(data, home.best, home.settings.mode) : data), [data, home]);
   const viewNotifications = useMemo(() => (viewPlan?.realAdmin
     ? { ...notifications, items: notifications.items.filter((n) => !String(n.kind).startsWith('admin_')), unread: notifications.items.filter((n) => n.unread && !String(n.kind).startsWith('admin_')).length }
     : notifications), [viewPlan, notifications]);
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, reloadPlan }),
-    [version, data, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, reloadPlan]);
+  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, reloadPlan, home, reloadHome }),
+    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, reloadPlan, home, reloadHome]);
 
   return (
     <DataCtx.Provider value={ctx}>
@@ -267,6 +282,7 @@ function Shell() {
             <Route path="/planos" element={<Plans />} />
             <Route path="/assinatura" element={<Subscription />} />
             <Route path="/treino" element={<Training />} />
+            <Route path="/treino-casa" element={<HomeTraining />} />
             <Route path="/time" element={<MyTeam />} />
             <Route path="/dia" element={<DayReport />} />
             <Route path="/dia/:day" element={<DayReport />} />

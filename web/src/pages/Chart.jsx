@@ -15,7 +15,8 @@ import { chartTagLabel, tagColor } from '../lib/tags.js';
 import ChartTagsAdmin from '../components/ChartTagsAdmin.jsx';
 import { canAdmin } from '../lib/admin.js';
 import { fmtNum, t, tn } from '../lib/i18n.js';
-import { ChevronLeft, History, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { ChevronLeft, History, House, PencilLine, Play, Users } from '../components/Icons.jsx';
+import { SOURCES } from '../lib/homeScores.js';
 import { entitlements } from '../lib/plans.js';
 
 const pct = (a, b) => (b ? Math.round((a / b) * 1000) / 10 : 0);
@@ -110,7 +111,7 @@ export default function Chart() {
         <section className="card cp-mine">
           <div className="cp-mine-main">
             <div>
-              <small className="muted">{t('Seu recorde')}</small>
+              <small className="muted">{t('Seu recorde')}{c.fromHome && <> · <span className="home-tag">{t('treino em casa')} · {SOURCES[c.fromHome]}</span></>}</small>
               <div className="sc">{fmtScore(c.score)}</div>
               {c.achievedAt && <small className="muted">{fmtDate(c.achievedAt)}</small>}
             </div>
@@ -121,6 +122,22 @@ export default function Chart() {
             {nxt && <span className="tag">{t('+{n} p/ {g}', { n: fmtScore(nxt.need), g: nxt.grade })}</span>}
             {c.broken && <span className="tag warn">stage break</span>}
           </div>
+        </section>
+      )}
+
+      {c.home && (
+        <section className="card cp-home">
+          <div className="cp-mine-main">
+            <div>
+              <small className="muted ic-row"><House size={14} /> {t('Treino em casa')} · {SOURCES[c.home.source]}</small>
+              <div className="sc">{c.home.broken ? t('quebrou') : fmtScore(c.home.score)}</div>
+              <small className="muted">{[c.home.plays ? tn(c.home.plays, '{n} jogada', '{n} jogadas') : null, c.home.last ? fmtDate(c.home.last) : null].filter(Boolean).join(' · ')}</small>
+            </div>
+            <div className="cp-mine-gp"><Grade grade={c.home.grade} broken={c.home.broken} /></div>
+          </div>
+          <p className="muted tiny">{c.fromHome
+            ? t('Consolidado: este recorde de casa está no lugar do da Phoenix 2 nas suas telas. No fliperama: {s}.', { s: c.arcade?.score != null && !c.arcade.broken ? fmtScore(c.arcade.score) : t('ainda não passou') })
+            : t('Recorde do simulador, guardado à parte. Não conta no PUMBILITY nem nas missões.')}</p>
         </section>
       )}
 

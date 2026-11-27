@@ -68,8 +68,12 @@ export const TOGGLES = [
   { id: 'tier_votes', label: 'Votação de tier', group: 'Comunidade' },
   { id: 'venue_requests', label: 'Cadastro e exclusão de fliperama pelos membros', group: 'Comunidade' },
   { id: 'training', label: 'Meu treino', group: 'Treino' },
+  { id: 'home_import', label: 'Treino em casa (StepP1 / XSanity)', group: 'Treino' },
 ];
-export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
+// recursos que começam desligados até o admin ligar (os outros começam ligados)
+export const DEFAULT_OFF = new Set(['home_import']);
+export const toggleOn = (toggles, id) => (toggles?.[id] == null ? !DEFAULT_OFF.has(id) : toggles[id] !== false);
+export const isOn = (plan, id) => toggleOn(plan?.config?.toggles, id);
 
 export const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 

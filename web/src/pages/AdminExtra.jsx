@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
-import { ALWAYS_FREE, FEATURE_DEFAULTS, FEATURES, LIMIT_DEFAULTS, LIMITS, PLAN_LABEL, PLAN_ORDER, rank, TOGGLES } from '../lib/plans.js';
+import { ALWAYS_FREE, FEATURE_DEFAULTS, FEATURES, LIMIT_DEFAULTS, LIMITS, PLAN_LABEL, PLAN_ORDER, rank, TOGGLES, toggleOn } from '../lib/plans.js';
 import { CHALLENGE_KINDS, goalText, PRIZE_MODES, prizeText, TEMPLATES } from '../lib/challenges.js';
 import { locale, t, tErr, tn } from '../lib/i18n.js';
 import { Check, Gift, Minus, Trophy } from '../components/Icons.jsx';
@@ -15,7 +15,7 @@ export function FeatureToggles() {
   const [saved, setSaved] = useState(false);
   useEffect(() => { rpc('app_config').then(setCfg).catch((e) => setErr(tErr(e.message))); }, []);
   if (!cfg) return <p className="empty">{err || t('Carregando…')}</p>;
-  const on = (id) => cfg.toggles?.[id] !== false;
+  const on = (id) => toggleOn(cfg.toggles, id);
   const flip = (id) => { setSaved(false); setCfg((c) => ({ ...c, toggles: { ...(c.toggles || {}), [id]: !on(id) } })); };
   const save = async () => {
     setErr('');

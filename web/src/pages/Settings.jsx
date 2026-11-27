@@ -7,7 +7,7 @@ import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { timeAgo } from '../components/ui.jsx';
 import { Link } from 'react-router-dom';
-import { Crown, Heart, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
+import { ChevronRight, Crown, Heart, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
 import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
@@ -103,6 +103,12 @@ export default function Settings() {
           </label>
         </section>
       </Group>
+
+      {isOn(plan, 'home_import') && (
+        <Group id="treino-casa" title="Treino em casa">
+          <HomeTrainingCard />
+        </Group>
+      )}
 
       <Group id="ajuda" title="Ajuda">
         <section className="card">
@@ -316,5 +322,38 @@ function AutoSync() {
         </span>
       </label>
     </div>
+  );
+}
+
+/** Treino em casa (StepP1 / XSanity): ativar e escolher se fica separado ou consolidado com a Phoenix 2. */
+function HomeTrainingCard() {
+  const { home, reloadHome } = useData();
+  const [busy, setBusy] = useState(false);
+  const st = home?.settings;
+  if (!st) return null;
+  const set = async (on, mode) => {
+    setBusy(true);
+    try { await rpc('set_home_settings', { p_on: on, p_mode: mode ?? null }); await reloadHome(); } catch { /* segue */ }
+    setBusy(false);
+  };
+  return (
+    <section className="card">
+      <label className="check legacy-pref">
+        <input type="checkbox" checked={!!st.on} disabled={busy} onChange={(e) => set(e.target.checked)} />
+        <span><b>{t('Usar recordes de simulador (StepP1, XSanity)')}</b><br />
+          <small className="muted">{t('Importe o Stats.xml do seu perfil no simulador para acompanhar o treino de casa. Os recordes ficam guardados à parte e não entram no PUMBILITY, nas missões nem nos rankings.')}</small></span>
+      </label>
+      {st.on && (
+        <>
+          <div className="rv-label">{t('Nas suas métricas')}</div>
+          <Chips value={st.mode || 'separate'} onChange={(m) => set(true, m)}
+            options={[['separate', t('Separado')], ['merged', t('Consolidar com a Phoenix 2')]]} />
+          <p className="muted small">{st.mode === 'merged'
+            ? t('Quando o recorde de casa for melhor, ele aparece no lugar do da Phoenix 2 nas suas telas (estatísticas, progresso, recomendações), marcado como treino em casa. Só você vê assim.')
+            : t('Os recordes de casa aparecem só na tela Treino em casa e na página de cada chart.')}</p>
+          <Link to="/treino-casa" className="btn ghost">{t('Treino em casa')} ({st.count || 0}) <ChevronRight size={14} /></Link>
+        </>
+      )}
+    </section>
   );
 }

@@ -2314,3 +2314,10 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 
 /* .shell-scroll: invólucro do conteúdo do app (rolagem da janela, como sempre).
    Tentativa de rolar dentro do app foi desfeita: no Safari do iPhone a tela ficava com um vão embaixo da barra. */
+
+/* treino em casa (StepP1 / XSanity) */
+.cp-home { border-color: rgba(120, 170, 255, .35); }
+.home-tag { color: #9cc3ff; font-weight: 700; }
+.ht-preview { display: grid; gap: 8px; margin-top: 10px; }
+.ht-list { display: grid; gap: 6px; }
+.ht-miss { margin: 4px 0 0; padding-left: 18px; max-height: 220px; overflow: auto; }
