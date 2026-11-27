@@ -1423,6 +1423,8 @@
 "{n} participantes": "{n} participants",
 "{n} passe": "{n} réussite",
 "{n} passes": "{n} réussites",
+"{n} passes deste dia não têm registro anterior. Seu histórico completo de scores começa em {d}, então não dá para saber se foram primeiro passe ou upscore.": "{n} réussites de ce jour n'ont pas d'historique antérieur. Votre historique complet commence le {d}, impossible de savoir s'il s'agit de premières réussites ou d'upscores.",
+"{n} passes deste dia não têm registro anterior. Sincronize seus scores para o app começar a separar primeiro passe de upscore.": "{n} réussites de ce jour n'ont pas d'historique antérieur. Synchronisez vos scores pour distinguer premières réussites et upscores.",
 "{n} pontos no PUMBILITY": "{n} points de PUMBILITY",
 "{n} quebra": "{n} échec",
 "{n} quebras": "{n} échecs",

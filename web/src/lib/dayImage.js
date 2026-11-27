@@ -87,14 +87,6 @@ function fitFont(ctx, text, max, weight, size, min, family) {
   return fit(ctx, text, max);
 }
 
-/** Linha de apoio de cada chart: o que aconteceu nele no dia. */
-function detailLine(r) {
-  if (r.newClear || r.kind === 'clear') return r.triesBefore ? t('Passou depois de {n} tentativas', { n: r.triesBefore + r.tries }) : tn2(r.tries);
-  if (r.pb || r.kind === 'pb') return [t('antes {s}', { s: fmtNum(r.prevScore) }), r.gradeUp && `${r.prevGrade} → ${r.grade}`].filter(Boolean).join(' · ');
-  return r.prevScore != null ? t('Recorde: {s}', { s: fmtNum(r.prevScore) }) : tn2(r.tries);
-}
-const tn2 = (n) => (n > 1 ? t('{n} tentativas', { n }) : t('Passou de primeira'));
-
 /** Cartão de um chart, no padrão da tela de detalhes da jogada: capa ao fundo, nome completo, bolinha do nível, score e julgamentos. */
 function drawCard(ctx, r, x, y, w, h, jkImg, gdImg, plImg) {
   const kt = kindTag(r);
@@ -125,10 +117,8 @@ function drawCard(ctx, r, x, y, w, h, jkImg, gdImg, plImg) {
   const R = 42; const my = y + P + 42;
   levelBall(ctx, r.chart, x + P + R, my + R, R);
   const sx = x + P + R * 2 + 24;
-  ctx.fillStyle = TXT; ctx.font = `800 52px ${NUM}`; ctx.fillText(fmtNum(r.score), sx, my + 50);
-  ctx.fillStyle = MUTED; ctx.font = `600 21px ${SANS}`;
+  ctx.fillStyle = TXT; ctx.font = `800 56px ${NUM}`; ctx.fillText(fmtNum(r.score), sx, my + R + 20);
   const gw = 118;
-  ctx.fillText(fit(ctx, detailLine(r), x + w - P - gw - 16 - sx), sx, my + 80);
   const gx = x + w - P - gw;
   if (!contain(ctx, gdImg, gx, my - 2, gw, gw * 0.6)) {
     ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 44px ${NUM}`; ctx.fillText(r.grade || '', x + w - P, my + 44); ctx.textAlign = 'left';

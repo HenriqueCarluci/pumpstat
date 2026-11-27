@@ -210,6 +210,13 @@ export default function DayReport() {
         <Kpi label={t('Nível médio')} value={tt.avgLevel != null ? tt.avgLevel.toFixed(1) : '—'} delta={<Delta now={tt.avgLevel} before={pv?.avg_level} digits={1} />} />
         {tt.accuracy != null && <Kpi label={t('Acerto')} value={`${(tt.accuracy * 100).toFixed(1)}%`} sub={tn(tt.misses, '{n} miss', '{n} misses')} />}
       </section>
+      {rep.unknownPrev > 0 && (
+        <p className="muted small dr-note">
+          {rep.coverage
+            ? t('{n} passes deste dia não têm registro anterior. Seu histórico completo de scores começa em {d}, então não dá para saber se foram primeiro passe ou upscore.', { n: rep.unknownPrev, d: dayLabelOf(new Date(rep.coverage * 1000).toISOString().slice(0, 10), { day: '2-digit', month: 'short', year: 'numeric' }) })
+            : t('{n} passes deste dia não têm registro anterior. Sincronize seus scores para o app começar a separar primeiro passe de upscore.', { n: rep.unknownPrev })}
+        </p>
+      )}
       {pv && <p className="muted tiny dr-vs">{t('Setas: comparação com o dia de jogo anterior ({day}).', { day: dayLabelOf(pv.day) })}</p>}
 
       {(() => { const hl = highlights(rep, 3); return hl.length > 0 && (

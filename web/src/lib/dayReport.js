@@ -10,16 +10,20 @@ const avg = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : nul
 /** Monta as listas e os totais do dia. `byId` = mapa de charts do app. */
 export function buildDay(raw, byId) {
   if (!raw?.day) return null;
+  // só dá para afirmar "primeiro passe" se já tínhamos a foto completa dos melhores scores antes do dia;
+  // sem ela, um passe sem registro anterior pode ser primeiro passe ou upscore
+  const known = raw.coverage != null && raw.start != null && raw.coverage <= raw.start;
   const rows = (raw.charts || []).map(([id, tries, passes, score, grade, plate, prevScore, prevGrade, prevPlate, triesBefore, bestFail]) => {
     const chart = byId.get(id);
     if (!chart) return null;
     const passed = passes > 0;
     const hadPass = prevScore != null;
-    const newClear = passed && !hadPass;
+    const newClear = passed && !hadPass && known;
+    const unknownPrev = passed && !hadPass && !known;
     const pb = passed && hadPass && score > prevScore;
     return {
       chart, tries, passes, score, grade, plate, prevScore, prevGrade, prevPlate, triesBefore, bestFail,
-      passed, newClear, pb, delta: pb ? score - prevScore : 0,
+      passed, newClear, unknownPrev, pb, delta: pb ? score - prevScore : 0,
       gradeUp: pb && gradeRank(grade) < gradeRank(prevGrade),
       plateUp: passed && hadPass && plate && plateRank(plate) < plateRank(prevPlate),
       // ainda não passou nunca: o que treinar
@@ -72,6 +76,9 @@ export function buildDay(raw, byId) {
   const byLevel = (a, b) => b.chart.level - a.chart.level;
   return {
     day: raw.day,
+    // passes em que não dá para saber se foram primeiro passe ou upscore, e desde quando temos o histórico completo
+    unknownPrev: rows.filter((r) => r.unknownPrev).length,
+    coverage: raw.coverage || null,
     days: raw.days || [],
     prev: raw.prev && raw.prev.day ? raw.prev : null,
     totals,

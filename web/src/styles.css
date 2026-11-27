@@ -1398,6 +1398,7 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .dr-hl-info > b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
 .dr-hl-tag { font-size: 12px; font-weight: 700; color: var(--muted); }
 .dr-hl-tag.clear { color: #ffd23f; }
+.dr-note { margin: 4px 2px 10px; padding: 10px 12px; border-radius: 12px; background: rgba(56,225,255,.07); border: 1px solid rgba(56,225,255,.2); }
 .dr-hl-tag.pb { color: #38e1ff; }
 .dr-delta.pb { color: #38e1ff; }
 .dr-h-clear svg { color: #ffd23f; }

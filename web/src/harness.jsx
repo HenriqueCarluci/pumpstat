@@ -42,7 +42,7 @@ const FAKE = {
       series: [0, 1, 2, 3, 4, 5, 6].map((i) => [st + i * 86400, [12, 20, 8, 30, 25, 14, 7][i], [4, 6, 2, 12, 9, 7, 5][i]]),
       top: [{ chart_id: 5769, song_id: 242, title: 'Gargoyle', mode: 'D', level: 20, plays: 9, passes: 6, players: 3 }, { chart_id: 4864, song_id: 242, title: 'Gargoyle', mode: 'D', level: 23, plays: 6, passes: 1, players: 2 }],
       members: [{ id: 'amigo', nickname: 'PUMPKING', plays: 70, passes: 58, new_clears: 9, max_d: 23, max_s: 24 }, { id: 'eu', nickname: 'HENRIQUE', plays: 51, passes: 33, new_clears: 8, max_d: 21, max_s: 20 }, { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME', plays: 0, passes: 0, new_clears: 0, max_d: null, max_s: null }] }; })(),
-  my_day_report: (() => { const s0 = 1795710000; return { day: '2026-11-25', start: s0, end: s0 + 86400,
+  my_day_report: (() => { const s0 = 1795710000; return { day: '2026-11-25', start: s0, end: s0 + 86400, coverage: s0 - 86400 * 30,
     charts: [[4864, 4, 1, 912300, 'AA', 'RG', null, null, null, 6, 880100], [5137, 2, 1, 991200, 'SSS+', 'MG', 985000, 'SS+', 'TG', 3, null],
       [5769, 3, 3, 975500, 'S+', 'TG', 961200, 'AAA+', 'TG', 5, null], [6270, 3, 0, null, null, null, null, null, null, 4, 902000], [7487, 1, 1, 990100, 'SSS', 'MG', 992311, 'SSS', 'MG', 2, null]],
     plays: [[7487, s0 + 3600, 990100, 'SSS', 'MG', false, 1100, 60, 3, 0, 2], [5769, s0 + 3900, 961000, 'AAA+', 'TG', false, 980, 160, 20, 4, 25], [5769, s0 + 4200, 975500, 'S+', 'TG', false, 1050, 120, 10, 2, 7],

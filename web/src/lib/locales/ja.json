@@ -1423,6 +1423,8 @@
 "{n} participantes": "参加者 {n} 人",
 "{n} passe": "{n}回クリア",
 "{n} passes": "{n}回クリア",
+"{n} passes deste dia não têm registro anterior. Seu histórico completo de scores começa em {d}, então não dá para saber se foram primeiro passe ou upscore.": "この日のクリア{n}件は以前の記録がありません。スコア履歴は{d}からなので、初クリアかスコア更新か判別できません。",
+"{n} passes deste dia não têm registro anterior. Sincronize seus scores para o app começar a separar primeiro passe de upscore.": "この日のクリア{n}件は以前の記録がありません。スコアを同期すると初クリアとスコア更新を区別し始めます。",
 "{n} pontos no PUMBILITY": "PUMBILITY {n}ポイント",
 "{n} quebra": "{n}回失敗",
 "{n} quebras": "{n}回失敗",
