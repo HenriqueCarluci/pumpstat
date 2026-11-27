@@ -70,7 +70,7 @@ export const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 /** Modo de teste do admin: plano simulado (vem do servidor, com prazo). Não muda a assinatura de verdade. */
 export function previewPlan(plan) {
   const p = plan?.preview;
-  if (!plan?.admin || !p?.plan) return null;
+  if (!(plan?.admin || plan?.realAdmin) || !p?.plan) return null;
   return !p.expires_at || new Date(p.expires_at) > new Date() ? p.plan : null;
 }
 /** Liga (plano + minutos) ou desliga (null) o modo de teste. O servidor também passa a aplicar os limites do plano. */
@@ -78,6 +78,17 @@ export async function setPreviewPlan(p, minutes = 60) {
   await rpc('admin_set_preview', { p_plan: p || null, p_minutes: minutes });
   try { localStorage.removeItem('pumpstat:preview-plan'); } catch { /* ignora */ }
   window.location.reload();
+}
+
+/**
+ * Modo de teste: o app inteiro passa a tratar o admin como um usuário comum do plano simulado
+ * (sem menu, cartões ou botões de administração). Só a faixa do topo continua, para sair.
+ */
+export function asPreviewUser(plan) {
+  if (!plan?.admin || !previewPlan(plan)) return plan;
+  // o plano mostrado (Ajustes, Assinatura) também é o simulado, sem validade nem origem da conta real
+  return { ...plan, admin: false, admin_role: null, perms: [], realAdmin: true,
+    plan: previewPlan(plan), source: null, expires_at: null, product: null, will_renew: null, grants: [] };
 }
 
 /** O que o usuário pode usar, a partir de my_plan(). */

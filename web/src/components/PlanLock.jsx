@@ -43,7 +43,7 @@ export default function PlanLock({ feature, title, children, preview, compact = 
     <div className="pl-card" role="note">
       <span className="pl-ico"><Lock size={18} /></span>
       <b>{title ? t('{f} está no {p}', { f: title, p: planName(need) }) : t('Disponível no {p}', { p: planName(need) })}</b>
-      <p className="muted small">{need === 'pro' ? t('Assine o Pro para liberar este recurso e todo o Plus.') : t('Assine o Plus para liberar este recurso, ficar sem anúncios e ver todas as análises.')}</p>
+      <p className="muted small">{need === 'pro' ? t('Seja Pro para liberar este recurso e tudo do Plus.') : t('Seja Plus para liberar este recurso, ficar sem anúncios e ver todas as análises.')}</p>
       <Cta need={need} />
     </div>
   );

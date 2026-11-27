@@ -33,6 +33,7 @@ import StatusPicker from './components/StatusPicker.jsx';
 import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
 import { useIsDesktop } from './lib/desktop.js';
 import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
+import { asPreviewUser } from './lib/plans.js';
 const noop = () => {};
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
@@ -180,8 +181,13 @@ function DataApp({ session, ingestKey }) {
   }, [salesOn, billingUser]); // eslint-disable-line
   // acorda a API e deixa ela atualizar o catálogo (no máximo 1x por dia)
   useEffect(() => { fetch(`${API_URL}/api/catalog/tick`).catch(() => {}); }, []);
-  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications, presence, plan, reloadPlan }),
-    [version, data, loading, error, reload, session, ingestKey, notifications, presence, plan, reloadPlan]);
+  // modo de teste do admin: 100% da experiência do plano simulado (sem nada de administração)
+  const viewPlan = useMemo(() => asPreviewUser(plan), [plan]);
+  const viewNotifications = useMemo(() => (viewPlan?.realAdmin
+    ? { ...notifications, items: notifications.items.filter((n) => !String(n.kind).startsWith('admin_')), unread: notifications.items.filter((n) => n.unread && !String(n.kind).startsWith('admin_')).length }
+    : notifications), [viewPlan, notifications]);
+  const ctx = useMemo(() => ({ version, setVersion, data, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, reloadPlan }),
+    [version, data, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, reloadPlan]);
 
   return (
     <DataCtx.Provider value={ctx}>
