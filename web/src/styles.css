@@ -2124,3 +2124,12 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .legacy-pref { display: flex; gap: 10px; align-items: flex-start; }
 .legacy-pref input { margin-top: 3px; flex: none; }
 .rn-eta { color: #ffd166; font-size: 12px; font-weight: 600; }
+.guest-ad { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(0, 0, 0, .72); }
+.guest-ad-box { width: min(440px, 100%); display: flex; flex-direction: column; gap: 10px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 16px; padding: 14px; }
+.guest-ad-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.guest-ad-top .icon-btn { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel2, var(--panel));
+  color: var(--text); display: grid; place-items: center; cursor: pointer; }
+.guest-ad-top .icon-btn:disabled { cursor: default; opacity: .8; }
+.guest-ad-wait { font-weight: 700; font-size: 14px; }
+.guest-ad .ad-slot { margin: 0; }

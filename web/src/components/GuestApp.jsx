@@ -1,12 +1,13 @@
 // Modo visitante: app sem login, só com o Tier e a página do chart (tier e tags). Nada de notas, perfil ou social.
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { HashRouter, Link, Route, Routes } from 'react-router-dom';
+import { HashRouter, Link, Navigate, Route, Routes } from 'react-router-dom';
+import AdSlot from './AdSlot.jsx';
 import { DataCtx } from '../App.jsx';
 import { fetchGuest, rpc } from '../lib/api.js';
 import { setGuest } from '../lib/guest.js';
 import { VERSIONS } from '../lib/piu.js';
 import { t, tErr } from '../lib/i18n.js';
-import { Logo } from './Icons.jsx';
+import { Logo, X } from './Icons.jsx';
 import Tier from '../pages/Tier.jsx';
 import GuestChart from '../pages/GuestChart.jsx';
 
@@ -55,12 +56,59 @@ export default function GuestApp() {
             {!data ? <div className="empty">{error ? '' : t('Carregando…')}</div> : (
               <Routes>
                 <Route path="/chart/:id" element={<GuestChart />} />
+                <Route path="/entrar" element={<Leave />} />
                 <Route path="*" element={<Tier />} />
               </Routes>
             )}
           </main>
+          {data && config && <GuestAd config={config} />}
         </div>
       </HashRouter>
     </DataCtx.Provider>
+  );
+}
+
+function Leave() {
+  useEffect(() => { setGuest(false); }, []);
+  return <Navigate to="/" replace />;
+}
+
+const AD_KEY = 'pumpstat:guest-ad-at';
+const lastAd = () => { try { return Number(localStorage.getItem(AD_KEY)) || 0; } catch { return 0; } };
+
+/**
+ * Visitante: um anúncio em tela cheia ao abrir e de novo a cada N minutos (padrão 60), configurável no admin.
+ * Fecha depois de alguns segundos. Sem anúncio próprio ativo, mostra o convite para criar a conta.
+ */
+function GuestAd({ config }) {
+  const g = config?.guest || {};
+  const every = Math.max(5, Number(g.ad_every_min) || 60) * 60000;
+  const [open, setOpen] = useState(() => g.ad_on_open !== false);
+  const [wait, setWait] = useState(5);
+  useEffect(() => {
+    const id = setInterval(() => { if (!open && Date.now() - lastAd() >= every) setOpen(true); }, 30000);
+    return () => clearInterval(id);
+  }, [open, every]);
+  useEffect(() => {
+    if (!open) return undefined;
+    try { localStorage.setItem(AD_KEY, String(Date.now())); } catch { /* ignora */ }
+    setWait(5);
+    const id = setInterval(() => setWait((w) => Math.max(0, w - 1)), 1000);
+    return () => clearInterval(id);
+  }, [open]);
+  if (!open) return null;
+  const fallback = { id: 'signup', title: t('Crie sua conta grátis'), text: t('Sincronize suas notas da Pump, veja seu PUMBILITY, missões da semana e entre na fila do fliperama.'), cta: t('Criar conta'), url: '#/entrar' };
+  return (
+    <div className="guest-ad" role="dialog" aria-modal="true" aria-label={t('Anúncio')}>
+      <div className="guest-ad-box">
+        <div className="guest-ad-top">
+          <span className="muted small">{t('Visitantes veem anúncios. Com conta, o PIU Stats é grátis e tem muito mais.')}</span>
+          <button type="button" className="icon-btn" disabled={wait > 0} onClick={() => setOpen(false)} aria-label={t('Fechar')}>
+            {wait > 0 ? <span className="guest-ad-wait">{wait}</span> : <X size={18} />}
+          </button>
+        </div>
+        <AdSlot place="guest" force fallback={fallback} />
+      </div>
+    </div>
   );
 }

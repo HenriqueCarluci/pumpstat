@@ -42,6 +42,11 @@ export function FeatureToggles() {
         <span><b>{t('Modo visitante: ver o tier e as tags sem conta')}</b> <small className={cfg.guest?.enabled ? 'up' : 'muted'}>{cfg.guest?.enabled ? t('ligado') : t('desligado')}</small><br />
           <small className="muted">{t('Aparece um botão na tela de login. O visitante vê só o Tier e a página do chart (tier, tags e detalhes), sem notas de ninguém.')}</small></span>
       </label>
+      <div className="cfg-row">
+        <span>{t('Anúncio em tela cheia para o visitante a cada quantos minutos (e sempre ao abrir)')}</span>
+        <input type="number" min="5" max="1440" value={cfg.guest?.ad_every_min ?? 60}
+          onChange={(e) => { setSaved(false); const v = Number(e.target.value) || 60; setCfg((c) => ({ ...c, guest: { ...(c.guest || {}), ad_every_min: v } })); }} />
+      </div>
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row">
         <button className="btn" onClick={save}>{t('Salvar')}</button>

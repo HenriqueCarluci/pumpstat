@@ -8,12 +8,12 @@ import { t } from '../lib/i18n.js';
 import { ChevronRight } from './Icons.jsx';
 
 /** Espaço de anúncio. Só aparece no plano grátis quando o admin liga os anúncios. */
-export default function AdSlot({ place, seed = 0, force = false }) {
+export default function AdSlot({ place, seed = 0, force = false, fallback = null }) {
   const { plan } = useData();
   const ads = adsConfig(plan);
   if (!ads.show && !force) return null;
   if (isAdsense(ads)) return <AdsenseUnit ads={ads} place={place} />;
-  const ad = pickHouse(ads, seed + place.length) || (force ? plusAd() : null);
+  const ad = pickHouse(ads, seed + place.length) || (force ? (fallback || plusAd()) : null);
   if (!ad) return null;
   return <HouseAd ad={ad} place={place} showPlans={entitlements(plan).showPlans} />;
 }
