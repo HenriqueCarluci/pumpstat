@@ -7,12 +7,11 @@ import { FriendScores, useFriendScores } from './Song.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory, rpc } from '../lib/api.js';
 import { chartRating, chartTier, fmtScore, GRADE_ORDER, nextGrade, TIERS } from '../lib/piu.js';
-import { topStyles, useStyles, videoUrl } from '../lib/style.js';
-import StyleBars from '../components/StyleBars.jsx';
+import { videoUrl } from '../lib/style.js';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialBadges } from '../components/Special.jsx';
 import { isUnique } from '../lib/special.js';
-import { chartTagLabel } from '../lib/tags.js';
+import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { fmtNum, t, tn } from '../lib/i18n.js';
 import { ChevronLeft, History, PencilLine, Play, Users } from '../components/Icons.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -25,7 +24,6 @@ export default function Chart() {
   const nav = useNavigate();
   const { data, version, reload, plan } = useData();
   const c = data.byId.get(Number(id));
-  const styleOf = useStyles(c ? [c.songId] : []);
   const friendsOf = useFriendScores(c?.songId, version);
   const [stats, setStats] = useState(null);
   const [hist, setHist] = useState(null);
@@ -41,14 +39,12 @@ export default function Chart() {
   if (!c) return <div className="page"><p className="empty">{t('Chart não encontrado nesta versão.')}</p><Link to="/musicas">{t('Voltar')}</Link></div>;
 
   const song = c.song;
-  const style = styleOf(c);
   const tier = TIERS.find((x) => x.id === chartTier(c));
   const rating = chartRating(version, c.mode, c.level, c.score, c.grade, c.plate, c.broken);
   const nxt = c.score != null && !c.broken ? nextGrade(version, c.score) : null;
   const siblings = song.charts;
   const grades = stats?.grades ? GRADE_ORDER.filter((g) => stats.grades[g]).map((g) => [g, stats.grades[g]]) : [];
   const gMax = Math.max(1, ...grades.map(([, n]) => n));
-  const refTags = c.tags || [];
   const commTags = c.community?.tags || [];
 
   return (
@@ -126,25 +122,19 @@ export default function Chart() {
         {stats && stats.players == null && <p className="muted small">{t('Entre na sua conta para ver os números da comunidade.')}</p>}
       </section>
 
-      {(refTags.length > 0 || commTags.length > 0 || style) && (
+      {(c.tagBars || commTags.length > 0) && (
         <section className="card cp-tags">
           <h3>{t('Tags')}</h3>
           {c.tagBars && (
             <div className="cp-skill">
-              {c.tagBars.map(([x, v]) => (
-                <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%` }} /></i></div>
+              {(ent.can('style_full') ? c.tagBars : c.tagBars.slice(0, 3)).map(([x, v]) => (
+                <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%`, background: tagColor(x) }} /></i><em>{v}%</em></div>
               ))}
+              {!ent.can('style_full') && c.tagBars.length > 3 && <p className="tiny muted">{t('As 3 skills principais. Todas ficam no Plus.')}</p>}
             </div>
           )}
-          {refTags.length > 0 && <div className="cp-chips">{refTags.map((x) => <span key={x} className={`tag cp-tag t-${x}`}>#{t(chartTagLabel(x))}</span>)}</div>}
           {commTags.length > 0 && (
             <p className="small muted cp-comm"><Users size={12} /> {t('Comunidade do PIU Stats:')} {commTags.map((x) => t(reviewTagLabel(Array.isArray(x) ? x[0] : x))).join(' · ')}</p>
-          )}
-          {style && (
-            <>
-              <div className="cp-style">{topStyles(style, 4).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}</div>
-              <StyleBars style={style} locked={!ent.can('style_full')} />
-            </>
           )}
         </section>
       )}

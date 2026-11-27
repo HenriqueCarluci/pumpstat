@@ -221,8 +221,7 @@ export function weaknesses(...sumsList) {
   }).filter(Boolean).sort((a, b) => b.index - a.index);
 }
 
-// Sem estilo do piucenter (músicas novas da Phoenix 2), o estilo vem das tags votadas no ArcadeStat (c.tagBars),
-// dos padrões do PIU Scores (c.skills) e das tags que a comunidade do PIU Stats marca nos charts.
+// Padrões do PIU Scores (c.skills) e tags da comunidade do PIU Stats: reserva para charts sem tags do ArcadeStat.
 const TAG_TO_DIM = { twist: 'twist', drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', doublestep: 'doublestep',
   footswitch: 'footswitch', stamina: 'stamina', speed: 'speed', gimmick: null };
 const BADGE_RULES = [
@@ -251,19 +250,13 @@ export function arcStyle(c) {
   for (const [tag, v] of c.tagBars) { const d = ARC_TO_DIM[tag]; if (d) pct[d] = Math.max(pct[d] || 0, v); }
   return Object.keys(pct).length ? pct : null;
 }
+// O piucenter não entra mais (dados ruins). O estilo vem das tags votadas no ArcadeStat; só quando o chart
+// não tem nenhuma, cai para os padrões do PIU Scores. Tags da comunidade do PIU Stats e gimmick marcado somam.
 export function styleOf(prog, c) {
-  const st = prog.styles.get(c.id);
   const arc = arcStyle(c);
-  if (st) {
-    // padrões de pé: % de notas do piucenter (objetivo); velocidade/resistência/gimmick também pelos votos do ArcadeStat
-    const extra = {};
-    for (const d of ['speed', 'stamina', 'gimmick']) if ((arc?.[d] || 0) >= 50) extra[d] = 60;
-    if (hasGimmick(c)) extra.gimmick = 60;
-    return Object.keys(extra).length ? { ...st, pct: { ...st.pct, ...extra } } : st;
-  }
-  // sem piucenter: tags votadas do ArcadeStat, completadas pelos padrões do PIU Scores e da comunidade
-  const pct = { ...(badgeStyle(c) || {}) };
-  for (const [d, v] of Object.entries(arc || {})) pct[d] = Math.max(pct[d] || 0, v);
+  const pct = arc ? { ...arc } : { ...(badgeStyle(c) || {}) };
+  for (const tg of c.community?.tags || []) { const d = TAG_TO_DIM[Array.isArray(tg) ? tg[0] : tg]; if (d) pct[d] = Math.max(pct[d] || 0, 50); }
+  if (hasGimmick(c)) pct.gimmick = Math.max(pct.gimmick || 0, 60);
   return Object.keys(pct).length ? { pct, nps: null, sustained: false, derived: true } : null;
 }
 

@@ -6,14 +6,13 @@ import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
 import { chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
-import { topStyles, useStyles, videoUrl } from '../lib/style.js';
+import { videoUrl } from '../lib/style.js';
 import { rpc } from '../lib/api.js';
-import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
-import { chartTagLabel } from '../lib/tags.js';
+import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { t } from '../lib/i18n.js';
-import { ChevronDown, ChevronRight, ChevronUp, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
+import { ChevronRight, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -23,7 +22,6 @@ export default function Song() {
   const { id } = useParams();
   const { data, version, reload, plan } = useData();
   const song = data.songs.find((s) => String(s.id) === id);
-  const styleOf = useStyles(song ? [song.id] : []);
   const friendsOf = useFriendScores(song?.id, version);
   const [params] = useSearchParams();
   const focus = Number(params.get('c')) || null;
@@ -61,15 +59,12 @@ export default function Song() {
       </section>
 
       {hasLegacy && <LegacyToggle />}
-      {song.charts.some((c) => c.skills.length > 0) && song.charts.every((c) => !styleOf(c)) && (
-        <p className="muted tiny song-note">{t('Música nova: a análise detalhada de estilo ainda não saiu; os padrões vêm do PIU Scores e já contam nos seus pontos fracos.')}</p>
-      )}
 
       {groups.map(([label, charts]) => (
         <section key={label}>
           <h3 className="group-h">{label}{label === 'Half-Double' && <RiseBadge small />}</h3>
           {label === 'Half-Double' && <p className="small muted rise-note">{t('Charts de 6 painéis do canal R!SE MIX. Só aparecem na Phoenix 2 com a conta Steam do R!SE ligada ao AM.PASS e não contam para o PUMBILITY.')}</p>}
-          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} style={styleOf(c)} friends={friendsOf(c.id)} focus={focus === c.id} onReviewed={() => reload()} />)}
+          {charts.map((c) => <ChartCard key={c.id} chart={c} version={version} other={other} friends={friendsOf(c.id)} focus={focus === c.id} onReviewed={() => reload()} />)}
         </section>
       ))}
       <AdSlot place="song" />
@@ -129,7 +124,7 @@ export function LegacyToggle() {
   );
 }
 
-function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed }) {
+function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
   const { plan } = useData();
   const [prefs] = usePrefs();
   const legacyMode = version === 'phoenix2';
@@ -137,7 +132,6 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
   const ent = entitlements(plan);
   const months = ent.can('history_full') ? null : ent.limit('history_months');
   const histCut = months ? new Date(Date.now() - months * 30.4 * 86400000) : null;
-  const [showStyle, setShowStyle] = useState(false);
   const [reviews, setReviews] = useState(false);
   const [hist, setHist] = useState(null);
   const [open, setOpen] = useState(false);
@@ -178,22 +172,18 @@ function ChartCard({ chart: c, version, other, style, friends, focus, onReviewed
         {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
         {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
-        {(c.tags || []).map((x) => <span key={x} className="tag cp-tag">#{t(chartTagLabel(x))}</span>)}
-        {!(c.tags || []).length && c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
+        {!c.tagBars && c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
         {c.community?.tags?.length > 0 && (
           <span className="tag community" title={t('Tags marcadas pela comunidade do PIU Stats')}>
             <Users size={12} /> {c.community.tags.map((x) => t(reviewTagLabel(x))).join(' · ')}
           </span>
         )}
       </div>
-      {style && (
-        <button className="cc-style" onClick={() => setShowStyle((v) => !v)} title={t('Ver estilo do chart')}>
-          {topStyles(style).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
-          {style.nps != null && <span className="muted small">{t('{n} notas/s', { n: style.nps })}</span>}
-          <span className="muted small">{showStyle ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
-        </button>
+      {c.tagBars && (
+        <div className="cc-style">
+          {c.tagBars.slice(0, 3).map(([x, v]) => <span key={x} className="st-chip" style={{ '--c': tagColor(x) }}>{t(chartTagLabel(x))} {v}%</span>)}
+        </div>
       )}
-      {style && showStyle && <StyleBars style={style} locked={!ent.can('style_full')} />}
 
       {showOther && (
         <div className={`cc-other ${legacyMode ? 'legacy' : ''}`}>

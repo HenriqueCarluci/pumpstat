@@ -1542,7 +1542,8 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 
 /* barrinhas de skill (ArcadeStat) */
 .cp-skill { display: grid; gap: 8px; margin: 4px 0 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.04); }
-.cp-skill-row { display: grid; grid-template-columns: minmax(90px, 34%) 1fr; align-items: center; gap: 12px; font-size: 14px; }
+.cp-skill-row { display: grid; grid-template-columns: minmax(90px, 34%) 1fr 36px; align-items: center; gap: 10px; font-size: 14px; }
+.cp-skill-row > em { font-style: normal; font-size: 12px; color: var(--muted, #9aa4b2); text-align: right; font-variant-numeric: tabular-nums; }
 .cp-skill-row > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cp-skill-row > i { height: 7px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
 .cp-skill-row > i > b { display: block; height: 100%; border-radius: 99px; background: #58a6f0; }

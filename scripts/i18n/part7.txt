@@ -788,3 +788,5 @@ Recorde: {s} | Best: {s} | Récord: {s} | 최고 기록: {s} | 自己ベスト: 
 Nota esperada | Expected score | Nota esperada | 예상 점수 | 予想スコア | Score attendu | Punteggio atteso
 Recorde | Best | Récord | 최고 기록 | 自己ベスト | Record | Record
 Tags e skills dos charts: comunidade | Chart tags and skills: community of | Tags y skills de los charts: comunidad de | 차트 태그 및 스킬: 커뮤니티 | 譜面のタグとスキル: コミュニティ | Tags et compétences des charts : communauté | Tag e abilità dei chart: comunità di
+As 3 skills principais. Todas ficam no Plus. | The top 3 skills. All of them are in Plus. | Las 3 skills principales. Todas están en Plus. | 주요 스킬 3개. 전체는 Plus에서 볼 수 있어요. | 主なスキル3つ。すべてはPlusで見られます。 | Les 3 compétences principales. Toutes sont dans Plus. | Le 3 abilità principali. Tutte sono in Plus.
+Todas as skills do chart (% de cada tag) | All chart skills (% for each tag) | Todas las skills del chart (% de cada tag) | 차트 스킬 전체(태그별 %) | 譜面の全スキル(タグごとの%) | Toutes les compétences du chart (% par tag) | Tutte le abilità del chart (% per tag)

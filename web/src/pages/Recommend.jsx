@@ -5,7 +5,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket } from '../components/ui.jsx';
 import { chartTier, fmtScore, TIERS } from '../lib/piu.js';
 import { recommendations } from '../lib/recommend.js';
-import { topStyles, useStyles } from '../lib/style.js';
+import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t } from '../lib/i18n.js';
 import { entitlements } from '../lib/plans.js';
@@ -20,7 +20,6 @@ export default function Recommend() {
   const full = (tab === 'fresh' ? rec.fresh : rec.improve).filter((r) => mode === 'all' || r.chart.mode === mode).slice(0, 40);
   const cap = ent.can('recommendations_all') ? null : ent.limit('recommendations');
   const list = cap != null ? full.slice(0, cap) : full;
-  const styleOf = useStyles(list.map((r) => r.chart.songId));
 
   return (
     <div className="page">
@@ -47,7 +46,7 @@ export default function Recommend() {
                   <b className="rc-title">{c.song.title}</b>
                   <div className="rc-tags">
                     {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}</span>}
-                    {topStyles(styleOf(c)).slice(0, 3).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
+                    {(c.tagBars || []).slice(0, 3).map(([x, v]) => <span key={x} className="st-chip" style={{ '--c': tagColor(x) }}>{t(chartTagLabel(x))} {v}%</span>)}
                   </div>
                 </div>
                 <div className="rc-gain"><b>+{r.gain.toFixed(1)}</b><small>PUMBILITY</small></div>

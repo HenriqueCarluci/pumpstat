@@ -7,7 +7,7 @@ export const FEATURES = [
   { id: 'no_ads', label: 'Sem anúncios', group: 'Geral' },
   { id: 'recommendations_all', label: 'Todas as recomendações para subir PUMBILITY', group: 'Análises' },
   { id: 'history_full', label: 'Histórico completo de notas', group: 'Análises' },
-  { id: 'style_full', label: 'Estilo do chart completo (% por padrão)', group: 'Análises' },
+  { id: 'style_full', label: 'Todas as skills do chart (% de cada tag)', group: 'Análises' },
   { id: 'evolution_chart', label: 'Gráficos de evolução', group: 'Análises' },
   { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises' },
   { id: 'weakness', label: 'Pontos fortes e fracos por padrão', group: 'Análises' },
