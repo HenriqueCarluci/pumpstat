@@ -42,6 +42,7 @@ export function hasHint(uid) {
 // o Supabase devolve o QR como "data:image/svg+xml;utf-8,<svg…>" sem codificar, e o Safari não desenha; codifica aqui
 function qrSrc(q) {
   if (!q) return null;
+  if (q.trim().startsWith('<')) return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(q.trim())}`;
   const m = q.match(/^data:image\/svg\+xml;(?:utf-?8|charset=utf-?8),(.*)$/is);
   if (!m) return q;
   const svg = m[1].trim().startsWith('<') ? m[1] : decodeURIComponent(m[1]);
@@ -53,7 +54,13 @@ export async function startEnroll() {
   const list = await listFactors();
   for (const f of list.filter((x) => x.status !== 'verified')) await authRequest(`factors/${f.id}`, { method: 'DELETE' });
   const d = await authRequest('factors', { method: 'POST', body: { factor_type: 'totp', issuer: NAME, friendly_name: NAME } });
-  return { id: d.id, qr: qrSrc(d.totp?.qr_code), secret: d.totp?.secret, uri: d.totp?.uri };
+  const uri = d.totp?.uri;
+  let qr = null;
+  // o QR é gerado aqui a partir do otpauth:// (o formato que o Supabase devolve não abre em alguns navegadores, como o Safari)
+  if (uri) {
+    try { const QR = (await import('qrcode')).default; qr = await QR.toDataURL(uri, { margin: 1, width: 240 }); } catch { /* usa o do Supabase */ }
+  }
+  return { id: d.id, qr: qr || qrSrc(d.totp?.qr_code), secret: d.totp?.secret, uri };
 }
 
 /** Confere o código de 6 dígitos; a sessão passa a valer como verificada (aal2). */
