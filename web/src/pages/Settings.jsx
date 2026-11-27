@@ -94,6 +94,13 @@ export default function Settings() {
               <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o PIU Stats enquanto você está com ele aberto.')}</small>
             </span>
           </label>
+          <label className="check legacy-pref">
+            <input type="checkbox" checked={prefs.notifPopup !== false} onChange={(e) => setPrefs({ notifPopup: e.target.checked })} />
+            <span>
+              <b>{t('Mostrar notificações em pop-up')}</b><br />
+              <small className="muted">{t('Passes e recordes dos amigos, PUMBILITY subindo, lives na Twitch e outras novidades aparecem no topo da tela quando chegam.')}</small>
+            </span>
+          </label>
         </section>
       </Group>
 

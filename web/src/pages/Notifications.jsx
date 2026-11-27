@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { Grade, Jacket, timeAgo } from '../components/ui.jsx';
-import { canAlert, describe, linkFor } from '../lib/notify.js';
+import { canAlert, describe, linkFor, twitchUrl } from '../lib/notify.js';
 import { Chips } from './Songs.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronRight, X } from '../components/Icons.jsx';
@@ -43,15 +43,16 @@ export default function Notifications() {
       <div className="notifs">
         {items.map((n) => (
           <div key={n.key} className={`notif-wrap ${n.unread ? 'unread' : ''}`}>
-          <Link to={linkFor(n)} className={`notif ${n.unread ? 'unread' : ''}`}>
+          <NotifLink n={n} className={`notif ${n.unread ? 'unread' : ''}`}>
             {n.jacket ? <Jacket song={{ title: n.title, jacket: n.jacket }} width={64} />
               : <span className="q-avatar" style={{ width: 44, height: 44 }}>{n.avatar ? <img src={n.avatar} alt="" referrerPolicy="no-referrer" /> : (n.nickname || '?').slice(0, 2)}</span>}
             <div className="notif-main">
               <div>{describe(n)}</div>
-              <small className="muted">{timeAgo(n.at)}{n.kind === 'friend_score' && n.version === 'phoenix' ? ' · Phoenix' : ''}</small>
+              <small className="muted">{timeAgo(n.at)}{n.kind === 'friend_score' && n.version === 'phoenix' ? ' · Phoenix' : ''}{n.kind === 'friend_live' ? ` · ${t('Twitch')}` : ''}</small>
             </div>
             {n.kind === 'friend_score' && <Grade grade={n.grade} size="sm" />}
-          </Link>
+            {n.kind === 'friend_live' && n.live_now && <span className="nt-live-chip">{t('AO VIVO')}</span>}
+          </NotifLink>
           <button className="notif-x" onClick={() => nt.dismiss(n.key)} title={t('Apagar')} aria-label={t('Apagar')}><X size={16} /></button>
           </div>
         ))}
@@ -59,4 +60,12 @@ export default function Notifications() {
       <p className="muted tiny">{t('Os recordes dos amigos aparecem quando eles sincronizam a conta da Pump. Músicas novas entram quando o catálogo é atualizado (uma vez por dia).')}</p>
     </div>
   );
+}
+
+/** Live na Twitch abre a Twitch; o resto navega dentro do app. */
+function NotifLink({ n, className, children }) {
+  if (n.kind === 'friend_live' && n.login) {
+    return <a href={twitchUrl(n.login)} target="_blank" rel="noopener noreferrer" className={className}>{children}</a>;
+  }
+  return <Link to={linkFor(n)} className={className}>{children}</Link>;
 }

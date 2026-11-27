@@ -15,7 +15,12 @@ export function describe(n) {
     case 'friend_score':
       return n.prev_score
         ? t('{who} subiu {song} {chart} para {grade} ({from} → {to})', { who, song: n.title, chart: `${n.mode}${n.level}`, grade: n.grade, from: fmt(n.prev_score), to: fmt(n.score) })
-        : t('{who} fez {grade} em {song} {chart} ({to})', { who, song: n.title, chart: `${n.mode}${n.level}`, grade: n.grade, to: fmt(n.score) });
+        : t('{who} passou {song} {chart} pela primeira vez: {grade} ({to})', { who, song: n.title, chart: `${n.mode}${n.level}`, grade: n.grade, to: fmt(n.score) });
+    case 'friend_pumbility':
+      return t('{who} subiu o PUMBILITY para {to} (+{d})', { who, to: fmt(Math.floor(n.pumbility)), d: fmt(Math.floor(n.pumbility) - Math.floor(n.prev)) })
+        + (n.version === 'phoenix' ? ' · Phoenix' : '');
+    case 'friend_live':
+      return t('{who} começou uma live na Twitch', { who }) + (n.title ? `: “${n.title}”` : '');
     case 'new_song':
       return t('Música nova no catálogo: {song}', { song: n.title }) + (n.charts?.length ? ` (${n.charts.join(' ')})` : '');
     case 'friend_request':
@@ -76,11 +81,14 @@ export function linkFor(n) {
     case 'team_approved': case 'team_rejected': return '/ajustes';
     case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'badge': return '/';
+    case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     case 'admin_new_user': return '/admin?tab=users';
     default: return n.user ? `/jogador/${n.user}` : '/';
   }
 }
+
+export const twitchUrl = (login) => `https://www.twitch.tv/${encodeURIComponent(login)}`;
 
 export const canAlert = () => typeof window !== 'undefined' && 'Notification' in window;
 

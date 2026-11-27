@@ -89,6 +89,7 @@ export function SocialsEditor() {
           <option value="hidden">{t('Ninguém (esconder)')}</option>
         </select>
       </label>
+      {form.twitch && form.visibility !== 'hidden' && <p className="muted tiny">{t('Quando você entrar ao vivo na Twitch, seus amigos recebem um aviso.')}</p>}
       <div className="bm-row">
         <button className="btn" disabled={busy} onClick={save}>{t('Salvar')}</button>
         {msg && <span className="muted small ic-row">{msg === t('Salvo') && <Check size={14} />} {msg}</span>}

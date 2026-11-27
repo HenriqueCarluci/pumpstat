@@ -4,6 +4,7 @@ import AdminPage from './pages/Admin.jsx';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import TeamPicker from './components/TeamPicker.jsx';
 import DayReport from './pages/DayReport.jsx';
+import NotifToast from './components/NotifToast.jsx';
 import { DataCtx } from './App.jsx';
 import Song from './pages/Song.jsx';
 import MyTeam from './pages/MyTeam.jsx';
@@ -177,7 +178,14 @@ const previewQ = new URLSearchParams(location.search).get('preview');
 const trialQ = new URLSearchParams(location.search).get('trial');
 const viewQ = new URLSearchParams(location.search).get('viewas');
 const plan = { view_as: viewQ ? { admin: 'eu', target: 'amigo', email: 'pk@exemplo.com', expires_at: new Date(Date.now() + 28 * 60e3).toISOString() } : null, plan: 'plus', source: trialQ ? 'trial' : 'admin', expires_at: trialQ ? new Date(Date.now() + Number(trialQ) * 86400e3 - 3600e3).toISOString() : '2027-01-01T00:00:00Z', preview: previewQ ? { plan: previewQ, expires_at: new Date(Date.now() + 47 * 60e3).toISOString() } : null, admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {}, trial_plan: 'plus', trial_days: 15, prices: { BR: { currency: 'BRL', plus: 6.9, pro: 12.9, plus_year: 59.9, pro_year: 109.9 }, WORLD: { currency: 'USD', plus: 2.49, pro: 4.99, plus_year: 19.99, pro_year: 39.99 } }, intro: { months: 2, prices: { BR: { plus: 5.9, pro: 9.9 }, WORLD: { plus: 1.99, pro: 3.99 } } } } };
-const ctx = { version: new URLSearchParams(location.search).get('ver') || 'phoenix2', setVersion: (v) => { location.search = v === 'phoenix2' ? '' : `?ver=${v}`; }, data, reload: () => {}, plan: asPreviewUser(plan), reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
+const NOTIF_ITEMS = new URLSearchParams(location.search).get('notif') ? (() => { const at = (m) => new Date(Date.now() - m * 60000).toISOString(); return [
+  { kind: 'friend_live', key: 'n:1', at: at(1), unread: true, user: 'amigo', nickname: 'PUMPKING', login: 'pumpking', title: 'Treinando D24 no Phoenix 2', live_now: true },
+  { kind: 'friend_pumbility', key: 'fp:1', at: at(2), unread: true, user: 'amigo', nickname: 'PUMPKING', pumbility: 16580.4, prev: 16565.7, version: 'phoenix2' },
+  { kind: 'friend_score', key: 'fs:1', at: at(3), unread: true, user: 'm2', nickname: 'NEONSTEP', song: 1, title: 'Gargoyle', mode: 'D', level: 23, grade: 'AA+', score: 931200, prev_score: null },
+  { kind: 'friend_score', key: 'fs:2', at: at(4), unread: true, user: 'm2', nickname: 'NEONSTEP', song: 2, title: 'Mephitz', mode: 'S', level: 20, grade: 'S', score: 975000, prev_score: 961000 },
+  { kind: 'new_song', key: 'ns:1', at: at(5), unread: true, song: 3, title: 'Nova Música', charts: ['S18', 'D22'] },
+]; })() : [];
+const ctx = { version: new URLSearchParams(location.search).get('ver') || 'phoenix2', setVersion: (v) => { location.search = v === 'phoenix2' ? '' : `?ver=${v}`; }, data, reload: () => {}, plan: asPreviewUser(plan), reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: NOTIF_ITEMS, loaded: true, unread: NOTIF_ITEMS.length, markSeen: () => {}, markAll: () => {}, dismiss: () => {}, clearAll: () => {} }, presence: {} };
 
 function HShell({ children }) {
   const desk = useIsDesktop();
@@ -186,7 +194,7 @@ function HShell({ children }) {
   useSearchHotkey(desk ? open : () => {});
   return <div className="app">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
     <header className="topbar">{desk && <button type="button" className="top-search" onClick={open}><span>Buscar música, artista, jogador ou página…</span><kbd>Ctrl K</kbd></button>}<span className="brand">PIU Stats</span></header>
-    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour />{children}</div>;
+    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour /><NotifToast />{children}</div>;
 }
 
 createRoot(document.getElementById('root')).render(
