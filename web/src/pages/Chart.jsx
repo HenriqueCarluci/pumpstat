@@ -129,6 +129,13 @@ export default function Chart() {
       {(refTags.length > 0 || commTags.length > 0 || style) && (
         <section className="card cp-tags">
           <h3>{t('Tags')}</h3>
+          {c.tagBars && (
+            <div className="cp-skill">
+              {c.tagBars.map(([x, v]) => (
+                <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%` }} /></i></div>
+              ))}
+            </div>
+          )}
           {refTags.length > 0 && <div className="cp-chips">{refTags.map((x) => <span key={x} className={`tag cp-tag t-${x}`}>#{t(chartTagLabel(x))}</span>)}</div>}
           {commTags.length > 0 && (
             <p className="small muted cp-comm"><Users size={12} /> {t('Comunidade do PIU Stats:')} {commTags.map((x) => t(reviewTagLabel(Array.isArray(x) ? x[0] : x))).join(' · ')}</p>
