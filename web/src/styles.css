@@ -838,6 +838,11 @@ a.q-city:hover { color: var(--text); }
 .rival-item .up { color: #7fb5f0; font-family: var(--num); }
 .rival-item .down { color: #e8a06a; font-family: var(--num); }
 .rival-pick { width: 100%; text-align: left; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+.player.rival-pick { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 12px; padding: 10px 12px; }
+.rival-pick .pinfo { gap: 2px; }
+.rival-pick .ptitle, .rival-pick .pinfo b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rival-pick .ppb b { font: 800 16px var(--num); white-space: nowrap; }
+.rival-pick.me { border-color: rgba(140,255,58,.55); background: rgba(140,255,58,.06); }
 
 /* logo do time */
 .team-logo { border-radius: 50%; object-fit: cover; background: #fff; flex: none; vertical-align: middle; }
@@ -1531,3 +1536,6 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .rc-exp .grade-img { height: 22px; width: auto; }
 .rc-foot .train-chip { min-height: 32px; }
 @media (max-width: 380px) { .rc-top { grid-template-columns: 92px minmax(0, 1fr) auto; gap: 10px; } }
+
+.rv-pick-pb { flex-direction: column; align-items: flex-end; gap: 0; }
+.rv-pick-pb small { font-size: 9px; opacity: .6; letter-spacing: .04em; }

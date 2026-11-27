@@ -101,7 +101,7 @@ export default function Rival() {
             <button key={p.id} className={`player rival-pick ${p.id === rival ? 'me' : ''}`} onClick={() => choose(p.id)}>
               <Avatar p={p} size={36} />
               <span className="pinfo"><span className="ptitle">{p.title}</span><b>{p.nickname || t('Jogador')}</b></span>
-              <span className="ppb"><b>{p.pumbility != null ? fmtNum(Math.round(p.pumbility)) : '—'}</b></span>
+              <span className="ppb rv-pick-pb"><b>{p.pumbility != null ? fmtNum(Math.round(p.pumbility)) : '—'}</b><small>PUMBILITY</small></span>
             </button>
           ))}
         </div>
