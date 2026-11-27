@@ -17,7 +17,7 @@ export function reportError(err, source) {
   try {
     const message = String(err?.message || err || '?').slice(0, 500);
     if (!message || seen.has(message) || sent >= 5) return;
-    if (/ResizeObserver loop|Load failed|Failed to fetch|NetworkError|AbortError/i.test(message)) return; // ruído de rede/navegador
+    if (/ResizeObserver loop|Load failed|Failed to fetch|NetworkError|AbortError|MetaMask|chrome-extension:/i.test(message)) return; // ruído de rede/navegador
     seen.add(message); sent++;
     rpc('log_client_error', { p: {
       message, source: source || null, stack: String(err?.stack || '').slice(0, 2000), route: window.location.hash.slice(0, 200),
