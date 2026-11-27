@@ -2327,3 +2327,25 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .ht-preview { display: grid; gap: 8px; margin-top: 10px; }
 .ht-list { display: grid; gap: 6px; }
 .ht-miss { margin: 4px 0 0; padding-left: 18px; max-height: 220px; overflow: auto; }
+
+/* administradores de time */
+.team-admin-tag { display: inline-flex; align-items: center; gap: 3px; color: #ffd166; border-color: rgba(255, 209, 102, .45); background: rgba(255, 209, 102, .08); }
+.team-mine .team-admin-tag { margin-left: 6px; }
+.team-requested { padding: 8px 10px; border-radius: 10px; background: rgba(140, 255, 58, .06); border: 1px dashed rgba(140, 255, 58, .35); }
+.mt-requests { display: grid; gap: 8px; }
+.mt-requests h3 { margin: 0 0 4px; }
+.mt-req { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 6px 0; border-top: 1px solid var(--line, rgba(255, 255, 255, .08)); }
+.mt-req:first-of-type { border-top: 0; }
+.mt-req-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.mt-actions { display: flex; gap: 14px; justify-content: flex-end; padding: 4px 10px 8px; }
+.mt-actions .danger { color: #ff6b6b; }
+.mt-manage { margin-right: 8px; }
+.adm-team { display: grid; gap: 6px; }
+.adm-team-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.adm-team-add { display: flex; gap: 6px; }
+.adm-team-add input { flex: 1; min-width: 0; }
+.mt-manage { align-self: flex-start; width: auto; display: inline-flex; align-items: center; gap: 6px; }
+@media (max-width: 520px) {
+  .mt-req { grid-template-columns: 36px minmax(0, 1fr); }
+  .mt-req-btns { grid-column: 2 / -1; justify-content: flex-start; }
+}

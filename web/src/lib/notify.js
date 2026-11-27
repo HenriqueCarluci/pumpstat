@@ -41,6 +41,14 @@ export function describe(n) {
       return t('O time {name} foi aprovado e você já faz parte dele', { name: n.name });
     case 'team_rejected':
       return t('O time {name} não foi aprovado', { name: n.name }) + (n.note ? `: ${n.note}` : '');
+    case 'team_join_request':
+      return t('{who} pediu para entrar no time {name}', { who, name: n.name });
+    case 'team_join_approved':
+      return t('Seu pedido foi aprovado: agora você faz parte do time {name}', { name: n.name });
+    case 'team_join_rejected':
+      return t('Seu pedido para entrar no time {name} não foi aprovado', { name: n.name });
+    case 'team_admin':
+      return t('Você agora é administrador do time {name}', { name: n.name });
     case 'tier_vote_open':
       return t('{who} propôs mudar o tier de {song} {chart} para {tier}. Vote!', { who, song: n.title, chart: `${n.mode}${n.level}`, tier: tierName(n.to) });
     case 'tier_vote_result':
@@ -78,7 +86,8 @@ export function linkFor(n) {
     case 'invite': return n.venue ? `/fila/${n.venue}` : '/online';
     case 'venue_approved': return `/fila/${n.venue}`;
     case 'venue_rejected': case 'venue_removed': case 'venue_removal_rejected': return '/fila';
-    case 'team_approved': case 'team_rejected': return '/ajustes';
+    case 'team_approved': case 'team_join_request': case 'team_join_approved': case 'team_admin': return '/time';
+    case 'team_rejected': case 'team_join_rejected': return '/ajustes';
     case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'badge': return '/';
     case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { rpc } from '../lib/api.js';
 import { forgetTeam, TeamLogo } from '../lib/teams.jsx';
 import { t, tErr } from '../lib/i18n.js';
-import { Check, Users } from './Icons.jsx';
+import { Check, Crown, Users } from './Icons.jsx';
 import TeamRequestForm, { TeamSocialLinks } from './TeamRequestForm.jsx';
 
 /** Seu time: escolhe um da lista ou pede o cadastro de um novo (o admin aprova). */
@@ -17,7 +17,20 @@ export default function TeamPicker({ userId }) {
 
   const pick = async (id) => {
     setErr('');
-    try { await rpc('set_my_team', { p_team: id }); if (userId) forgetTeam(userId); setMode('view'); setMsg(id ? t('Time salvo.') : t('Você saiu do time.')); load(); } catch (e) { setErr(tErr(e.message)); }
+    try {
+      const r = await rpc('set_my_team', { p_team: id });
+      if (userId) forgetTeam(userId);
+      setMode('view');
+      const name = data.teams.find((x) => x.id === id)?.name || '';
+      setMsg(!id ? t('Você saiu do time.') : r?.status === 'pending'
+        ? t('Pedido enviado aos administradores do {name}. Você entra no time assim que aprovarem.', { name })
+        : t('Time salvo.'));
+      load();
+    } catch (e) { setErr(tErr(e.message)); }
+  };
+  const cancelRequest = async () => {
+    setErr('');
+    try { await rpc('cancel_team_request'); setMsg(t('Pedido cancelado.')); load(); } catch (e) { setErr(tErr(e.message)); }
   };
 
   if (!data) return <section className="card"><h3>{t('Seu time')}</h3><p className="muted small">{err || t('Carregando…')}</p></section>;
@@ -27,9 +40,15 @@ export default function TeamPicker({ userId }) {
       <h3 className="ic-row"><Users size={18} /> {t('Seu time')}</h3>
       {data.mine
         ? <p className="team-mine">{data.mine.logo && <TeamLogo team={data.mine} size={40} />}<b>{data.mine.name}</b>{data.mine.tag && <span className="team-tag">{data.mine.tag}</span>}
-</p>
+          {data.mine.admin && <span className="tag team-admin-tag"><Crown size={11} /> {t('Administrador')}</span>}</p>
         : <p className="muted small">{t('Você ainda não está em nenhum time.')}</p>}
       {data.mine && <TeamSocialLinks team={data.mine} />}
+      {data.requested && (
+        <p className="small team-requested">
+          {t('Pedido para entrar no {name} esperando os administradores do time.', { name: data.requested.name })}
+          {' '}<button className="link" onClick={cancelRequest}>{t('Cancelar pedido')}</button>
+        </p>
+      )}
       {data.pending && (
         <p className="small muted">
           {data.pending.status === 'pending'
@@ -56,7 +75,7 @@ export default function TeamPicker({ userId }) {
             {list.map((x) => (
               <button key={x.id} className={`team-opt ${data.mine?.id === x.id ? 'on' : ''}`} onClick={() => pick(x.id)}>
                 {x.logo && <TeamLogo team={x} size={28} />}<b>{x.name}</b>{x.tag && <span className="team-tag">{x.tag}</span>}
-                <small className="muted">{[x.city, t('{n} membros', { n: x.members })].filter(Boolean).join(' · ')}</small>
+                <small className="muted">{[x.city, t('{n} membros', { n: x.members }), x.approval && data.mine?.id !== x.id ? t('entrada com aprovação') : null].filter(Boolean).join(' · ')}</small>
               </button>
             ))}
           </div>

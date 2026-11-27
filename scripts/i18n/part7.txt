@@ -1456,3 +1456,40 @@ arquivo grande demais | file is too large | archivo demasiado grande | 파일이
 Votações | Votes | Votaciones | 투표 | 投票 | Votes | Votazioni
 As 50 notas que somam o seu PUMBILITY, com os pontos que cada uma vale. | The 50 scores that make up your PUMBILITY, with the points each one is worth. | Las 50 notas que suman tu PUMBILITY, con los puntos que vale cada una. | 내 PUMBILITY를 이루는 50개 기록과 각각의 점수입니다. | あなたのPUMBILITYを構成する50件のスコアと、それぞれのポイントです。 | Les 50 scores qui composent ton PUMBILITY, avec les points de chacun. | I 50 punteggi che compongono il tuo PUMBILITY, con i punti di ognuno.
 Onde você mais quebra | Where you break most | Dónde más quiebras | 가장 많이 끊기는 곳 | 一番ブレイクしやすいところ | Là où tu casses le plus | Dove rompi di più
+Pedido enviado aos administradores do {name}. Você entra no time assim que aprovarem. | Request sent to the {name} admins. You'll join the team once they approve. | Solicitud enviada a los administradores de {name}. Entras al equipo en cuanto la aprueben. | {name} 관리자에게 요청을 보냈어요. 승인되면 팀에 들어가요. | {name}の管理者にリクエストを送りました。承認されるとチームに参加します。 | Demande envoyée aux admins de {name}. Tu rejoins l'équipe dès qu'ils approuvent. | Richiesta inviata agli admin di {name}. Entri nel team appena approvano.
+Pedido cancelado. | Request canceled. | Solicitud cancelada. | 요청을 취소했어요. | リクエストを取り消しました。 | Demande annulée. | Richiesta annullata.
+Administrador | Admin | Administrador | 관리자 | 管理者 | Admin | Admin
+Pedido para entrar no {name} esperando os administradores do time. | Request to join {name} waiting for the team admins. | Solicitud para entrar a {name} esperando a los administradores del equipo. | {name} 가입 요청이 팀 관리자의 승인을 기다리고 있어요. | {name}への参加リクエストはチーム管理者の承認待ちです。 | Demande pour rejoindre {name} en attente des admins de l'équipe. | Richiesta per entrare in {name} in attesa degli admin del team.
+Cancelar pedido | Cancel request | Cancelar solicitud | 요청 취소 | リクエストを取り消す | Annuler la demande | Annulla richiesta
+entrada com aprovação | approval required | entrada con aprobación | 승인 후 가입 | 承認制 | sur approbation | ingresso con approvazione
+{n} pedido para entrar | {n} request to join | {n} solicitud para entrar | 가입 요청 {n}개 | 参加リクエスト{n}件 | {n} demande pour rejoindre | {n} richiesta di ingresso
+{n} pedidos para entrar | {n} requests to join | {n} solicitudes para entrar | 가입 요청 {n}개 | 参加リクエスト{n}件 | {n} demandes pour rejoindre | {n} richieste di ingresso
+Aceitar | Accept | Aceptar | 수락 | 承認 | Accepter | Accetta
+Pronto | Done | Listo | 완료 | 完了 | Terminé | Fatto
+Gerenciar participantes | Manage members | Gestionar miembros | 멤버 관리 | メンバー管理 | Gérer les membres | Gestisci membri
+Administrador do time | Team admin | Administrador del equipo | 팀 관리자 | チーム管理者 | Admin de l'équipe | Admin del team
+admin | admin | admin | 관리자 | 管理者 | admin | admin
+Deixar de ser administrador do time? | Stop being a team admin? | ¿Dejar de ser administrador del equipo? | 팀 관리자를 그만둘까요? | チーム管理者をやめますか? | Ne plus être admin de l'équipe ? | Smettere di essere admin del team?
+Tirar admin | Remove admin | Quitar admin | 관리자 해제 | 管理者を外す | Retirer l'admin | Togli admin
+Tornar admin | Make admin | Hacer admin | 관리자로 지정 | 管理者にする | Nommer admin | Rendi admin
+Tirar {n} do time? | Remove {n} from the team? | ¿Sacar a {n} del equipo? | {n} 님을 팀에서 내보낼까요? | {n}をチームから外しますか? | Retirer {n} de l'équipe ? | Togliere {n} dal team?
+Tirar do time | Remove from team | Sacar del equipo | 팀에서 내보내기 | チームから外す | Retirer de l'équipe | Togli dal team
+Este time ainda não tem administrador: qualquer pessoa entra sem aprovação. | This team has no admin yet: anyone can join without approval. | Este equipo todavía no tiene administrador: cualquiera entra sin aprobación. | 이 팀에는 아직 관리자가 없어서 누구나 승인 없이 들어올 수 있어요. | このチームにはまだ管理者がいないため、誰でも承認なしで参加できます。 | Cette équipe n'a pas encore d'admin : tout le monde peut entrer sans approbation. | Questo team non ha ancora un admin: chiunque entra senza approvazione.
+{who} pediu para entrar no time {name} | {who} asked to join the team {name} | {who} pidió entrar al equipo {name} | {who} 님이 {name} 팀 가입을 요청했어요 | {who}さんがチーム{name}への参加をリクエストしました | {who} a demandé à rejoindre l'équipe {name} | {who} ha chiesto di entrare nel team {name}
+Seu pedido foi aprovado: agora você faz parte do time {name} | Your request was approved: you're now part of the team {name} | Tu solicitud fue aprobada: ahora formas parte del equipo {name} | 요청이 승인됐어요. 이제 {name} 팀원이에요 | リクエストが承認されました。チーム{name}のメンバーになりました | Ta demande a été acceptée : tu fais maintenant partie de l'équipe {name} | La tua richiesta è stata approvata: ora fai parte del team {name}
+Seu pedido para entrar no time {name} não foi aprovado | Your request to join the team {name} was not approved | Tu solicitud para entrar al equipo {name} no fue aprobada | {name} 팀 가입 요청이 승인되지 않았어요 | チーム{name}への参加リクエストは承認されませんでした | Ta demande pour rejoindre l'équipe {name} n'a pas été acceptée | La tua richiesta di entrare nel team {name} non è stata approvata
+Você agora é administrador do time {name} | You're now an admin of the team {name} | Ahora eres administrador del equipo {name} | 이제 {name} 팀의 관리자예요 | チーム{name}の管理者になりました | Tu es maintenant admin de l'équipe {name} | Ora sei admin del team {name}
+Administradores dos times ({n}) | Team admins ({n}) | Administradores de los equipos ({n}) | 팀 관리자 ({n}) | チーム管理者 ({n}) | Admins des équipes ({n}) | Admin dei team ({n})
+{n} pedidos | {n} requests | {n} solicitudes | 요청 {n}개 | リクエスト{n}件 | {n} demandes | {n} richieste
+Sem administrador: a entrada é livre. | No admin: anyone can join. | Sin administrador: la entrada es libre. | 관리자 없음: 누구나 가입 가능. | 管理者なし:誰でも参加できます。 | Pas d'admin : entrée libre. | Nessun admin: ingresso libero.
+Participantes | Members | Miembros | 멤버 | メンバー | Membres | Membri
+Nick do jogador (ex.: NICK #1234) | Player nick (e.g. NICK #1234) | Nick del jugador (ej.: NICK #1234) | 플레이어 닉네임 (예: NICK #1234) | プレイヤー名 (例: NICK #1234) | Pseudo du joueur (ex. : NICK #1234) | Nick del giocatore (es.: NICK #1234)
+Adicionar admin | Add admin | Agregar admin | 관리자 추가 | 管理者を追加 | Ajouter un admin | Aggiungi admin
+Só os administradores do time podem fazer isso. | Only team admins can do this. | Solo los administradores del equipo pueden hacer esto. | 팀 관리자만 할 수 있어요. | チーム管理者のみ操作できます。 | Seuls les admins de l'équipe peuvent faire ça. | Solo gli admin del team possono farlo.
+Esse pedido não existe mais. | This request no longer exists. | Esta solicitud ya no existe. | 이 요청은 더 이상 없어요. | このリクエストはもうありません。 | Cette demande n'existe plus. | Questa richiesta non esiste più.
+Esse jogador não está no time. | This player isn't on the team. | Este jugador no está en el equipo. | 이 플레이어는 팀에 없어요. | このプレイヤーはチームにいません。 | Ce joueur n'est pas dans l'équipe. | Questo giocatore non è nel team.
+O time precisa ter pelo menos um administrador. | The team needs at least one admin. | El equipo necesita al menos un administrador. | 팀에는 관리자가 한 명 이상 있어야 해요. | チームには管理者が1人以上必要です。 | L'équipe doit avoir au moins un admin. | Il team deve avere almeno un admin.
+Para sair do time, use Ajustes. | To leave the team, use Settings. | Para salir del equipo, usa Ajustes. | 팀을 나가려면 설정을 이용하세요. | チームを抜けるには設定から行ってください。 | Pour quitter l'équipe, passe par Réglages. | Per lasciare il team, usa Impostazioni.
+Tire o cargo de administrador antes. | Remove the admin role first. | Quita primero el cargo de administrador. | 먼저 관리자 권한을 해제하세요. | 先に管理者権限を外してください。 | Retire d'abord le rôle d'admin. | Togli prima il ruolo di admin.
+Nenhum jogador com esse nick. | No player with that nick. | Ningún jugador con ese nick. | 그 닉네임의 플레이어가 없어요. | そのプレイヤー名は見つかりません。 | Aucun joueur avec ce pseudo. | Nessun giocatore con questo nick.
+Mais de um jogador com esse nick: use o nick completo, com o #. | More than one player with that nick: use the full nick, with the #. | Más de un jugador con ese nick: usa el nick completo, con el #. | 같은 닉네임이 여러 명이에요. # 포함 전체 닉네임을 쓰세요. | 同じ名前のプレイヤーが複数います。#を含む完全な名前を入力してください。 | Plusieurs joueurs avec ce pseudo : utilise le pseudo complet, avec le #. | Più giocatori con questo nick: usa il nick completo, con il #.

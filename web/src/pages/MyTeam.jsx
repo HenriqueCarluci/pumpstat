@@ -13,7 +13,7 @@ import { Ball } from '../components/ui.jsx';
 import { Chips } from './Songs.jsx';
 import TeamReport from '../components/TeamReport.jsx';
 import { Avatar } from './Players.jsx';
-import { Crown, Shield, Trophy, Users } from '../components/Icons.jsx';
+import { Check, Crown, Shield, Trophy, UserPlus, Users, X } from '../components/Icons.jsx';
 
 const SORTS = { pumb: (m) => m.pumbility ?? -1, D: (m) => m.max_d ?? -1, S: (m) => m.max_s ?? -1, clears: (m) => m.clears };
 
@@ -23,12 +23,20 @@ export default function MyTeam() {
   const [info, setInfo] = useState(undefined);
   const [err, setErr] = useState('');
   const [sort, setSort] = useState('pumb');
+  const [manage, setManage] = useState(false);
+  const [actErr, setActErr] = useState('');
+  const [tick, setTick] = useState(0);
   useEffect(() => {
     let alive = true;
-    setInfo(undefined);
+    if (!tick) setInfo(undefined);
     rpc('my_team', { p_version: version }).then((r) => alive && setInfo(r)).catch((e) => alive && setErr(tErr(e.message)));
     return () => { alive = false; };
-  }, [version]);
+  }, [version, tick]);
+  const act = async (fn, args, ask) => {
+    if (ask && !window.confirm(ask)) return;
+    setActErr('');
+    try { await rpc(fn, args); setTick((x) => x + 1); } catch (e) { setActErr(tErr(e.message)); }
+  };
   const members = info?.members || [];
   const ccOf = useCountries(members.map((m) => m.id));
   const ranked = useMemo(() => [...members].sort((a, b) => SORTS[sort](b) - SORTS[sort](a) || (b.pumbility ?? 0) - (a.pumbility ?? 0)), [members, sort]);
@@ -84,7 +92,28 @@ export default function MyTeam() {
         </div>
       </section>
 
+      {info.am_admin && (info.requests || []).length > 0 && (
+        <section className="card mt-requests">
+          <h3 className="ic-row"><UserPlus size={18} /> {tn(info.requests.length, '{n} pedido para entrar', '{n} pedidos para entrar')}</h3>
+          {info.requests.map((r) => (
+            <div key={r.id} className="mt-req">
+              <Avatar p={r} size={36} />
+              <div className="mt-main">
+                <b>{r.nickname || t('Jogador')}</b>
+                <div className="muted tiny">{[r.title, r.pumbility != null ? `PUMBILITY ${fmtP(r.pumbility)}` : null].filter(Boolean).join(' · ')}</div>
+              </div>
+              <div className="mt-req-btns">
+                <button className="btn sm" onClick={() => act('team_review_request', { p_user: r.id, p_approve: true })}><Check size={14} /> {t('Aceitar')}</button>
+                <button className="btn sm ghost" onClick={() => act('team_review_request', { p_user: r.id, p_approve: false })}><X size={14} /> {t('Recusar')}</button>
+              </div>
+            </div>
+          ))}
+        </section>
+      )}
+      {actErr && <div className="form-err">{actErr}</div>}
+
       <div className="filters">
+        {info.am_admin && <button className={`btn sm ${manage ? '' : 'ghost'} mt-manage`} onClick={() => setManage(!manage)}><Crown size={14} /> {manage ? t('Pronto') : t('Gerenciar participantes')}</button>}
         <Chips value={sort} onChange={setSort} options={[['pumb', 'PUMBILITY'], ['D', t('Maior Double')], ['S', t('Maior Single')], ['clears', t('Clears')]]} />
       </div>
 
@@ -95,7 +124,7 @@ export default function MyTeam() {
               <span className={`mt-rank r${i + 1}`}>{i < 3 ? <Trophy size={14} /> : null}{i + 1}</span>
               <Avatar p={m} size={40} />
               <div className="mt-main">
-                <div className="mt-nick"><Flag cc={ccOf(m.id)} /><b>{m.nickname || t('Jogador')}</b>{m.me && <span className="tag">{t('você')}</span>}{m.online && !m.me && <span className="dot-on" title={t('online agora')} />}</div>
+                <div className="mt-nick"><Flag cc={ccOf(m.id)} /><b>{m.nickname || t('Jogador')}</b>{m.admin && <span className="tag team-admin-tag" title={t('Administrador do time')}><Crown size={11} /> {t('admin')}</span>}{m.me && <span className="tag">{t('você')}</span>}{m.online && !m.me && <span className="dot-on" title={t('online agora')} />}</div>
                 {m.title && <div className="muted tiny mt-title">{m.title}</div>}
                 <div className="mt-levels">
                   {m.max_d != null && <Ball chart={{ mode: 'D', level: m.max_d }} size="sm" />}
@@ -108,13 +137,22 @@ export default function MyTeam() {
           );
           return (
             <li key={m.id} className={m.me ? 'me' : ''}>
-              {m.me || !m.friend ? <div className="mt-row">{body}</div> : <Link className="mt-row" to={`/jogador/${m.id}`}>{body}</Link>}
+              {m.me || !m.friend || manage ? <div className="mt-row">{body}</div> : <Link className="mt-row" to={`/jogador/${m.id}`}>{body}</Link>}
+              {manage && (
+                <div className="mt-actions">
+                  {m.admin
+                    ? <button className="link small" onClick={() => act('team_set_admin', { p_user: m.id, p_on: false }, m.me ? t('Deixar de ser administrador do time?') : null)}>{t('Tirar admin')}</button>
+                    : <button className="link small" onClick={() => act('team_set_admin', { p_user: m.id, p_on: true })}><Crown size={12} /> {t('Tornar admin')}</button>}
+                  {!m.me && !m.admin && <button className="link small danger" onClick={() => act('team_remove_member', { p_user: m.id }, t('Tirar {n} do time?', { n: m.nickname || t('Jogador') }))}>{t('Tirar do time')}</button>}
+                </div>
+              )}
             </li>
           );
         })}
       </ol>
       {isOn(plan, 'team_report') && <PlanLock feature="team_report" title={t('Relatório do time')}><TeamReport /></PlanLock>}
 
+      {!members.some((m) => m.admin) && <p className="muted tiny">{t('Este time ainda não tem administrador: qualquer pessoa entra sem aprovação.')}</p>}
       <p className="muted tiny">{t('Maior nível passado sem quebrar, na versão atual. Toque num amigo para comparar as notas.')}
         {' '}{t('No time desde {d}.', { d: new Date(members.find((m) => m.me)?.joined || Date.now()).toLocaleDateString(locale(), { day: '2-digit', month: 'short', year: 'numeric' }) })}</p>
       {canAdmin(plan, 'venues') && <p className="muted tiny"><Crown size={12} /> {t('Times e participantes são gerenciados em Administração.')}</p>}
