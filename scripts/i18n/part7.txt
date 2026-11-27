@@ -1408,3 +1408,9 @@ Passes e recordes dos amigos, PUMBILITY subindo, lives na Twitch e outras novida
 Notificações em pop-up | Pop-up notifications | Notificaciones emergentes | 팝업 알림 | ポップアップ通知 | Notifications pop-up | Notifiche pop-up
 Notificação de PUMBILITY dos amigos | Friends' PUMBILITY notifications | Notificación de PUMBILITY de amigos | 친구 PUMBILITY 알림 | フレンドのPUMBILITY通知 | Notification du PUMBILITY des amis | Notifica PUMBILITY degli amici
 Aviso de live na Twitch | Twitch live alert | Aviso de directo en Twitch | Twitch 방송 알림 | Twitch配信の通知 | Alerte de live Twitch | Avviso diretta Twitch
+Quem pode me ver | Who can see me | Quién puede verme | 나를 볼 수 있는 사람 | 表示する相手 | Qui peut me voir | Chi può vedermi
+Mais gente online | More people online | Más gente en línea | 다른 온라인 플레이어 | ほかのオンライン | Autres joueurs en ligne | Altri giocatori online
+No meu fliperama | At my arcade | En mi arcade | 내 오락실 | 同じゲーセン | Dans ma salle | Nella mia sala
+Todo mundo online já está nas sugestões acima. | Everyone online is already in the suggestions above. | Todos los que están en línea ya están en las sugerencias de arriba. | 온라인인 사람은 모두 위 추천에 있어요. | オンラインの人は全員上のおすすめにいます。 | Tous les joueurs en ligne sont déjà dans les suggestions ci-dessus. | Tutti quelli online sono già nei suggerimenti sopra.
+Ninguém nesse filtro agora. | No one in this filter right now. | Nadie en este filtro ahora. | 지금 이 필터에는 아무도 없어요. | 今このフィルターには誰もいません。 | Personne dans ce filtre pour l'instant. | Nessuno in questo filtro ora.
+Convidado | Invited | Invitado | 초대함 | 招待済み | Invité | Invitato

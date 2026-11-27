@@ -93,6 +93,12 @@ const FAKE = {
     prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
     days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
   list_teams: { teams: [], mine: null, pending: null },
+  online_players: [
+    { id: 'amigo', nickname: 'OINOMORI #7461', title: '[D] ADVANCED LV.7', pumbility: 17046, max: { S: 21, D: 24, version: 'phoenix2' }, match: 'close', venue: 'HotZone ParkShopping São Caetano', friend: true, status: 'online' },
+    { id: 'm2', nickname: 'FROZEN07 #1125', title: '[THE 1ST] BOSS BREAKER', pumbility: 3811, max: { S: 13, D: 8, version: 'phoenix2' }, status: 'online' },
+    { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME #0001', title: 'Bracket Lv.10', pumbility: 9020, max: { S: 18, D: 19, version: 'phoenix' }, same_venue: true, status: 'away', invited: true },
+  ],
+  lives_now: [{ user: 'amigo', login: 'oinomori', title: 'Treino D24 no Phoenix 2', started_at: new Date().toISOString() }],
   app_config: { community: { tier_vote_hours: 48, tier_vote_min: 3 } },
   admin_stats: { users: 412, new_7d: 31, active_7d: 188, online: 12, linked: 300, plus: 40, pro: 6, feedback_open: 3, reports_open: 1, banned: 2 },
   admin_staff: [{ id: 'eu', role: 'owner', since: '2026-08-01T00:00:00Z', nickname: 'HENRIQUE', email: 'eu@exemplo.com' },

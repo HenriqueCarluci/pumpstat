@@ -1,5 +1,5 @@
 // Lives da Twitch: quem preencheu a Twitch no perfil e entrou ao vivo vira notificação para os amigos.
-// Chamada pelo pg_cron a cada 30 min. Precisa dos segredos TWITCH_CLIENT_ID e TWITCH_CLIENT_SECRET
+// Chamada pelo pg_cron a cada 10 min. Precisa dos segredos TWITCH_CLIENT_ID e TWITCH_CLIENT_SECRET
 // (app criado em dev.twitch.tv). Sem eles, não faz nada.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 

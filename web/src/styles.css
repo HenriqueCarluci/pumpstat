@@ -2264,3 +2264,51 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 @keyframes nt-in { from { transform: translateY(-120%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes nt-out { from { transform: none; opacity: 1; } to { transform: translateY(-120%); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .nt-toast, .nt-toast.leaving { animation-duration: .01s; } }
+
+/* selo AO VIVO (Twitch) */
+.live-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 6px; background: #e91916; color: #fff;
+  font-size: 10.5px; font-weight: 800; letter-spacing: .04em; text-decoration: none; white-space: nowrap; vertical-align: middle; }
+.live-badge i { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: live-pulse 1.4s ease-in-out infinite; }
+.live-badge.big { font-size: 12px; padding: 4px 10px; border-radius: 8px; gap: 6px; max-width: 100%; }
+.live-badge .live-title { font-weight: 600; letter-spacing: 0; opacity: .92; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.live-badge.big .live-title::before { content: '·'; margin-right: 6px; }
+@keyframes live-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .live-badge i { animation: none; } }
+
+/* Online agora: cartões mais compactos */
+.on-head h2 { margin-bottom: 4px; }
+.on-vis { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; margin: 10px 0 4px; border-radius: 12px;
+  background: var(--card, rgba(255,255,255,.04)); border: 1px solid var(--line); }
+.on-vis-l { font-size: 13px; color: var(--muted, #a3a8b5); }
+.on-vis .chips { margin: 0; }
+.on-vis .chips button { padding: 4px 10px; font-size: 13px; }
+.on-vis p { flex-basis: 100%; margin: 0; }
+.on-sec { margin-top: 14px; }
+.on-sec > h3 { margin-bottom: 2px; }
+.on-list-h { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.on-list-h h3 { margin: 0; }
+.on-list-h .chips { margin: 0; }
+.on-list-h .chips button { padding: 4px 10px; font-size: 13px; }
+.online-row { padding: 12px; border: 1px solid var(--line); }
+.online-row.m-close { border-color: rgba(255,93,143,.45); }
+.online-row.m-near { border-color: rgba(255,176,46,.35); }
+.online-main { grid-template-columns: 48px minmax(0, 1fr) auto; align-items: start; gap: 12px; }
+.online-av { width: 48px; height: 48px; }
+.online-nick { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.online-nick b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.online-nick-link { min-width: 0; color: inherit; text-decoration: none; }
+.online-title { font-size: 12px; font-weight: 600; opacity: .75; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.online-stats { display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+.online-stats .online-pb { margin-left: 0; font-size: 14px; }
+.online-stats .online-max { margin-top: 0; gap: 4px; }
+.online-max .ball.sm { width: 30px; height: 30px; }
+.online-tags { margin-top: 8px; gap: 5px; align-items: center; }
+.online-tags .tag { gap: 4px; }
+.online-tags .tag.venue { max-width: 100%; min-width: 0; }
+.online-tags .tag.venue span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.online-tags .tag.ok, .online-cta .tag.ok { border-color: #3ee06f; color: #9ff0b9; }
+.online-cta { align-self: start; }
+.online-cta .btn.sm { padding: 7px 14px; }
+.pp-live { margin: 4px 0 2px; max-width: 100%; display: flex; }
+.tag.on-st.away { border-color: #ffc83d; color: #ffd978; }
+.tag.on-st.busy { border-color: #ff6b6b; color: #ff9d9d; }

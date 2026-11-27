@@ -14,8 +14,10 @@ import MiniChat from '../components/MiniChat.jsx';
 import { Badges } from '../components/WeekCard.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
 import PlanLock from '../components/PlanLock.jsx';
-import { entitlements } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
+import LiveBadge from '../components/LiveBadge.jsx';
+import { useLives } from '../lib/lives.js';
 
 export function Avatar({ p, size = 44 }) {
   return (
@@ -28,6 +30,7 @@ export function Avatar({ p, size = 44 }) {
 /** Amigos (notas visíveis só depois da aprovação), busca por nickname e solicitações. */
 export default function Players() {
   const { version, plan } = useData();
+  const lives = useLives(isOn(plan, 'twitch_live'));
   const friendCap = entitlements(plan).limit('friends');
   const [params] = useSearchParams();
   const [tab, setTab] = useState(params.get('tab') || 'friends');
@@ -91,7 +94,7 @@ export default function Players() {
                     <Avatar p={p} />
                     <span className="pinfo">
                       <span className="ptitle">{p.title}</span>
-                      <Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>}
+                      <Flag cc={ccOf(p.id)} /><b>{p.nickname || t('Jogador')}</b><TeamTag team={teamOf(p.id)} />{p.me && <span className="tag">{t('você')}</span>} <LiveBadge live={lives.get(p.id)} />
                       <small className="muted">{t('{n} recordes', { n: p.bests })}</small>
                     </span>
                     <span className="ppb">
@@ -188,8 +191,9 @@ function hl(name, term) {
 /** Perfil de um amigo: informações, estatísticas, as 50 músicas que formam o PUMBILITY e o botão para comparar. */
 export function PlayerProfile() {
   const { id } = useParams();
-  const { data, version, session } = useData();
+  const { data, version, session, plan } = useData();
   const myId = session?.user?.id;
+  const lives = useLives(isOn(plan, 'twitch_live'));
   const [rows, setRows] = useState(null);
   const [other, setOther] = useState(null);
   // leva até o minichat no fim da página e já deixa o campo pronto para escrever
@@ -269,6 +273,7 @@ export function PlayerProfile() {
           {who?.title && <span className="ptitle">{who.title}</span>}
           <h2><Flag cc={ccOf(id)} />{who?.nickname || t('Jogador')}</h2>
           <TeamTag team={teamOf(id)} />
+          {lives.get(id) && <div className="pp-live"><LiveBadge live={lives.get(id)} big /></div>}
           <SocialLinks userId={id} me={isMe} />
           <Badges userId={id} />
         </div>
