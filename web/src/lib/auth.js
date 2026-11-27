@@ -107,12 +107,23 @@ export async function authRequest(path, { method = 'GET', body } = {}) {
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
+    const code = data.error_code || data.code;
+    // a sessão foi encerrada no servidor (ex.: ao ativar a verificação em duas etapas, o Supabase encerra as outras
+    // sessões da conta): sai neste aparelho e a tela de login explica
+    if (code === 'session_not_found' || /session_id claim in JWT does not exist/i.test(data.msg || data.message || '')) {
+      try { sessionStorage.setItem('pumpstat:session-ended', '1'); } catch { /* ignore */ }
+      save(null);
+    }
     const err = new Error(translate(data.msg || data.error_description || data.message || `Erro ${res.status}`));
     err.status = res.status;
-    err.code = data.error_code || data.code;
+    err.code = code;
     throw err;
   }
   return data;
+}
+/** true uma vez, depois que a sessão foi encerrada no servidor (para a tela de login avisar). */
+export function takeSessionEnded() {
+  try { const v = sessionStorage.getItem('pumpstat:session-ended'); sessionStorage.removeItem('pumpstat:session-ended'); return !!v; } catch { return false; }
 }
 /** Troca a sessão pela que o servidor devolveu (ex.: depois de confirmar o código do autenticador). */
 export const adoptSession = (data) => store(data);
@@ -232,6 +243,8 @@ function translate(m) {
     'Email not confirmed': 'Confirme o e-mail pelo link que enviamos antes de entrar.',
     'User already registered': 'Este e-mail já tem conta. Use "Entrar".',
     'Password should be at least 6 characters.': 'A senha precisa ter pelo menos 6 caracteres.',
+    'Session from session_id claim in JWT does not exist': 'Sua sessão terminou. Entre de novo.',
+    'Session not found': 'Sua sessão terminou. Entre de novo.',
     'Invalid TOTP code entered': 'Código inválido ou expirado. Confira o relógio do celular e tente de novo.',
     'Invalid MFA code entered': 'Código inválido ou expirado. Confira o relógio do celular e tente de novo.',
   };

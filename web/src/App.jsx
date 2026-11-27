@@ -3,7 +3,7 @@ import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-do
 import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
 import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
-import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
+import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
 import { initNative } from './lib/native.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
@@ -96,7 +96,8 @@ export default function App() {
     if (/^#\/excluir-conta/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><DeleteInfo /></main></div>;
     if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><Privacy /></main></div>;
     if (isGuest()) return <GuestApp />;
-    return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
+    return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error })
+      : takeSessionEnded() ? t('Sua sessão neste aparelho foi encerrada (isso acontece ao ativar a verificação em duas etapas). Entre de novo.') : ''} />;
   }
   return <MfaGate session={session}>
     {recovery && <NewPassword onDone={() => setRecovery(false)} />}
