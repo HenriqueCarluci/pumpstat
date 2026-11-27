@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { rpc } from '../lib/api.js';
 import { chartTier, TIER_NUM, TIER_VOTES } from '../lib/piu.js';
 import { t, tErr, tn } from '../lib/i18n.js';
+import { canAdmin } from '../lib/admin.js';
 import { useData } from '../App.jsx';
 import { Ball, Jacket } from './ui.jsx';
 import { Check, Clock, ShieldCheck, ThumbsDown, ThumbsUp, Vote } from './Icons.jsx';
@@ -56,7 +57,7 @@ export function ProposalCard({ p, onChange, showChart = false }) {
           {p.my_vote != null && <span className="muted small ic-row"><Check size={13} /> {t('voto registrado')}</span>}
         </div>
       ) : <p className="muted small">{t('Só quem passou este chart pode votar.')}</p>)}
-      {p.status === 'open' && plan?.admin && (
+      {p.status === 'open' && canAdmin(plan, 'charts') && (
         <div className="bm-row small">
           <span className="muted ic-row"><ShieldCheck size={13} /> {t('Admin:')}</span>
           <button className="link" disabled={busy} onClick={() => close(true)}>{t('Aprovar agora')}</button>

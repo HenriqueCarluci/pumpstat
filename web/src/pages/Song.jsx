@@ -12,6 +12,7 @@ import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialAdmin, SpecialBadges } from '../components/Special.jsx';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { t } from '../lib/i18n.js';
+import { canAdmin } from '../lib/admin.js';
 import { ChevronRight, History, PencilLine, Play, Star, Trophy, Users } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
@@ -52,9 +53,9 @@ export default function Song() {
             {song.rise && <RiseBadge />}
           </div>
           {song.rise && <p className="small muted rise-note">{t('Música do PUMP IT UP R!SE. Na Phoenix 2 ela só aparece para quem ligou a conta Steam do R!SE ao AM.PASS.')}</p>}
-          {plan?.admin && <RiseAdmin song={song} onChange={reload} />}
+          {canAdmin(plan, 'charts') && <RiseAdmin song={song} onChange={reload} />}
           <a className="btn yt" href={videoUrl('s', song.id, song.title)} target="_blank" rel="noreferrer"><Play size={16} fill="currentColor" /> {t('Ver no YouTube')}</a>
-          {plan?.admin && <VideoAdmin vkey={`s:${song.id}`} />}
+          {canAdmin(plan, 'charts') && <VideoAdmin vkey={`s:${song.id}`} />}
         </div>
       </section>
 
@@ -204,8 +205,8 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
         <button type="button" className={`cc-act ${open ? 'on' : ''}`} onClick={toggle} aria-expanded={open}><History size={16} /><span>{t('Histórico')}</span></button>
         <Link to={`/chart/${c.id}`} className="cc-act"><ChevronRight size={16} /><span>{t('Detalhes')}</span></Link>
       </div>
-      {plan?.admin && <VideoAdmin vkey={`c:${c.id}`} />}
-      {plan?.admin && <SpecialAdmin chart={c} onSaved={onReviewed} />}
+      {canAdmin(plan, 'charts') && <VideoAdmin vkey={`c:${c.id}`} />}
+      {canAdmin(plan, 'charts') && <SpecialAdmin chart={c} onSaved={onReviewed} />}
 
       {reviews && <div className="cc-hist"><ChartReviews chart={c} onSaved={onReviewed} /></div>}
       {rank && <div className="cc-hist"><ChartRanking chartId={c.id} /></div>}

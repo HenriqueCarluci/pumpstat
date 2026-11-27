@@ -6,8 +6,9 @@ import { DEFAULT_PRODUCTS } from '../lib/billing.js';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
-import { Check, Crown, ShieldCheck, ShieldOff, UserX, UserCheck, X } from '../components/Icons.jsx';
+import { Check, Crown, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
 import { PLAN_LABEL } from '../lib/plans.js';
+import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
 import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
@@ -17,21 +18,64 @@ import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 export default function Admin() {
   const { plan } = useData();
   const [params] = useSearchParams();
-  const [tab, setTab] = useState(params.get('tab') || 'users');
+  const tabs = [['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
+    ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
+    ['challenges', 'Desafios', 'events'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
+  const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
   if (!plan?.admin) return <div className="page"><p className="empty">{t('só administradores')}</p></div>;
+  const shown = tabs.some(([id]) => id === tab) ? tab : tabs[0]?.[0];
   return (
     <div className="page admin">
       <h2>{t('Administração')}</h2>
-      <Stats />
-      <Chips value={tab} onChange={setTab} options={[['users', t('Usuários')], ['approvals', t('Aprovações')], ['reports', t('Denúncias')], ['feedback', t('Suporte')], ['plans', t('Planos')], ['ads', t('Anúncios')], ['challenges', t('Desafios')], ['features', t('Recursos')]]} />
-      {tab === 'users' && <Users />}
-      {tab === 'approvals' && <Approvals />}
-      {tab === 'reports' && <Reports />}
-      {tab === 'feedback' && <FeedbackList />}
-      {tab === 'plans' && <PlansConfig />}
-      {tab === 'ads' && <AdsConfig />}
-      {tab === 'challenges' && <ChallengesAdmin />}
-      {tab === 'features' && <FeatureToggles />}
+      <p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p>
+      {canAdmin(plan, 'stats') && <Stats />}
+      <Chips value={shown} onChange={setTab} options={tabs.map(([id, l]) => [id, t(l)])} />
+      {shown === 'users' && <Users />}
+      {shown === 'team' && <Team />}
+      {shown === 'curation' && <><CommunityConfig /><p className="muted small">{t('O tier do clube, os gimmicks, o R!SE e os vídeos são ajustados direto na página de cada música e chart.')}</p></>}
+      {shown === 'approvals' && <Approvals />}
+      {shown === 'reports' && <Reports />}
+      {shown === 'feedback' && <FeedbackList />}
+      {shown === 'plans' && <PlansConfig />}
+      {shown === 'ads' && <AdsConfig />}
+      {shown === 'challenges' && <ChallengesAdmin />}
+      {shown === 'features' && <FeatureToggles />}
+    </div>
+  );
+}
+
+function Team() {
+  const { plan, session } = useData();
+  const [list, setList] = useState(null);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_staff').then(setList).catch((e) => setErr(tErr(e.message)));
+  useEffect(() => { load(); }, []); // eslint-disable-line
+  const setRole = async (m, role) => {
+    if (!window.confirm(role ? t('Dar o perfil "{r}" para esta pessoa?', { r: t(roleLabel(role)) }) : t('Tirar esta pessoa da equipe?'))) return;
+    try { await rpc('admin_set_role', { p_user: m.id, p_role: role || null }); load(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  const edit = canAdmin(plan, 'roles');
+  const me = session?.user?.id;
+  return (
+    <div className="admin-team">
+      <div className="card admin-roles">
+        {ADMIN_ROLES.map(([id, l, d]) => <p key={id} className="small"><b>{t(l)}</b> · <span className="muted">{t(d)}</span></p>)}
+        {edit && <p className="tiny muted">{t('Para chamar alguém para a equipe, busque a pessoa em Usuários e escolha o perfil.')}</p>}
+      </div>
+      {err && <div className="form-err">{err}</div>}
+      {!list && !err && <p className="empty">{t('Carregando…')}</p>}
+      {(list || []).map((m) => (
+        <div key={m.id} className="admin-user team-row">
+          <span className="q-avatar" style={{ width: 36, height: 36 }}>{m.avatar ? <img src={m.avatar} alt="" referrerPolicy="no-referrer" /> : (m.nickname || m.email || '?').slice(0, 2)}</span>
+          <span className="admin-user-info"><b>{m.nickname || m.email}</b><small className="muted">{m.email} · {t('desde {d}', { d: fmtDate(m.since) })}</small></span>
+          {edit && m.id !== me
+            ? <select value={m.role} onChange={(e) => setRole(m, e.target.value)}>
+                <option value="">{t('Fora da equipe')}</option>
+                {ADMIN_ROLES.map(([id, l]) => <option key={id} value={id}>{t(l)}</option>)}
+              </select>
+            : <span className="tag admin-tag">{t(roleLabel(m.role))}</span>}
+        </div>
+      ))}
     </div>
   );
 }
@@ -74,6 +118,7 @@ function Users() {
 }
 
 function UserRow({ u, open, onToggle, onChange }) {
+  const { plan } = useData();
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const [note, setNote] = useState(u.plan_note || '');
@@ -99,7 +144,7 @@ function UserRow({ u, open, onToggle, onChange }) {
           <small className="muted">{u.email} · {u.provider}</small>
           <span className="online-tags">
             <span className={`tag ${plus ? 'plus' : ''}`}>{planText}</span>
-            {u.admin && <span className="tag admin-tag ic-row"><ShieldCheck size={12} /> admin</span>}
+            {u.admin && <span className="tag admin-tag ic-row"><ShieldCheck size={12} /> {t(roleLabel(u.admin_role) || 'admin')}</span>}
             {u.banned && <span className="tag warn">{t('bloqueado')}</span>}
           </span>
         </span>
@@ -116,6 +161,7 @@ function UserRow({ u, open, onToggle, onChange }) {
             <span>{t('Amigos')}: {u.friends}</span>
             {u.reports > 0 && <span className="warn-text">{t('Denúncias')}: {u.reports}</span>}
           </div>
+          {canAdmin(plan, 'plans') && <>
           <div className="rv-label">{t('Liberar plano (cortesia)')}</div>
           <div className="chips">{['plus', 'pro'].map((p) => <button key={p} className={give === p ? 'on' : ''} onClick={() => setGive(p)}>{PLAN_LABEL[p]}</button>)}</div>
           <input placeholder={t('Motivo (opcional), ex.: membro do clube')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} />
@@ -129,14 +175,20 @@ function UserRow({ u, open, onToggle, onChange }) {
               <button disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'free' }, t('Remover o plano deste usuário?'))}>{t('Remover plano')}</button>
             )}
           </div>
+          </>}
+          {canAdmin(plan, 'roles') && <>
+            <div className="rv-label">{t('Equipe')}</div>
+            <select value={u.admin_role || ''} disabled={busy}
+              onChange={(e) => run('admin_set_role', { p_user: u.id, p_role: e.target.value || null }, e.target.value ? t('Dar o perfil "{r}" para esta pessoa?', { r: t(roleLabel(e.target.value)) }) : t('Tirar esta pessoa da equipe?'))}>
+              <option value="">{t('Fora da equipe')}</option>
+              {ADMIN_ROLES.map(([id, l]) => <option key={id} value={id}>{t(l)}</option>)}
+            </select>
+          </>}
           <div className="rv-label">{t('Conta')}</div>
           <div className="bm-row">
-            {u.banned
+            {canAdmin(plan, 'ban') && (u.banned
               ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: false })}><UserCheck size={15} /> {t('Desbloquear')}</button>
-              : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>}
-            {u.admin
-              ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_admin', { p_user: u.id, p_admin: false }, t('Tirar o acesso de administrador?'))}><ShieldOff size={15} /> {t('Tirar admin')}</button>
-              : <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_admin', { p_user: u.id, p_admin: true }, t('Dar acesso de administrador? A pessoa poderá gerenciar planos e usuários.'))}><ShieldCheck size={15} /> {t('Tornar admin')}</button>}
+              : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
           </div>
           {err && <div className="form-err">{err}</div>}
@@ -186,6 +238,7 @@ function FeedbackList() {
 const REASON = { spam: 'Spam', abuse: 'Ofensa ou assédio', cheating: 'Trapaça nas notas', inappropriate: 'Conteúdo impróprio', other: 'Outro' };
 
 function Reports() {
+  const { plan } = useData();
   const [status, setStatus] = useState('open');
   const [list, setList] = useState(null);
   const load = () => rpc('admin_reports', { p_status: status }).then(setList).catch(() => setList([]));
@@ -211,7 +264,7 @@ function Reports() {
             {r.context?.comment && <p className="fb-msg muted">“{r.context.comment}”</p>}
             <small className="muted">{t('Denunciado por')} {r.reporter_nick || '—'}{r.context?.where ? ` · ${r.context.where}` : ''}</small>
             <div className="bm-row">
-              {!r.reported_banned && <button className="btn ghost danger" onClick={() => ban(r)}><UserX size={15} /> {t('Bloquear conta')}</button>}
+              {!r.reported_banned && canAdmin(plan, 'ban') && <button className="btn ghost danger" onClick={() => ban(r)}><UserX size={15} /> {t('Bloquear conta')}</button>}
               {r.status === 'open'
                 ? <button className="btn" onClick={() => mark(r.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
                 : <button className="btn ghost" onClick={() => mark(r.id, 'open')}>{t('Reabrir')}</button>}
@@ -412,7 +465,6 @@ function Approvals() {
       <h3>{t('Votações de tier abertas')}</h3>
       {!votes.length && <p className="muted small">{t('Nenhuma votação aberta.')}</p>}
       {votes.map((p) => <ProposalCard key={p.id} p={p} onChange={load} showChart />)}
-      <CommunityConfig />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // Só para desenvolvimento: renderiza a página da música com dados de exemplo (não entra no build).
 import { createRoot } from 'react-dom/client';
+import AdminPage from './pages/Admin.jsx';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import TeamPicker from './components/TeamPicker.jsx';
 import DayReport from './pages/DayReport.jsx';
@@ -51,6 +52,12 @@ const FAKE = {
     prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
     days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
   list_teams: { teams: [], mine: null, pending: null },
+  admin_stats: { users: 412, new_7d: 31, active_7d: 188, online: 12, linked: 300, plus: 40, pro: 6, feedback_open: 3, reports_open: 1, banned: 2 },
+  admin_staff: [{ id: 'eu', role: 'owner', since: '2026-08-01T00:00:00Z', nickname: 'HENRIQUE', email: 'eu@exemplo.com' },
+    { id: 'amigo', role: 'curator', since: '2026-11-20T00:00:00Z', nickname: 'PUMPKING', email: 'pk@exemplo.com' },
+    { id: 'm2', role: 'moderator', since: '2026-11-21T00:00:00Z', nickname: 'NEONSTEP', email: 'neon@exemplo.com' }],
+  admin_users: [{ id: 'amigo', email: 'pk@exemplo.com', provider: 'google', nickname: 'PUMPKING', plan: 'plus', plan_source: 'admin', plan_expires: '2027-01-01T00:00:00Z', admin: true, admin_role: 'curator', friends: 4, linked: true, created_at: '2026-08-01T00:00:00Z', last_sign_in: '2026-11-26T00:00:00Z' },
+    { id: 'm2', email: 'neon@exemplo.com', provider: 'google', nickname: 'NEONSTEP', plan: 'free', admin: false, friends: 1, linked: true, created_at: '2026-09-01T00:00:00Z', last_sign_in: '2026-11-25T00:00:00Z' }],
   my_training: [[5769, 1795700000]], training_set: [[5769, 1795700000], [4864, 1795710000]],
   countries_of: [['amigo', 'BR'], ['m2', 'BR'], ['m3', 'JP'], ['eu', 'BR']], teams_of: { eu: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' }, amigo: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg' } },
   my_team: { team: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', city: 'São Paulo - SP', logo: '/teams/laqua.jpg', instagram: 'team.laqua', socials: { tiktok: 'team.laqua', discord: 'abcXYZ' } },
@@ -87,11 +94,15 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
 song.charts = charts;
 charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; c.tags = [['twist', 'spin'], ['half', 'crossover'], ['gimmick', 'drill'], [], ['run'], ['jack']][i % 6]; });
 const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
-const plan = { plan: 'plus', admin: new URLSearchParams(location.search).has('admin'), config: { toggles: {} } };
+const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','feedback','charts','events','venues','ads','config'],
+  admin: ['stats','users','ban','reports','feedback','charts','events','venues','ads','config'], moderator: ['stats','users','ban','reports'],
+  curator: ['stats','charts'], events: ['stats','events','venues'], support: ['stats','users','feedback'] };
+const adminRole = new URLSearchParams(location.search).get('admin');
+const plan = { plan: 'plus', admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {} } };
 const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { list: [] }, presence: {} };
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

@@ -3,7 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { cachedVersion, fetchVersion, loadProgress, sessionVersion } from '../lib/api.js';
 import {
-  chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, PATTERNS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
+  chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, DIMENSIONS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
 } from '../lib/insights.js';
 import Rival from './Rival.jsx';
 import TopPlayed from '../components/TopPlayed.jsx';
@@ -77,7 +77,7 @@ export default function Progress() {
     const othLvl = a.oth ? playerLevel(levelStats(a.oth.attempts, mode)) : null;
     const weak = weaknesses(weaknessSums(a.attempts, a.prog, mode, lvl), a.oth ? weaknessSums(a.oth.attempts, a.oth.prog, mode, othLvl) : new Map());
     const s1 = patternShare(a.attempts, a.prog, mode, lvl), s2 = a.oth ? patternShare(a.oth.attempts, a.oth.prog, mode, othLvl) : { pass: {}, fail: {} };
-    const sum = (x, y) => Object.fromEntries(PATTERNS.map((p) => [p, (x[p] || 0) + (y[p] || 0)]));
+    const sum = (x, y) => Object.fromEntries(DIMENSIONS.map((p) => [p, (x[p] || 0) + (y[p] || 0)]));
     const share = { pass: sum(s1.pass, s2.pass), fail: sum(s1.fail, s2.fail) };
     const tipList = makeTips(data, a.prog, a.attempts, mode, lvl, weak);
     const recs = recommendations(version, data.charts);
@@ -184,7 +184,8 @@ function Evolution({ a, r, mode }) {
 
 // ---------- Gráficos de setor: onde você passa e onde você quebra ----------
 // cor fixa por padrão (a cor segue o padrão, nunca a posição), paleta validada para fundo escuro
-const PATTERN_COLOR = { twist: '#338ced', drill: '#e76624', run: '#00a888', bracket: '#d28e05', jump: '#e24d8b', jack: '#0aac23', doublestep: '#9887ef', footswitch: '#eb6263' };
+const PATTERN_COLOR = { twist: '#338ced', drill: '#e76624', run: '#00a888', bracket: '#d28e05', jump: '#e24d8b', jack: '#0aac23', doublestep: '#9887ef', footswitch: '#eb6263',
+  speed: '#f4d35e', stamina: '#b0703c', gimmick: '#5ce1e6' };
 function slicesOf(counts) {
   const total = Object.values(counts).reduce((a, v) => a + v, 0);
   if (!total) return [];
@@ -206,7 +207,7 @@ function ShareDonuts({ share }) {
         <div><h4 className="center">{t('Quebras')}</h4>{fail.length ? <Donut slices={fail} label={t('Quebras')} center={[fmtNum(n(fail)), t('quebras')]} /> : <p className="muted small center">{t('Nenhuma quebra registrada perto do seu nível.')}</p>}</div>
       </div>
       <ChartTable head={[t('Padrão'), t('Passes'), t('Quebras')]}
-        rows={PATTERNS.filter((p) => share.pass[p] || share.fail[p]).map((p) => [dimName(p), share.pass[p] || 0, share.fail[p] || 0])} />
+        rows={DIMENSIONS.filter((p) => share.pass[p] || share.fail[p]).map((p) => [dimName(p), share.pass[p] || 0, share.fail[p] || 0])} />
     </section>
   );
 }

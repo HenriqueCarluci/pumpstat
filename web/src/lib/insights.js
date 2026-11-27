@@ -450,7 +450,7 @@ export function mainPattern(prog, c, mean) {
   const st = styleOf(prog, c);
   if (!st) return null;
   let best = null, v = 0;
-  for (const p of PATTERNS) {
+  for (const p of DIMENSIONS) {
     const x = st.pct[p] || 0;
     const lift = mean ? x / Math.max(mean[p] || 0, 2) : x;
     if (x >= 5 && lift > v) { v = lift; best = p; }
@@ -464,7 +464,7 @@ export function patternShare(attempts, prog, mode, lvl) {
   if (!lvl) return { pass, fail };
   const zone = attempts.filter((r) => r.chart.mode === mode && r.chart.level >= lvl.ceiling - 4 && r.chart.level <= lvl.ceiling + 1 && styleOf(prog, r.chart));
   const mean = {};
-  for (const p of PATTERNS) mean[p] = zone.reduce((a, r) => a + (styleOf(prog, r.chart).pct[p] || 0), 0) / (zone.length || 1);
+  for (const p of DIMENSIONS) mean[p] = zone.reduce((a, r) => a + (styleOf(prog, r.chart).pct[p] || 0), 0) / (zone.length || 1);
   for (const r of zone) {
     const p = mainPattern(prog, r.chart, mean);
     if (!p || !r.attempts) continue;

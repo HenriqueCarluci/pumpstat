@@ -1548,3 +1548,12 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .cp-skill-row > i { height: 7px; border-radius: 99px; background: rgba(255,255,255,.08); overflow: hidden; }
 .cp-skill-row > i > b { display: block; height: 100%; border-radius: 99px; background: #58a6f0; }
 .cp-credit { margin: 6px 0 0; }
+
+/* equipe de administração */
+.admin-role { margin: -6px 0 10px; }
+.admin-team { display: grid; gap: 8px; }
+.admin-roles p { margin: 0 0 6px; }
+.admin-user.team-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; }
+.team-row .admin-user-info { display: flex; flex-direction: column; min-width: 0; }
+.team-row .admin-user-info b, .team-row .admin-user-info small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-row select { max-width: 150px; }

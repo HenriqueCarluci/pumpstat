@@ -4,6 +4,7 @@ import { rpc } from '../lib/api.js';
 import { TIER_VOTES } from '../lib/piu.js';
 import { Grade, timeAgo } from './ui.jsx';
 import { t, tErr, tn } from '../lib/i18n.js';
+import { canAdmin } from '../lib/admin.js';
 import { Check } from './Icons.jsx';
 import ReportBlock from './ReportBlock.jsx';
 import { ShieldCheck } from './Icons.jsx';
@@ -69,7 +70,7 @@ export default function ChartReviews({ chart, onSaved }) {
   if (!info) return <p className="muted small">{err || t('Carregando avaliações…')}</p>;
   return (
     <div className="reviews">
-      {plan?.admin && (
+      {canAdmin(plan, 'charts') && (
         <div className="club-tier">
           <div className="rv-label ic-row"><ShieldCheck size={13} /> {t('Tier do clube (admin): vale acima dos votos e do PIU Scores')}</div>
           <div className="chips">
@@ -79,7 +80,7 @@ export default function ChartReviews({ chart, onSaved }) {
           </div>
         </div>
       )}
-      {info.club_tier != null && !plan?.admin && <div className="tag club-tag">{t('Tier do clube')}: {tierLabel(info.club_tier)}</div>}
+      {info.club_tier != null && !canAdmin(plan, 'charts') && <div className="tag club-tag">{t('Tier do clube')}: {tierLabel(info.club_tier)}</div>}
       {isOn(plan, 'tier_votes') && <TierVote chart={chart} canPropose={info.can_review} clubTier={info.club_tier} onChange={() => { load(); onSaved?.(); }} />}
       <div className="rv-summary">
         {info.votes > 0
