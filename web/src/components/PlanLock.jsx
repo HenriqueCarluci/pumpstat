@@ -3,6 +3,7 @@
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { entitlements, PLAN_LABEL, setPreviewPlan } from '../lib/plans.js';
+import { canAdmin } from '../lib/admin.js';
 import { isNative } from '../lib/native.js';
 import { t } from '../lib/i18n.js';
 import { Crown, Eye, FlaskConical, Lock } from './Icons.jsx';
@@ -101,6 +102,32 @@ export function TestMode({ compact = false }) {
         <button type="button" className="btn" disabled={busy} onClick={() => go(pick, mins)}>{ent.preview ? t('Trocar') : t('Começar teste')}</button>
         {ent.preview && <button type="button" className="btn ghost" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>}
       </div>
+      {err && <div className="form-err">{err}</div>}
+      {!compact && canAdmin(plan, 'view_as') && <TestAccounts />}
+    </div>
+  );
+}
+
+/** Contas de teste: abre o app como elas pelo "ver como" (só leitura), para conferir a navegação em situações específicas. */
+function TestAccounts() {
+  const [list, setList] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => { rpc('admin_test_accounts').then(setList).catch(() => setList([])); }, []);
+  if (!list?.length) return null;
+  return (
+    <div className="test-accounts">
+      <b className="small">{t('Contas de teste')}</b>
+      <p className="muted small">{t('Abra o app como uma conta de teste para ver a navegação nessa situação (só leitura, 30 minutos).')}</p>
+      {list.map((a) => (
+        <div key={a.id} className="ta-row">
+          <span className="small">{t(a.label)}</span>
+          <button type="button" className="btn ghost sm" disabled={busy} onClick={async () => {
+            setBusy(true); setErr('');
+            try { await startViewAs(a.id, 30); } catch (e) { setErr(e.message); setBusy(false); }
+          }}><Eye size={14} /> {t('Ver como')}</button>
+        </div>
+      ))}
       {err && <div className="form-err">{err}</div>}
     </div>
   );

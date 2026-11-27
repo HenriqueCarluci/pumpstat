@@ -2488,3 +2488,7 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .np-link small { display: block; }
 .np-ic { width: 40px; height: 40px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: rgba(140, 255, 58, .1); color: var(--neon); }
 .tag.no-pump { margin-left: 6px; font-size: 10.5px; color: #ffd166; border-color: rgba(255, 209, 102, .4); }
+.test-accounts { display: grid; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.test-accounts p { margin: 0; }
+.ta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); }
+.ta-row .btn { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
