@@ -4,6 +4,6 @@ export const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY || 'sb_publishable
 // Serviço no Render que entra no piugame.com pelo usuário.
 export const API_URL = import.meta.env.VITE_API_URL || 'https://pumpstat-api.onrender.com';
 // Endereço público do site (o app nativo roda em localhost, então links e QR codes usam este).
-export const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://stepclub.onrender.com';
+export const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://piustats.com.br';
 // Esquema do app Android/iOS para abrir um link direto no app (ex.: QR da fila).
 export const APP_SCHEME = 'com.henriquecarluci.stepclub';
