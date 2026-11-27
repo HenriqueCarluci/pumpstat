@@ -47,6 +47,7 @@ import ChartPage from './pages/Chart.jsx';
 import ReleaseNotesP from './pages/ReleaseNotes.jsx';
 import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
 import { QuizPrompt } from './components/QuizModal.jsx';
+import { MfaInvite } from './components/TwoFactor.jsx';
 import { asPreviewUser } from './lib/plans.js';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
@@ -200,7 +201,7 @@ function HShell({ children }) {
   useSearchHotkey(desk ? open : () => {});
   return <div className="app shell"><div className="shell-scroll">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
     <header className="topbar">{desk && <button type="button" className="top-search" onClick={open}><span>Buscar música, artista, jogador ou página…</span><kbd>Ctrl K</kbd></button>}<span className="brand">PIU Stats</span></header>
-    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour /><NotifToast />{children}</div><nav className="tabbar"><a>Início</a><a>Músicas</a><a>Tier</a><a>Fila</a><a>Ajustes</a></nav></div>;
+    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour /><MfaInvite /><NotifToast />{children}</div><nav className="tabbar"><a>Início</a><a>Músicas</a><a>Tier</a><a>Fila</a><a>Ajustes</a></nav></div>;
 }
 
 createRoot(document.getElementById('root')).render(

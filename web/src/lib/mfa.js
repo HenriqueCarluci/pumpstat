@@ -10,8 +10,25 @@ export function sessionAal(s = getSession()) {
 }
 
 export async function listFactors() {
+  return totp(await authRequest('user'));
+}
+const totp = (u) => (u.factors || []).filter((f) => f.factor_type === 'totp');
+
+// convite para ativar: aparece uma vez por conta (guardado na própria conta, vale em todos os aparelhos)
+const ASKED = 'pumpstat:mfa-asked:';
+/** true quando vale mostrar o convite: sem autenticador e sem ter respondido antes. */
+export async function shouldInvite(uid) {
+  try { if (localStorage.getItem(ASKED + uid)) return false; } catch { /* ignore */ }
   const u = await authRequest('user');
-  return (u.factors || []).filter((f) => f.factor_type === 'totp');
+  if (verifiedFactor(totp(u)) || u.user_metadata?.mfa_invite_done) {
+    try { localStorage.setItem(ASKED + uid, '1'); } catch { /* ignore */ }
+    return false;
+  }
+  return true;
+}
+export async function markInvited(uid) {
+  try { localStorage.setItem(ASKED + uid, '1'); } catch { /* ignore */ }
+  await authRequest('user', { method: 'PUT', body: { data: { mfa_invite_done: true } } }).catch(() => {});
 }
 export const verifiedFactor = (list) => list.find((f) => f.status === 'verified') || null;
 

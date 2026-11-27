@@ -6,7 +6,7 @@ import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { initNative } from './lib/native.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
-import { MfaLogin } from './components/TwoFactor.jsx';
+import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
 import './lib/topbar.js';
 import { VERSIONS } from './lib/piu.js';
 import Home from './pages/Home.jsx';
@@ -322,7 +322,7 @@ function Shell() {
       <FriendOnlineToast />
       <AdminSignupToast />
       <NotifToast />
-      <QuizPrompt /><Tour />
+      <QuizPrompt /><Tour /><MfaInvite />
       </div>
 
       <nav className="tabbar">
