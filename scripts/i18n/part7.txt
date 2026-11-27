@@ -1227,3 +1227,12 @@ Entre para ver seus recordes, notas e o seu progresso neste chart. | Sign in to 
 Ver o tier sem conta | See the tier without an account | Ver el tier sin cuenta | 계정 없이 티어 보기 | アカウントなしでティアを見る | Voir le tier sans compte | Vedi il tier senza account
 charts | charts | charts | 차트 | 譜面 | charts | chart
 o modo visitante está desligado | guest mode is turned off | el modo visitante está apagado | 게스트 모드가 꺼져 있습니다 | ゲストモードはオフです | le mode visiteur est désactivé | la modalità ospite è disattivata
+Seções dos ajustes | Settings sections | Secciones de ajustes | 설정 섹션 | 設定のセクション | Sections des réglages | Sezioni delle impostazioni
+Idioma e exibição | Language and display | Idioma y visualización | 언어 및 표시 | 言語と表示 | Langue et affichage | Lingua e visualizzazione
+Privacidade e dados | Privacy and data | Privacidad y datos | 개인정보와 데이터 | プライバシーとデータ | Confidentialité et données | Privacy e dati
+teste grátis | free trial | prueba gratis | 무료 체험 | 無料体験 | essai gratuit | prova gratuita
+Seu teste grátis do {p} termina hoje | Your {p} free trial ends today | Tu prueba gratis del {p} termina hoy | {p} 무료 체험이 오늘 끝납니다 | {p}の無料体験は今日で終了します | Votre essai gratuit {p} se termine aujourd'hui | La tua prova gratuita di {p} finisce oggi
+Termina em {d}. Depois sua conta volta para o plano grátis, sem cobrança. | Ends on {d}. After that your account goes back to the free plan, with no charge. | Termina el {d}. Después tu cuenta vuelve al plan gratis, sin cobro. | {d}에 끝납니다. 이후 계정은 요금 없이 무료 플랜으로 돌아갑니다. | {d}に終了します。その後アカウントは料金なしで無料プランに戻ります。 | Se termine le {d}. Ensuite votre compte repasse au forfait gratuit, sans frais. | Finisce il {d}. Poi il tuo account torna al piano gratuito, senza addebiti.
+Continuar no {p} depois do teste | Keep {p} after the trial | Seguir en {p} después de la prueba | 체험 후에도 {p} 계속 쓰기 | 体験後も{p}を続ける | Garder {p} après l'essai | Continua con {p} dopo la prova
+Falta {n} dia do seu teste grátis do {p} | {n} day left in your {p} free trial | Falta {n} día de tu prueba gratis del {p} | {p} 무료 체험이 {n}일 남았습니다 | {p}の無料体験は残り{n}日 | Il reste {n} jour à votre essai gratuit {p} | Manca {n} giorno alla fine della prova gratuita di {p}
+Faltam {n} dias do seu teste grátis do {p} | {n} days left in your {p} free trial | Faltan {n} días de tu prueba gratis del {p} | {p} 무료 체험이 {n}일 남았습니다 | {p}の無料体験は残り{n}日 | Il reste {n} jours à votre essai gratuit {p} | Mancano {n} giorni alla fine della prova gratuita di {p}
