@@ -8,6 +8,7 @@ import { Grade } from '../components/ui.jsx';
 import { History, X } from '../components/Icons.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import AdSlot from '../components/AdSlot.jsx';
+import { useIsDesktop } from '../lib/desktop.js';
 import { adsConfig } from '../lib/ads.js';
 import { legacyOf, needsRise } from '../lib/piu.js';
 
@@ -23,6 +24,7 @@ export default function Songs() {
   const legacy = (c) => legacyOf(c, version, showLegacy);
   const [params, setParams] = useSearchParams();
   const [sheet, setSheet] = useState(false);
+  const desk = useIsDesktop();
   const [legend, setLegend] = useState(false);
 
   // maior nível passado por modo: base de "Meu nível", "Para treinar" e da ordem "Perto do meu nível"
@@ -88,6 +90,49 @@ export default function Songs() {
     ...(status !== 'all' ? [[STATUS[status] || status, () => set('s', '')]] : []),
   ];
 
+  const filterSections = (
+    <>
+      <section>
+        <h4>{t('Nível')} <span className="fs-val">{minL}–{maxL}</span></h4>
+        {hasTop && (
+          <div className="chips wrap">
+            <button className={minL === Math.max(1, myTop - 2) && maxL === Math.min(28, myTop + 1) ? 'on' : ''}
+              onClick={() => setLevels(Math.max(1, myTop - 2), Math.min(28, myTop + 1))}>{t('Meu nível')}</button>
+            <button className={status === 'todo' && minL === Math.max(1, myTop - 1) && maxL === Math.min(28, myTop + 1) ? 'on' : ''}
+              onClick={() => setMany({ min: Math.max(1, myTop - 1) <= 1 ? '' : Math.max(1, myTop - 1), max: Math.min(28, myTop + 1), s: 'todo' })}>{t('Para treinar')}</button>
+            <button className={minL === 1 && maxL === 28 ? 'on' : ''} onClick={() => setLevels(1, 28)}>{t('Todos os níveis')}</button>
+          </div>
+        )}
+        <LevelRange min={minL} max={maxL} onChange={setLevels} />
+      </section>
+      <section>
+        <h4>{t('Tipo de chart')}</h4>
+        <Chips wrap value={spec} onChange={(v) => set('x', v === 'all' ? '' : v)}
+          options={[['all', t('Todos os steps')], ['esp', 'Unique'], ['gim', t('Com gimmick')], ['normal', t('Sem Unique')]]} />
+      </section>
+      <section>
+        <h4>{t('Suas jogadas')}</h4>
+        <Chips wrap value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
+          options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['todo', t('Não passados')], ['improve', t('Sem PG')],
+            ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />
+        {isP2 && (
+          <label className="fs-switch">
+            <input type="checkbox" checked={!!prefs.legacyP1} onChange={() => { setPrefs({ legacyP1: !prefs.legacyP1 }); if (status === 'legacy') set('s', ''); }} />
+            <span><History size={14} /> {t('Mostrar recordes da Phoenix (legado P1)')}</span>
+          </label>
+        )}
+      </section>
+      {!desk && (
+        <section>
+          <h4>{t('Ordenar')}</h4>
+          <Chips wrap value={sort} onChange={(v) => set('o', v === (hasTop ? 'near' : 'az') ? '' : v)}
+            options={[...(hasTop ? [['near', t('Perto do meu nível')]] : []), ['az', 'A–Z'], ['new', t('Novas primeiro')],
+              ['best', t('Maior score')], ['recent', t('Recorde recente')], ['bpm', 'BPM']]} />
+        </section>
+      )}
+    </>
+  );
+
   return (
     <div className="page songs-page">
       <div className="songs-head">
@@ -111,73 +156,57 @@ export default function Songs() {
           </div>
         )}
       </div>
-      {grade && (
-        <div className="grade-filter">
-          <Grade grade={grade} size="sm" />
-          <span>{t('Charts que você passou com {g}', { g: grade })} · {tn(list.reduce((n, s) => n + s.charts.filter(chartFilter).length, 0), '{n} chart', '{n} charts')}</span>
-          <button className="link" onClick={() => set('g', '')}><X size={14} /> {t('Limpar')}</button>
-        </div>
-      )}
-      <div className="count muted">
-        {tn(list.length, '{n} música', '{n} músicas')}
-        <button type="button" className={`legend-btn ${legend ? 'on' : ''}`} onClick={() => setLegend((v) => !v)} aria-expanded={legend} aria-label={t('Legenda')}>i</button>
-      </div>
-      {legend && <PipLegend legacy={showLegacy} />}
-      <div className="songlist">
-        {list.slice(0, 400).map((s, i) => (
-          <Fragment key={s.id}>
-            {ads.show && i > 0 && i % ads.everyN === 0 && <AdSlot place="songs" seed={i / ads.everyN} />}
-            <SongRow song={s} filter={chartFilter} legacy={showLegacy ? legacy : null} />
-          </Fragment>
-        ))}
-        {list.length === 0 && (
-          <div className="songs-empty muted">
-            <p>{t('Nenhuma música com esses filtros.')}</p>
-            {(active.length > 0 || q) && <button type="button" className="btn ghost" onClick={() => setMany({ min: '', max: '', x: '', s: '', q: '' })}>{t('Limpar filtros')}</button>}
+      <div className="songs-body">
+        {desk && (
+          <aside className="songs-filters card" aria-label={t('Filtros')}>
+            <div className="sf-h"><b>{t('Filtros')}</b>
+              {active.length > 0 && <button type="button" className="link small" onClick={() => setMany({ min: '', max: '', x: '', s: '', o: '' })}>{t('Limpar filtros')}</button>}</div>
+            {filterSections}
+          </aside>
+        )}
+        <div className="songs-main">
+        {grade && (
+          <div className="grade-filter">
+            <Grade grade={grade} size="sm" />
+            <span>{t('Charts que você passou com {g}', { g: grade })} · {tn(list.reduce((n, s) => n + s.charts.filter(chartFilter).length, 0), '{n} chart', '{n} charts')}</span>
+            <button className="link" onClick={() => set('g', '')}><X size={14} /> {t('Limpar')}</button>
           </div>
         )}
-        {list.length > 400 && <p className="muted center">{t('Mostrando 400. Refine a busca para ver o resto.')}</p>}
+        <div className="count muted">
+          {tn(list.length, '{n} música', '{n} músicas')}
+          <button type="button" className={`legend-btn ${legend ? 'on' : ''}`} onClick={() => setLegend((v) => !v)} aria-expanded={legend} aria-label={t('Legenda')}>i</button>
+        </div>
+        {legend && <PipLegend legacy={showLegacy} />}
+          {desk && list.length > 0 && (
+            <div className="songs-th" role="row">
+              {[['az', t('Música')], ['bpm', 'BPM'], ['best', t('Maior score')], ['recent', t('Recorde recente')], ['new', t('Novas primeiro')], ...(hasTop ? [['near', t('Perto do meu nível')]] : [])].map(([k, l]) => (
+                <button key={k} type="button" className={sort === k ? 'on' : ''} onClick={() => set('o', k === (hasTop ? 'near' : 'az') ? '' : k)}>{l}{sort === k ? ' ↓' : ''}</button>
+              ))}
+            </div>
+          )}
+        <div className="songlist">
+          {list.slice(0, 400).map((s, i) => (
+            <Fragment key={s.id}>
+              {ads.show && i > 0 && i % ads.everyN === 0 && <AdSlot place="songs" seed={i / ads.everyN} />}
+              <SongRow song={s} filter={chartFilter} legacy={showLegacy ? legacy : null} />
+            </Fragment>
+          ))}
+          {list.length === 0 && (
+            <div className="songs-empty muted">
+              <p>{t('Nenhuma música com esses filtros.')}</p>
+              {(active.length > 0 || q) && <button type="button" className="btn ghost" onClick={() => setMany({ min: '', max: '', x: '', s: '', q: '' })}>{t('Limpar filtros')}</button>}
+            </div>
+          )}
+          {list.length > 400 && <p className="muted center">{t('Mostrando 400. Refine a busca para ver o resto.')}</p>}
+        </div>
+
+        </div>
       </div>
 
-      {sheet && (
+      {sheet && !desk && (
         <FilterSheet onClose={() => setSheet(false)} count={list.length}
           onReset={() => setMany({ min: '', max: '', x: '', s: '', o: '' })}>
-          <section>
-            <h4>{t('Nível')} <span className="fs-val">{minL}–{maxL}</span></h4>
-            {hasTop && (
-              <div className="chips wrap">
-                <button className={minL === Math.max(1, myTop - 2) && maxL === Math.min(28, myTop + 1) ? 'on' : ''}
-                  onClick={() => setLevels(Math.max(1, myTop - 2), Math.min(28, myTop + 1))}>{t('Meu nível')}</button>
-                <button className={status === 'todo' && minL === Math.max(1, myTop - 1) && maxL === Math.min(28, myTop + 1) ? 'on' : ''}
-                  onClick={() => setMany({ min: Math.max(1, myTop - 1) <= 1 ? '' : Math.max(1, myTop - 1), max: Math.min(28, myTop + 1), s: 'todo' })}>{t('Para treinar')}</button>
-                <button className={minL === 1 && maxL === 28 ? 'on' : ''} onClick={() => setLevels(1, 28)}>{t('Todos os níveis')}</button>
-              </div>
-            )}
-            <LevelRange min={minL} max={maxL} onChange={setLevels} />
-          </section>
-          <section>
-            <h4>{t('Tipo de chart')}</h4>
-            <Chips wrap value={spec} onChange={(v) => set('x', v === 'all' ? '' : v)}
-              options={[['all', t('Todos os steps')], ['esp', 'Unique'], ['gim', t('Com gimmick')], ['normal', t('Sem Unique')]]} />
-          </section>
-          <section>
-            <h4>{t('Suas jogadas')}</h4>
-            <Chips wrap value={status} onChange={(v) => set('s', v === 'all' ? '' : v)}
-              options={[['all', t('Tudo')], ['played', t('Jogados')], ['unplayed', t('Não jogados')], ['todo', t('Não passados')], ['improve', t('Sem PG')],
-                ...(showLegacy ? [['legacy', t('Só legado P1')]] : [])]} />
-            {isP2 && (
-              <label className="fs-switch">
-                <input type="checkbox" checked={!!prefs.legacyP1} onChange={() => { setPrefs({ legacyP1: !prefs.legacyP1 }); if (status === 'legacy') set('s', ''); }} />
-                <span><History size={14} /> {t('Mostrar recordes da Phoenix (legado P1)')}</span>
-              </label>
-            )}
-          </section>
-          <section>
-            <h4>{t('Ordenar')}</h4>
-            <Chips wrap value={sort} onChange={(v) => set('o', v === (hasTop ? 'near' : 'az') ? '' : v)}
-              options={[...(hasTop ? [['near', t('Perto do meu nível')]] : []), ['az', 'A–Z'], ['new', t('Novas primeiro')],
-                ['best', t('Maior score')], ['recent', t('Recorde recente')], ['bpm', 'BPM']]} />
-          </section>
+          {filterSections}
         </FilterSheet>
       )}
     </div>

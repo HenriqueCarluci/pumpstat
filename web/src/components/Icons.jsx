@@ -4,7 +4,7 @@ export {
   MapPin, MessageCircle, Music2, PencilLine, Play, RefreshCw, Settings as SettingsIcon, SkipForward, Swords, Tag,
   Target, ArrowUpToLine, Users, X, LayoutGrid, History, Radio, LifeBuoy, Crown, ShieldCheck, ShieldOff, UserX, UserCheck,
   Flag, Ban, Trash2, Lock, TrendingUp, Plus, ThumbsUp, ThumbsDown, Vote, Clock, Flame, Trophy, CalendarCheck, Gift, ToggleRight,
-  Dumbbell, BookmarkPlus, BookmarkCheck, Zap, Shuffle, Sparkles, Star, Minus, AtSign, Copy, ExternalLink, Send, Shield, ChevronLeft, ChartColumn as BarChart3, Heart,
+  Dumbbell, BookmarkPlus, BookmarkCheck, Search, Zap, Shuffle, Sparkles, Star, Minus, AtSign, Copy, ExternalLink, Send, Shield, ChevronLeft, ChartColumn as BarChart3, Heart,
   ImagePlus, Award, Map,
 } from 'lucide-react';
 

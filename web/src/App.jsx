@@ -29,6 +29,9 @@ import Online from './pages/Online.jsx';
 import InviteToast from './components/InviteToast.jsx';
 import FriendOnlineToast from './components/FriendOnlineToast.jsx';
 import StatusPicker from './components/StatusPicker.jsx';
+import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
+import { useIsDesktop } from './lib/desktop.js';
+const noop = () => {};
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
 import Subscription from './pages/Subscription.jsx';
@@ -39,7 +42,7 @@ import Tour from './components/Tour.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import { t, tErr } from './lib/i18n.js';
-import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon } from './components/Icons.jsx';
+import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, Search, SettingsIcon } from './components/Icons.jsx';
 import Challenges from './pages/Challenges.jsx';
 import DeleteInfo from './pages/DeleteInfo.jsx';
 
@@ -183,11 +186,18 @@ function Shell() {
   const { version, setVersion, data, loading, error, reload, notifications } = useData();
   const loc = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [loc.pathname]);
+  const desk = useIsDesktop();
+  const [search, setSearch] = useState(false);
+  const openSearch = useCallback(() => setSearch(true), []);
+  useSearchHotkey(desk ? openSearch : noop);
   if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
 
   return (
     <div className="app">
+      {desk && <Sidebar onSearch={openSearch} />}
+      {search && <SearchDialog onClose={() => setSearch(false)} />}
       <header className="topbar">
+        {desk && <button type="button" className="top-search" onClick={openSearch}><Search size={16} /> <span>{t('Buscar música, artista, jogador ou página…')}</span><kbd>Ctrl K</kbd></button>}
         <NavLink to="/" end className="brand" title={t('Início')}><Logo /> <span className="brand-text">PIU Stats</span></NavLink>
         <StatusPicker />
         <NavLink to="/notificacoes" className="bell" aria-label={t('Notificações')}>

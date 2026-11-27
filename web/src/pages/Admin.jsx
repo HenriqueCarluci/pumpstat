@@ -14,12 +14,13 @@ import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
 import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 import MissionsAdmin from './MissionsAdmin.jsx';
+import AdminHealth from './AdminHealth.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
   const { plan } = useData();
   const [params] = useSearchParams();
-  const tabs = [['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
+  const tabs = [['health', 'Monitoramento', 'stats'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
     ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
     ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
@@ -29,8 +30,13 @@ export default function Admin() {
     <div className="page admin">
       <h2>{t('Administração')}</h2>
       <p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p>
-      {canAdmin(plan, 'stats') && <Stats />}
-      <Chips value={shown} onChange={setTab} options={tabs.map(([id, l]) => [id, t(l)])} />
+      <div className="admin-layout">
+      <nav className="admin-nav" aria-label={t('Seções da administração')}>
+        <Chips value={shown} onChange={setTab} options={tabs.map(([id, l]) => [id, t(l)])} />
+      </nav>
+      <div className="admin-body">
+      {canAdmin(plan, 'stats') && shown !== 'health' && <Stats />}
+      {shown === 'health' && <AdminHealth />}
       {shown === 'users' && <Users />}
       {shown === 'team' && <Team />}
       {shown === 'curation' && <><CommunityConfig /><p className="muted small">{t('O tier do clube, os gimmicks, o R!SE e os vídeos são ajustados direto na página de cada música e chart.')}</p></>}
@@ -42,6 +48,8 @@ export default function Admin() {
       {shown === 'challenges' && <ChallengesAdmin />}
       {shown === 'missions' && <MissionsAdmin />}
       {shown === 'features' && <FeatureToggles />}
+      </div>
+      </div>
     </div>
   );
 }

@@ -1032,3 +1032,94 @@ Fixar no início | Pin to home | Fijar en el inicio | 홈에 고정 | ホーム�
 Toque na estrela para fixar até 4 atalhos no início. Sem fixar, aparecem os que você mais usa. | Tap the star to pin up to 4 shortcuts on the home screen. Otherwise, the ones you use most show up. | Toca la estrella para fijar hasta 4 atajos en el inicio. Si no fijas, aparecen los que más usas. | 별을 눌러 홈에 바로가기를 최대 4개 고정하세요. 고정하지 않으면 가장 많이 쓰는 것이 나옵니다. | 星をタップするとホームにショートカットを4つまで固定できます。固定しない場合はよく使うものが表示されます。 | Touchez l'étoile pour épingler jusqu'à 4 raccourcis à l'accueil. Sinon, ceux que vous utilisez le plus s'affichent. | Tocca la stella per fissare fino a 4 scorciatoie nella home. Altrimenti compaiono quelle che usi di più.
 Adicionar redes sociais | Add social links | Agregar redes sociales | SNS 추가 | SNSを追加 | Ajouter des réseaux sociaux | Aggiungi social
 Discord copiado: {u} | Discord copied: {u} | Discord copiado: {u} | Discord 복사됨: {u} | Discordをコピーしました: {u} | Discord copié : {u} | Discord copiato: {u}
+# desktop e monitoramento
+Buscar música, artista, jogador ou página… | Search song, artist, player or page… | Buscar canción, artista, jugador o página… | 곡, 아티스트, 플레이어, 페이지 검색… | 曲、アーティスト、プレイヤー、ページを検索… | Rechercher une chanson, un artiste, un joueur ou une page… | Cerca canzone, artista, giocatore o pagina…
+Navegação | Navigation | Navegación | 탐색 | ナビゲーション | Navigation | Navigazione
+Buscar… | Search… | Buscar… | 검색… | 検索… | Rechercher… | Cerca…
+Nada encontrado. | Nothing found. | No se encontró nada. | 결과가 없습니다. | 見つかりませんでした。 | Aucun résultat. | Nessun risultato.
+navegar | navigate | navegar | 이동 | 移動 | naviguer | naviga
+abrir | open | abrir | 열기 | 開く | ouvrir | apri
+fechar | close | cerrar | 닫기 | 閉じる | fermer | chiudi
+Jogadores | Players | Jugadores | 플레이어 | プレイヤー | Joueurs | Giocatori
+Páginas | Pages | Páginas | 페이지 | ページ | Pages | Pagine
+Seções da administração | Admin sections | Secciones de administración | 관리 섹션 | 管理セクション | Sections d'administration | Sezioni di amministrazione
+Monitoramento | Monitoring | Monitoreo | 모니터링 | モニタリング | Surveillance | Monitoraggio
+Tudo funcionando | All systems working | Todo funcionando | 모두 정상 | すべて正常 | Tout fonctionne | Tutto funziona
+Alguns pontos de atenção | A few things need attention | Algunos puntos de atención | 확인이 필요한 항목이 있습니다 | 注意が必要な点があります | Quelques points d'attention | Alcuni punti di attenzione
+Há problemas | There are problems | Hay problemas | 문제가 있습니다 | 問題があります | Il y a des problèmes | Ci sono problemi
+OK | OK | OK | 정상 | OK | OK | OK
+Atenção | Attention | Atención | 주의 | 注意 | Attention | Attenzione
+Problema | Problem | Problema | 문제 | 問題 | Problème | Problema
+Sem dado | No data | Sin datos | 데이터 없음 | データなし | Pas de donnée | Nessun dato
+fora do ar | down | fuera de línea | 접속 불가 | 停止中 | hors ligne | non raggiungibile
+Acorda em até ~50 s quando estava dormindo | Takes up to ~50 s to wake up when idle | Despierta en hasta ~50 s si estaba dormida | 대기 상태면 깨어나는 데 최대 ~50초 | 休止中なら起動に最大約50秒 | Jusqu'à ~50 s pour se réveiller en veille | Fino a ~50 s per riattivarsi se inattiva
+Banco (Supabase) | Database (Supabase) | Base de datos (Supabase) | 데이터베이스 (Supabase) | データベース (Supabase) | Base de données (Supabase) | Database (Supabase)
+erro | error | error | 오류 | エラー | erreur | errore
+Tempo do painel inteiro, ida e volta | Round trip for the whole panel | Tiempo del panel completo, ida y vuelta | 전체 패널 왕복 시간 | パネル全体の往復時間 | Aller-retour du panneau complet | Andata e ritorno dell'intero pannello
+Última sincronização | Last sync | Última sincronización | 마지막 동기화 | 最終同期 | Dernière synchro | Ultima sincronizzazione
+De qualquer jogador | From any player | De cualquier jugador | 모든 플레이어 기준 | 全プレイヤー | De n'importe quel joueur | Di qualsiasi giocatore
+{m} de {n} charts casados | {m} of {n} charts matched | {m} de {n} charts emparejados | {n}개 중 {m}개 채보 매칭 | {n}譜面中{m}件一致 | {m} sur {n} charts associés | {m} di {n} chart abbinati
+Tarefas agendadas | Scheduled jobs | Tareas programadas | 예약 작업 | 定期ジョブ | Tâches planifiées | Attività pianificate
+Falhas nas últimas 24 h | Failures in the last 24 h | Fallas en las últimas 24 h | 최근 24시간 실패 | 直近24時間の失敗 | Échecs ces 24 dernières heures | Errori nelle ultime 24 h
+Erros do app | App errors | Errores de la app | 앱 오류 | アプリのエラー | Erreurs de l'appli | Errori dell'app
+{n} pessoas nas últimas 24 h | {n} people in the last 24 h | {n} personas en las últimas 24 h | 최근 24시간 {n}명 | 直近24時間で{n}人 | {n} personnes ces 24 dernières heures | {n} persone nelle ultime 24 h
+Cache do banco | Database cache | Caché de la base | DB 캐시 | DBキャッシュ | Cache de la base | Cache del database
+Abaixo de 99% o banco lê mais do disco | Below 99% the database reads more from disk | Por debajo de 99% la base lee más del disco | 99% 미만이면 디스크 읽기가 늘어납니다 | 99%未満だとディスク読み込みが増えます | Sous 99 % la base lit davantage sur disque | Sotto il 99% il database legge di più dal disco
+Conexões | Connections | Conexiones | 연결 | 接続 | Connexions | Connessioni
+Abertas agora | Open now | Abiertas ahora | 현재 열림 | 現在接続中 | Ouvertes maintenant | Aperte ora
+atualizado às {h} | updated at {h} | actualizado a las {h} | {h} 업데이트 | {h} 更新 | mis à jour à {h} | aggiornato alle {h}
+Atualizar a cada 30 s | Refresh every 30 s | Actualizar cada 30 s | 30초마다 새로고침 | 30秒ごとに更新 | Actualiser toutes les 30 s | Aggiorna ogni 30 s
+Uso | Usage | Uso | 사용량 | 利用状況 | Utilisation | Utilizzo
+Contas | Accounts | Cuentas | 계정 | アカウント | Comptes | Account
++{n} em 7 dias | +{n} in 7 days | +{n} en 7 días | 7일간 +{n} | 7日で+{n} | +{n} en 7 jours | +{n} in 7 giorni
+Online agora | Online now | En línea ahora | 현재 온라인 | オンライン中 | En ligne | Online ora
+Sincronizaram 24 h | Synced in 24 h | Sincronizaron 24 h | 24시간 내 동기화 | 24時間以内に同期 | Synchro en 24 h | Sincronizzati 24 h
+{n} em 7 dias | {n} in 7 days | {n} en 7 días | 7일간 {n} | 7日で{n} | {n} en 7 jours | {n} in 7 giorni
+Sincronizações 24 h | Syncs in 24 h | Sincronizaciones 24 h | 24시간 동기화 횟수 | 24時間の同期数 | Synchros en 24 h | Sincronizzazioni 24 h
+Jogadas novas 24 h | New plays in 24 h | Jugadas nuevas 24 h | 24시간 새 플레이 | 24時間の新規プレイ | Nouvelles parties 24 h | Nuove partite 24 h
+Na fila agora | In queue now | En la fila ahora | 현재 대기열 | 現在の列 | Dans la file | In fila ora
+Sincronizações por hora (24 h) | Syncs per hour (24 h) | Sincronizaciones por hora (24 h) | 시간별 동기화 (24시간) | 時間ごとの同期 (24時間) | Synchros par heure (24 h) | Sincronizzazioni per ora (24 h)
+Origem nos últimos 7 dias | Source in the last 7 days | Origen en los últimos 7 días | 최근 7일 출처 | 直近7日間の取得元 | Origine ces 7 derniers jours | Origine negli ultimi 7 giorni
+charts não reconhecidos | unrecognized charts | charts no reconocidos | 인식되지 않은 채보 | 認識できない譜面 | charts non reconnus | chart non riconosciuti
+Banco de dados | Database | Base de datos | 데이터베이스 | データベース | Base de données | Database
+Tamanho | Size | Tamaño | 크기 | サイズ | Taille | Dimensione
+limite do plano grátis: 500 MB | free plan limit: 500 MB | límite del plan gratis: 500 MB | 무료 플랜 한도: 500MB | 無料プランの上限: 500MB | limite du plan gratuit : 500 Mo | limite del piano gratuito: 500 MB
+Cache | Cache | Caché | 캐시 | キャッシュ | Cache | Cache
+índices | indexes | índices | 인덱스 | インデックス | index | indici
+Tabela | Table | Tabla | 테이블 | テーブル | Table | Tabella
+Linhas | Rows | Filas | 행 | 行 | Lignes | Righe
+Mortas | Dead | Muertas | 삭제 대기 | 不要行 | Mortes | Morte
+Funções mais pesadas | Heaviest functions | Funciones más pesadas | 가장 무거운 함수 | 重い関数 | Fonctions les plus lourdes | Funzioni più pesanti
+Desde o último reinício do banco. Tempo médio acima de 150 ms em função muito chamada é candidato a otimização. | Since the last database restart. A frequently called function averaging over 150 ms is a candidate for optimization. | Desde el último reinicio de la base. Una función muy llamada con promedio sobre 150 ms es candidata a optimización. | 마지막 DB 재시작 이후 기준. 자주 호출되면서 평균 150ms를 넘으면 최적화 대상입니다. | 前回のDB再起動以降。よく呼ばれ平均150msを超える関数は最適化候補です。 | Depuis le dernier redémarrage de la base. Une fonction très appelée au-delà de 150 ms en moyenne est à optimiser. | Dall'ultimo riavvio del database. Una funzione molto chiamata con media oltre 150 ms è da ottimizzare.
+Função | Function | Función | 함수 | 関数 | Fonction | Funzione
+Chamadas | Calls | Llamadas | 호출 | 呼び出し | Appels | Chiamate
+Total | Total | Total | 합계 | 合計 | Total | Totale
+Realtime (assinaturas) | Realtime (subscriptions) | Realtime (suscripciones) | 실시간 (구독) | Realtime (購読) | Temps réel (abonnements) | Realtime (iscrizioni)
+Estatísticas de consultas indisponíveis. | Query statistics unavailable. | Estadísticas de consultas no disponibles. | 쿼리 통계를 사용할 수 없습니다. | クエリ統計は利用できません。 | Statistiques de requêtes indisponibles. | Statistiche delle query non disponibili.
+Nenhuma tarefa agendada no banco. | No scheduled jobs in the database. | No hay tareas programadas en la base. | DB에 예약 작업이 없습니다. | DBに定期ジョブはありません。 | Aucune tâche planifiée dans la base. | Nessuna attività pianificata nel database.
+desligada | off | desactivada | 꺼짐 | オフ | désactivée | disattivata
+última | last | última | 마지막 | 最終 | dernière | ultima
+ainda não rodou | hasn't run yet | aún no se ejecutó | 아직 실행 안 됨 | 未実行 | pas encore exécutée | non ancora eseguita
+{n} falhas em 24 h | {n} failures in 24 h | {n} fallas en 24 h | 24시간 실패 {n}회 | 24時間で{n}件失敗 | {n} échecs en 24 h | {n} errori in 24 h
+tiers e tags | tiers and tags | tiers y tags | 티어와 태그 | ティアとタグ | tiers et tags | tier e tag
+sem par | unmatched | sin pareja | 매칭 없음 | 未一致 | sans correspondance | senza abbinamento
+{n} falhas | {n} failures | {n} fallas | 실패 {n}회 | {n}件失敗 | {n} échecs | {n} errori
+sem falhas | no failures | sin fallas | 실패 없음 | 失敗なし | aucun échec | nessun errore
+Apagar todos os erros registrados? Não dá para desfazer. | Delete all recorded errors? This can't be undone. | ¿Borrar todos los errores registrados? No se puede deshacer. | 기록된 오류를 모두 삭제할까요? 되돌릴 수 없습니다. | 記録されたエラーをすべて削除しますか？元に戻せません。 | Supprimer toutes les erreurs enregistrées ? Action irréversible. | Eliminare tutti gli errori registrati? Non si può annullare.
+Erros do app (7 dias) | App errors (7 days) | Errores de la app (7 días) | 앱 오류 (7일) | アプリのエラー (7日間) | Erreurs de l'appli (7 jours) | Errori dell'app (7 giorni)
+Nenhum erro registrado. | No errors recorded. | No hay errores registrados. | 기록된 오류가 없습니다. | 記録されたエラーはありません。 | Aucune erreur enregistrée. | Nessun errore registrato.
+{n} pessoas | {n} people | {n} personas | {n}명 | {n}人 | {n} personnes | {n} persone
+Tela | Screen | Pantalla | 화면 | 画面 | Écran | Schermata
+sem detalhes | no details | sin detalles | 상세 정보 없음 | 詳細なし | sans détails | nessun dettaglio
+Versão do app | App version | Versión de la app | 앱 버전 | アプリのバージョン | Version de l'appli | Versione dell'app
+Plataforma | Platform | Plataforma | 플랫폼 | プラットフォーム | Plateforme | Piattaforma
+Site | Site | Sitio | 사이트 | サイト | Site | Sito
+Navegador | Browser | Navegador | 브라우저 | ブラウザ | Navigateur | Browser
+Idioma e fuso | Language and time zone | Idioma y zona horaria | 언어와 시간대 | 言語とタイムゾーン | Langue et fuseau | Lingua e fuso orario
+Conexão | Connection | Conexión | 연결 | 接続 | Connexion | Connessione
+online | online | en línea | 온라인 | オンライン | en ligne | online
+offline | offline | sin conexión | 오프라인 | オフライン | hors ligne | offline
+Dados guardados | Stored data | Datos guardados | 저장된 데이터 | 保存データ | Données stockées | Dati salvati
+total | total | total | 전체 | 合計 | total | totale
+Este aparelho | This device | Este dispositivo | 이 기기 | この端末 | Cet appareil | Questo dispositivo
+Copiar diagnóstico | Copy diagnostics | Copiar diagnóstico | 진단 정보 복사 | 診断情報をコピー | Copier le diagnostic | Copia diagnostica

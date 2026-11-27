@@ -47,7 +47,7 @@ export default function Song() {
   };
   const bpm = fmtBpm(song.bpm);
   return (
-    <div className="page">
+    <div className="page song-page">
       <section className="song-hero card">
         <div className="sh-top">
           <Jacket song={song} width={220} className="hero-jacket" />

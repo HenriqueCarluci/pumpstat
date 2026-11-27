@@ -59,89 +59,105 @@ export default function Home() {
   }
 
   return (
-    <div className="page">
-      <Link to={session?.user?.id ? `/jogador/${session.user.id}` : '/'} className="card profile profile-link" title={t('Ver meu perfil')}>
-        <div className="avatar">{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
-        <div className="pinfo">
-          <div className="ptitle">{p?.title || t('Sem título')}</div>
-          <div className="pname">{p?.nickname || t('Faça a primeira sincronização')}</div>
-          <div className="psync">{v.name} · {t('sincronizado {when}', { when: timeAgo(data.lastSync) })}</div>
+    <div className="page home">
+      <div className="h-col h-main">
+        <div className="h-blk o1">
+          <Link to={session?.user?.id ? `/jogador/${session.user.id}` : '/'} className="card profile profile-link" title={t('Ver meu perfil')}>
+            <div className="avatar">{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
+            <div className="pinfo">
+              <div className="ptitle">{p?.title || t('Sem título')}</div>
+              <div className="pname">{p?.nickname || t('Faça a primeira sincronização')}</div>
+              <div className="psync">{v.name} · {t('sincronizado {when}', { when: timeAgo(data.lastSync) })}</div>
+            </div>
+            <ChevronRight size={18} className="profile-go" />
+          </Link>
         </div>
-        <ChevronRight size={18} className="profile-go" />
-      </Link>
-
-      <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
-
-      <ChallengeBanner />
-      <WeekCard />
-
-      <QuickLinks />
-
-      <section className="stats">
-        <Stat label={t('Charts jogados')} value={stats.played.length} sub={t('de {n}', { n: data.charts.length })} />
-        <Stat label={t('Clears')} value={stats.clears.length} />
-        <Stat label={t('Média')} value={stats.avg ? fmtScore(stats.avg) : '—'} />
-      </section>
-      <AdSlot place="home" />
-
-      <Panel id="home-grades" title={t('Grades')} maxHeight={300}>
-        <div className="gradebars">
-          {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
-            <Link key={g} to={`/musicas?g=${encodeURIComponent(g)}&o=best`} className="gb" title={t('Ver músicas com {g}', { g })}>
-              <span className="gb-l"><Grade grade={g} size="sm" /></span>
-              <span className="gb-bar"><i className={`g-${gradeTier(g)}`} style={{ width: `${(stats.grades[g] / maxGrade) * 100}%` }} /></span>
-              <span className="gb-n">{stats.grades[g]} ›</span>
-            </Link>
-          ))}
-          {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
+        <div className="h-blk o2">
+          <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
         </div>
-      </Panel>
-
-      <Panel id="home-levels" title={t('Progresso por nível')} maxHeight={320}
-        extra={<div className="seg sm">
-          {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
-        </div>}>
-        <div className="levels">
-          {levels.map((l) => (
-            <Link key={l.lv} to={`/tier?m=${mode}&l=${l.lv}`} className="lvl">
-              <Ball chart={{ mode, level: l.lv }} size="sm" />
-              <div className="lvl-bar"><i style={{ width: `${(l.clears / l.total) * 100}%` }} /></div>
-              <span className="lvl-n">{l.clears}/{l.total}</span>
-              <span className="lvl-a">{l.avg ? fmtScore(l.avg) : ''}</span>
-            </Link>
-          ))}
+        <div className="h-blk o4">
+          <WeekCard />
         </div>
-      </Panel>
-
-      <Panel id="home-top50" title={<>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></>} defaultOpen={false} maxHeight={420}>
-        {(
-          <ol className="toplist">
-            {stats.pb.top.map(({ chart: c, value }) => (
-              <li key={c.id}>
-                <Link to={`/musica/${c.song.id}`}>
-                  <Jacket song={c.song} width={64} />
-                  <span className="t">{c.song.title}</span>
-                  <Ball chart={c} size="sm" />
-                  <Grade grade={c.grade} size="sm" />
-                  <Plate plate={c.plate} />
-                  <span className="val">{value.toFixed(2)}</span>
+        <div className="h-blk o10">
+          <Panel id="home-top50" title={<>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></>} defaultOpen={false} maxHeight={420}>
+            {(
+              <ol className="toplist">
+                {stats.pb.top.map(({ chart: c, value }) => (
+                  <li key={c.id}>
+                    <Link to={`/musica/${c.song.id}`}>
+                      <Jacket song={c.song} width={64} />
+                      <span className="t">{c.song.title}</span>
+                      <Ball chart={c} size="sm" />
+                      <Grade grade={c.grade} size="sm" />
+                      <Plate plate={c.plate} />
+                      <span className="val">{value.toFixed(2)}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </Panel>
+        </div>
+        <div className="h-blk o11">
+          {data.plays.length > 0 && (
+            <Panel id="home-recent" title={t('Últimas jogadas')} extra={<Link className="link" to="/recentes">{t('Ver todas')}</Link>}>
+              <div className="cards">
+                {data.plays.slice(0, 4).map((pl, i) => (
+                  <ScoreCard key={i} chart={pl.chart} score={pl.score} grade={pl.grade} plate={pl.plate}
+                    broken={pl.broken} date={pl.playedAt} to={`/musica/${pl.chart.song.id}`} />
+                ))}
+              </div>
+            </Panel>
+          )}
+        </div>
+      </div>
+      <div className="h-col h-side">
+        <div className="h-blk o3">
+          <ChallengeBanner />
+        </div>
+        <div className="h-blk o5">
+          <QuickLinks />
+        </div>
+        <div className="h-blk o6">
+          <section className="stats">
+            <Stat label={t('Charts jogados')} value={stats.played.length} sub={t('de {n}', { n: data.charts.length })} />
+            <Stat label={t('Clears')} value={stats.clears.length} />
+            <Stat label={t('Média')} value={stats.avg ? fmtScore(stats.avg) : '—'} />
+          </section>
+          <AdSlot place="home" />
+        </div>
+        <div className="h-blk o8">
+          <Panel id="home-grades" title={t('Grades')} maxHeight={300}>
+            <div className="gradebars">
+              {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
+                <Link key={g} to={`/musicas?g=${encodeURIComponent(g)}&o=best`} className="gb" title={t('Ver músicas com {g}', { g })}>
+                  <span className="gb-l"><Grade grade={g} size="sm" /></span>
+                  <span className="gb-bar"><i className={`g-${gradeTier(g)}`} style={{ width: `${(stats.grades[g] / maxGrade) * 100}%` }} /></span>
+                  <span className="gb-n">{stats.grades[g]} ›</span>
                 </Link>
-              </li>
-            ))}
-          </ol>
-        )}
-      </Panel>
-
-      {data.plays.length > 0 && (
-        <Panel id="home-recent" title={t('Últimas jogadas')} extra={<Link className="link" to="/recentes">{t('Ver todas')}</Link>}>
-          <div className="cards">
-            {data.plays.slice(0, 4).map((pl, i) => (
-              <ScoreCard key={i} chart={pl.chart} score={pl.score} grade={pl.grade} plate={pl.plate}
-                broken={pl.broken} date={pl.playedAt} to={`/musica/${pl.chart.song.id}`} />
-            ))}
-          </div>
-        </Panel>
-      )}
+              ))}
+              {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
+            </div>
+          </Panel>
+        </div>
+        <div className="h-blk o9">
+          <Panel id="home-levels" title={t('Progresso por nível')} maxHeight={320}
+            extra={<div className="seg sm">
+              {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
+            </div>}>
+            <div className="levels">
+              {levels.map((l) => (
+                <Link key={l.lv} to={`/tier?m=${mode}&l=${l.lv}`} className="lvl">
+                  <Ball chart={{ mode, level: l.lv }} size="sm" />
+                  <div className="lvl-bar"><i style={{ width: `${(l.clears / l.total) * 100}%` }} /></div>
+                  <span className="lvl-n">{l.clears}/{l.total}</span>
+                  <span className="lvl-a">{l.avg ? fmtScore(l.avg) : ''}</span>
+                </Link>
+              ))}
+            </div>
+          </Panel>
+        </div>
+      </div>
     </div>
   );
 }
