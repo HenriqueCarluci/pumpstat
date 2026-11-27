@@ -64,6 +64,9 @@ jobs:
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.jks"
           echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/upload.jks" >> "$GITHUB_ENV"
 
+      - name: Certificado intermediário do piugame
+        run: bash scripts/piu-ca.sh
+
       - name: Gerar .aab
         working-directory: android
         env:
@@ -92,3 +95,4 @@ jobs:
           releaseFiles: android/app/build/outputs/bundle/release/*.aab
           track: ${{ vars.PLAY_TRACK || 'internal' }}
           status: ${{ vars.PLAY_STATUS || 'draft' }}
+          releaseName: ${{ format('1.0.{0}', github.run_number) }}

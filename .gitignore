@@ -2,3 +2,4 @@ node_modules
 dist
 .env
 .env.*
+android/app/src/main/res/raw/piu_ca.pem

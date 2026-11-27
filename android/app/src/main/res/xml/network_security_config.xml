@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- O piugame.com não envia o certificado intermediário; o build embute esse intermediário em res/raw/piu_ca.pem
+     (scripts/piu-ca.sh) e o app confia nele só para estes domínios. O resto segue só os certificados do sistema. -->
+<network-security-config>
+    <domain-config>
+        <domain includeSubdomains="true">piugame.com</domain>
+        <domain includeSubdomains="true">am-pass.net</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/piu_ca" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>
