@@ -768,3 +768,9 @@ Dificuldade de clear | Clear difficulty | Dificultad de clear | 클리어 난이
 Avaliações e comentários | Ratings and comments | Valoraciones y comentarios | 평가와 댓글 | 評価とコメント | Avis et commentaires | Valutazioni e commenti
 Seu histórico | Your history | Tu historial | 내 기록 내역 | あなたの履歴 | Votre historique | La tua cronologia
 Abrir a página deste nível | Open this level's page | Abrir la página de este nivel | 이 레벨 페이지 열기 | このレベルのページを開く | Ouvrir la page de ce niveau | Apri la pagina di questo livello
+Todos os passes | All clears | Todos los pases | 모든 클리어 | すべてのクリア | Toutes les réussites | Tutti i superati
+Imagens baixadas. | Images downloaded. | Imágenes descargadas. | 이미지를 저장했습니다. | 画像を保存しました。 | Images téléchargées. | Immagini scaricate.
+{n} imagens: a capa e todos os passes do dia. Poste como carrossel. | {n} images: the cover and all of the day's clears. Post them as a carousel. | {n} imágenes: la portada y todos los pases del día. Publícalas como carrusel. | 이미지 {n}장: 표지와 오늘의 모든 클리어. 캐러셀로 올리세요. | 画像{n}枚: 表紙とその日のすべてのクリア。カルーセルで投稿しましょう。 | {n} images : la couverture et toutes les réussites du jour. Publiez-les en carrousel. | {n} immagini: la copertina e tutti i superati del giorno. Pubblicale come carosello.
+Compartilhar todas | Share all | Compartir todas | 모두 공유 | すべて共有 | Tout partager | Condividi tutte
+Baixar esta | Download this one | Descargar esta | 이 이미지 저장 | この画像を保存 | Télécharger celle-ci | Scarica questa
+Compartilhar só esta ({i}/{n}) | Share only this one ({i}/{n}) | Compartir solo esta ({i}/{n}) | 이것만 공유 ({i}/{n}) | これだけ共有 ({i}/{n}) | Partager seulement celle-ci ({i}/{n}) | Condividi solo questa ({i}/{n})

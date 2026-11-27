@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { buildDay, highlights, loadDayReport } from '../lib/dayReport.js';
 import { Chips } from './Songs.jsx';
-import { dayLabelOf, downloadImage, drawDayImage, shareImage } from '../lib/dayImage.js';
+import { dayLabelOf, downloadImage, drawDayImages, shareImage } from '../lib/dayImage.js';
 import { fmtNum, locale, t, tErr, tMsg, tn } from '../lib/i18n.js';
 import { isOn } from '../lib/plans.js';
 import { VERSIONS } from '../lib/piu.js';
@@ -75,30 +75,43 @@ function Highlight({ r }) {
   );
 }
 
-/** Imagem pronta: prévia e botões de compartilhar/baixar. */
-function ImageSheet({ blob, filename, text, onClose, format, onFormat, busy }) {
-  const [url, setUrl] = useState(null);
+/** Imagens prontas (capa + todos os passes): prévia em carrossel e botões de compartilhar/baixar. */
+function ImageSheet({ blobs, filename, text, onClose, format, onFormat, busy }) {
+  const [urls, setUrls] = useState([]);
   const [msg, setMsg] = useState('');
-  useEffect(() => { const u = URL.createObjectURL(blob); setUrl(u); return () => URL.revokeObjectURL(u); }, [blob]);
-  const share = async () => {
+  const [cur, setCur] = useState(0);
+  useEffect(() => {
+    const us = blobs.map((b) => URL.createObjectURL(b)); setUrls(us); setCur(0);
+    return () => us.forEach((u) => URL.revokeObjectURL(u));
+  }, [blobs]);
+  const name = (i) => (blobs.length > 1 ? filename.replace(/\.png$/, `-${i + 1}.png`) : filename);
+  const share = async (only = null) => {
     setMsg('');
     try {
-      const r = await shareImage(blob, filename, text);
-      if (r === 'downloaded') setMsg(t('Imagem baixada.'));
+      const r = await shareImage(only == null ? blobs : [blobs[only]], only == null ? filename : name(only), text);
+      if (r === 'downloaded') setMsg(blobs.length > 1 && only == null ? t('Imagens baixadas.') : t('Imagem baixada.'));
     } catch (e) { setMsg(tErr(e.message || 'Não deu para compartilhar.')); }
   };
+  const onScroll = (e) => { const el = e.currentTarget; setCur(Math.round(el.scrollLeft / Math.max(1, el.clientWidth))); };
   return (
     <div className="qs-backdrop" onClick={onClose} role="presentation">
       <div className="qs-sheet dr-sheet" role="dialog" aria-modal="true" aria-label={t('Imagem do dia')} onClick={(e) => e.stopPropagation()}>
         <div className="qs-grip" aria-hidden="true" />
         <Chips value={format} onChange={onFormat} options={[['feed', t('Feed (4:5)')], ['story', t('Stories (9:16)')]]} />
-        {url && <img className={`dr-preview ${busy ? 'busy' : ''}`} src={url} alt={t('Imagem do dia')} />}
+        <div className={`dr-carousel ${busy ? 'busy' : ''}`} onScroll={onScroll}>
+          {urls.map((u, i) => <img key={u} className="dr-preview" src={u} alt={`${t('Imagem do dia')} ${i + 1}/${urls.length}`} />)}
+        </div>
+        {urls.length > 1 && (
+          <div className="dr-dots" aria-hidden="true">{urls.map((u, i) => <i key={u} className={i === cur ? 'on' : ''} />)}</div>
+        )}
+        {urls.length > 1 && <p className="small muted center">{t('{n} imagens: a capa e todos os passes do dia. Poste como carrossel.', { n: urls.length })}</p>}
         <div className="qs-row">
-          <button type="button" className="btn" onClick={share}><Send size={15} /> {t('Compartilhar')}</button>
+          <button type="button" className="btn" onClick={() => share()}><Send size={15} /> {urls.length > 1 ? t('Compartilhar todas') : t('Compartilhar')}</button>
           {isNative
             ? <button type="button" className="btn ghost" onClick={onClose}><X size={15} /> {t('Fechar')}</button>
-            : <button type="button" className="btn ghost" onClick={() => { downloadImage(blob, filename); setMsg(t('Imagem baixada.')); }}>{t('Baixar')}</button>}
+            : <button type="button" className="btn ghost" onClick={() => { downloadImage(blobs[cur], name(cur)); setMsg(t('Imagem baixada.')); }}>{urls.length > 1 ? t('Baixar esta') : t('Baixar')}</button>}
         </div>
+        {urls.length > 1 && <button type="button" className="link small center-block" onClick={() => share(cur)}>{t('Compartilhar só esta ({i}/{n})', { i: cur + 1, n: urls.length })}</button>}
         {msg && <p className="small center qs-msg">{msg}</p>}
       </div>
     </div>
@@ -163,11 +176,11 @@ export default function DayReport() {
   const makeImage = async (fmt = format) => {
     setMaking(true); setFormat(fmt);
     try {
-      const blob = await drawDayImage({
+      const blobs = await drawDayImages({
         rep, nickname: data.profile?.nickname, versionName: VERSIONS[version]?.name || version, format: fmt,
         dayLabel: dayLabelOf(rep.day, { day: '2-digit', month: 'short', year: 'numeric' }), list: highlights(rep, 7),
       });
-      setImg(blob);
+      setImg(blobs);
     } catch (e) { setErr(tErr(e.message)); }
     setMaking(false);
   };
@@ -275,7 +288,7 @@ export default function DayReport() {
         </div>
       </section>
 
-      {img && <ImageSheet blob={img} filename={`piu-stats-${rep.day}-${format}.png`} text={t('Meu dia de Pump It Up · PIU Stats')} onClose={() => setImg(null)}
+      {img && <ImageSheet blobs={img} filename={`piu-stats-${rep.day}-${format}.png`} text={t('Meu dia de Pump It Up · PIU Stats')} onClose={() => setImg(null)}
         format={format} busy={making} onFormat={(f) => makeImage(f)} />}
     </div>
   );

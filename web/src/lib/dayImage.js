@@ -54,7 +54,7 @@ function contain(ctx, img, x, y, w, h) {
 }
 
 /** Desenha a imagem do dia e devolve um PNG. */
-export async function drawDayImage({ rep, nickname, versionName, dayLabel, list, format = 'feed' }) {
+export async function drawDayImage({ rep, nickname, versionName, dayLabel, list, format = 'feed', pageLabel = null }) {
   const F = FORMATS[format] || FORMATS.feed;
   const W = F.w; const H = F.h;
   try { await Promise.all([document.fonts?.load(`800 40px ${NUM}`), document.fonts?.load(`700 30px ${SANS}`)]); } catch { /* fonte do sistema */ }
@@ -70,19 +70,7 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   c.width = W; c.height = H;
   const ctx = c.getContext('2d');
 
-  // fundo: a capa do destaque principal, desfocada e escurecida, com brilho verde
-  ctx.fillStyle = '#0b0c0f'; ctx.fillRect(0, 0, W, H);
-  if (jk(0)) {
-    ctx.save(); ctx.filter = 'blur(46px) saturate(1.3)'; ctx.globalAlpha = 0.55;
-    cover(ctx, jk(0), -80, -80, W + 160, H * 0.62, 0);
-    ctx.restore(); ctx.filter = 'none'; ctx.globalAlpha = 1;
-  }
-  let g = ctx.createLinearGradient(0, 0, 0, H);
-  g.addColorStop(0, 'rgba(11,12,15,.35)'); g.addColorStop(0.35, 'rgba(11,12,15,.82)'); g.addColorStop(1, 'rgba(11,12,15,.98)');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-  g = ctx.createRadialGradient(W, 0, 10, W, 0, 700);
-  g.addColorStop(0, 'rgba(140,255,58,.18)'); g.addColorStop(1, 'rgba(140,255,58,0)');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  background(ctx, W, H, jk(0));
 
   // cabeçalho
   const M = 60;
@@ -209,15 +197,130 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     ctx.fillText(t('Nenhum passe neste dia. Bora treinar!'), M, top + 40);
   }
 
-  // rodapé
+  footer(ctx, W, H, M, foot, pageLabel);
+  return new Promise((ok) => c.toBlob(ok, 'image/png'));
+}
+
+function background(ctx, W, H, img) {
+  // fundo: a capa do destaque principal, desfocada e escurecida, com brilho verde
+  ctx.fillStyle = '#0b0c0f'; ctx.fillRect(0, 0, W, H);
+  if (img) {
+    ctx.save(); ctx.filter = 'blur(46px) saturate(1.3)'; ctx.globalAlpha = 0.55;
+    cover(ctx, img, -80, -80, W + 160, H * 0.62, 0);
+    ctx.restore(); ctx.filter = 'none'; ctx.globalAlpha = 1;
+  }
+  let g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, 'rgba(11,12,15,.35)'); g.addColorStop(0.35, 'rgba(11,12,15,.82)'); g.addColorStop(1, 'rgba(11,12,15,.98)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  g = ctx.createRadialGradient(W, 0, 10, W, 0, 700);
+  g.addColorStop(0, 'rgba(140,255,58,.18)'); g.addColorStop(1, 'rgba(140,255,58,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+function footer(ctx, W, H, M, foot, pageLabel) {
   ctx.fillStyle = 'rgba(255,255,255,.08)'; ctx.fillRect(M, H - foot + 10, W - M * 2, 2);
   ctx.fillStyle = MUTED; ctx.font = `600 23px ${SANS}`;
   ctx.fillText(t('Gerado com PIU Stats'), M, H - 38);
-  ctx.textAlign = 'right'; ctx.fillStyle = NEON; ctx.font = `800 24px ${NUM}`;
+  ctx.textAlign = 'right';
+  if (pageLabel) { ctx.fillStyle = MUTED; ctx.font = `700 23px ${NUM}`; ctx.fillText(pageLabel, W / 2 + 60, H - 38); }
+  ctx.fillStyle = NEON; ctx.font = `800 24px ${NUM}`;
   ctx.fillText('#PumpItUp', W - M, H - 38);
   ctx.textAlign = 'left';
+}
 
+/** Linhas por página na lista de todos os passes. */
+const LIST_ROWS = { feed: 8, story: 13 };
+
+/** Página extra: todos os passes do dia, em linhas compactas. */
+async function drawListPage({ rows, nickname, dayLabel, format, page, pages, logo }) {
+  const F = FORMATS[format] || FORMATS.feed;
+  const W = F.w; const H = F.h; const M = 60; const foot = 96;
+  const imgs = await Promise.all(rows.flatMap((r) => [loadImg(proxied(r.chart.song.jacket)), loadImg(proxied(gradeImgUrl(r.grade))), loadImg(proxied(plateImgUrl(r.plate)))]));
+  const jk = (i) => imgs[i * 3]; const gd = (i) => imgs[i * 3 + 1]; const pl = (i) => imgs[i * 3 + 2];
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const ctx = c.getContext('2d');
+  background(ctx, W, H, jk(0));
+
+  // cabeçalho menor
+  if (logo) { ctx.save(); rr(ctx, M, 50, 64, 64, 18); ctx.clip(); ctx.drawImage(logo, M, 50, 64, 64); ctx.restore(); }
+  ctx.fillStyle = NEON; ctx.font = `800 22px ${SANS}`;
+  ctx.fillText(`${t('Dia de jogo').toUpperCase()} · ${t('Todos os passes')}`, M + 84, 76);
+  ctx.fillStyle = TXT; ctx.font = `800 36px ${SANS}`;
+  ctx.fillText(fit(ctx, nickname || 'PIU Stats', W - M * 2 - 84 - 260), M + 84, 114);
+  ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `600 24px ${SANS}`;
+  ctx.fillText(dayLabel, W - M, 76);
+  ctx.font = `800 26px ${NUM}`; ctx.fillStyle = TXT; ctx.fillText(`${page}/${pages}`, W - M, 114);
+  ctx.textAlign = 'left';
+
+  const top = 150; const n = LIST_ROWS[format] || 8; const gap = 12;
+  const rh = Math.floor((H - top - foot - 20 - gap * (n - 1)) / n);
+  rows.forEach((r, i) => {
+    const y = top + i * (rh + gap);
+    rr(ctx, M, y, W - M * 2, rh, 20); ctx.fillStyle = 'rgba(20,22,28,.86)'; ctx.fill();
+    ctx.strokeStyle = r.newClear ? 'rgba(140,255,58,.45)' : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
+    const jh = rh - 20; const jw = Math.round(jh * 16 / 9); const jx = M + 10; const jy = y + 10;
+    cover(ctx, jk(i), jx, jy, jw, jh, 12);
+    const col = MODE_COLOR[r.chart.mode] || TXT; const lab = `${r.chart.mode}${r.chart.level}`;
+    ctx.font = `800 24px ${NUM}`; const lw = ctx.measureText(lab).width + 18;
+    rr(ctx, jx + 6, jy + jh - 38, lw, 32, 10); ctx.fillStyle = 'rgba(0,0,0,.75)'; ctx.fill();
+    ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.fillStyle = col; ctx.fillText(lab, jx + 15, jy + jh - 14);
+
+    const tx = jx + jw + 20; const right = W - M - 16;
+    const gw = Math.min(96, rh * 0.9);
+    const textMax = right - gw - 12 - tx;
+    ctx.fillStyle = TXT; ctx.font = `800 26px ${SANS}`;
+    ctx.fillText(fit(ctx, r.chart.song.title, textMax), tx, y + 36);
+    let tag; let tagCol = NEON;
+    if (r.newClear) tag = `★ ${t('Primeiro passe')}`;
+    else if (r.pb) tag = `▲ +${fmtNum(r.delta)}`;
+    else { tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'); tagCol = MUTED; }
+    ctx.font = `800 30px ${NUM}`; ctx.fillStyle = TXT; const sc = fmtNum(r.score); ctx.fillText(sc, tx, y + rh - 18);
+    const sw = ctx.measureText(sc).width;
+    ctx.fillStyle = tagCol; ctx.font = `700 19px ${SANS}`; ctx.fillText(fit(ctx, tag, textMax - sw - 16), tx + sw + 16, y + rh - 21);
+    // perfects/misses da melhor jogada, em uma linha curta
+    const b = r.best;
+    if (b && b.perfect != null && rh >= 96) {
+      ctx.font = `700 17px ${NUM}`; let jx2 = tx; const jy2 = y + 62;
+      for (const [k, l, cl] of JUDG) {
+        ctx.fillStyle = cl; ctx.fillText(l, jx2, jy2); jx2 += ctx.measureText(l).width + 4;
+        ctx.fillStyle = MUTED; const v = fmtNum(b[k] || 0); ctx.fillText(v, jx2, jy2); jx2 += ctx.measureText(v).width + 12;
+        if (jx2 > tx + textMax) break;
+      }
+    }
+    const gx = right - gw; const gh = rh * 0.5;
+    if (!contain(ctx, gd(i), gx, y + 8, gw, gh)) {
+      ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 30px ${NUM}`; ctx.fillText(r.grade || '', right, y + 40); ctx.textAlign = 'left';
+    }
+    if (r.plate && !contain(ctx, pl(i), gx, y + 12 + gh, gw, rh * 0.3)) {
+      ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `800 20px ${NUM}`; ctx.fillText(r.plate, right, y + rh - 18); ctx.textAlign = 'left';
+    }
+  });
+  footer(ctx, W, H, M, foot, null);
   return new Promise((ok) => c.toBlob(ok, 'image/png'));
+}
+
+/**
+ * Todas as imagens do dia: a capa (números e destaques) e, se não couber tudo nela, páginas com todos os passes.
+ * Devolve uma lista de PNGs, na ordem de postar (carrossel).
+ */
+export async function drawDayImages(opts) {
+  const format = opts.format || 'feed';
+  const F = FORMATS[format] || FORMATS.feed;
+  const passes = opts.rep.rows.filter((r) => r.passed)
+    .sort((a, b) => b.chart.level - a.chart.level || (b.newClear - a.newClear) || (b.pb - a.pb) || b.score - a.score);
+  const shownOnCover = Math.min(opts.list.length, F.rows);
+  const extra = passes.length > shownOnCover || opts.list.some((r) => r.kind !== 'pass') ? passes : [];
+  const per = LIST_ROWS[format] || 8;
+  const listPages = extra.length && !(extra.length <= shownOnCover && opts.list.every((r) => r.kind === 'pass')) ? Math.ceil(extra.length / per) : 0;
+  const pages = 1 + listPages;
+  const coverBlob = await drawDayImage({ ...opts, format, pageLabel: pages > 1 ? `1/${pages}` : null });
+  const logo = await loadImg(new URL('icons/icon-192.png', document.baseURI).href);
+  const out = [coverBlob];
+  for (let p = 0; p < listPages; p++) {
+    out.push(await drawListPage({ rows: extra.slice(p * per, (p + 1) * per), nickname: opts.nickname, dayLabel: opts.dayLabel, format, page: p + 2, pages, logo }));
+  }
+  return out;
 }
 
 const toBase64 = (blob) => new Promise((ok, fail) => {
@@ -227,19 +330,25 @@ const toBase64 = (blob) => new Promise((ok, fail) => {
   r.readAsDataURL(blob);
 });
 
-/** Compartilha a imagem: no app, pela folha de compartilhar do Android; no navegador, Web Share ou download. */
-export async function shareImage(blob, filename, text) {
+/** Compartilha uma ou mais imagens: no app, pela folha de compartilhar do Android; no navegador, Web Share ou download. */
+export async function shareImage(blobs, filename, text) {
+  const list = Array.isArray(blobs) ? blobs : [blobs];
+  const names = list.map((_, i) => (list.length > 1 ? filename.replace(/\.png$/, `-${i + 1}.png`) : filename));
   if (isNative) {
     const [{ Filesystem, Directory }, { Share }] = await Promise.all([import('@capacitor/filesystem'), import('@capacitor/share')]);
-    const { uri } = await Filesystem.writeFile({ path: filename, data: await toBase64(blob), directory: Directory.Cache });
-    await Share.share({ title: filename, text, files: [uri], dialogTitle: t('Compartilhar') });
+    const uris = [];
+    for (let i = 0; i < list.length; i++) {
+      const { uri } = await Filesystem.writeFile({ path: names[i], data: await toBase64(list[i]), directory: Directory.Cache });
+      uris.push(uri);
+    }
+    await Share.share({ title: filename, text, files: uris, dialogTitle: t('Compartilhar') });
     return 'shared';
   }
-  const file = new File([blob], filename, { type: 'image/png' });
-  if (navigator.canShare?.({ files: [file] })) {
-    try { await navigator.share({ files: [file], text }); return 'shared'; } catch (e) { if (e?.name === 'AbortError') return 'cancel'; }
+  const files = list.map((b, i) => new File([b], names[i], { type: 'image/png' }));
+  if (navigator.canShare?.({ files })) {
+    try { await navigator.share({ files, text }); return 'shared'; } catch (e) { if (e?.name === 'AbortError') return 'cancel'; }
   }
-  downloadImage(blob, filename);
+  list.forEach((b, i) => setTimeout(() => downloadImage(b, names[i]), i * 400));
   return 'downloaded';
 }
 

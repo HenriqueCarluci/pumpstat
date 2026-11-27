@@ -1496,3 +1496,11 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .cp-info dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; }
 .cp-info dt { color: var(--muted); font-size: 13px; }
 .cp-info dd { margin: 0; font-weight: 600; }
+
+.dr-carousel { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 10px 0 6px; }
+.dr-carousel .dr-preview { flex: 0 0 100%; scroll-snap-align: center; max-height: 62vh; object-fit: contain; }
+.dr-carousel.busy { opacity: .5; }
+.dr-dots { display: flex; justify-content: center; gap: 6px; margin: 4px 0; }
+.dr-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); }
+.dr-dots i.on { background: var(--neon); }
+.center-block { display: block; margin: 6px auto 0; }
