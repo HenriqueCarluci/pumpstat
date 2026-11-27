@@ -73,6 +73,8 @@ export function describe(n) {
       return t('Você ganhou no desafio {name}!', { name: n.title }) + (n.prize ? ` ${t('Prêmio')}: ${n.prize}` : '');
     case 'admin_new_user':
       return t('Novo usuário no PIU Stats: {email}', { email: n.email || '—' }) + (n.provider && n.provider !== 'email' ? ` (${n.provider === 'google' ? 'Google' : n.provider})` : '');
+    case 'app_update':
+      return t('Nova versão do app Android para teste ({v}). Toque para atualizar pela Play Store.', { v: n.version || '' });
     case 'badge':
       return t('Selo novo: {b}', { b: n.name || (n.badge === 'streak' ? t('Sequência de {n} semanas', { n: n.level }) : (n.level === 1 ? t('Primeira semana completa') : t('{n} semanas completas', { n: n.level }))) });
     default:
@@ -80,6 +82,12 @@ export function describe(n) {
   }
 }
 const fmt = (v) => fmtNum(v);
+
+/** Notificações que abrem fora do app (Twitch, Play Store). */
+export function externalLink(n) {
+  if (n.kind === 'app_update' && n.link) return n.link;
+  return null;
+}
 
 export function linkFor(n) {
   switch (n.kind) {

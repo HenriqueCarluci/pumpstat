@@ -6,3 +6,4 @@ export const androidTestJoin = (email) => rpc('android_tester_join', { p_email: 
 export const androidTestLeave = () => rpc('android_tester_leave');
 export const adminAndroidTesters = () => rpc('admin_android_testers');
 export const adminAndroidTestersMark = (users, added) => rpc('admin_android_testers_mark', { p_users: users, p_added: added });
+export const adminNotifyAndroidTesters = (version) => rpc('admin_notify_android_testers', { p_version: version });

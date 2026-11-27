@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { Grade, Jacket, timeAgo } from '../components/ui.jsx';
-import { canAlert, describe, linkFor, twitchUrl } from '../lib/notify.js';
+import { canAlert, describe, externalLink, linkFor, twitchUrl } from '../lib/notify.js';
 import { Chips } from './Songs.jsx';
 import { t } from '../lib/i18n.js';
 import { ChevronRight, X } from '../components/Icons.jsx';
@@ -67,5 +67,7 @@ function NotifLink({ n, className, children }) {
   if (n.kind === 'friend_live' && n.login) {
     return <a href={twitchUrl(n.login)} target="_blank" rel="noopener noreferrer" className={className}>{children}</a>;
   }
+  const ext = externalLink(n);
+  if (ext) return <a href={ext} target="_blank" rel="noopener noreferrer" className={className}>{children}</a>;
   return <Link to={linkFor(n)} className={className}>{children}</Link>;
 }

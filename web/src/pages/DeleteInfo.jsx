@@ -13,6 +13,8 @@ export default function DeleteInfo() {
         <li>{t('Confirme digitando o texto pedido. A exclusão é imediata.')}</li>
       </ol>
       <p>{t('Sem acesso à conta? Fale com a gente pelo e-mail de contato da nossa página na Google Play, a partir do e-mail cadastrado, e excluímos em até 30 dias.')}</p>
+      <h3>{t('Apagar só os dados de jogo')}</h3>
+      <p>{t('Para apagar seus recordes, jogadas e histórico sem excluir a conta, vá em Ajustes e toque em “Desconectar conta da Pump”. Amigos, time e preferências continuam na sua conta do PIU Stats. Para apagar outros dados específicos, fale com o suporte pelo app.')}</p>
       <h3>{t('O que é apagado')}</h3>
       <p>{t('Sua conta de login, a ligação com o AM.PASS, sessões salvas, recordes e jogadas sincronizados, histórico, amizades, mensagens e convites, avaliações, votos, participação em desafios, fila e preferências.')}</p>
       <h3>{t('O que pode ficar')}</h3>

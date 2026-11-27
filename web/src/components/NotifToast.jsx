@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { usePrefs } from '../lib/prefs.js';
 import { isOn } from '../lib/plans.js';
-import { describe, linkFor, twitchUrl } from '../lib/notify.js';
+import { describe, externalLink, linkFor, twitchUrl } from '../lib/notify.js';
 import { t, tn } from '../lib/i18n.js';
 import { Bell, X } from './Icons.jsx';
 
@@ -59,6 +59,7 @@ export default function NotifToast() {
   const open = (c) => {
     close(c.key);
     if (c.n.kind === 'friend_live' && c.n.login) window.open(twitchUrl(c.n.login), '_blank', 'noopener');
+    else if (externalLink(c.n)) window.open(externalLink(c.n), '_blank', 'noopener');
     else nav(c.more ? '/notificacoes' : linkFor(c.n));
   };
 

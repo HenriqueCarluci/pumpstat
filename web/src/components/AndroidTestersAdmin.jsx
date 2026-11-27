@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { adminAndroidTesters, adminAndroidTestersMark } from '../lib/androidTest.js';
+import { adminAndroidTesters, adminAndroidTestersMark, adminNotifyAndroidTesters } from '../lib/androidTest.js';
 import { t, tErr } from '../lib/i18n.js';
 import Panel from './Panel.jsx';
-import { Check, Copy, Smartphone } from './Icons.jsx';
+import { Bell, Check, Copy, Smartphone } from './Icons.jsx';
 
 const GOAL = 12; // o Google pede 12 testadores no teste fechado antes de liberar a produção
 
@@ -11,6 +11,7 @@ export default function AndroidTestersAdmin() {
   const [list, setList] = useState(null);
   const [err, setErr] = useState('');
   const [msg, setMsg] = useState('');
+  const [ver, setVer] = useState('');
   const load = () => adminAndroidTesters().then(setList).catch((e) => setErr(tErr(e.message)));
   useEffect(() => { load(); }, []);
   if (!list) return err ? <div className="form-err">{err}</div> : null;
@@ -36,6 +37,13 @@ export default function AndroidTestersAdmin() {
       {list.length > 0 && pending.length === 0 && (
         <div className="card-actions"><button className="btn ghost" onClick={() => copy(list)}><Copy size={15} /> {t('Copiar todos os e-mails')}</button></div>
       )}
+      <form className="atest-row" onSubmit={async (e) => {
+        e.preventDefault(); setErr('');
+        try { const n = await adminNotifyAndroidTesters(ver); setMsg(t('{n} testadores avisados da versão {v}.', { n, v: ver })); setVer(''); } catch (ex) { setErr(tErr(ex.message)); }
+      }}>
+        <input value={ver} onChange={(e) => setVer(e.target.value)} placeholder={t('versão publicada (ex.: 1.0.105)')} maxLength={20} required />
+        <button className="btn ghost"><Bell size={15} /> {t('Avisar testadores')}</button>
+      </form>
       {msg && <p className="small muted">{msg}</p>}
       {err && <div className="form-err">{err}</div>}
       <div className="atest-list">
