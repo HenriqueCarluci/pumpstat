@@ -4,7 +4,7 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { isOn } from '../lib/plans.js';
 import { t, tErr } from '../lib/i18n.js';
-import { Check } from './Icons.jsx';
+import { Check, ChevronDown } from './Icons.jsx';
 
 export const STATUSES = [
   { id: 'online', label: 'Online', hint: 'Todo mundo vê você online' },
@@ -41,6 +41,7 @@ export default function StatusPicker() {
     <div className="status-picker" ref={ref}>
       <button className="status-btn" onClick={() => setOpen(!open)} aria-haspopup="menu" aria-expanded={open} title={t(info.label)} aria-label={t('Seu status: {s}', { s: t(info.label) })}>
         <StatusDot status={cur} />
+        <ChevronDown size={12} className="status-chev" />
       </button>
       {open && (
         <div className="status-menu" role="menu">
