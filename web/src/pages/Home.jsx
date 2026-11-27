@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import PiuConnect from '../components/PiuConnect.jsx';
 import WeekCard from '../components/WeekCard.jsx';
+import QuickLinks from '../components/QuickLinks.jsx';
 import ChallengeBanner from '../components/ChallengeBanner.jsx';
-import { isOn } from '../lib/plans.js';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronDown, ChevronRight, History, Logo, Tag, Target, Trophy, Users, TrendingUp, Dumbbell, Shield, CalendarCheck } from '../components/Icons.jsx';
+import { ChevronDown, ChevronRight, Logo } from '../components/Icons.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 
 export default function Home() {
-  const { data, version, reload, presence, plan, session } = useData();
+  const { data, version, reload, session } = useData();
   const [mode, setMode] = useState('D');
 
   const stats = useMemo(() => {
@@ -75,18 +75,7 @@ export default function Home() {
       <ChallengeBanner />
       <WeekCard />
 
-      <div className="quick-links">
-        {isOn(plan, 'online') && <Link to="/online" className="ql"><span className="dot-on" /> {t('Online')}{presence.online ? ` (${presence.online})` : ''}</Link>}
-        {isOn(plan, 'challenges') && <Link to="/desafios" className="ql"><Trophy size={16} /> {t('Desafios')}</Link>}
-        {isOn(plan, 'training') && <Link to="/treino" className="ql"><Dumbbell size={16} /> {t('Meu treino')}</Link>}
-        {isOn(plan, 'teams') && <Link to="/time" className="ql"><Shield size={16} /> {t('Meu Time')}</Link>}
-        {isOn(plan, 'day_report') && <Link to="/dia" className="ql"><CalendarCheck size={16} /> {t('Dia de jogo')}</Link>}
-        <Link to="/progresso" className="ql"><TrendingUp size={16} /> {t('Progresso')}</Link>
-        <Link to="/recomendacoes" className="ql"><Target size={16} /> {t('Recomendadas')}</Link>
-        <Link to="/titulos" className="ql"><Tag size={16} /> {t('Títulos')}</Link>
-        <Link to="/jogadores" className="ql"><Users size={16} /> {t('Amigos')}</Link>
-        <Link to="/recentes" className="ql"><History size={16} /> {t('Recentes')}</Link>
-      </div>
+      <QuickLinks />
 
       <section className="stats">
         <Stat label={t('Charts jogados')} value={stats.played.length} sub={t('de {n}', { n: data.charts.length })} />

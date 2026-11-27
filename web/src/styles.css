@@ -1804,3 +1804,27 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .week-card .panel-h h3 { min-width: 0; }
 .player-page > .socials { margin: 0 0 10px; }
 .socials-add { display: inline-flex; margin: 0 0 10px; color: var(--muted); }
+
+/* ---------- atalhos da início: uma linha + gaveta "Mais" ---------- */
+.qrow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.qtile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-width: 0; min-height: 64px; padding: 8px 2px;
+  border-radius: 14px; background: var(--panel); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-family: inherit; cursor: pointer; }
+.qtile:active { transform: scale(0.97); }
+.qtile.more { background: transparent; border-style: dashed; color: var(--muted); }
+.qico { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 11px; background: rgba(255, 255, 255, 0.06); }
+.qico .dot-on { margin: 0; }
+.qbadge { position: absolute; top: -5px; right: -7px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: #3ee06f; color: #0b1a10;
+  font: 800 10px/17px var(--num); font-style: normal; text-align: center; }
+.qlabel { font-size: 11.5px; font-weight: 600; line-height: 1.15; text-align: center; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.qcell { position: relative; }
+.qcell .qtile { width: 100%; min-height: 76px; }
+.qcell .qlabel { font-size: 12.5px; white-space: normal; }
+.qpin { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;
+  border: 0; border-radius: 8px; background: transparent; color: var(--muted); cursor: pointer; }
+.qpin.on { color: #ffd166; }
+.qpin.on svg { fill: #ffd166; }
+.qsheet .sheet-body { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+@media (min-width: 700px) { .qrow { grid-template-columns: repeat(5, minmax(0, 120px)); } }
+.qrow .qlabel { white-space: normal; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 11px; min-height: 2.3em; display: -webkit-box; align-content: center; }
+@media (min-width: 400px) { .qrow .qlabel { font-size: 11.5px; } }
