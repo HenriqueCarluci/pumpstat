@@ -108,6 +108,7 @@ export default function Settings() {
       </Group>
 
       <Group id="privacidade" title="Privacidade">
+        <PrivateStats />
         <BlockedUsers />
         <section className="card">
           <h3>{t('Privacidade e dados')}</h3>
@@ -215,6 +216,30 @@ function AccountCard() {
 }
 
 const fmtDay = (iso) => new Date(iso).toLocaleDateString(locale(), { day: 'numeric', month: 'long' });
+
+/** Perfil privado: esconde de todo mundo (amigos também) as estatísticas que o app gera. */
+function PrivateStats() {
+  const [on, setOn] = useState(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { rpc('my_privacy').then((r) => setOn(!!r?.private_stats)).catch(() => setOn(false)); }, []);
+  if (on == null) return null;
+  const flip = async () => {
+    setBusy(true);
+    try { await rpc('set_private_stats', { p_on: !on }); setOn(!on); } catch { /* segue */ }
+    setBusy(false);
+  };
+  return (
+    <section className="card">
+      <h3 className="ic-row"><Lock size={17} /> {t('Perfil privado')}</h3>
+      <label className="check legacy-pref">
+        <input type="checkbox" checked={on} disabled={busy} onChange={flip} />
+        <span><b>{t('Ocultar minhas estatísticas, até dos amigos')}</b><br />
+          <small className="muted">{t('Some para os outros: notas e recordes, jogadas, top 50, notas e placas, passes por nível, estilo de jogo, comparação, rival, pontos e selos das missões e avisos dos seus recordes.')}</small><br />
+          <small className="muted">{t('Continua visível o que o próprio jogo mostra (nick, foto, título e PUMBILITY), além de bandeira, time e redes sociais. Você continua vendo tudo seu.')}</small></span>
+      </label>
+    </section>
+  );
+}
 
 function BlockedUsers() {
   const [list, setList] = useState(null);

@@ -7,7 +7,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtScore, pbTier, PLATE_ORDER, pumbility, VERSIONS } from '../lib/piu.js';
-import { Award, MessageCircle, Swords, TrendingUp } from '../components/Icons.jsx';
+import { Award, Lock, MessageCircle, Swords, TrendingUp } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
@@ -286,12 +286,18 @@ export function PlayerProfile() {
         </div>
       ) : (
         <div className="pp-actions">
-          <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>
+          {!other?.private && <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>}
           <button type="button" className="btn ghost" onClick={openChat}><MessageCircle size={16} /> {t('Chat')}</button>
           <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
         </div>
       )}
 
+      {!isMe && other?.private ? (
+        <section className="card pp-private">
+          <Lock size={18} />
+          <div><b>{t('Estatísticas privadas')}</b><p className="muted small">{t('{n} deixou as estatísticas do app ocultas. Nick, título e PUMBILITY continuam visíveis.', { n: other?.nickname || t('Jogador') })}</p></div>
+        </section>
+      ) : <>
       <section className={`pp-kpis ${isMe ? 'me' : ''}`}>
         <div className="card pp-kpi"><small className="muted">{t('Recordes')}</small><b>{fmtNum(charts.length)}</b></div>
         {stats.map((s) => (
@@ -384,6 +390,7 @@ export function PlayerProfile() {
           </div>
         </section>
       </PlanLock>
+      </>}
 
       {!isMe && <MiniChat user={id} name={other?.nickname} />}
       {!isMe && <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />}
@@ -419,6 +426,7 @@ export function ComparePlayer() {
 
   if (err) return <div className="page"><p className="empty">{err}</p><Link to="/jogadores" className="btn ghost">{t('Ver amigos e solicitações')}</Link></div>;
   if (!rows) return <div className="page"><p className="empty">{t('Carregando comparação…')}</p></div>;
+  if (other?.private) return <div className="page"><p className="empty">{t('{n} deixou as estatísticas do app ocultas.', { n: other.nickname || t('Jogador') })}</p><Link to={`/jogador/${id}`} className="btn ghost">{t('Ver o perfil de {n}', { n: other.nickname || t('Jogador') })}</Link></div>;
 
   const both = items.filter((x) => x.me.score != null && x.them.score != null);
   const wins = both.filter((x) => x.me.score > x.them.score).length;

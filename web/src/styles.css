@@ -2166,3 +2166,4 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 @media (max-width: 560px) { .grants-matrix th:nth-child(3), .grants-matrix td:nth-child(3) { display: none; } }
 .grants-sheet .sheet-body > * { flex-shrink: 0; }
 .grants-matrix .gm-group td { text-align: left !important; }
+.pp-private { display: flex; gap: 12px; align-items: flex-start; } .pp-private p { margin: 4px 0 0; }
