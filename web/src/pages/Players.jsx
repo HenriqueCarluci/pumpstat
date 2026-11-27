@@ -394,7 +394,8 @@ export function PlayerProfile() {
 /** Comparação chart a chart entre você e outro jogador. */
 export function ComparePlayer() {
   const { id } = useParams();
-  const { data, version, session } = useData();
+  const { data, version, session, plan } = useData();
+  const full = entitlements(plan).can('compare_full');
   const myId = session?.user?.id;
   const me = { nickname: data.profile?.nickname, avatar: data.profile?.avatar_url, title: data.profile?.title };
   const [rows, setRows] = useState(null);
@@ -422,7 +423,8 @@ export function ComparePlayer() {
   const both = items.filter((x) => x.me.score != null && x.them.score != null);
   const wins = both.filter((x) => x.me.score > x.them.score).length;
   const losses = both.filter((x) => x.me.score < x.them.score).length;
-  const shown = (filter === 'both' ? both : filter === 'only-them' ? items.filter((x) => x.me.score == null) : items.filter((x) => x.them.score == null))
+  const view = full ? filter : 'both';
+  const shown = (view === 'both' ? both : view === 'only-them' ? items.filter((x) => x.me.score == null) : items.filter((x) => x.them.score == null))
     .sort((a, b) => b.chart.level - a.chart.level || ((b.them.score ?? 0) - (b.me.score ?? 0)) - ((a.them.score ?? 0) - (a.me.score ?? 0)));
 
   return (
@@ -445,10 +447,12 @@ export function ComparePlayer() {
         </div>
       </section>
       <Link to={`/jogador/${id}`} className="link small">{t('Ver o perfil de {n}', { n: other?.nickname || t('Jogador') })}</Link>
-      <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />
-      <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+      {full ? <>
+        <Chips value={filter} onChange={setFilter} options={[['both', t('Em comum')], ['only-them', t('Só ele jogou')], ['only-me', t('Só você jogou')]]} />
+        <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+      </> : <p className="muted small">{t('Os 5 charts em comum de nível mais alto.')}</p>}
       <div className="cmp-list">
-        {shown.slice(0, 300).map((x) => {
+        {shown.slice(0, full ? 300 : 5).map((x) => {
           const diff = x.me.score != null && x.them.score != null ? x.me.score - x.them.score : null;
           return (
             <Link key={x.chart.id} to={`/musica/${x.chart.song.id}`} className="cmp-row">
@@ -462,6 +466,7 @@ export function ComparePlayer() {
           );
         })}
       </div>
+      {!full && <PlanLock feature="compare_full" title={t('A comparação completa')} compact />}
     </div>
   );
 }

@@ -55,6 +55,7 @@ const FAKE = {
     { id: 20, status: 'soon', released_on: null, tag: 'new', title: { pt: 'Planos Plus e Pro' }, body: { pt: 'Análises, treino e recursos sociais a mais, com preço de lançamento nos primeiros meses.' } },
     { id: 21, status: 'soon', released_on: null, tag: 'new', title: { pt: 'Sincronização automática' }, body: { pt: 'Suas notas atualizadas sozinhas depois de jogar.' } }],
   admin_set_preview: null,
+  admin_feature_grants: [{ feature: 'player_stats', expires_at: '2027-02-25T00:00:00Z', note: 'membro do clube', active: true }],
   get admin_release_notes() { return FAKE.release_notes.map((n) => ({ ...n, published: true })).concat([{ id: 30, status: 'soon', tag: 'new', title: { pt: 'Competições no perfil (CBPIU e LBPIU)' }, body: {}, published: false, sort: 5 }]); },
   chat_with: (() => { const now = Date.now(); const mk = (i, mine, kind, message, status) => ({ id: i, mine, kind, message, status, at: new Date(now - (20 - i) * 3600e3).toISOString(), reactions: i === 3 ? [{ e: '😂', mine: true }, { e: '😂', mine: false }] : i === 2 ? [{ e: '🔥', mine: false }] : [] });
     return [mk(1, false, 'message', 'eai, bora treinar sábado na Liberdade?', 'accepted'), mk(2, true, 'message', 'bora! que horas você chega?', 'accepted'),

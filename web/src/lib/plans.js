@@ -14,11 +14,13 @@ export const FEATURES = [
   { id: 'style_full', label: 'Todas as skills do chart (% de cada tag)', group: 'Análises', min: 'plus' },
   { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises', min: 'plus' },
   { id: 'day_report', label: 'Dia de jogo (relatório do dia)', group: 'Análises', min: 'plus' },
+  { id: 'week_summary', label: 'Resumo da semana passada', group: 'Análises', min: 'plus' },
   { id: 'weakness', label: 'Pontos fortes e fracos por padrão', group: 'Análises', min: 'pro' },
   { id: 'training_list', label: 'Meu treino: lista de charts para treinar', group: 'Treino', min: 'plus' },
   { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar', group: 'Treino', min: 'plus' },
   { id: 'training_plan', label: 'Plano de treino semanal e metas', group: 'Treino', min: 'pro' },
   { id: 'missions_focus', label: 'Missões: foco da semana', group: 'Treino', min: 'pro' },
+  { id: 'compare_full', label: 'Comparar com amigo: lista completa, filtros e só ele / só você jogou', group: 'Social', min: 'plus' },
   { id: 'rival', label: 'Rival: comparação completa com um amigo', group: 'Social', min: 'plus' },
   { id: 'team_report', label: 'Relatório do time por dia, semana e mês', group: 'Social', min: 'plus' },
   { id: 'export', label: 'Exportar tier e cards em imagem', soon: true, group: 'Social', min: 'plus' },
@@ -32,7 +34,7 @@ export const FEATURE_DEFAULTS = Object.fromEntries(FEATURES.map((f) => [f.id, f.
 /** Recursos sempre grátis (só para mostrar na matriz). */
 export const ALWAYS_FREE = ['Recordes e histórico completo de passes e notas', 'PUMBILITY e faixa (só o número)', 'Tier (Unique e New Tunes)', 'Lista de músicas e charts',
   'Sincronização manual (com anúncio no Grátis)', 'Fila dos fliperamas', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
-  'Votações de tier e desafios do mês', 'Missões da semana, pontos e selos', 'Site no computador e busca'];
+  'Votações de tier e desafios do mês', 'Missões da semana, pontos e selos', 'Comparar com amigo (resumo)', 'Site no computador e busca'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
   { id: 'missions', label: 'Missões por semana' },
@@ -86,8 +88,10 @@ export function entitlements(plan) {
   const mine = preview || plan?.plan || 'free';
   const bypass = !!plan?.admin && !preview;
   const need = (feature) => cfg.features?.[feature] || FEATURE_DEFAULTS[feature] || 'free';
+  const grants = Array.isArray(plan?.grants) ? plan.grants : [];
   const can = (feature) => {
-    if (!enforce || bypass) return true;
+    if (bypass || grants.includes(feature)) return true;
+    if (!enforce) return true;
     return rank(mine) >= rank(need(feature));
   };
   // limite numérico do plano (null = sem limite)
@@ -96,7 +100,7 @@ export function entitlements(plan) {
     const v = cfg.limits?.[mine]?.[key] ?? LIMIT_DEFAULTS[mine]?.[key];
     return v == null || v === '' ? null : Number(v);
   };
-  return { plan: mine, enforce, preview, previewUntil: preview ? plan.preview.expires_at : null, showPlans: !!cfg.show_plans || !!plan?.admin, can, need, limit, config: cfg };
+  return { plan: mine, enforce, grants, preview, previewUntil: preview ? plan.preview.expires_at : null, showPlans: !!cfg.show_plans || !!plan?.admin, can, need, limit, config: cfg };
 }
 
 /** Preço de lançamento (os primeiros N meses) de uma região, se houver. */

@@ -11,7 +11,7 @@ import {
 } from '../lib/missions.js';
 import { loadTraining } from '../lib/training.js';
 import { DIM_LABEL } from '../pages/Progress.jsx';
-import { isOn } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball } from './ui.jsx';
 import Panel from './Panel.jsx';
@@ -77,7 +77,7 @@ export default function WeekCard() {
   const cfg = useMemo(() => missionConfig(plan), [plan]);
   // a Phoenix 1 não recebe jogadas novas: missões e resumo da semana só valem na Phoenix 2
   const p2 = version === 'phoenix2';
-  const on = { missions: p2 && isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: p2 && isOn(plan, 'week_summary') };
+  const on = { missions: p2 && isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: p2 && isOn(plan, 'week_summary') && entitlements(plan).can('week_summary') };
   const p1Note = !p2 && isOn(plan, 'missions');
   const uid = session?.user?.id || 'anon';
   const ws = weekStart();

@@ -7,7 +7,7 @@ import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
-import { PLAN_LABEL } from '../lib/plans.js';
+import { FEATURES, PLAN_LABEL } from '../lib/plans.js';
 import { TestMode } from '../components/PlanLock.jsx';
 import ReleaseNotesAdmin from './ReleaseNotesAdmin.jsx';
 import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
@@ -189,6 +189,7 @@ function UserRow({ u, open, onToggle, onChange }) {
               <button disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'free' }, t('Remover o plano deste usuário?'))}>{t('Remover plano')}</button>
             )}
           </div>
+          <FeatureGrants userId={u.id} />
           </>}
           {canAdmin(plan, 'roles') && <>
             <div className="rv-label">{t('Equipe')}</div>
@@ -208,6 +209,55 @@ function UserRow({ u, open, onToggle, onChange }) {
           {err && <div className="form-err">{err}</div>}
         </div>
       )}
+    </div>
+  );
+}
+
+/** Recursos liberados para uma pessoa, sem mudar o plano dela (com prazo e motivo). */
+function FeatureGrants({ userId }) {
+  const [list, setList] = useState(null);
+  const [feature, setFeature] = useState('');
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_feature_grants', { p_user: userId }).then((r) => setList(r || [])).catch((e) => setErr(tErr(e.message)));
+  useEffect(() => { load(); }, [userId]);
+  const label = (id) => FEATURES.find((f) => f.id === id)?.label || id;
+  const run = async (fn, args) => {
+    setBusy(true); setErr('');
+    try { await rpc(fn, args); await load(); } catch (e) { setErr(tErr(e.message)); }
+    setBusy(false);
+  };
+  const options = FEATURES.filter((f) => !f.hidden && !f.soon && f.min !== 'free');
+  return (
+    <div className="feature-grants">
+      <div className="rv-label">{t('Recursos liberados (sem mudar o plano)')}</div>
+      {list?.length > 0 && (
+        <ul className="fg-list">
+          {list.map((g) => (
+            <li key={g.feature} className={g.active ? '' : 'expired'}>
+              <span className="fg-name">{t(label(g.feature))}<small className="muted">
+                {g.expires_at ? (g.active ? t('até {d}', { d: fmtDate(g.expires_at) }) : t('venceu em {d}', { d: fmtDate(g.expires_at) })) : t('sem prazo')}
+                {g.note ? ` · ${g.note}` : ''}</small></span>
+              <button type="button" className="link" disabled={busy} onClick={() => run('admin_remove_feature_grant', { p_user: userId, p_feature: g.feature })} title={t('Remover')}><X size={14} /></button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {list && !list.length && <p className="muted small">{t('Nenhum recurso liberado para esta pessoa.')}</p>}
+      <select value={feature} onChange={(e) => setFeature(e.target.value)}>
+        <option value="">{t('Escolha um recurso…')}</option>
+        {options.map((f) => <option key={f.id} value={f.id}>{t(f.label)} ({PLAN_LABEL[f.min]})</option>)}
+      </select>
+      {feature && <>
+        <input placeholder={t('Motivo (opcional), ex.: membro do clube')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} />
+        <div className="chips">
+          {[[30, '30 dias'], [90, '3 meses'], [365, '1 ano'], [null, 'Sem prazo']].map(([d, l]) => (
+            <button key={l} type="button" disabled={busy} onClick={() => run('admin_set_feature_grant', { p_user: userId, p_feature: feature, p_days: d, p_note: note || null }).then(() => { setFeature(''); setNote(''); })}>{t(l)}</button>
+          ))}
+        </div>
+      </>}
+      {err && <div className="form-err">{err}</div>}
     </div>
   );
 }

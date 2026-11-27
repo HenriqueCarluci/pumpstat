@@ -12,7 +12,8 @@ export function adsConfig(plan) {
   const mine = preview || plan?.plan || 'free';
   // "Sem anúncios" é um recurso da matriz de planos (padrão: a partir do Plus)
   const need = plan?.config?.features?.no_ads || FEATURE_DEFAULTS.no_ads;
-  const show = !!ads.enabled && rank(mine) < rank(need) && (!plan?.admin || !!preview || !!ads.show_admin);
+  const granted = Array.isArray(plan?.grants) && plan.grants.includes('no_ads');
+  const show = !!ads.enabled && !granted && rank(mine) < rank(need) && (!plan?.admin || !!preview || !!ads.show_admin);
   return { ...ads, show, everyN: Math.max(4, Number(ads.every_n) || 12) };
 }
 
