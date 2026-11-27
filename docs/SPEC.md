@@ -87,6 +87,8 @@ carregadas de `piugame.com/l_img/p2/…`, acento verde-neon do logo.
 6. **Competições no perfil (CBPIU e LBPIU)** — ver 6.2.
 7. **Liberação de recursos por usuário** — o admin dá (ou tira) um recurso de uma pessoa sem mudar o plano dela, com prazo e motivo. Ver 6.3.
 8. **Seguidores** — seguir o perfil de um jogador que deixou o perfil público. Ver 6.4.
+9. **Recorde por foto (registro manual)** — para Phoenix 1 ou quem não tem cartão: foto da tela de resultado → leitura por modelo de visão no servidor → formulário pré-preenchido para conferir → salvo com a tag "Registro manual" e a foto como comprovante. Ver 6.5.
+10. **Push no app Android (FCM)** — o aviso de "sua vez" na fila hoje só chega pelo site/PWA (Web Push).
 
 ### 6.2 Competições no perfil (CBPIU e LBPIU)
 
@@ -371,3 +373,15 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - **Separado:** recorde de casa só na tela Treino em casa e num cartão na página do chart.
 - **Consolidado:** no app (`withHome`), quando o de casa é melhor, ele entra no lugar do da Phoenix 2 nas telas da própria pessoa (estatísticas, progresso, recomendações), marcado `fromHome`; o do fliperama fica em `arcade`. O servidor continua só com o fliperama (PUMBILITY oficial, missões, rankings, amigos).
 - **Pendente:** validar o leitor com arquivos reais do StepP1 e do XSanity antes de ligar. O XSanity tem conta online (Saninet), sem API pública: perguntar à equipe se pode haver uma.
+
+### 6.5 Recorde por foto (registro manual)
+
+Pedido em 27/11/2026 (deixado no backlog). Viabilidade conferida com 3 fotos reais de telas de resultado do Phoenix:
+- Dá para ler da foto: música, modo e nível (bola SINGLE/DOUBLE + número), score, nota (A, A+, S+…), plate (ROUGH GAME, FAIR GAME…), Perfect/Great/Good/Bad/Miss, max combo e kcal. Funcionou com foto torta e com os números desalinhados das legendas.
+- Conferência: o score do Phoenix sai dos acertos — `(P + 0,6·Gr + 0,2·Gd + 0,1·B) × 995000 / total + maxCombo × 5000 / total`, total = soma dos cinco. Nas 3 fotos bateu exato (ou com 1 ponto de diferença por arredondamento). Se não fechar, a leitura errou ou o número foi editado: o app pede correção.
+- O total de notas também tem que bater com a chart do catálogo; o nome é casado com o catálogo e confirmado pelo nível.
+- Tela de 2 jogadores: cada lado tem sua coluna de números; perguntar "qual lado é você" (ou deduzir pelo nível).
+- Sem cartão o nome aparece como "PUMPITUP / BEGINNER": a foto fica vinculada a quem enviou.
+- Falta ver uma foto de máquina Phoenix 1 (as 3 eram Phoenix 2).
+- Regras sugeridas (configuráveis no admin): aparece no perfil com a tag; fora do ranking oficial/Top 50 por padrão (ou com selo); recorde oficial da mesma chart substitui o manual; admin pode invalidar; foto repetida é bloqueada (hash).
+- Peças: tela de captura/confirmação, endpoint na API com modelo de visão, coluna de origem nos scores, armazenamento das fotos, filtros nos rankings.
