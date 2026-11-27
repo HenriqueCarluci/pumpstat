@@ -59,6 +59,8 @@ export function chartAttempts(data, prog) {
   };
   for (const p of prog.plays) {
     if (p.chart.mode !== 'S' && p.chart.mode !== 'D') continue;
+    // sem score e sem marca de quebra o site da Pump não diz se passou: não conta como passe nem quebra
+    if (p.score == null && !p.broken) continue;
     const r = get(p.chart);
     r.attempts++;
     if (p.broken) r.fails++; else { r.passes++; r.firstClear = Math.min(r.firstClear ?? Infinity, p.at); }
@@ -460,8 +462,8 @@ export function mainPattern(prog, c, mean) {
 
 /** Passes e quebras perto do nível do jogador, agrupados pelo padrão que mais se destaca em cada chart (cada chart pesa no máximo 4). */
 export function patternShare(attempts, prog, mode, lvl) {
-  const pass = {}, fail = {};
-  if (!lvl) return { pass, fail };
+  const pass = {}, fail = {}, lists = { pass: {}, fail: {} };
+  if (!lvl) return { pass, fail, lists };
   const zone = attempts.filter((r) => r.chart.mode === mode && r.chart.level >= lvl.ceiling - 4 && r.chart.level <= lvl.ceiling + 1 && styleOf(prog, r.chart));
   const mean = {};
   for (const p of DIMENSIONS) mean[p] = zone.reduce((a, r) => a + (styleOf(prog, r.chart).pct[p] || 0), 0) / (zone.length || 1);
@@ -469,9 +471,10 @@ export function patternShare(attempts, prog, mode, lvl) {
     const p = mainPattern(prog, r.chart, mean);
     if (!p || !r.attempts) continue;
     const k = Math.min(r.attempts, 4) / r.attempts;
-    if (r.passes) pass[p] = (pass[p] || 0) + r.passes * k;
-    if (r.fails) fail[p] = (fail[p] || 0) + r.fails * k;
+    if (r.passes) { pass[p] = (pass[p] || 0) + r.passes * k; (lists.pass[p] ||= []).push(r); }
+    if (r.fails) { fail[p] = (fail[p] || 0) + r.fails * k; (lists.fail[p] ||= []).push(r); }
   }
   for (const o of [pass, fail]) for (const p in o) o[p] = Math.round(o[p]);
-  return { pass, fail };
+  // lists: os charts que entraram em cada fatia (para o drill-down do gráfico)
+  return { pass, fail, lists };
 }

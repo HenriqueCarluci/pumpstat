@@ -1392,3 +1392,5 @@ Toque numa tag para ver os charts. | Tap a tag to see the charts. | Toca una tag
 passou | passed | pasó | 클리어 | クリア | passé | superato
 Ver {n} chart | See {n} chart | Ver {n} chart | 차트 {n}개 보기 | 譜面{n}件を見る | Voir {n} chart | Vedi {n} chart
 Ver {n} charts | See {n} charts | Ver {n} charts | 차트 {n}개 보기 | 譜面{n}件を見る | Voir {n} charts | Vedi {n} chart
+Toque num padrão para ver os charts. | Tap a pattern to see the charts. | Toca un patrón para ver los charts. | 패턴을 누르면 차트를 볼 수 있어요. | パターンをタップすると譜面が見られます。 | Touchez un motif pour voir les charts. | Tocca uno schema per vedere i chart.
+Charts perto do seu nível em que esse é o padrão que mais se destaca, com as jogadas registradas. | Charts near your level where this is the standout pattern, with your recorded plays. | Charts cerca de tu nivel en los que este es el patrón que más destaca, con las jugadas registradas. | 내 레벨 근처에서 이 패턴이 가장 두드러지는 차트와 기록된 플레이예요. | 自分のレベル付近でこのパターンが最も目立つ譜面と、記録されたプレイです。 | Charts proches de votre niveau où ce motif ressort le plus, avec vos parties enregistrées. | Chart vicini al tuo livello in cui questo è lo schema più evidente, con le giocate registrate.

@@ -2,6 +2,7 @@
 // Cores categóricas validadas para o fundo escuro (azul/laranja passam no teste de daltonismo); texto sempre na cor de texto.
 import { useMemo, useRef, useState } from 'react';
 import { t } from '../lib/i18n.js';
+import { ChevronRight } from './Icons.jsx';
 
 export const SERIES = { a: '#3d8fe6', b: '#d9772e', gold: '#ffd23f' };
 
@@ -161,7 +162,8 @@ export function ChartTable({ head, rows }) {
  * Gráfico de setor (rosca). slices: [{ key, name, value, color }]. Mostra % em cada fatia grande,
  * legenda com valores e tooltip ao passar o dedo/mouse.
  */
-export function Donut({ slices, label, center, fmtV = (v) => v }) {
+/** onPick(slice): se vier, tocar numa fatia ou num item da legenda abre o detalhe daquela fatia. */
+export function Donut({ slices, label, center, fmtV = (v) => v, onPick = null }) {
   const [hover, setHover] = useState(null);
   const total = slices.reduce((a, s) => a + s.value, 0);
   if (!total) return null;
@@ -187,7 +189,8 @@ export function Donut({ slices, label, center, fmtV = (v) => v }) {
     <figure className="donut" aria-label={label}>
       <svg viewBox="0 0 200 200" role="img" onPointerLeave={() => setHover(null)}>
         {arcs.map((s, i) => (
-          <path key={s.key} d={s.d} fill={s.color} className={hover === i ? 'on' : ''} onPointerEnter={() => setHover(i)} onClick={() => setHover(i)} />
+          <path key={s.key} d={s.d} fill={s.color} className={`${hover === i ? 'on' : ''}${onPick ? ' pick' : ''}`} onPointerEnter={() => setHover(i)}
+            onClick={() => { setHover(i); onPick?.(s); }} />
         ))}
         {arcs.map((s) => s.frac >= 0.08 && (
           <text key={`t${s.key}`} x={s.lx} y={s.ly + 4} textAnchor="middle" className="donut-pct">{Math.round(s.frac * 100)}%</text>
@@ -197,8 +200,12 @@ export function Donut({ slices, label, center, fmtV = (v) => v }) {
       </svg>
       <ul className="donut-legend">
         {arcs.map((s, i) => (
-          <li key={s.key} className={hover === i ? 'on' : ''} onPointerEnter={() => setHover(i)}>
-            <i style={{ background: s.color }} /> <span>{s.name}</span> <b>{fmtV(s.value)}</b>
+          <li key={s.key} className={`${hover === i ? 'on' : ''}${onPick ? ' pickable' : ''}`} onPointerEnter={() => setHover(i)}>
+            {onPick ? (
+              <button type="button" className="donut-pick" onClick={() => onPick(s)}>
+                <i style={{ background: s.color }} /> <span>{s.name}</span> <b>{fmtV(s.value)}</b><ChevronRight size={14} className="muted" />
+              </button>
+            ) : <><i style={{ background: s.color }} /> <span>{s.name}</span> <b>{fmtV(s.value)}</b></>}
           </li>
         ))}
       </ul>

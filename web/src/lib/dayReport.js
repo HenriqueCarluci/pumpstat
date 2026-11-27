@@ -16,7 +16,8 @@ export function buildDay(raw, byId) {
   const rows = (raw.charts || []).map(([id, tries, passes, score, grade, plate, prevScore, prevGrade, prevPlate, triesBefore, bestFail]) => {
     const chart = byId.get(id);
     if (!chart) return null;
-    const passed = passes > 0;
+    // passe só com score: jogada sem score e sem marca de quebra não diz se passou
+    const passed = passes > 0 && score != null;
     const hadPass = prevScore != null;
     const newClear = passed && !hadPass && known;
     const unknownPrev = passed && !hadPass && !known;
@@ -35,11 +36,13 @@ export function buildDay(raw, byId) {
     chart: byId.get(id), at, score, grade, plate, broken, perfect, great, good, bad, miss,
   })).filter((p) => p.chart);
 
-  const passes = plays.filter((p) => !p.broken);
+  // sem score e sem marca de quebra o site da Pump não diz se passou: não conta como passe
+  const passed = (p) => !p.broken && p.score != null;
+  const passes = plays.filter(passed);
   const bestPlay = new Map();
   for (const p of plays) {
     const b = bestPlay.get(p.chart.id);
-    if (!b || (!p.broken && (b.broken || p.score > b.score)) || (p.broken && b.broken && p.score > b.score)) bestPlay.set(p.chart.id, p);
+    if (!b || (passed(p) && (!passed(b) || p.score > b.score)) || (!passed(p) && !passed(b) && (p.score || 0) > (b.score || 0))) bestPlay.set(p.chart.id, p);
   }
   for (const r of rows) r.best = bestPlay.get(r.chart.id) || null;
   const sd = (p) => p.chart.mode === 'S' || p.chart.mode === 'D';
@@ -69,7 +72,7 @@ export function buildDay(raw, byId) {
   for (const p of plays.filter(sd)) {
     const k = `${p.chart.mode}${p.chart.level}`;
     const v = levels.get(k) || { mode: p.chart.mode, level: p.chart.level, tries: 0, passes: 0 };
-    v.tries += 1; if (!p.broken) v.passes += 1;
+    v.tries += 1; if (passed(p)) v.passes += 1;
     levels.set(k, v);
   }
 

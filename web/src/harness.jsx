@@ -33,7 +33,7 @@ import QueueP from './pages/Queue.jsx';
 import TitlesP from './pages/Titles.jsx';
 import PlayersP from './pages/Players.jsx';
 import VotesP from './pages/Votes.jsx';
-import ProgressP from './pages/Progress.jsx';
+import ProgressP, { ShareDonuts } from './pages/Progress.jsx';
 import NotificationsP from './pages/Notifications.jsx';
 import OnlineP from './pages/Online.jsx';
 import PlansP from './pages/Plans.jsx';
@@ -85,10 +85,10 @@ const FAKE = {
       members: [{ id: 'amigo', nickname: 'PUMPKING', plays: 70, passes: 58, new_clears: 9, max_d: 23, max_s: 24 }, { id: 'eu', nickname: 'HENRIQUE', plays: 51, passes: 33, new_clears: 8, max_d: 21, max_s: 20 }, { id: 'm3', nickname: 'AKIRA_PIU_LONGNAME', plays: 0, passes: 0, new_clears: 0, max_d: null, max_s: null }] }; })(),
   my_day_report: (() => { const s0 = 1795710000; return { day: '2026-11-25', start: s0, end: s0 + 86400, coverage: s0 - 86400 * 30,
     charts: [[4864, 4, 1, 912300, 'AA', 'RG', null, null, null, 6, 880100], [5137, 2, 1, 991200, 'SSS+', 'MG', 985000, 'SS+', 'TG', 3, null],
-      [5769, 3, 3, 975500, 'S+', 'TG', 961200, 'AAA+', 'TG', 5, null], [6270, 3, 0, null, null, null, null, null, null, 4, 902000], [7487, 1, 1, 990100, 'SSS', 'MG', 992311, 'SSS', 'MG', 2, null]],
+      [5769, 3, 3, 975500, 'S+', 'TG', 961200, 'AAA+', 'TG', 5, null], [6270, 4, 1, null, null, null, null, null, null, 4, 902000], [7487, 1, 1, 990100, 'SSS', 'MG', 992311, 'SSS', 'MG', 2, null]],
     plays: [[7487, s0 + 3600, 990100, 'SSS', 'MG', false, 1100, 60, 3, 0, 2], [5769, s0 + 3900, 961000, 'AAA+', 'TG', false, 980, 160, 20, 4, 25], [5769, s0 + 4200, 975500, 'S+', 'TG', false, 1050, 120, 10, 2, 7],
       [6270, s0 + 4500, 902000, 'AA', null, true, 800, 200, 30, 10, 15], [4864, s0 + 4800, 880100, 'A+', null, true, 900, 300, 40, 20, 40], [4864, s0 + 5100, 912300, 'AA', 'RG', false, 1000, 220, 30, 10, 40],
-      [5137, s0 + 5400, 991200, 'SSS+', 'MG', false, 1250, 40, 5, 1, 4], [5769, s0 + 5700, 970000, 'S', 'TG', false, 1000, 150, 20, 4, 15], [6270, s0 + 6000, 850000, 'A', null, true, 700, 250, 50, 20, 35], [6270, s0 + 6300, 870000, 'A+', null, true, 750, 230, 40, 15, 20], [4864, s0 + 6600, 800000, 'A', null, true, 800, 300, 60, 30, 70], [4864, s0 + 6900, 0, null, null, true, 400, 100, 20, 10, 90], [5137, s0 + 7200, 985000, 'SS+', 'TG', true, 1200, 80, 10, 3, 10]],
+      [5137, s0 + 5400, 991200, 'SSS+', 'MG', false, 1250, 40, 5, 1, 4], [5769, s0 + 5700, 970000, 'S', 'TG', false, 1000, 150, 20, 4, 15], [6270, s0 + 6000, 850000, 'A', null, true, 700, 250, 50, 20, 35], [6270, s0 + 6300, 870000, 'A+', null, true, 750, 230, 40, 15, 20], [4864, s0 + 6600, 800000, 'A', null, true, 800, 300, 60, 30, 70], [4864, s0 + 6900, 0, null, null, true, 400, 100, 20, 10, 90], [6270, s0 + 7000, null, null, null, false, 0, 0, 0, 0, 777], [5137, s0 + 7200, 985000, 'SS+', 'TG', true, 1200, 80, 10, 3, 10]],
     prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
     days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
   list_teams: { teams: [], mine: null, pending: null },
@@ -191,10 +191,18 @@ function HShell({ children }) {
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/teststyle" element={<TestStyle />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
+    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/teststyle" element={<TestStyle />} /><Route path="/testdonut" element={<TestDonut />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
   </DataCtx.Provider>,
 );
 
+function TestDonut() {
+  const cs = Array.from({ length: 12 }, (_, i) => ({ id: 7000 + i, mode: 'D', level: 23 - (i % 4), song: { id: 7000 + i, title: `Song ${i + 1}`, jacket: null } }));
+  const r = (c, passes, fails, other) => ({ chart: c, passes, fails, attempts: passes + fails, other });
+  const share = { pass: { twist: 57, run: 44, speed: 43, drill: 40, stamina: 32, bracket: 26, jump: 4 }, fail: { twist: 20, drill: 12, jack: 2 },
+    lists: { pass: { twist: [r(cs[0], 3, 1), r(cs[1], 1, 0), r(cs[2], 2, 2, true)], run: [r(cs[3], 1, 0)], speed: [r(cs[4], 2, 0)], drill: [r(cs[5], 1, 3)], stamina: [r(cs[6], 1, 0)], bracket: [r(cs[7], 1, 0)], jump: [r(cs[8], 1, 0)] },
+      fail: { twist: [r(cs[0], 3, 1), r(cs[2], 2, 2, true)], drill: [r(cs[5], 1, 3)], jack: [r(cs[9], 0, 2)] } } };
+  return <ShareDonuts share={share} otherName="Phoenix" />;
+}
 function TestStyle() {
   const mk = (i, lv, broken, tags) => ({ id: i, mode: 'D', level: lv, score: 950000 - i * 1000, grade: 'AA', plate: null, broken, tagBars: tags, song: { id: i, title: `Song ${i}`, jacket: null } });
   const charts = [];

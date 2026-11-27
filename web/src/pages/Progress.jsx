@@ -17,7 +17,7 @@ import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball, Jacket } from '../components/ui.jsx';
 import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
 import { Chips } from './Songs.jsx';
-import { Check, Lock, Target } from '../components/Icons.jsx';
+import { Check, ChevronRight, Lock, Target, X } from '../components/Icons.jsx';
 
 export const DIM_LABEL = Object.fromEntries([...STYLE_KEYS.map((k) => [k.id, k.label]), ['speed', 'Velocidade'], ['stamina', 'Resistência'], ['gimmick', 'Gimmick']]);
 export const DIM_TIP = {
@@ -76,9 +76,11 @@ export default function Progress() {
     const lvl = playerLevel(stats);
     const othLvl = a.oth ? playerLevel(levelStats(a.oth.attempts, mode)) : null;
     const weak = weaknesses(weaknessSums(a.attempts, a.prog, mode, lvl), a.oth ? weaknessSums(a.oth.attempts, a.oth.prog, mode, othLvl) : new Map());
-    const s1 = patternShare(a.attempts, a.prog, mode, lvl), s2 = a.oth ? patternShare(a.oth.attempts, a.oth.prog, mode, othLvl) : { pass: {}, fail: {} };
+    const s1 = patternShare(a.attempts, a.prog, mode, lvl), s2 = a.oth ? patternShare(a.oth.attempts, a.oth.prog, mode, othLvl) : { pass: {}, fail: {}, lists: { pass: {}, fail: {} } };
     const sum = (x, y) => Object.fromEntries(DIMENSIONS.map((p) => [p, (x[p] || 0) + (y[p] || 0)]));
-    const share = { pass: sum(s1.pass, s2.pass), fail: sum(s1.fail, s2.fail) };
+    // charts de cada fatia; os da outra versão vão marcados (a página de chart é só da versão aberta)
+    const cat = (k) => Object.fromEntries(DIMENSIONS.map((p) => [p, [...(s1.lists[k][p] || []), ...(s2.lists[k][p] || []).map((r) => ({ ...r, other: true }))]]));
+    const share = { pass: sum(s1.pass, s2.pass), fail: sum(s1.fail, s2.fail), lists: { pass: cat('pass'), fail: cat('fail') } };
     const tipList = makeTips(data, a.prog, a.attempts, mode, lvl, weak);
     const recs = recommendations(version, data.charts);
     const planW = trainingPlan(version, data, a.prog, a.attempts, mode, lvl, weak, [...recs.improve, ...recs.fresh]);
@@ -257,10 +259,12 @@ function slicesOf(counts) {
   if (!total) return [];
   const big = Object.entries(counts).filter(([, v]) => v / total >= 0.04).sort((a, b) => b[1] - a[1]);
   const rest = total - big.reduce((a, [, v]) => a + v, 0);
-  return [...big.map(([p, v]) => ({ key: p, name: dimName(p), value: v, color: PATTERN_COLOR[p] })),
-    ...(rest > 0 ? [{ key: 'other', name: t('Outros'), value: rest, color: '#6b6f78' }] : [])];
+  const small = Object.keys(counts).filter((p) => counts[p] > 0 && !big.some(([b]) => b === p));
+  return [...big.map(([p, v]) => ({ key: p, name: dimName(p), value: v, color: PATTERN_COLOR[p], keys: [p] })),
+    ...(rest > 0 ? [{ key: 'other', name: t('Outros'), value: rest, color: '#6b6f78', keys: small }] : [])];
 }
-function ShareDonuts({ share }) {
+export function ShareDonuts({ share, otherName }) {
+  const [open, setOpen] = useState(null); // { slice, kind: 'pass' | 'fail' }
   const pass = slicesOf(share.pass), fail = slicesOf(share.fail);
   if (!pass.length && !fail.length) return null;
   const n = (x) => x.reduce((a, s) => a + s.value, 0);
@@ -269,12 +273,57 @@ function ShareDonuts({ share }) {
       <h3>{t('Onde você passa e onde você quebra')}</h3>
       <p className="muted small">{t('Cada chart conta no padrão que mais se destaca nele (acima do normal para charts do seu nível), e uma música repetida pesa no máximo 4 jogadas. Este gráfico não desconta a dificuldade; o diagnóstico abaixo, sim.')}</p>
       <div className="donut-pair">
-        <div><h4 className="center">{t('Passes')}</h4><Donut slices={pass} label={t('Passes')} center={[fmtNum(n(pass)), t('passes')]} /></div>
-        <div><h4 className="center">{t('Quebras')}</h4>{fail.length ? <Donut slices={fail} label={t('Quebras')} center={[fmtNum(n(fail)), t('quebras')]} /> : <p className="muted small center">{t('Nenhuma quebra registrada perto do seu nível.')}</p>}</div>
+        <div><h4 className="center">{t('Passes')}</h4><Donut slices={pass} label={t('Passes')} center={[fmtNum(n(pass)), t('passes')]} onPick={(sl) => setOpen({ slice: sl, kind: 'pass' })} /></div>
+        <div><h4 className="center">{t('Quebras')}</h4>{fail.length ? <Donut slices={fail} label={t('Quebras')} center={[fmtNum(n(fail)), t('quebras')]} onPick={(sl) => setOpen({ slice: sl, kind: 'fail' })} /> : <p className="muted small center">{t('Nenhuma quebra registrada perto do seu nível.')}</p>}</div>
       </div>
       <ChartTable head={[t('Padrão'), t('Passes'), t('Quebras')]}
         rows={DIMENSIONS.filter((p) => share.pass[p] || share.fail[p]).map((p) => [dimName(p), share.pass[p] || 0, share.fail[p] || 0])} />
+      <p className="muted tiny">{t('Toque num padrão para ver os charts.')}</p>
+      {open && <PatternCharts slice={open.slice} kind={open.kind}
+        list={open.slice.keys.flatMap((p) => share.lists[open.kind][p] || [])} otherName={otherName} onClose={() => setOpen(null)} />}
     </section>
+  );
+}
+
+/** Charts que entraram numa fatia do gráfico (passes ou quebras de um padrão), num pop-up. */
+function PatternCharts({ slice, kind, list, otherName, onClose }) {
+  useEffect(() => {
+    const k = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', k);
+    const prev = document.body.style.overflow; document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', k); document.body.style.overflow = prev; };
+  }, [onClose]);
+  const sorted = [...list].sort((a, b) => b.chart.level - a.chart.level || (kind === 'pass' ? b.passes - a.passes : b.fails - a.fails));
+  const Row = ({ r }) => (
+    <>
+      <Jacket song={r.chart.song} width={64} />
+      <Ball chart={r.chart} size="sm" />
+      <span className="pp-top-name">{r.chart.song.title}{r.other && <small className="muted">{otherName}</small>}</span>
+      <span className="pc-counts">
+        {r.passes > 0 && <span className="ok">{tn(r.passes, '{n} passe', '{n} passes')}</span>}
+        {r.fails > 0 && <span className="bad">{tn(r.fails, '{n} quebra', '{n} quebras')}</span>}
+      </span>
+      {r.other ? <span /> : <ChevronRight size={16} className="muted" />}
+    </>
+  );
+  return (
+    <div className="sheet-wrap" onClick={onClose}>
+      <div className="sheet style-sheet" role="dialog" aria-modal="true" aria-label={slice.name} onClick={(e) => e.stopPropagation()}>
+        <div className="sheet-h">
+          <span className="sheet-grip" aria-hidden />
+          <b><span className="st-dot" style={{ background: slice.color }} /> {slice.name} · {kind === 'pass' ? t('Passes') : t('Quebras')} <small className="muted">({tn(sorted.length, '{n} chart', '{n} charts')})</small></b>
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Fechar')}><X size={18} /></button>
+        </div>
+        <div className="sheet-body">
+          <p className="muted small">{t('Charts perto do seu nível em que esse é o padrão que mais se destaca, com as jogadas registradas.')}</p>
+          <div className="style-list">
+            {sorted.map((r) => (r.other
+              ? <div key={r.chart.id} className="pp-top-row style-row no-link"><Row r={r} /></div>
+              : <Link key={r.chart.id} to={`/chart/${r.chart.id}`} className="pp-top-row style-row" onClick={onClose}><Row r={r} /></Link>))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -285,7 +334,7 @@ function Weak({ r, mode, hasOther, otherName }) {
   return (
     <>
       <LevelSummary lvl={r.lvl} mode={mode} />
-      <ShareDonuts share={r.share} />
+      <ShareDonuts share={r.share} otherName={otherName} />
       <section className="card">
         <h3>{t('Pontos fracos e fortes por padrão')}</h3>
         <p className="muted small">
