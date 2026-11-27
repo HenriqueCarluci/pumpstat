@@ -2500,3 +2500,7 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .q-guest p { flex-basis: 100%; margin: 0; }
 .q-add-guest { margin-top: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .q-guest-of { display: block; font: 500 11px var(--sans, inherit); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.unlink-pump { display: grid; gap: 6px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.unlink-pump p { margin: 0; }
+/* faixa do "ver como" respeita o entalhe do iPhone */
+.viewas-banner { padding-top: max(8px, env(safe-area-inset-top)); }

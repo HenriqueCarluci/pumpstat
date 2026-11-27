@@ -64,7 +64,9 @@ export default function Home() {
         <section className="card hero-connect">
           <div className="login-brand"><Logo size={30} /> PIU Stats</div>
           <p className="center">{t('Conecte a sua conta da Pump It Up (AM.PASS) para ver seus recordes, PUMBILITY, missões e recomendações. Enquanto isso, já dá para usar o resto do app.')}</p>
-          <PiuConnect onDone={() => reload()} />
+          {plan?.view_as
+            ? <p className="muted small center">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p>
+            : <PiuConnect onDone={() => reload()} />}
         </section>
         {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
         <section className="card np-links">

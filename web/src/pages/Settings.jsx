@@ -21,7 +21,7 @@ import Feedback from '../components/Feedback.jsx';
 import TeamPicker from '../components/TeamPicker.jsx';
 import { NotesCard } from '../components/ReleaseNotes.jsx';
 import { QuizCard } from '../components/QuizModal.jsx';
-import { TestMode } from '../components/PlanLock.jsx';
+import { clearUserCaches, TestMode } from '../components/PlanLock.jsx';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
 
@@ -36,6 +36,7 @@ function Group({ id, title, children }) {
 
 export default function Settings() {
   const { data, version, reload, session, plan } = useData();
+  const linked = !!data?.profile || (data?.charts || []).some((c) => c.score != null);
   const [prefs, setPrefs] = usePrefs();
   const go = (id) => document.getElementById(`set-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -51,15 +52,20 @@ export default function Settings() {
       <Group id="sync" title="Sincronização">
         <section className="card">
           <h3>{t('Sincronizar com a Pump It Up')}</h3>
-          <p className="muted small">{t('Última sincronização da {v}: {when}', { v: VERSIONS[version].name, when: timeAgo(data.lastSync) })}</p>
+          {linked
+            ? <p className="muted small">{t('Última sincronização da {v}: {when}', { v: VERSIONS[version].name, when: timeAgo(data.lastSync) })}</p>
+            : <p className="muted small">{t('Nenhuma conta da Pump (AM.PASS) conectada.')}</p>}
           {plan?.view_as ? <p className="muted small">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p> : <>
-          <QuickSync onDone={() => reload()} />
-          <AutoSync />
+          {linked && <QuickSync onDone={() => reload()} />}
+          {linked && <AutoSync />}
+          {linked ? (
+            <details className="other-login">
+              <summary className="small">{t('Entrar com outra conta AM.PASS')}</summary>
+              <PiuConnect compact onDone={() => reload()} />
+            </details>
+          ) : <PiuConnect compact onDone={() => reload()} />}
+          {linked && <UnlinkPump />}
           </>}
-          <details className="other-login">
-            <summary className="small">{t('Entrar com outra conta AM.PASS')}</summary>
-            <PiuConnect compact onDone={() => reload()} />
-          </details>
         </section>
       </Group>
 
@@ -362,5 +368,28 @@ function HomeTrainingCard() {
         </>
       )}
     </section>
+  );
+}
+
+/** Desconectar a conta da Pump: a conta do PIU Stats continua; só as notas importadas saem. */
+function UnlinkPump() {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const go = async () => {
+    if (!window.confirm(t('Desconectar a conta da Pump (AM.PASS)?\n\nAs notas importadas saem do PIU Stats. Seus amigos, time, ajustes e lista de treino continuam. Depois você pode conectar esta ou outra conta da Pump.'))) return;
+    setBusy(true); setErr('');
+    try {
+      await rpc('unlink_my_piu');
+      clearUserCaches();
+      window.location.hash = '#/';
+      window.location.reload();
+    } catch (e) { setErr(tErr(e.message)); setBusy(false); }
+  };
+  return (
+    <div className="unlink-pump">
+      <button type="button" className="btn ghost danger-text" disabled={busy} onClick={go}>{busy ? t('Aguarde…') : t('Desconectar conta da Pump')}</button>
+      <p className="muted tiny">{t('Amigos, time e ajustes ficam na sua conta do PIU Stats; a conta da Pump só traz as notas.')}</p>
+      {err && <div className="form-err">{err}</div>}
+    </div>
   );
 }
