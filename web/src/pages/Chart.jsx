@@ -6,7 +6,7 @@ import { ChartRanking } from './Players.jsx';
 import { FriendScores, useFriendScores } from './Song.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory, rpc } from '../lib/api.js';
-import { chartRating, chartTier, DIFF_PT, fmtScore, GRADE_ORDER, nextGrade, TIERS } from '../lib/piu.js';
+import { chartRating, chartTier, fmtScore, GRADE_ORDER, nextGrade, TIERS } from '../lib/piu.js';
 import { topStyles, useStyles, videoUrl } from '../lib/style.js';
 import StyleBars from '../components/StyleBars.jsx';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
@@ -151,8 +151,6 @@ export default function Chart() {
           {c.notes ? <><dt>{t('Notas')}</dt><dd>{fmtNum(c.notes)}</dd></> : null}
           {c.scoringLevel ? <><dt>{t('Nível efetivo')}</dt><dd>{c.scoringLevel.toFixed(2)}</dd></> : null}
           {tier && tier.id !== 'unknown' && <><dt>{t('Tier')}</dt><dd>{t(tier.label)}{c.community?.votes ? ` · ${tn(c.community.votes, '{n} voto', '{n} votos')}` : ''}</dd></>}
-          {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <><dt>{t('Dificuldade de clear')}</dt><dd>{t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</dd></>}
-          {song.songType && <><dt>{t('Tipo')}</dt><dd>{song.songType}</dd></>}
         </dl>
       </section>
 
