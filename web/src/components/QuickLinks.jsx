@@ -33,7 +33,7 @@ export default function QuickLinks() {
     { id: 'friends', g: 'social', to: '/jogadores', label: 'Amigos', icon: <Users size={18} /> },
     isOn(plan, 'teams') && { id: 'team', g: 'social', to: '/time', label: 'Meu Time', icon: <Shield size={18} /> },
     isOn(plan, 'training') && { id: 'training', g: 'evo', to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} />, f: 'training_list' },
-    { id: 'progress', g: 'evo', to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} /> },
+    { id: 'progress', g: 'evo', to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} />, f: 'player_stats' },
     { id: 'recs', g: 'evo', to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} />, f: 'recommendations_all' },
     isOn(plan, 'challenges') && { id: 'challenges', g: 'evo', to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },
     isOn(plan, 'day_report') && { id: 'day', g: 'game', to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} />, f: 'day_report' },

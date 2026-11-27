@@ -13,6 +13,7 @@ import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
 import { Badges } from '../components/WeekCard.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
+import PlanLock from '../components/PlanLock.jsx';
 import { entitlements } from '../lib/plans.js';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
 
@@ -307,63 +308,82 @@ export function PlayerProfile() {
         </div>}
       </section>
 
-      <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} me={isMe} />
+      <PlanLock feature="player_stats" title={t('O painel de estatísticas')} preview={<>
+        <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} me={isMe} />
 
-      <section className="card">
-        <h3>{t('Notas e placas')}</h3>
-        <div className="pp-grades">
-          {Object.entries(grades).map(([g, n]) => (
-            <span key={g} className="pp-grade"><Grade grade={g === 'SSS' ? 'SSS+' : g === 'SS' ? 'SS+' : g === 'S' ? 'S+' : 'AAA+'} size="sm" /><b>{n}</b><small className="muted">{g} {t('ou melhor')}</small></span>
-          ))}
-        </div>
-        {plates.length > 0 && (
-          <div className="pp-plates">
-            {plates.map(([k, n]) => <span key={k} className="pp-plate"><Plate plate={k} size="sm" /><b>{n}</b></span>)}
+        <section className="card">
+          <h3>{t('Notas e placas')}</h3>
+          <div className="pp-grades">
+            {Object.entries(grades).map(([g, n]) => (
+              <span key={g} className="pp-grade"><Grade grade={g === 'SSS' ? 'SSS+' : g === 'SS' ? 'SS+' : g === 'S' ? 'S+' : 'AAA+'} size="sm" /><b>{n}</b><small className="muted">{g} {t('ou melhor')}</small></span>
+            ))}
           </div>
-        )}
-      </section>
-
-      <section className="card">
-        <h3>{t('Passes por nível')}</h3>
-        <div className="pp-levels">
-          {stats.map((s) => (
-            <div key={s.mode} className="pp-lv-col">
-              <h4 className={s.mode === 'S' ? 'ball-s-txt' : 'ball-d-txt'}>{s.mode === 'S' ? 'Single' : 'Double'}</h4>
-              {!s.levels.length && <p className="muted small">{t('Sem recordes do nível 10 para cima.')}</p>}
-              {s.levels.slice(0, 14).map((l) => (
-                <div key={l.level} className="pp-lv" title={`${l.clear} / ${l.clear + l.broken}`}>
-                  <span className="pp-lv-n">{s.mode}{l.level}</span>
-                  <span className="pp-lv-bar">
-                    <i className={`ok ${s.mode}`} style={{ width: `${(l.clear / maxLv) * 100}%` }} />
-                    <i className="bad" style={{ width: `${(l.broken / maxLv) * 100}%` }} />
-                  </span>
-                  <span className="pp-lv-c">{l.clear}{l.broken ? <small className="muted"> +{l.broken}</small> : null}</span>
-                </div>
-              ))}
+          {plates.length > 0 && (
+            <div className="pp-plates">
+              {plates.map(([k, n]) => <span key={k} className="pp-plate"><Plate plate={k} size="sm" /><b>{n}</b></span>)}
             </div>
-          ))}
-        </div>
-        <p className="muted small">{t('Barra cheia: passou. Parte vermelha: só tem recorde quebrado.')}</p>
-      </section>
+          )}
+        </section>
 
-      <section className="card">
-        <h3>{t('Top 50 do PUMBILITY')}</h3>
-        <p className="muted small">{t('As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale.')}</p>
-        <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
-        {!top.length && <p className="empty">{t('Sem notas que contam para o PUMBILITY nesta versão.')}</p>}
-        <div className="pp-top">
-          {top.map((r) => (
-            <Link key={r.chart.id} to={`/musica/${r.chart.song.id}`} className="pp-top-row">
-              <span className="rank">{pb.top.indexOf(r) + 1}</span>
-              <Jacket song={r.chart.song} width={64} />
-              <Ball chart={r.chart} size="sm" />
-              <span className="pp-top-name">{r.chart.song.title}<small className="muted">{fmtScore(r.chart.score)}</small></span>
-              <span className="pp-top-gp"><Grade grade={r.chart.grade} size="xs" /><Plate plate={r.chart.plate} size="xs" /></span>
-              <b className="pp-top-pts">{fmtNum(Math.round(r.value))}</b>
-            </Link>
-          ))}
-        </div>
-      </section>
+      </>}>
+        <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} me={isMe} />
+
+        <section className="card">
+          <h3>{t('Notas e placas')}</h3>
+          <div className="pp-grades">
+            {Object.entries(grades).map(([g, n]) => (
+              <span key={g} className="pp-grade"><Grade grade={g === 'SSS' ? 'SSS+' : g === 'SS' ? 'SS+' : g === 'S' ? 'S+' : 'AAA+'} size="sm" /><b>{n}</b><small className="muted">{g} {t('ou melhor')}</small></span>
+            ))}
+          </div>
+          {plates.length > 0 && (
+            <div className="pp-plates">
+              {plates.map(([k, n]) => <span key={k} className="pp-plate"><Plate plate={k} size="sm" /><b>{n}</b></span>)}
+            </div>
+          )}
+        </section>
+
+        <section className="card">
+          <h3>{t('Passes por nível')}</h3>
+          <div className="pp-levels">
+            {stats.map((s) => (
+              <div key={s.mode} className="pp-lv-col">
+                <h4 className={s.mode === 'S' ? 'ball-s-txt' : 'ball-d-txt'}>{s.mode === 'S' ? 'Single' : 'Double'}</h4>
+                {!s.levels.length && <p className="muted small">{t('Sem recordes do nível 10 para cima.')}</p>}
+                {s.levels.slice(0, 14).map((l) => (
+                  <div key={l.level} className="pp-lv" title={`${l.clear} / ${l.clear + l.broken}`}>
+                    <span className="pp-lv-n">{s.mode}{l.level}</span>
+                    <span className="pp-lv-bar">
+                      <i className={`ok ${s.mode}`} style={{ width: `${(l.clear / maxLv) * 100}%` }} />
+                      <i className="bad" style={{ width: `${(l.broken / maxLv) * 100}%` }} />
+                    </span>
+                    <span className="pp-lv-c">{l.clear}{l.broken ? <small className="muted"> +{l.broken}</small> : null}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <p className="muted small">{t('Barra cheia: passou. Parte vermelha: só tem recorde quebrado.')}</p>
+        </section>
+
+        <section className="card">
+          <h3>{t('Top 50 do PUMBILITY')}</h3>
+          <p className="muted small">{t('As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale.')}</p>
+          <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+          {!top.length && <p className="empty">{t('Sem notas que contam para o PUMBILITY nesta versão.')}</p>}
+          <div className="pp-top">
+            {top.map((r) => (
+              <Link key={r.chart.id} to={`/musica/${r.chart.song.id}`} className="pp-top-row">
+                <span className="rank">{pb.top.indexOf(r) + 1}</span>
+                <Jacket song={r.chart.song} width={64} />
+                <Ball chart={r.chart} size="sm" />
+                <span className="pp-top-name">{r.chart.song.title}<small className="muted">{fmtScore(r.chart.score)}</small></span>
+                <span className="pp-top-gp"><Grade grade={r.chart.grade} size="xs" /><Plate plate={r.chart.plate} size="xs" /></span>
+                <b className="pp-top-pts">{fmtNum(Math.round(r.value))}</b>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </PlanLock>
 
       {!isMe && <MiniChat user={id} name={other?.nickname} />}
       {!isMe && <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />}

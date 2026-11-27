@@ -23,7 +23,7 @@ export function useSections() {
       { to: '/fila', label: 'Fila', icon: <ListOrdered size={18} /> },
     ] },
     { g: 'Evolução', items: [
-      { to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} /> },
+      { to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} />, f: 'player_stats' },
       isOn(plan, 'training') && { to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} />, f: 'training_list' },
       { to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} />, f: 'recommendations_all' },
       isOn(plan, 'challenges') && { to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },

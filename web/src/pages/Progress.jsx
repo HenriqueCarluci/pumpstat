@@ -90,13 +90,13 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', <>{t('Evolução')}<LockBadge feature="evolution_chart" /></>], ['top', t('Mais jogadas')], ['fracos', <>{t('Pontos fortes e fracos')}<LockBadge feature="weakness" /></>], ['dicas', <>{t('Dicas')}<LockBadge feature="tips" /></>], ['plano', <>{t('Plano de treino')}<LockBadge feature="training_plan" /></>], ...(isOn(plan, 'rival') ? [['rival', <>{t('Rival')}<LockBadge feature="rival" /></>]] : [])]} />
+          options={[['evolucao', <>{t('Evolução')}<LockBadge feature="evolution_chart" /></>], ['top', <>{t('Mais jogadas')}<LockBadge feature="player_stats" /></>], ['fracos', <>{t('Pontos fortes e fracos')}<LockBadge feature="weakness" /></>], ['dicas', <>{t('Dicas')}<LockBadge feature="tips" /></>], ['plano', <>{t('Plano de treino')}<LockBadge feature="training_plan" /></>], ...(isOn(plan, 'rival') ? [['rival', <>{t('Rival')}<LockBadge feature="rival" /></>]] : [])]} />
         {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
       {!r && !err && tab !== 'rival' && <p className="empty">{t('Carregando…')}</p>}
       {r && tab === 'evolucao' && <PlanLock feature="evolution_chart" title={t('Gráficos de evolução')}><Evolution a={a} r={r} mode={mode} /></PlanLock>}
-      {a && tab === 'top' && <TopPlayed plays={a.prog.plays} mode={mode} />}
+      {a && tab === 'top' && <PlanLock feature="player_stats" title={t('O painel de estatísticas')}><TopPlayed plays={a.prog.plays} mode={mode} /></PlanLock>}
       {r && tab === 'fracos' && <PlanLock feature="weakness" title={t('Pontos fortes e fracos')}><Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /></PlanLock>}
       {r && tab === 'dicas' && <PlanLock feature="tips" title={t('Dicas')}><Tips r={r} mode={mode} /></PlanLock>}
       {r && tab === 'plano' && <PlanLock feature="training_plan" title={t('Plano de treino')}><Plan r={r} /></PlanLock>}

@@ -12,9 +12,13 @@ import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbil
 import { locale, t } from '../lib/i18n.js';
 import { ChevronDown, ChevronRight, Logo } from '../components/Icons.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
+import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
+import { entitlements } from '../lib/plans.js';
 
 export default function Home() {
-  const { data, version, reload, session } = useData();
+  const { data, version, reload, session, plan } = useData();
+  const ent = entitlements(plan);
+  const statsOk = ent.can('player_stats');
   const [mode, setMode] = useState('D');
 
   const stats = useMemo(() => {
@@ -75,12 +79,13 @@ export default function Home() {
           <NewsBanner />
         </div>
         <div className="h-blk o2">
-          <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
+          <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} canTips={ent.can('recommendations_all')} />
         </div>
         <div className="h-blk o4">
           <WeekCard />
         </div>
         <div className="h-blk o10">
+          {statsOk ? (
           <Panel id="home-top50" title={<>{t('Top 50 do PUMBILITY')} <span className="muted">({t('estimativa')})</span></>} defaultOpen={false} maxHeight={420}>
             {(
               <ol className="toplist">
@@ -99,6 +104,7 @@ export default function Home() {
               </ol>
             )}
           </Panel>
+          ) : <PlanLock feature="player_stats" title={t('O painel de estatísticas')} compact />}
         </div>
         <div className="h-blk o11">
           {data.plays.length > 0 && (
@@ -128,7 +134,7 @@ export default function Home() {
           </section>
           <AdSlot place="home" />
         </div>
-        <div className="h-blk o8">
+        {statsOk && <div className="h-blk o8">
           <Panel id="home-grades" title={t('Grades')} maxHeight={300}>
             <div className="gradebars">
               {GRADE_ORDER.filter((g) => stats.grades[g] > 0).map((g) => (
@@ -141,8 +147,8 @@ export default function Home() {
               {!stats.clears.length && <p className="muted">{t('Nenhum clear ainda nesta versão.')}</p>}
             </div>
           </Panel>
-        </div>
-        <div className="h-blk o9">
+        </div>}
+        {statsOk && <div className="h-blk o9">
           <Panel id="home-levels" title={t('Progresso por nível')} maxHeight={320}
             extra={<div className="seg sm">
               {['S', 'D'].map((m) => <button key={m} className={mode === m ? 'on' : ''} onClick={() => setMode(m)}>{m === 'S' ? 'Single' : 'Double'}</button>)}
@@ -158,7 +164,7 @@ export default function Home() {
               ))}
             </div>
           </Panel>
-        </div>
+        </div>}
       </div>
     </div>
   );
@@ -173,7 +179,7 @@ function Spark({ points }) {
   return <svg className="spark" viewBox={`0 0 ${w} ${h}`} width={w} height={h} aria-label={t('Evolução do PUMBILITY')}><path d={d} /></svg>;
 }
 
-function TierCard({ version, points, estimated, history, charts }) {
+function TierCard({ version, points, estimated, history, charts, canTips }) {
   const fmt = (n) => Number(n).toLocaleString(locale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const ideas = useMemo(() => pumbilitySuggestions(version, charts), [version, charts]);
   if (version !== 'phoenix2') {
@@ -209,7 +215,11 @@ function TierCard({ version, points, estimated, history, charts }) {
           </div>
         </>
       )}
-      {ideas.length > 0 && <Ideas ideas={ideas} />}
+      {ideas.length > 0 && (canTips ? <Ideas ideas={ideas} /> : (
+        <Link to="/planos" className="ideas-h panel-toggle ideas-locked">
+          <ChevronRight size={16} className="panel-chev" /> {t('Como subir')} <LockBadge feature="recommendations_all" />
+        </Link>
+      ))}
     </section>
   );
 }

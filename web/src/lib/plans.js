@@ -8,7 +8,8 @@ export const PLAN_LABEL = { free: 'Grátis', plus: 'Plus', pro: 'Pro' };
 export const FEATURES = [
   { id: 'no_ads', label: 'Sem anúncios (inclusive na sincronização)', group: 'Geral', min: 'plus' },
   { id: 'supporter', label: 'Selo "Apoiador" no perfil e acesso antecipado', group: 'Geral', min: 'pro' },
-  { id: 'recommendations_all', label: 'Recomendações para subir PUMBILITY', group: 'Análises', min: 'plus' },
+  { id: 'player_stats', label: 'Estatísticas do jogador: top 50, notas e placas, passes por nível, estilo de jogo e mais jogadas', group: 'Análises', min: 'plus' },
+  { id: 'recommendations_all', label: 'Recomendações e “Como subir” o PUMBILITY', group: 'Análises', min: 'plus' },
   { id: 'evolution_chart', label: 'Gráficos de evolução', group: 'Análises', min: 'plus' },
   { id: 'style_full', label: 'Todas as skills do chart (% de cada tag)', group: 'Análises', min: 'plus' },
   { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises', min: 'plus' },
@@ -29,7 +30,7 @@ export const FEATURES = [
 /** Plano mínimo de cada recurso quando o admin ainda não configurou. */
 export const FEATURE_DEFAULTS = Object.fromEntries(FEATURES.map((f) => [f.id, f.min]));
 /** Recursos sempre grátis (só para mostrar na matriz). */
-export const ALWAYS_FREE = ['Recordes e histórico completo de passes e notas', 'Tier (Unique e New Tunes)', 'Lista de músicas e charts',
+export const ALWAYS_FREE = ['Recordes e histórico completo de passes e notas', 'PUMBILITY e faixa (só o número)', 'Tier (Unique e New Tunes)', 'Lista de músicas e charts',
   'Sincronização manual (com anúncio no Grátis)', 'Fila dos fliperamas', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
   'Votações de tier e desafios do mês', 'Missões da semana, pontos e selos', 'Site no computador e busca'];
 export const LIMITS = [

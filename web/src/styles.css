@@ -2076,3 +2076,4 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .release-notes .chips { margin: 8px 0; }
 .rn-item.soon { opacity: 1; }
 .legal-note { text-align: center; margin: 4px 16px 0; }
+.ideas-locked { display: flex; align-items: center; gap: 6px; color: var(--muted); text-decoration: none; }
