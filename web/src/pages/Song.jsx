@@ -5,7 +5,7 @@ import TrainingToggle from '../components/TrainingToggle.jsx';
 import { ChartRanking } from './Players.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
 import { chartHistory } from '../lib/api.js';
-import { chartRating, chartTier, DIFF_PT, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
+import { chartRating, chartTier, fmtScore, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { videoUrl } from '../lib/style.js';
 import { rpc } from '../lib/api.js';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
@@ -172,7 +172,6 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
       <div className="cc-meta">
         <SpecialBadges chart={c} gimmick={false} />
         {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
-        {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
         {c.notes ? <span className="tag">{t('{n} notas', { n: c.notes })}</span> : null}
         {!c.tagBars && c.skills.map((s) => <span key={s} className="tag skill">{s}</span>)}
