@@ -86,10 +86,46 @@ const FAKE = {
       { id: 'm3', me: false, friend: true, nickname: 'AKIRA_PIU_LONGNAME', title: 'Bracket Lv.10', pumbility: 9020.5, max_s: 18, max_d: null, clears: 120, online: false, joined: '2026-08-01' },
     ] },
 };
+// missões da semana (fakes com estado: init, troca e foco)
+{
+  const mon = (() => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d; })();
+  const key = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const prev = new Date(mon); prev.setDate(prev.getDate() - 7);
+  const ws = Math.floor(mon.getTime() / 1000);
+  const ids = [7487, 5769, 4864, 8431, 6270, 5137];
+  const plays = [];
+  for (let w = 6; w >= 0; w--) for (let i = 0; i < (w === 0 ? 5 : 9); i++) {
+    const id = ids[(i + w) % ids.length]; const at = ws - w * 7 * 86400 + (i % 3) * 86400 + 3600 * (i + 1);
+    const broken = id === 4864 || (id === 5137 && w > 0);
+    plays.push([id, at, broken ? 700000 : 940000 + i * 1500 + (6 - w) * 900, broken ? 'B' : 'AAA', broken, 900, 120, 10, 3, broken ? 40 : 4]);
+  }
+  const history = plays.filter((p) => !p[4]).map((p) => [p[0], p[1], p[2], p[3], 'TG', false]).concat([[4864, ws - 20 * 86400, 700000, 'B', null, true]]);
+  FAKE.my_progress = { plays, history, firsts: [], styles: [] };
+  FAKE.my_week = { week: key(mon), prev: key(prev), weeks: [key(mon), key(prev)], pb: { start: 14000, end: 14104 }, rival: { id: 'amigo', nickname: 'PUMPKING', start: 16400, end: 16565, plays: 40 } };
+  let row = null;
+  FAKE.missions_ctx = () => ({ row, past: [{ week: key(prev), done: 4, total: 4, completed_at: new Date(prev.getTime() + 2 * 86400000).toISOString(), types: ['days', 'improve', 'clear_prev', 'near_clear'] }],
+    rival: { id: 'amigo', nickname: 'PUMPKING', cleared: [4864, 5137, 6270] }, friends: [[6270, 'PUMPKING'], [7487, 'NEONSTEP']], checkins: 0, visited: true, friend_count: 3, badges: [] });
+  FAKE.set_week_missions = (b) => {
+    if (b.p_action === 'init' && row) return row;
+    row = { week: key(mon), mode: b.p_mode, focus: b.p_focus, missions: b.p_missions, total: b.p_missions.length, done: 0, progress: null,
+      rerolls: (row?.rerolls || 0) + (b.p_action === 'reroll' ? 1 : 0), focus_changes: (row?.focus_changes || 0) + (b.p_action === 'focus' ? 1 : 0) };
+    return row;
+  };
+  FAKE.report_week_progress = (b) => ({ completed: b.p_done >= (row?.total || 99), new: b.p_done >= 2 ? [['weeks', 1]] : [], points_total: 230 + b.p_done * 20 });
+  FAKE.points_of = 230;
+  FAKE.badges_of = [['weeks', 1, 1795700000], ['weeks', 5, 1795710000], ['streak', 4, 1795720000]];
+  FAKE.admin_mission_stats = { weeks: [{ week: key(mon), users: 41, completed: 6, avg_pct: 48, rerolls: 12, focus_changes: 9, focus: { auto: 30, level: 6, score: 3, fun: 2 } },
+    { week: key(prev), users: 52, completed: 19, avg_pct: 71, rerolls: 20, focus_changes: 14, focus: { auto: 38, level: 8, weak: 6 } }],
+    types: [{ type: 'days', tier: 'easy', shown: 40, done: 36 }, { type: 'near_clear', tier: 'hard', shown: 20, done: 4 }, { type: 'grade_up', tier: 'medium', shown: 22, done: 11 }, { type: 'weak', tier: 'medium', shown: 18, done: 9 }],
+    badges: { 'weeks:1': 30, 'weeks:5': 4, 'streak:4': 12 } };
+}
 const realFetch = window.fetch.bind(window);
 window.fetch = async (url, opts) => {
   const m = String(url).match(/\/rpc\/([a-z_]+)/);
-  if (m && m[1] in FAKE) return new Response(JSON.stringify(FAKE[m[1]]), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  if (m && m[1] in FAKE) {
+    const v = typeof FAKE[m[1]] === 'function' ? FAKE[m[1]](JSON.parse(opts?.body || '{}')) : FAKE[m[1]];
+    return new Response(JSON.stringify(v), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  }
   if (m) return new Response('null', { status: 200 });
   return realFetch(url, opts);
 };

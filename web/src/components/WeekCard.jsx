@@ -1,39 +1,95 @@
-// Início: missões da semana, sequência de semanas jogadas e o resumo da semana passada.
-import { useEffect, useMemo, useState } from 'react';
+// Início: missões da semana (personalizadas e congeladas na semana), foco, troca de missão, selos,
+// sequência de semanas jogadas e o resumo da semana passada.
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { loadProgress, rpc } from '../lib/api.js';
 import { chartAttempts, levelStats, parseProgress, playerLevel, weaknessSums, weaknesses } from '../lib/insights.js';
-import { lastWeekSummary, weeklyMissions, weekStart, weekStreak } from '../lib/missions.js';
+import {
+  adjustFactor, badgeName, FOCUS, focusOptions, friendSuggestions, generateMissions, hashSeed, lastWeekSummary, missionConfig, missionCtx,
+  missionProgress, pointsFor, pointsOn, rerollMission, TIERS, weekKey, weekStart, weekStreak,
+} from '../lib/missions.js';
+import { loadTraining } from '../lib/training.js';
 import { DIM_LABEL } from '../pages/Progress.jsx';
 import { isOn } from '../lib/plans.js';
-import { fmtNum, locale, t, tn } from '../lib/i18n.js';
+import { fmtNum, locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball } from './ui.jsx';
 import Panel from './Panel.jsx';
-import { CalendarCheck, Check, ChevronRight, Flame, Swords, Trophy, X } from './Icons.jsx';
+import { Award, CalendarCheck, Check, ChevronDown, ChevronRight, Flame, Shuffle, Star, Swords, Target, Trophy, X } from './Icons.jsx';
 
 const SEEN_KEY = 'stepclub:week-summary-seen';
+const LOCAL_KEY = 'pumpstat:missions:';
+const DAY = 86400000;
 const fmtDay = (ms) => new Date(ms).toLocaleDateString(locale(), { day: '2-digit', month: '2-digit' });
 const signed = (n) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${fmtNum(Math.abs(n))}`;
+const TIER_LABEL = Object.fromEntries(TIERS);
+// missões em que os charts mostrados são sugestões (a missão vale para qualquer chart do tipo)
+const SUGGEST = new Set(['clear_prev', 'clear_target', 'weak', 'training', 'event', 'new_songs', 'gimmick']);
 
-function missionText(m) {
-  const v = m.vars;
-  switch (m.id) {
-    case 'days': return t('Jogue em {n} dias diferentes', v);
-    case 'clear_prev': return t('Passe {n} charts novos {m}{L}', v);
-    case 'clear_target': return t('Passe 1 chart novo {m}{L}', v);
-    case 'improve': return t('Melhore a nota em {n} charts que você já passou', v);
-    case 'weak': return t('Jogue {n} charts com muito {p} (seu ponto fraco)', { ...v, p: t(DIM_LABEL[v.p] || v.p) });
+export function missionText(m) {
+  const v = m.vars || {};
+  switch (m.type || m.id) {
+    case 'days': return tn(v.n, 'Jogue em {n} dia', 'Jogue em {n} dias diferentes');
     case 'plays': return t('Jogue {n} charts', v);
-    default: return m.id;
+    case 'explore': return tn(v.n, 'Jogue {n} chart que você nunca jogou', 'Jogue {n} charts que você nunca jogou');
+    case 'checkin': return v.n > 1 ? t('Entre na fila de um fliperama pelo app em {n} dias', v) : t('Entre na fila de um fliperama pelo app');
+    case 'clear_prev': case 'clear_target':
+      return v.n > 1 ? t('Passe {n} charts novos {m}{L}', v) : t('Passe 1 chart novo {m}{L}', v);
+    case 'near_clear': return (m.charts || []).length > 1 ? t('Passe um destes charts que você já tentou e ainda não passou') : t('Passe este chart que você já tentou e ainda não passou');
+    case 'improve': return t('Melhore a nota em {n} charts que você já passou', v);
+    case 'grade_up': return t('Chegue à próxima nota em um destes charts');
+    case 'plate_up': return t('Melhore a plate de um destes charts');
+    case 'pumbility': return t('Suba seu PUMBILITY: chegue à próxima nota em um destes charts');
+    case 'weak': return t('Jogue {n} charts com muito {p} (seu ponto fraco)', { ...v, p: t(DIM_LABEL[v.p] || v.p) });
+    case 'training': return t('Jogue {n} charts do seu Meu treino', v);
+    case 'friend_chart': return v.n > 1 ? t('Jogue {n} charts que seus amigos jogaram esta semana', v) : t('Jogue um chart que um amigo jogou esta semana');
+    case 'rival_clear': return t('Passe um chart que {r} já passou e você não', { r: v.r || t('seu rival') });
+    case 'event': return `${v.title ? `${v.title}: ` : ''}${tn(v.n, 'jogue {n} chart do evento', 'jogue {n} charts do evento')}`;
+    case 'new_songs': return t('Jogue {n} charts de músicas novas da Phoenix 2', v);
+    case 'gimmick': return t('Jogue {n} charts com gimmick', v);
+    default: return m.type || m.id;
   }
 }
 
+/** Charts citados na missão, com a informação extra de cada um. */
+function missionCharts(m, data, ctx) {
+  const by = (id) => data.byId.get(id);
+  if (m.type === 'friend_chart') return friendSuggestions(ctx).map(({ c, nick }) => ({ c, extra: nick }));
+  if (m.targets) {
+    return m.targets.map((x) => {
+      const c = by(x.id);
+      if (!c) return null;
+      if (m.type === 'plate_up') return { c, extra: `${x.from || c.plate || ''} → ${x.p}` };
+      const need = x.s - (c.score || 0);
+      return { c, extra: need > 0 ? `${x.g} · ${t('faltam {n}', { n: fmtNum(need) })}` : `${x.g} ✓`, ok: need <= 0 };
+    }).filter(Boolean);
+  }
+  return (m.charts || []).map((id) => {
+    const c = by(id);
+    if (!c) return null;
+    if (m.type === 'near_clear') { const f = m.meta?.fails?.[id]; return { c, extra: f ? tn(f, '{n} quebra', '{n} quebras') : null }; }
+    return { c };
+  }).filter(Boolean);
+}
+
 export default function WeekCard() {
-  const { data, version, plan } = useData();
+  const { data, version, plan, session } = useData();
+  const cfg = useMemo(() => missionConfig(plan), [plan]);
   const on = { missions: isOn(plan, 'missions'), streak: isOn(plan, 'streak'), summary: isOn(plan, 'week_summary') };
+  const uid = session?.user?.id || 'anon';
+  const ws = weekStart();
+  const wk = weekKey(ws);
   const [raw, setRaw] = useState(null);
   const [week, setWeek] = useState(null);
+  const [mctx, setMctx] = useState(null);
+  const [training, setTraining] = useState(null);
+  const [row, setRow] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const [openFocus, setOpenFocus] = useState(false);
+  const [newBadges, setNewBadges] = useState([]);
+  const [points, setPoints] = useState(null);
+  const sent = useRef(null);
   const [seen, setSeen] = useState(() => { try { return localStorage.getItem(SEEN_KEY); } catch { return null; } });
 
   const any = on.missions || on.streak || on.summary;
@@ -44,8 +100,17 @@ export default function WeekCard() {
     rpc('my_week').then((w) => { if (alive) setWeek(w); }).catch(() => {});
     return () => { alive = false; };
   }, [version, data.lastSync, any]);
+  useEffect(() => {
+    if (!on.missions) return undefined;
+    let alive = true;
+    rpc('missions_ctx', { p_week: wk }).then((c) => { if (alive) setMctx(c || {}); }).catch(() => { if (alive) setMctx({ offline: true }); });
+    const tr = isOn(plan, 'training') ? loadTraining().then((m) => [...m.keys()]).catch(() => []) : Promise.resolve([]);
+    tr.then((ids) => { if (alive) setTraining(ids); });
+    if (session?.user?.id && pointsOn(cfg)) rpc('points_of', { p_user: session.user.id }).then((n) => { if (alive) setPoints(n); }).catch(() => {});
+    return () => { alive = false; };
+  }, [wk, on.missions, data.lastSync]); // eslint-disable-line
 
-  const a = useMemo(() => {
+  const base = useMemo(() => {
     if (!raw) return null;
     const prog = parseProgress(raw, data);
     const attempts = chartAttempts(data, prog);
@@ -53,48 +118,171 @@ export default function WeekCard() {
     const mode = count('S') > count('D') ? 'S' : 'D';
     const lvl = playerLevel(levelStats(attempts, mode));
     const weak = lvl ? weaknesses(weaknessSums(attempts, prog, mode, lvl), new Map()) : [];
-    const ctx = { prog, attempts, mode, lvl, weak };
-    return { mode, now: weeklyMissions(ctx), last: { ...lastWeekSummary({ ...ctx, week }), showRival: isOn(plan, 'rival') } };
-  }, [raw, data, week, plan]);
+    return { prog, attempts, mode, lvl, weak };
+  }, [raw, data]);
 
+  const mkCtx = () => missionCtx({ ...base, mode: row?.mode || base.mode, data, version, training: training || [], social: mctx, past: mctx?.past, cfg, ws });
+
+  // missões da semana: as guardadas ou, na primeira abertura, geradas e guardadas
+  useEffect(() => {
+    if (!on.missions || !base || !mctx || training == null || row) return;
+    if (mctx.row) { setRow(mctx.row); return; }
+    const ctx = missionCtx({ ...base, data, version, training, social: mctx, past: mctx.past, cfg, ws });
+    const defs = generateMissions(ctx, { focus: 'auto', seed: hashSeed(`${uid}:${wk}:auto`) });
+    const local = { week: wk, missions: defs, focus: 'auto', rerolls: 0, focus_changes: 0, mode: base.mode, offline: true };
+    const offline = () => {
+      // sem servidor: guarda no aparelho para as missões não mudarem durante a semana
+      try {
+        const saved = JSON.parse(localStorage.getItem(LOCAL_KEY + wk) || 'null');
+        if (saved?.missions?.length) { setRow({ ...saved, offline: true }); return; }
+        localStorage.setItem(LOCAL_KEY + wk, JSON.stringify(local));
+      } catch { /* ignora */ }
+      setRow(local);
+    };
+    if (mctx.offline) { offline(); return; }
+    rpc('set_week_missions', { p_week: wk, p_mode: base.mode, p_focus: 'auto', p_missions: defs, p_action: 'init' }).then(setRow).catch(offline);
+  }, [on.missions, base, mctx, training, row]); // eslint-disable-line
+
+  const live = useMemo(() => {
+    if (!row || !base || !mctx) return null;
+    const ctx = mkCtx();
+    return { ctx, missions: missionProgress(row.missions || [], ctx) };
+  }, [row, base, mctx, training, data]); // eslint-disable-line
+
+  // manda o progresso (o servidor fecha a semana e dá os selos)
+  useEffect(() => {
+    if (!live || !row || row.offline) return;
+    const prog = live.missions.map((m) => m.cur);
+    const done = live.missions.filter((m) => m.done).length;
+    const key = JSON.stringify(prog);
+    const complete = done === live.missions.length;
+    if (sent.current === key || (key === JSON.stringify(row.progress || []) && (!complete || row.completed_at))) return;
+    sent.current = key;
+    rpc('report_week_progress', { p_week: wk, p_progress: prog, p_done: done }).then((r) => {
+      if (r?.new?.length) setNewBadges(r.new);
+      if (r?.points_total != null) setPoints(r.points_total);
+      setRow((x) => (x ? { ...x, progress: prog, done, completed_at: r?.completed ? (x.completed_at || new Date().toISOString()) : x.completed_at } : x));
+    }).catch(() => { sent.current = null; });
+  }, [live]); // eslint-disable-line
+
+  const reroll = async (i) => {
+    setErr('');
+    const defs = rerollMission(mkCtx(), row.missions, i, { focus: row.focus, seed: hashSeed(`${uid}:${wk}:r${(row.rerolls || 0) + 1}:${i}`) });
+    if (!defs) { setErr(t('Não há outra missão disponível para trocar agora.')); return; }
+    setBusy(true);
+    try { setRow(await rpc('set_week_missions', { p_week: wk, p_mode: row.mode || base.mode, p_focus: row.focus, p_missions: defs, p_action: 'reroll' })); sent.current = null; } catch (e) { setErr(tErr(e.message)); }
+    setBusy(false);
+  };
+  const changeFocus = async (f) => {
+    setOpenFocus(false);
+    if (f === row.focus) return;
+    setErr(''); setBusy(true);
+    const defs = generateMissions(missionCtx({ ...base, data, version, training: training || [], social: mctx, past: mctx.past, cfg, ws }), { focus: f, seed: hashSeed(`${uid}:${wk}:${f}`) });
+    try { setRow(await rpc('set_week_missions', { p_week: wk, p_mode: base.mode, p_focus: f, p_missions: defs, p_action: 'focus' })); sent.current = null; } catch (e) { setErr(tErr(e.message)); }
+    setBusy(false);
+  };
+
+  const prevKey = weekKey(ws - 7 * DAY);
+  const lastRow = (mctx?.past || []).find((p) => p.week === prevKey) || null;
+  const last = useMemo(() => (base ? { ...lastWeekSummary({ ...base, week, lastRow }), showRival: isOn(plan, 'rival') } : null), [base, week, lastRow, plan]);
   const streak = week && on.streak ? weekStreak(week.weeks, week.week) : null;
-  const lastKey = String(weekStart() - 7 * 86400000);
-  const showSummary = on.summary && a && !a.last.empty && seen !== lastKey;
+  const lastKey = String(ws - 7 * DAY);
+  const showSummary = on.summary && last && !last.empty && seen !== lastKey;
   const closeSummary = () => { try { localStorage.setItem(SEEN_KEY, lastKey); } catch { /* ignora */ } setSeen(lastKey); };
 
-  if (!a || !any) return null;
-  const { now } = a;
-  const end = now.ws + 6 * 86400000;
+  if (!any || !base) return null;
+  const ms = live?.missions || [];
+  const done = ms.filter((m) => m.done).length;
+  const total = ms.length;
+  const rerollsLeft = row && !row.offline ? Math.max(0, (Number(cfg.rerolls) || 0) - (row.rerolls || 0)) : 0;
+  const focusLeft = row && !row.offline && cfg.focus !== false ? Math.max(0, (Number(cfg.focus_changes) || 0) - (row.focus_changes || 0)) : 0;
+  const adj = mctx?.past ? adjustFactor(mctx.past, cfg).why : null;
+  const focus = FOCUS.find(([id]) => id === (row?.focus || 'auto')) || FOCUS[0];
+  const end = ws + 6 * DAY;
 
   return (
     <>
-      {showSummary && <LastWeek s={a.last} streak={streak} onClose={closeSummary} />}
+      {showSummary && <LastWeek s={last} streak={streak} onClose={closeSummary} />}
       {(on.missions || streak) && <Panel id="home-missions" className="week-card"
         title={<span className="ic-row">{on.missions ? <><Trophy size={18} /> {t('Missões da semana')}</> : <><Flame size={18} /> {t('Sequência de semanas')}</>}
-          {on.missions && <span className="muted small"> {now.done}/{now.total}</span>}</span>}
-        extra={streak && (
-          <span className={`streak ${streak.streak ? 'on' : ''}`} title={t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}>
-            <Flame size={16} /> {tn(streak.streak, '{n} semana', '{n} semanas')}
-          </span>
-        )}>
-        {on.missions && <>
-        <p className="muted small">
-          {fmtDay(now.ws)}–{fmtDay(end)} · {t('{d} de {n} completas', { d: now.done, n: now.total })}
-          {a.mode && <> · {a.mode === 'S' ? 'Single' : 'Double'}</>}
-        </p>
-        <div className="missions-bar"><span style={{ width: `${(now.done / now.total) * 100}%` }} /></div>
-        <ul className="missions">
-          {now.missions.map((m) => (
-            <li key={m.id} className={m.done ? 'done' : ''}>
-              <span className="mission-check">{m.done ? <Check size={14} /> : null}</span>
-              <span className="mission-text">{missionText(m)}</span>
-              <span className="mission-count">{m.cur}/{m.goal}</span>
-            </li>
-          ))}
-        </ul>
+          {on.missions && total > 0 && <span className="muted small"> {done}/{total}</span>}</span>}
+        extra={(streak || (on.missions && pointsOn(cfg) && points != null)) && <span className="week-extra">
+          {on.missions && pointsOn(cfg) && points != null && <span className="mission-points" title={t('Pontos que você ganhou completando missões')}><Star size={13} /> {fmtNum(points)}</span>}
+          {streak && (
+            <span className={`streak ${streak.streak ? 'on' : ''}`} title={t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}>
+              <Flame size={16} /> {tn(streak.streak, '{n} semana', '{n} semanas')}
+            </span>
+          )}
+        </span>}>
+        {on.missions && !live && <p className="muted small">{t('Montando suas missões…')}</p>}
+        {on.missions && live && <>
+          <div className="mission-head">
+            <p className="muted small">{fmtDay(ws)}–{fmtDay(end)} · {t('{d} de {n} completas', { d: done, n: total })}
+              {row?.mode && <> · {row.mode === 'S' ? 'Single' : 'Double'}</>}</p>
+            {cfg.focus !== false && !row?.offline && (
+              <button className={`mission-focus-btn ${openFocus ? 'on' : ''}`} disabled={busy || (!focusLeft && !openFocus)}
+                onClick={() => setOpenFocus((o) => !o)} title={focusLeft ? t('Escolher o foco da semana') : t('Você já trocou o foco esta semana')}>
+                <Target size={13} /> {t(focus[1])}{focusLeft > 0 && <ChevronDown size={12} />}
+              </button>
+            )}
+          </div>
+          {openFocus && (
+            <div className="mission-focus">
+              <p className="muted tiny">{t('O foco muda as missões desta semana. Dá para trocar {n}x por semana.', { n: cfg.focus_changes })}</p>
+              {focusOptions(cfg).map(([id, label, desc]) => (
+                <button key={id} className={`mf-opt ${id === focus[0] ? 'on' : ''}`} onClick={() => changeFocus(id)} disabled={busy}>
+                  <b>{t(label)}</b><small className="muted">{t(desc)}</small>
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="missions-bar"><span style={{ width: `${total ? (done / total) * 100 : 0}%` }} /></div>
+          <ul className="missions">
+            {ms.map((m, i) => {
+              const chips = missionCharts(m, data, live.ctx);
+              return (
+                <li key={`${m.type}-${i}`} className={m.done ? 'done' : ''}>
+                  <span className="mission-check">{m.done ? <Check size={14} /> : null}</span>
+                  <div className="mission-body">
+                    <div className="mission-line">
+                      <span className={`mission-tier t-${m.tier}`}>{t(TIER_LABEL[m.tier] || '')}</span>
+                      <span className="mission-text">{missionText(m)}</span>
+                    </div>
+                    {chips.length > 0 && !m.done && (
+                      <div className="mission-charts">
+                        {SUGGEST.has(m.type) && <small className="muted">{t('Sugestões')}</small>}
+                        {chips.map(({ c, extra, ok }) => (
+                          <Link key={c.id} to={`/chart/${c.id}`} className={`mission-chart ${ok ? 'ok' : ''}`}>
+                            <Ball chart={c} size="sm" /><span className="mc-title">{c.song.title}</span>{extra && <em>{extra}</em>}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <span className="mission-count">{m.cur}/{m.goal}{pointsOn(cfg) && <small className={`mission-pts ${m.done ? 'on' : ''}`}>+{pointsFor(cfg, m.tier)}</small>}</span>
+                  {rerollsLeft > 0 && !m.done && (
+                    <button className="link muted mission-reroll" disabled={busy} onClick={() => reroll(i)}
+                      aria-label={t('Trocar missão')} title={tn(rerollsLeft, 'Trocar esta missão ({n} troca restante)', 'Trocar esta missão ({n} trocas restantes)')}>
+                      <Shuffle size={14} />
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          {err && <p className="form-err small">{err}</p>}
+          {adj === 'ease' && <p className="muted tiny">{t('Metas um pouco mais leves esta semana, depois de duas semanas difíceis.')}</p>}
+          {adj === 'harder' && <p className="muted tiny">{t('Metas um pouco mais puxadas: você fechou a semana passada rapidinho.')}</p>}
         </>}
+        {newBadges.length > 0 && cfg.badges !== false && (
+          <div className="mission-badges-new">
+            {newBadges.map(([b, l]) => <p key={`${b}${l}`} className="small ic-row"><Award size={16} /> {t('Selo novo: {b}', { b: badgeName(cfg, b, l, t) })}</p>)}
+            <Link className="small" to={`/jogador/${uid}`}>{t('Ver no perfil')} <ChevronRight size={12} /></Link>
+          </div>
+        )}
         {streak?.atRisk && <p className="small streak-warn"><Flame size={14} /> {tn(streak.streak, 'Jogue esta semana para não perder a sequência de {n} semana.', 'Jogue esta semana para não perder a sequência de {n} semanas.')}</p>}
-        {on.missions && now.done === now.total && <p className="small mission-all"><Trophy size={14} /> {t('Semana completa! Novas missões na segunda.')}</p>}
+        {on.missions && total > 0 && done === total && <p className="small mission-all"><Trophy size={14} /> {t('Semana completa! Novas missões na segunda.')}{pointsOn(cfg) && <> {t('+{n} pts de bônus.', { n: pointsFor(cfg, 'week') })}</>}</p>}
+        {on.missions && total > 0 && done < total && pointsOn(cfg) && pointsFor(cfg, 'week') > 0 && <p className="muted tiny">{t('Complete todas para ganhar +{n} pts de bônus.', { n: pointsFor(cfg, 'week') })}</p>}
         {on.missions && <p className="muted small">{t('As missões se completam sozinhas quando você sincroniza.')} <Link to="/progresso?v=plano">{t('Ver plano de treino')} <ChevronRight size={12} /></Link></p>}
         {!on.missions && streak && <p className="muted small">{t('Semanas seguidas com pelo menos uma jogada. Recorde: {n}', { n: streak.best })}</p>}
       </Panel>}
@@ -109,12 +297,12 @@ function LastWeek({ s, streak, onClose }) {
         <h3 className="ic-row"><CalendarCheck size={18} /> {t('Sua semana passada')}</h3>
         <button className="link muted" aria-label={t('Fechar')} onClick={onClose}><X size={16} /></button>
       </div>
-      <p className="muted small">{fmtDay(s.ws)}–{fmtDay(s.ws + 6 * 86400000)}</p>
+      <p className="muted small">{fmtDay(s.ws)}–{fmtDay(s.ws + 6 * DAY)}</p>
       <div className="ws-grid">
         <div><b>{fmtNum(s.plays)}</b><small>{tn(s.days, 'jogadas em {n} dia', 'jogadas em {n} dias')}</small></div>
         <div><b>{fmtNum(s.clears)}</b><small>{t('charts novos passados')}</small></div>
         <div><b>{fmtNum(s.improved)}</b><small>{t('notas melhores')}</small></div>
-        <div><b>{s.missions.done}/{s.missions.total}</b><small>{t('missões')}</small></div>
+        {s.missions && <div><b>{s.missions.done}/{s.missions.total}</b><small>{t('missões')}</small></div>}
         {s.pb && <div><b className={s.pb.delta > 0 ? 'up' : s.pb.delta < 0 ? 'down' : ''}>{signed(s.pb.delta)}</b><small>PUMBILITY</small></div>}
         {streak && <div><b><Flame size={16} /> {streak.streak}</b><small>{t('semanas seguidas')}</small></div>}
       </div>
@@ -138,5 +326,33 @@ function LastWeek({ s, streak, onClose }) {
         </p>
       )}
     </section>
+  );
+}
+
+/** Pontos e selos do jogador (perfil). Cada um pode ser desligado pelo admin. */
+export function Badges({ userId }) {
+  const { plan, session } = useData();
+  const cfg = useMemo(() => missionConfig(plan), [plan]);
+  const [list, setList] = useState(null);
+  const [pts, setPts] = useState(null);
+  const showBadges = cfg.badges !== false;
+  const showPoints = pointsOn(cfg);
+  useEffect(() => {
+    if (!session || !userId) return undefined;
+    let alive = true;
+    if (showBadges) rpc('badges_of', { p_user: userId }).then((r) => { if (alive) setList(r || []); }).catch(() => {});
+    if (showPoints) rpc('points_of', { p_user: userId }).then((n) => { if (alive) setPts(n); }).catch(() => {});
+    return () => { alive = false; };
+  }, [userId, session, showBadges, showPoints]);
+  if (!(showBadges && list?.length) && !(showPoints && pts > 0)) return null;
+  return (
+    <div className="badges">
+      {showPoints && pts > 0 && <span className="badge-chip b-points" title={t('Pontos ganhos completando missões')}><Star size={13} /> {t('{n} pts', { n: fmtNum(pts) })}</span>}
+      {showBadges && (list || []).map(([b, l, at]) => (
+        <span key={`${b}${l}`} className={`badge-chip b-${b}`} title={new Date(at * 1000).toLocaleDateString(locale())}>
+          {b === 'streak' ? <Flame size={13} /> : <Award size={13} />} {badgeName(cfg, b, l, t)}
+        </span>
+      ))}
+    </div>
   );
 }

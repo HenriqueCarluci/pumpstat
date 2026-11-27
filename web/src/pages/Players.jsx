@@ -11,6 +11,7 @@ import { Award, MessageCircle, Swords, TrendingUp } from '../components/Icons.js
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
+import { Badges } from '../components/WeekCard.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
 import { entitlements } from '../lib/plans.js';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
@@ -267,6 +268,7 @@ export function PlayerProfile() {
           {who?.title && <span className="ptitle">{who.title}</span>}
           <h2><Flag cc={ccOf(id)} />{who?.nickname || t('Jogador')}</h2>
           <TeamTag team={teamOf(id)} />
+          <Badges userId={id} />
         </div>
         <div className="pp-pb">
           {tier?.icon && <img src={tier.icon} alt="" referrerPolicy="no-referrer" />}

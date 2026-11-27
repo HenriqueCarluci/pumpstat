@@ -1738,3 +1738,67 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .cfg-sub { margin: 14px 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .cfg-row select { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; color: var(--text); max-width: 55%; }
 .cfg-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--neon); flex: none; }
+
+/* ---------- missões personalizadas ---------- */
+.week-extra { display: inline-flex; align-items: center; gap: 8px; }
+.mission-points { display: inline-flex; align-items: center; gap: 4px; font: 700 12px var(--num); color: #ffd166; background: rgba(255, 209, 102, 0.12); padding: 3px 8px; border-radius: 999px; }
+.mission-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.mission-head p { margin: 0; }
+.mission-focus-btn { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; font-size: 12px; font-family: inherit; color: var(--text); background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+.mission-focus-btn.on { border-color: #b6ff5c; }
+.mission-focus-btn:disabled { cursor: default; opacity: 0.75; }
+.mission-focus { display: grid; gap: 6px; margin: 8px 0; padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); }
+.mission-focus p { margin: 0 0 2px; }
+.mf-opt { display: grid; gap: 2px; text-align: left; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); background: transparent; color: var(--text); font-family: inherit; cursor: pointer; }
+.mf-opt b { font-size: 14px; }
+.mf-opt.on { border-color: #b6ff5c; background: rgba(182, 255, 92, 0.08); }
+.missions li { align-items: flex-start; }
+.missions li .mission-check { margin-top: 1px; }
+.mission-body { flex: 1; min-width: 0; display: grid; gap: 6px; }
+.mission-line { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+.mission-tier { font-weight: 700; font-size: 10px; font-family: inherit; text-transform: uppercase; letter-spacing: 0.04em; padding: 2px 6px; border-radius: 6px; flex: none; }
+.mission-tier.t-easy { color: #8fd3ff; background: rgba(143, 211, 255, 0.12); }
+.mission-tier.t-medium { color: #b6ff5c; background: rgba(182, 255, 92, 0.12); }
+.mission-tier.t-hard { color: #ff8f6b; background: rgba(255, 143, 107, 0.14); }
+.mission-tier.t-bonus { color: #ffd166; background: rgba(255, 209, 102, 0.14); }
+.mission-charts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.mission-charts > small { width: 100%; font-size: 11px; }
+.mission-chart { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 8px 3px 3px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); color: var(--text); text-decoration: none; font-size: 12px; }
+.mission-chart .mc-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 150px; }
+.mission-chart em { font-style: normal; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.mission-chart.ok em { color: #3ee06f; }
+.mission-count { display: grid; justify-items: end; gap: 2px; flex: none; }
+.mission-pts { font: 600 10px var(--num); color: var(--muted); }
+.mission-pts.on { color: #ffd166; }
+.mission-reroll { padding: 2px; flex: none; }
+.mission-badges-new { margin: 8px 0; padding: 10px 12px; border-radius: 12px; background: linear-gradient(90deg, rgba(255, 209, 102, 0.16), rgba(182, 255, 92, 0.08)); }
+.mission-badges-new p { margin: 0 0 4px; font-weight: 600; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.badge-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: rgba(182, 255, 92, 0.12); color: #b6ff5c; }
+.badge-chip.b-streak { background: rgba(255, 143, 107, 0.14); color: #ff8f6b; }
+.badge-chip.b-points { background: rgba(255, 209, 102, 0.14); color: #ffd166; }
+.missions-admin .card { margin-bottom: 12px; }
+.mtype-row { padding: 4px 0; }
+.mtype-row .mtype-name { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.mtype-stat { display: block; font-size: 11px; }
+.mtype-row select { flex: none; }
+.mtype-group + .mtype-group { margin-top: 6px; }
+.missions-admin .cfg-row input[type=number] { width: 72px; flex: none; }
+.missions-admin .cfg-row > span:first-child { flex: 1; min-width: 0; }
+.missions-admin .bmarks .cfg-row input:not([type]) { width: 150px; flex: none; }
+.mstats td.tiny { font-size: 11px; }
+.missions-admin .card { overflow-x: auto; }
+.ev-form { border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 10px; margin-bottom: 10px; }
+.ev-songs { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.ev-songs input { flex: 1; min-width: 160px; }
+.ev-goal { display: inline-flex; gap: 6px; }
+.ev-goal input { width: 70px; }
+.mstats { width: 100%; border-collapse: collapse; font-size: 12px; margin: 6px 0; }
+.mstats th, .mstats td { text-align: left; padding: 5px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+.mstats th { color: var(--muted); font-weight: 600; }
+.mstats tr.warn td:last-child { color: #ff8f6b; font-weight: 700; }
+.mstats tr.easy td:last-child { color: #8fd3ff; font-weight: 700; }
+.sticky-save { position: sticky; bottom: calc(env(safe-area-inset-bottom) + 8px); z-index: 2; background: var(--bg, #0b0f14); padding: 8px 0; }
+.mission-chart .ball.sm { width: 26px; height: 26px; }
+.week-card .panel-h h3 { min-width: 0; }

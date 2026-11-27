@@ -56,6 +56,8 @@ export function describe(n) {
       return t('Desafio novo no clube: {name}. Participe!', { name: n.title });
     case 'challenge_won':
       return t('Você ganhou no desafio {name}!', { name: n.title }) + (n.prize ? ` ${t('Prêmio')}: ${n.prize}` : '');
+    case 'badge':
+      return t('Selo novo: {b}', { b: n.name || (n.badge === 'streak' ? t('Sequência de {n} semanas', { n: n.level }) : (n.level === 1 ? t('Primeira semana completa') : t('{n} semanas completas', { n: n.level }))) });
     default:
       return t('Novidade no PIU Stats');
   }
@@ -71,6 +73,7 @@ export function linkFor(n) {
     case 'venue_rejected': case 'venue_removed': case 'venue_removal_rejected': return '/fila';
     case 'team_approved': case 'team_rejected': return '/ajustes';
     case 'challenge_new': case 'challenge_won': return '/desafios';
+    case 'badge': return '/';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     default: return n.user ? `/jogador/${n.user}` : '/';
   }

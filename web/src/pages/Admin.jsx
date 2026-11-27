@@ -13,6 +13,7 @@ import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
 import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
+import MissionsAdmin from './MissionsAdmin.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -20,7 +21,7 @@ export default function Admin() {
   const [params] = useSearchParams();
   const tabs = [['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
     ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
-    ['challenges', 'Desafios', 'events'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
+    ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
   if (!plan?.admin) return <div className="page"><p className="empty">{t('só administradores')}</p></div>;
   const shown = tabs.some(([id]) => id === tab) ? tab : tabs[0]?.[0];
@@ -39,6 +40,7 @@ export default function Admin() {
       {shown === 'plans' && <PlansConfig />}
       {shown === 'ads' && <AdsConfig />}
       {shown === 'challenges' && <ChallengesAdmin />}
+      {shown === 'missions' && <MissionsAdmin />}
       {shown === 'features' && <FeatureToggles />}
     </div>
   );
