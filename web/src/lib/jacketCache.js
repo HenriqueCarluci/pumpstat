@@ -21,11 +21,16 @@ const LAST = 'pumpstat:jackets-last';
 export const lastJacketRun = () => { try { return JSON.parse(localStorage.getItem(LAST) || 'null'); } catch { return null; } };
 const key = (u) => u.replace(/^https?:\/\/[^/]+\//, '');
 
+// Imagens que aparecem fora das listas (notificações, por exemplo): o app registra aqui para entrarem no "Baixar todas".
+const extraUrls = new Set();
+export const addImageUrls = (list) => (list || []).forEach((u) => { if (typeof u === 'string' && /^https:\/\//.test(u)) extraUrls.add(u); });
+
 /** Tudo o que dá para saber sem ir ao servidor: capas da versão atual, imagens fixas do jogo e a sua foto. */
 export const jacketUrls = (data) => [...new Set([
   ...(data?.songs || []).map((s) => s.jacket),
   ...staticImageUrls(),
   data?.profile?.avatar_url,
+  ...extraUrls,
 ].filter(Boolean))];
 
 /** Fotos de perfil dos amigos e da comunidade (lista de jogadores). */

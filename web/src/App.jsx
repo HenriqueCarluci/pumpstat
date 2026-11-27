@@ -5,7 +5,7 @@ import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
 import { initNative, isNative } from './lib/native.js';
-import { downloadJackets, jacketMode } from './lib/jacketCache.js';
+import { addImageUrls, downloadJackets, jacketMode } from './lib/jacketCache.js';
 import { initImgStore } from './lib/imgStore.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
@@ -232,6 +232,8 @@ function DataApp({ session, ingestKey }) {
   };
 
   const notifications = useNotifications(!!session);
+  // capas e fotos das notificações também entram no download de imagens do app
+  useEffect(() => { addImageUrls((notifications.items || []).flatMap((n) => [n.jacket, n.avatar])); }, [notifications.items]);
   const presence = usePresence(!!session);
   const [plan, setPlan] = useState(null);
   const [planReady, setPlanReady] = useState(false);
