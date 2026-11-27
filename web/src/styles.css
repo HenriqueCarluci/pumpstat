@@ -1586,3 +1586,19 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
   .song-hero .sh-top { align-items: flex-start; }
   .song-hero .hero-jacket { width: 112px !important; flex: none; border-radius: 12px; }
 }
+
+/* perfil de outro jogador */
+.player-page .pp-head { background: linear-gradient(135deg, #22262c, #1b1d21); }
+.player-page .pp-id > * { justify-self: start; }
+.player-page .pp-id .ptitle { font-size: 12px; line-height: 1.2; overflow-wrap: anywhere; }
+.player-page .pp-id h2 { white-space: normal; overflow-wrap: anywhere; line-height: 1.15; }
+.player-page .pp-id .team-tag { margin-left: 0; margin-top: 4px; }
+.player-page .pp-actions { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 8px; }
+.player-page .pp-actions .btn { justify-content: center; padding-left: 8px; padding-right: 8px; white-space: nowrap; }
+@media (max-width: 520px) {
+  .player-page .pp-head { gap: 12px; padding: 14px; }
+  .player-page .pp-id h2 { font-size: 19px; }
+  .player-page .pp-pb { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 2px; }
+  .player-page .pp-pb b { font-size: 20px; }
+  .player-page .pp-actions .btn { font-size: 14px; }
+}

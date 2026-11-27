@@ -256,7 +256,7 @@ export function PlayerProfile() {
   const maxLv = Math.max(1, ...stats.flatMap((s) => s.levels.map((l) => l.clear + l.broken)));
 
   return (
-    <div className="page profile">
+    <div className="page player-page">
       <section className="card pp-head">
         <Avatar p={other || {}} size={72} />
         <div className="pp-id">
