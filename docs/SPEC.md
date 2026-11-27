@@ -84,6 +84,40 @@ carregadas de `piugame.com/l_img/p2/…`, acento verde-neon do logo.
 3. Metas (ex.: “SSS em todos os D20”) e notificações quando um recorde melhora.
 4. Gráfico da evolução de cada chart usando `best_score_history`.
 5. **Fila do fliperama** — ✅ primeira versão no ar (`#/fila/liberdade`, modo TV em `#/fila/liberdade/tv`).
+6. **Competições no perfil (CBPIU e LBPIU)** — ver 6.2.
+7. **Liberação de recursos por usuário** — o admin dá (ou tira) um recurso de uma pessoa sem mudar o plano dela, com prazo e motivo. Ver 6.3.
+
+### 6.2 Competições no perfil (CBPIU e LBPIU)
+
+Pedido em 27/11/2026: mostrar no perfil as etapas do CBPIU (últimas etapas jogadas, scores) e os campeonatos da LBPIU (títulos e medalhas), achando o jogador pelo nick da conta ou por um nome/link informado por ele.
+
+**Fonte (analisada em 27/11/2026)**
+- O CBPIU e os campeonatos da LBPIU (BRPF, NEtão, Semana Santa, B1G ONE, Ostrão, Gauchones, Speed Super Stars etc.) estão todos no scoreboard da LBPIU: `scoreboard.lbpiu.com.br` (o endereço antigo `lbpiu.com.br/scoreboard/...` redireciona).
+- Cada jogador tem perfil público: `scoreboard.lbpiu.com.br/perfil/<nick>-<código>` (ex.: `kyuubi-1uabu2`). O começo do código é o nick, então dá para sugerir o perfil pelo nick da conta e confirmar com o jogador.
+- O site carrega arquivos públicos (Firebase Storage do projeto `scoreboard-1b28f`):
+  - `dados/indice.json` (~520 KB): `Jogou` (código do jogador → lista de campeonatos), `Players` (campeonato → inscritos e categorias), `Destaques`, `Em` (data da última geração).
+  - `dados/campeonato/<id>.json`: um registro por tabela com `Path` (ex.: `Etapa4/1/Single` no CBPIU, `Masculino/Final` ou `Inter/Final/GoldMatch` nos campeonatos), `Parametros.List` (músicas e níveis), `Parametros.Medals`, e `Tabela` já na ordem de classificação: `Player` (códigos), `Scores` (`Score`, `DG` = perfect-great-good-bad-miss-combo, `Pass`).
+  - Só existe arquivo dos campeonatos encerrados. O CBPIU em andamento (ex.: `cbpiu26`) dá 404: fica no Realtime Database, que não deve ser usado (o acesso foi bloqueado como não autorizado).
+- Nome dos campeonatos, cidade e Instagram do jogador não estão nesses arquivos. Os nomes teriam que vir de um mapa nosso pelo prefixo do código (`cbpiu`, `brpf`, `bigone`, `netao`, `ss`, `sss`, `ostrao`, `gauchones`, `liga`, `final`, `especialxx`, `playx4`, `pumpbh`, `paulissteps`…) + ano, editável no admin.
+
+**Antes de construir:** pedir autorização à LBPIU (lbpiuscoreboard@gmail.com) para usar os dados no app e perguntar se existe um jeito oficial (API ou exportação). Dar crédito com link para o scoreboard.
+
+**Como ficaria**
+| Item | Proposta |
+|---|---|
+| Vincular | Em Ajustes: sugestão pelo nick da conta, busca por nick ou colar o link do perfil do scoreboard |
+| Coleta | Função `sync-lbpiu` (Supabase Edge) 1×/dia: baixa o `indice.json` e só os arquivos dos campeonatos que cada jogador vinculado jogou; guarda um resumo por jogador (`lbpiu_links.data`). Nada de chamar o site a cada visita |
+| Perfil | Seção "Competições": títulos e medalhas (1º–3º na final; GoldMatch/BronzeMatch), campeonatos jogados com categoria e fase alcançada, CBPIU por temporada (etapa, divisão, modo, colocação, músicas e scores), link para o perfil no scoreboard |
+| Admin | Recurso `competitions` com liberação "Pelo plano / Só usuários liberados / Desligado" (começa em "Só usuários liberados"), status da última coleta, botão "Coletar agora" e edição dos nomes dos campeonatos |
+
+### 6.3 Liberação de recursos por usuário
+
+| Item | Proposta |
+|---|---|
+| Dados | `user_feature_grants(user_id, feature, mode 'grant'/'block', expires_at, note, granted_by)` |
+| Regra | Admin (sem prévia) tem tudo → recurso desligado no geral → bloqueado para a pessoa → liberado para a pessoa → "só usuários liberados" → regra do plano. Vale mesmo com a cobrança desligada |
+| Servidor | `plan_can` segue a mesma regra; `my_plan()` devolve `grants` |
+| Admin | No usuário: "Recursos liberados" (recurso, liberar/bloquear, 30 dias / 3 meses / 1 ano / sem prazo, motivo). Em Planos: coluna "Liberação" por recurso e lista de quem tem cada recurso liberado |
 
 ### 6.1 Fila do fliperama
 
