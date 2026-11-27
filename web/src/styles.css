@@ -2373,3 +2373,12 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
   .toplist .plate-img { grid-area: p; height: 18px; justify-self: start; }
   .toplist .val { grid-area: v; }
 }
+
+/* confirmação do vínculo AM.PASS */
+.link-confirm { display: grid; gap: 12px; }
+.lc-block { display: grid; gap: 8px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255, 209, 102, .35); background: rgba(255, 209, 102, .05); }
+.lc-opt { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .1); cursor: pointer; }
+.lc-opt.on { border-color: rgba(140, 255, 58, .55); background: rgba(140, 255, 58, .06); }
+.lc-opt input { margin-top: 3px; }
+.lc-opt span { display: grid; gap: 2px; }
+.adm-team .danger { color: #ff6b6b; }

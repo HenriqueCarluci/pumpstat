@@ -47,6 +47,8 @@ export function describe(n) {
       return t('Seu pedido foi aprovado: agora você faz parte do time {name}', { name: n.name });
     case 'team_join_rejected':
       return t('Seu pedido para entrar no time {name} não foi aprovado', { name: n.name });
+    case 'piu_link_moved':
+      return t('O ID de jogo {id} foi vinculado a outra conta do PIU Stats. As notas dele saíram desta conta; para sincronizar de novo, entre com a sua conta AM.PASS em Ajustes.', { id: n.game_id });
     case 'team_admin':
       return t('Você agora é administrador do time {name}', { name: n.name });
     case 'tier_vote_open':
@@ -87,7 +89,7 @@ export function linkFor(n) {
     case 'venue_approved': return `/fila/${n.venue}`;
     case 'venue_rejected': case 'venue_removed': case 'venue_removal_rejected': return '/fila';
     case 'team_approved': case 'team_join_request': case 'team_join_approved': case 'team_admin': return '/time';
-    case 'team_rejected': case 'team_join_rejected': return '/ajustes';
+    case 'team_rejected': case 'team_join_rejected': case 'piu_link_moved': return '/ajustes';
     case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'badge': return '/';
     case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';

@@ -728,6 +728,7 @@ function Approvals() {
       {teams && !teams.length && <p className="muted small">{t('Nenhum pedido esperando.')}</p>}
       {(teams || []).map((x) => <TeamReview key={x.id} x={x} onDone={load} />)}
       <TeamAdmins />
+      <PiuLinkIssues />
 
       <h3>{t('Votações de tier abertas')}</h3>
       {!votes.length && <p className="muted small">{t('Nenhuma votação aberta.')}</p>}
@@ -810,6 +811,45 @@ function InactiveVenues() {
         <div key={v.id} className="row-between"><span>{v.name} · {v.city}</span><button className="link" onClick={() => reactivate(v.id)}>{t('Reativar')}</button></div>
       ))}
     </details>
+  );
+}
+
+/** Vínculos AM.PASS com problema: ID de jogo em mais de uma conta do app e contas com mais de um nick. */
+function PiuLinkIssues() {
+  const [d, setD] = useState(null);
+  const [err, setErr] = useState('');
+  const load = () => rpc('admin_piu_link_issues').then(setD).catch(() => setD(null));
+  useEffect(() => { load(); }, []);
+  if (!d || (!d.shared.length && !d.multi.length)) return null;
+  const unlink = async (u, label) => {
+    if (!window.confirm(t('Desvincular o AM.PASS de {who} e apagar as notas importadas dessa conta? Amigos, time e ajustes continuam.', { who: label }))) return;
+    setErr('');
+    try { await rpc('admin_unlink_piu', { p_user: u, p_wipe: true }); load(); } catch (e) { setErr(tErr(e.message)); }
+  };
+  return (
+    <>
+      <h3>{t('Vínculos AM.PASS')}</h3>
+      {err && <div className="form-err">{err}</div>}
+      {d.shared.map((g) => (
+        <div key={g.game_id} className="card adm-team">
+          <div className="adm-team-row"><b>{g.game_id}</b><span className="muted tiny">{t('mesmo ID em {n} contas', { n: g.accounts.length })}</span></div>
+          {g.accounts.map((a) => (
+            <div key={a.user} className="adm-team-row">
+              <span className="small">{a.email || a.user.slice(0, 8)} · {t('{n} recordes', { n: a.scores })}{a.last_sync ? ` · ${timeAgo(a.last_sync)}` : ''}</span>
+              <button className="link small danger" onClick={() => unlink(a.user, a.email || a.user.slice(0, 8))}>{t('Desvincular')}</button>
+            </div>
+          ))}
+        </div>
+      ))}
+      {d.multi.map((m) => (
+        <div key={m.user} className="card adm-team">
+          <div className="adm-team-row"><b>{m.email || m.user.slice(0, 8)}</b><span className="muted tiny">{t('mais de um nick nas notas')}</span></div>
+          <p className="small">{m.nicks.join(' · ')}{m.current ? ` → ${t('atual')}: ${m.current}` : ''}</p>
+          <p className="muted tiny">{t('Pode ser troca de nick (tudo certo) ou de AM.PASS (notas misturadas). Se for troca de jogador, desvincule e peça para a pessoa entrar de novo.')}</p>
+          <div className="bm-row"><button className="link small danger" onClick={() => unlink(m.user, m.email || m.user.slice(0, 8))}>{t('Desvincular e apagar as notas')}</button></div>
+        </div>
+      ))}
+    </>
   );
 }
 

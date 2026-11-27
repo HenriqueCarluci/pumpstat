@@ -181,6 +181,37 @@ async function pickAccount(session, job, version) {
   }
 }
 
+/**
+ * Regras do vínculo antes de gravar: o ID de jogo não pode estar em outra conta do app, e trocar de ID
+ * numa conta que já tem notas pergunta se é o mesmo jogador (mudou o nick) ou outro (apaga as notas antigas).
+ * Na sincronização automática não há a quem perguntar: para sem gravar.
+ */
+async function checkLink(job, nickname) {
+  if (job.linkChecked || !nickname || !process.env.INGEST_KEY) return;
+  const st = await rpcAsServer('piu_link_check', { p_user: job.userId, p_game_id: nickname });
+  if (st.taken || st.changed) {
+    if (!job.interactive) {
+      job.needLogin = true;
+      throw new Error(st.taken ? 'Este ID de jogo também está vinculado a outra conta do PIU Stats. Entre com a sua senha AM.PASS para decidir onde ele fica.' : 'O ID de jogo desta conta mudou. Entre com a sua senha AM.PASS para confirmar.');
+    }
+    job.link = { game_id: nickname, current: st.current || null, taken: !!st.taken, changed: !!st.changed };
+    job.state = 'confirm';
+    job.message = 'Confirme o vínculo com a conta Pump It Up.';
+    const d = await new Promise((resolve, reject) => {
+      job.confirm = resolve;
+      setTimeout(() => reject(new Error('Tempo esgotado para confirmar. Sincronize de novo.')), 10 * 60_000).unref();
+    });
+    delete job.confirm; delete job.link;
+    if (!d || d.cancel) throw new Error('Sincronização cancelada. Nada foi gravado.');
+    if (st.taken && !d.move) throw new Error('Sincronização cancelada. Nada foi gravado.');
+    if (st.changed && !['same', 'other'].includes(d.mode)) throw new Error('Sincronização cancelada. Nada foi gravado.');
+    job.state = 'running';
+    job.message = 'Atualizando o vínculo…';
+    await rpcAsServer('piu_link_resolve', { p_user: job.userId, p_game_id: nickname, p_mode: st.changed ? d.mode : null, p_move: !!st.taken });
+  }
+  job.linkChecked = true;
+}
+
 async function runJob(job, { login, password, versions, token, saved, partial = false, writer = userWriter(token) }) {
   try {
     let session;
@@ -202,6 +233,7 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
       await switchSite(session, SITES[version]);
       await pickAccount(session, job, version);
       const payload = await scrapeVersion(session, version, job, partial);
+      await checkLink(job, payload.profile?.nickname);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
       const { titles, ...scores } = payload;
       job.results[version] = { ...(await writer.scores(scores)), bests: payload.bests.length, plays: payload.plays.length };
@@ -436,6 +468,17 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { emailed: !!body && body.ok !== false }, origin);
     }
 
+    // vínculo: o app manda a decisão (mesmo jogador / outro jogador / mover de outra conta / cancelar)
+    const mf = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)\/confirm$/);
+    if (req.method === 'POST' && mf) {
+      const job = jobs.get(mf[1]);
+      if (!job || job.userId !== user.id) return send(res, 404, { error: 'Sincronização não encontrada.' }, origin);
+      if (job.state !== 'confirm' || !job.confirm) return send(res, 409, { error: 'Essa escolha não vale mais. Sincronize de novo.' }, origin);
+      const { mode, move, cancel } = await readJson(req);
+      job.state = 'running'; job.message = cancel ? 'Cancelando…' : 'Atualizando o vínculo…';
+      job.confirm({ mode: mode === 'same' || mode === 'other' ? mode : null, move: !!move, cancel: !!cancel });
+      return send(res, 200, { ok: true }, origin);
+    }
     // conta com mais de um ID de jogo: o app manda o nick escolhido e a sincronização continua
     const mc = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)\/choose$/);
     if (req.method === 'POST' && mc) {
@@ -452,7 +495,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && m) {
       const job = jobs.get(m[1]);
       if (!job || job.userId !== user.id) return send(res, 404, { error: 'Sincronização não encontrada.' }, origin);
-      const { userId, choose, session, interactive, ...pub } = job;
+      const { userId, choose, confirm, session, interactive, linkChecked, ...pub } = job;
       return send(res, 200, pub, origin);
     }
     return send(res, 404, { error: 'not found' }, origin);
