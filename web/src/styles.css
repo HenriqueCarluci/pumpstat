@@ -2545,3 +2545,12 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .atest-who small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .atest-tag { flex: none; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--muted); cursor: pointer; }
 .atest-tag.ok { color: var(--neon); border-color: rgba(140,255,58,.4); }
+
+/* tela de carregamento da primeira entrada */
+.boot { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: var(--bg); padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom); }
+.boot-mark { position: relative; width: 96px; height: 96px; display: grid; place-items: center; }
+.boot-ring { position: absolute; inset: 0; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--neon); animation: spin 0.9s linear infinite; box-shadow: 0 0 24px rgba(140,255,58,.15); }
+.boot-name { font: 800 22px var(--num, inherit); letter-spacing: .02em; margin-top: 6px; }
+.boot-step { min-height: 1.4em; margin: 0; font-size: 14px; text-align: center; animation: bootfade .4s ease; }
+@keyframes bootfade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .boot-ring { animation-duration: 2.5s; } }

@@ -198,7 +198,8 @@ function DataApp({ session, ingestKey }) {
   const notifications = useNotifications(!!session);
   const presence = usePresence(!!session);
   const [plan, setPlan] = useState(null);
-  const reloadPlan = useCallback(() => rpc('my_plan').then((p) => { setPlan(p); return p; }).catch(() => null), []);
+  const [planReady, setPlanReady] = useState(false);
+  const reloadPlan = useCallback(() => rpc('my_plan').then((p) => { setPlan(p); return p; }).catch(() => null).finally(() => setPlanReady(true)), []);
   useEffect(() => { reloadPlan(); }, [reloadPlan]);
   // cobrança pela Google Play (só no app Android, com a venda ligada pelo admin)
   const billingUser = session?.user?.id;
@@ -227,8 +228,8 @@ function DataApp({ session, ingestKey }) {
   const viewNotifications = useMemo(() => (viewPlan?.realAdmin
     ? { ...notifications, items: notifications.items.filter((n) => !String(n.kind).startsWith('admin_')), unread: notifications.items.filter((n) => n.unread && !String(n.kind).startsWith('admin_')).length }
     : notifications), [viewPlan, notifications]);
-  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, reloadPlan, home, reloadHome }),
-    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, reloadPlan, home, reloadHome]);
+  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, planReady, reloadPlan, home, reloadHome }),
+    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, planReady, reloadPlan, home, reloadHome]);
 
   return (
     <DataCtx.Provider value={ctx}>
@@ -239,8 +240,23 @@ function DataApp({ session, ingestKey }) {
   );
 }
 
+const BOOT_STEPS = ['Entrando na sua conta…', 'Carregando seus recordes…', 'Buscando músicas e charts…', 'Montando o seu painel…', 'Quase lá…'];
+
+/** Tela de carregamento da primeira entrada: logo, giro e o que está sendo carregado. */
+export function BootScreen() {
+  const [i, setI] = useState(0);
+  useEffect(() => { const h = setInterval(() => setI((n) => Math.min(n + 1, BOOT_STEPS.length - 1)), 1400); return () => clearInterval(h); }, []);
+  return (
+    <div className="boot" role="status" aria-live="polite">
+      <div className="boot-mark"><div className="boot-ring" aria-hidden="true" /><Logo size={44} /></div>
+      <div className="boot-name">PIU Stats</div>
+      <p key={i} className="boot-step muted">{t(BOOT_STEPS[i])}</p>
+    </div>
+  );
+}
+
 function Shell() {
-  const { version, setVersion, data, loading, error, reload, notifications } = useData();
+  const { version, setVersion, data, loading, error, reload, notifications, planReady } = useData();
   const loc = useLocation();
   const scroller = useRef(null);
   useEffect(() => { window.scrollTo(0, 0); scroller.current?.scrollTo(0, 0); }, [loc.pathname]);
@@ -249,6 +265,8 @@ function Shell() {
   const openSearch = useCallback(() => setSearch(true), []);
   useSearchHotkey(desk ? openSearch : noop);
   if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
+  // primeira entrada (sem nada guardado no aparelho): tela de carregamento até chegarem os dados e o plano
+  if ((!data && loading && !error) || !planReady) return <BootScreen />;
 
   return (
     <div className="app shell">
