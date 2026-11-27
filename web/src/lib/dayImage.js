@@ -8,6 +8,12 @@ import { gradeImgUrl, plateImgUrl } from '../components/ui.jsx';
 export const FORMATS = { feed: { w: 1080, h: 1350, rows: 4 }, story: { w: 1080, h: 1920, rows: 7 } };
 const MODE_COLOR = { S: '#ff6a3d', D: '#3ddc84', HD: '#b06cff', C: '#ffd23f' };
 const NEON = '#8cff3a';
+// primeiro passe (nunca tinha passado) e upscore (já tinha passado, melhorou o score): cores próprias para não confundir
+const CLEAR = '#ffd23f';
+const UP = '#38e1ff';
+const kindTag = (r) => (r.kind === 'clear' || r.newClear
+  ? [`★ ${t('Primeiro passe')}`, CLEAR]
+  : (r.kind === 'pb' || r.pb) ? [`▲ ${t('Upscore')} +${fmtNum(r.delta)}`, UP] : null);
 const TXT = '#f2f3f5';
 const MUTED = '#a3a6b0';
 const NUM = "'Oxanium', 'Pretendard', system-ui, sans-serif";
@@ -58,7 +64,14 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   const F = FORMATS[format] || FORMATS.feed;
   const W = F.w; const H = F.h;
   try { await Promise.all([document.fonts?.load(`800 40px ${NUM}`), document.fonts?.load(`700 30px ${SANS}`)]); } catch { /* fonte do sistema */ }
-  const items = list.slice(0, F.rows);
+  // capa separada em grupos: primeiros passes, upscores (ou só os melhores passes, se não houve nenhum dos dois)
+  const picked = list.slice(0, F.rows);
+  const groups = [
+    [`★ ${t('Primeiros passes')}`, CLEAR, picked.filter((r) => r.kind === 'clear')],
+    [`▲ ${t('Upscores')}`, UP, picked.filter((r) => r.kind === 'pb')],
+    [t('Melhores passes do dia'), TXT, picked.filter((r) => r.kind === 'pass')],
+  ].filter((g) => g[2].length);
+  const items = groups.flatMap((g) => g[2]);
   // carrega tudo em paralelo: capas, grades, plates e o logo
   const [logo, ...imgs] = await Promise.all([
     loadImg(new URL('icons/icon-192.png', document.baseURI).href),
@@ -90,8 +103,8 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   const kpis = [
     [t('Jogadas'), fmtNum(tt.plays), null, TXT],
     [t('Passes'), fmtNum(tt.passes), `${Math.round(tt.rate * 100)}%`, TXT],
-    [t('Recordes'), fmtNum(tt.pbs), null, tt.pbs ? NEON : TXT],
-    [t('Primeiros passes'), fmtNum(tt.newClears), null, tt.newClears ? NEON : TXT],
+    [t('Primeiros passes'), fmtNum(tt.newClears), null, tt.newClears ? CLEAR : TXT],
+    [t('Upscores'), fmtNum(tt.pbs), null, tt.pbs ? UP : TXT],
   ];
   const kw = (W - M * 2 - 3 * 16) / 4; const ky = 184;
   kpis.forEach(([label, val, sub, col], i) => {
@@ -122,15 +135,22 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     cx += w + 12;
   }
 
-  // destaques
-  const kind = items.some((r) => r.kind !== 'pass') ? t('Recordes do dia') : t('Melhores passes do dia');
-  ctx.fillStyle = TXT; ctx.font = `800 32px ${SANS}`; ctx.fillText(kind, M, 444);
-  const top = 470; const foot = 96; const gap = 16;
-  const ch = Math.min(196, (H - top - foot - gap * (F.rows - 1)) / F.rows);
+  // destaques, um título por grupo
+  const top = 470; const foot = 96; const gap = 16; const GH = 58;
+  const extraHead = GH * Math.max(0, groups.length - 1);
+  const ch = Math.min(196, (H - top - foot - gap * (F.rows - 1) - extraHead) / F.rows);
+  const rowY = [];
+  { let y = top; let i = 0;
+    groups.forEach(([label, col, rows], gi) => {
+      if (gi > 0) y += GH - gap + 16;
+      ctx.fillStyle = col; ctx.font = `800 32px ${SANS}`; ctx.fillText(label, M, y - 26);
+      rows.forEach(() => { rowY[i++] = y; y += ch + gap; });
+    }); }
   items.forEach((r, i) => {
-    const y = top + i * (ch + gap);
+    const y = rowY[i];
+    const kt = kindTag(r);
     rr(ctx, M, y, W - M * 2, ch, 26); ctx.fillStyle = 'rgba(20,22,28,.86)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.strokeStyle = kt ? `${kt[1]}66` : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
     // capa com o nível por cima
     const jh = ch - 28; const jw = Math.round(jh * 16 / 9); const jx = M + 14; const jy = y + 14;
     cover(ctx, jk(i), jx, jy, jw, jh, 18);
@@ -146,10 +166,9 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     const textMax = right - gw - 14 - tx;
     ctx.fillStyle = TXT; ctx.font = `800 31px ${SANS}`;
     ctx.fillText(fit(ctx, r.chart.song.title, textMax), tx, y + 50);
-    let tag; let tagCol = NEON;
-    if (r.kind === 'clear') tag = `★ ${t('Primeiro passe')}`;
-    else if (r.kind === 'pb') tag = `▲ +${fmtNum(r.delta)}${r.gradeUp ? `  ${r.prevGrade} → ${r.grade}` : ''}`;
-    else { tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'); tagCol = MUTED; }
+    let tag; let tagCol = MUTED;
+    if (kt) { [tag, tagCol] = kt; if (r.kind === 'pb' && r.gradeUp) tag += `  ${r.prevGrade} → ${r.grade}`; if (r.kind === 'clear' && r.triesBefore) tag += ` · ${t('depois de {n} tentativas', { n: r.triesBefore + r.tries })}`; }
+    else tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou');
     ctx.fillStyle = tagCol; ctx.font = `700 22px ${SANS}`; ctx.fillText(fit(ctx, tag, textMax), tx, y + 82);
     ctx.fillStyle = TXT; ctx.font = `800 40px ${NUM}`; ctx.fillText(fmtNum(r.score), tx, y + 128);
 
@@ -178,7 +197,7 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     }
   });
   // espaço sobrando: passes por nível
-  let y0 = top + items.length * (ch + gap) + (items.length ? 34 : 110);
+  let y0 = (items.length ? rowY[items.length - 1] + ch + gap : top) + (items.length ? 34 : 110);
   const lv = rep.levels.slice(0, Math.max(0, Math.floor((H - foot - 30 - y0 - 44) / 50)));
   if (lv.length >= 2) {
     ctx.fillStyle = TXT; ctx.font = `800 30px ${SANS}`; ctx.fillText(t('Por nível'), M, y0);
@@ -257,7 +276,8 @@ async function drawListPage({ rows, nickname, dayLabel, format, page, pages, log
   rows.forEach((r, i) => {
     const y = top + i * (rh + gap);
     rr(ctx, M, y, W - M * 2, rh, 20); ctx.fillStyle = 'rgba(20,22,28,.86)'; ctx.fill();
-    ctx.strokeStyle = r.newClear ? 'rgba(140,255,58,.45)' : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
+    const kt = kindTag(r);
+    ctx.strokeStyle = kt ? `${kt[1]}73` : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
     const jh = rh - 20; const jw = Math.round(jh * 16 / 9); const jx = M + 10; const jy = y + 10;
     cover(ctx, jk(i), jx, jy, jw, jh, 12);
     const col = MODE_COLOR[r.chart.mode] || TXT; const lab = `${r.chart.mode}${r.chart.level}`;
@@ -271,10 +291,9 @@ async function drawListPage({ rows, nickname, dayLabel, format, page, pages, log
     const textMax = right - gw - 12 - tx;
     ctx.fillStyle = TXT; ctx.font = `800 26px ${SANS}`;
     ctx.fillText(fit(ctx, r.chart.song.title, textMax), tx, y + 36);
-    let tag; let tagCol = NEON;
-    if (r.newClear) tag = `★ ${t('Primeiro passe')}`;
-    else if (r.pb) tag = `▲ +${fmtNum(r.delta)}`;
-    else { tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'); tagCol = MUTED; }
+    let tag; let tagCol = MUTED;
+    if (kt) [tag, tagCol] = kt;
+    else tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou');
     ctx.font = `800 30px ${NUM}`; ctx.fillStyle = TXT; const sc = fmtNum(r.score); ctx.fillText(sc, tx, y + rh - 18);
     const sw = ctx.measureText(sc).width;
     ctx.fillStyle = tagCol; ctx.font = `700 19px ${SANS}`; ctx.fillText(fit(ctx, tag, textMax - sw - 16), tx + sw + 16, y + rh - 21);

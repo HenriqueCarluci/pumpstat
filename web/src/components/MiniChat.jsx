@@ -40,7 +40,7 @@ export default function MiniChat({ user, name }) {
   };
 
   return (
-    <section className="card minichat">
+    <section className="card minichat" id="chat">
       <div className="mc-head">
         <h3 className="ic-row"><MessageCircle size={18} /> <span className="mc-name">{name || t('Jogador')}</span></h3>
         <span className={`mc-status ${online ? 'on' : ''}`}>{online ? <><span className="dot-on" /> {t('online agora')}</> : t('offline')}</span>

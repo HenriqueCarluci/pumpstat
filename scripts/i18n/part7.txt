@@ -774,3 +774,9 @@ Imagens baixadas. | Images downloaded. | Imágenes descargadas. | 이미지를 �
 Compartilhar todas | Share all | Compartir todas | 모두 공유 | すべて共有 | Tout partager | Condividi tutte
 Baixar esta | Download this one | Descargar esta | 이 이미지 저장 | この画像を保存 | Télécharger celle-ci | Scarica questa
 Compartilhar só esta ({i}/{n}) | Share only this one ({i}/{n}) | Compartir solo esta ({i}/{n}) | 이것만 공유 ({i}/{n}) | これだけ共有 ({i}/{n}) | Partager seulement celle-ci ({i}/{n}) | Condividi solo questa ({i}/{n})
+Upscore | Upscore | Upscore | 업스코어 | スコア更新 | Upscore | Upscore
+Upscores | Upscores | Upscores | 업스코어 | スコア更新 | Upscores | Upscore
+depois de {n} tentativas | after {n} tries | después de {n} intentos | {n}번 시도 끝에 | {n}回目で | après {n} essais | dopo {n} tentativi
+Charts que você nunca tinha passado e passou hoje. | Charts you had never cleared and cleared today. | Charts que nunca habías pasado y pasaste hoy. | 처음으로 클리어한 차트예요. | 今日初めてクリアした譜面です。 | Charts jamais réussis avant et réussis aujourd'hui. | Chart mai superati prima e superati oggi.
+Charts que você já tinha passado e melhorou o score hoje. | Charts you had already cleared and improved the score today. | Charts que ya habías pasado y mejoraste el score hoy. | 이미 클리어했고 오늘 점수를 올린 차트예요. | クリア済みで今日スコアを更新した譜面です。 | Charts déjà réussis dont vous avez amélioré le score aujourd'hui. | Chart già superati in cui hai migliorato il punteggio oggi.
+Chat | Chat | Chat | 채팅 | チャット | Chat | Chat

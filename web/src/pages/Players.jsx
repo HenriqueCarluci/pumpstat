@@ -7,7 +7,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtScore, pbTier, PLATE_ORDER, pumbility, VERSIONS } from '../lib/piu.js';
-import { Award, Swords } from '../components/Icons.jsx';
+import { Award, MessageCircle, Swords } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
@@ -189,6 +189,13 @@ export function PlayerProfile() {
   const myId = session?.user?.id;
   const [rows, setRows] = useState(null);
   const [other, setOther] = useState(null);
+  // leva até o minichat no fim da página e já deixa o campo pronto para escrever
+  const openChat = () => {
+    const el = document.getElementById('chat');
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => el.querySelector('input')?.focus({ preventScroll: true }), 450);
+  };
   const [err, setErr] = useState('');
   const [mode, setMode] = useState('all');
   const teamOf = useTeams([id]);
@@ -265,6 +272,7 @@ export function PlayerProfile() {
 
       <div className="pp-actions">
         <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>
+        <button type="button" className="btn ghost" onClick={openChat}><MessageCircle size={16} /> {t('Chat')}</button>
         <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
       </div>
 

@@ -24,7 +24,7 @@ function Delta({ now, before, digits = 0, suffix = '' }) {
 
 function Kpi({ label, value, sub, delta, hi }) {
   return (
-    <div className={`dr-kpi ${hi ? 'hi' : ''}`}>
+    <div className={`dr-kpi ${hi ? `hi ${typeof hi === 'string' ? hi : ''}` : ''}`}>
       <small>{label}</small>
       <b>{value}</b>
       {(sub || delta) && <span className="dr-kpi-sub">{sub}{delta}</span>}
@@ -61,7 +61,7 @@ function Judgments({ p }) {
 
 /** Destaque do dia: capa grande, nível, score, grade/plate e os julgamentos da melhor jogada. */
 function Highlight({ r }) {
-  const tag = r.kind === 'clear' ? t('Primeiro passe') : r.kind === 'pb' ? `+${fmtNum(r.delta)}${r.gradeUp ? ` · ${r.prevGrade} → ${r.grade}` : ''}` : (r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'));
+  const tag = r.kind === 'clear' ? `★ ${t('Primeiro passe')}` : r.kind === 'pb' ? `▲ ${t('Upscore')} +${fmtNum(r.delta)}${r.gradeUp ? ` · ${r.prevGrade} → ${r.grade}` : ''}` : (r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou'));
   return (
     <Link className="dr-hl" to={`/musica/${r.chart.song.id}`}>
       <div className="dr-hl-jk"><Jacket song={r.chart.song} width={132} /><span className="dr-hl-ball"><Ball chart={r.chart} size="sm" /></span></div>
@@ -202,8 +202,8 @@ export default function DayReport() {
         <Kpi label={t('Jogadas')} value={fmtNum(tt.plays)} delta={<Delta now={tt.plays} before={pv?.plays} />} />
         <Kpi label={t('Passes')} value={fmtNum(tt.passes)} sub={`${Math.round(tt.rate * 100)}% `} delta={<Delta now={tt.rate * 100} before={pvRate} suffix=" pp" />} />
         <Kpi label={t('Quebras')} value={fmtNum(tt.fails)} />
-        <Kpi label={t('Primeiros passes')} value={fmtNum(tt.newClears)} hi={tt.newClears > 0} />
-        <Kpi label={t('Recordes')} value={fmtNum(tt.pbs)} hi={tt.pbs > 0} />
+        <Kpi label={t('Primeiros passes')} value={fmtNum(tt.newClears)} hi={tt.newClears > 0 && 'clear'} />
+        <Kpi label={t('Upscores')} value={fmtNum(tt.pbs)} hi={tt.pbs > 0 && 'pb'} />
         <Kpi label={t('Músicas')} value={fmtNum(tt.charts)} />
         <Kpi label={t('Maior Double')} value={tt.maxD ? `D${tt.maxD}` : '—'} delta={<Delta now={tt.maxD} before={pv?.max_d} />} />
         <Kpi label={t('Maior Single')} value={tt.maxS ? `S${tt.maxS}` : '—'} delta={<Delta now={tt.maxS} before={pv?.max_s} />} />
@@ -225,7 +225,8 @@ export default function DayReport() {
 
       {rep.newClears.length > 0 && (
         <section className="card">
-          <h3 className="ic-row"><Flame size={18} /> {t('Primeiros passes')}</h3>
+          <h3 className="ic-row dr-h-clear"><Flame size={18} /> {t('Primeiros passes')}</h3>
+          <p className="muted small">{t('Charts que você nunca tinha passado e passou hoje.')}</p>
           {rep.newClears.map((r) => (
             <Row key={r.chart.id} r={r} sub={r.triesBefore ? t('Passou depois de {n} tentativas antes de hoje', { n: r.triesBefore }) : tn(r.tries, '{n} tentativa hoje', '{n} tentativas hoje')}
               right={<><Grade grade={r.grade} size="sm" /><span className="dr-score">{fmtNum(r.score)}</span></>} />
@@ -235,11 +236,12 @@ export default function DayReport() {
 
       {rep.pbs.length > 0 && (
         <section className="card">
-          <h3 className="ic-row"><TrendingUp size={18} /> {t('Recordes batidos')}</h3>
+          <h3 className="ic-row dr-h-pb"><TrendingUp size={18} /> {t('Upscores')}</h3>
+          <p className="muted small">{t('Charts que você já tinha passado e melhorou o score hoje.')}</p>
           {rep.pbs.map((r) => (
             <Row key={r.chart.id} r={r}
               sub={[t('antes {s}', { s: fmtNum(r.prevScore) }), r.gradeUp && `${r.prevGrade} → ${r.grade}`, r.plateUp && `${r.prevPlate || '—'} → ${r.plate}`].filter(Boolean).join(' · ')}
-              right={<div className="dr-pb"><span className="dr-score">{fmtNum(r.score)}</span><span className="dr-delta up">+{fmtNum(r.delta)}</span></div>} />
+              right={<div className="dr-pb"><span className="dr-score">{fmtNum(r.score)}</span><span className="dr-delta pb">+{fmtNum(r.delta)}</span></div>} />
           ))}
         </section>
       )}

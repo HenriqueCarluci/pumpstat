@@ -1397,7 +1397,13 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .dr-hl-info { min-width: 0; display: grid; gap: 3px; }
 .dr-hl-info > b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; }
 .dr-hl-tag { font-size: 12px; font-weight: 700; color: var(--muted); }
-.dr-hl-tag.clear, .dr-hl-tag.pb { color: var(--neon); }
+.dr-hl-tag.clear { color: #ffd23f; }
+.dr-hl-tag.pb { color: #38e1ff; }
+.dr-delta.pb { color: #38e1ff; }
+.dr-h-clear svg { color: #ffd23f; }
+.dr-h-pb svg { color: #38e1ff; }
+.dr-kpi.hi.clear b { color: #ffd23f; }
+.dr-kpi.hi.pb b { color: #38e1ff; }
 .dr-hl-score { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
 .dr-hl-score img { max-height: 22px; max-width: 64px; }
 @media (max-width: 420px) { .dr-hl { grid-template-columns: 104px 1fr; } .dr-hl-jk .jacket { width: 104px !important; height: auto !important; } .dr-hl-score > span { font-size: 18px; } }
