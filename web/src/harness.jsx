@@ -41,7 +41,7 @@ import SubscriptionP from './pages/Subscription.jsx';
 import TrainingP from './pages/Training.jsx';
 import ChallengesP from './pages/Challenges.jsx';
 import './styles.css';
-import { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
+import { ComparePlayer, PlayerProfile, PlayStyle } from './pages/Players.jsx';
 import ChartPage from './pages/Chart.jsx';
 import ReleaseNotesP from './pages/ReleaseNotes.jsx';
 import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
@@ -191,6 +191,14 @@ function HShell({ children }) {
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
+    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/teststyle" element={<TestStyle />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
   </DataCtx.Provider>,
 );
+
+function TestStyle() {
+  const mk = (i, lv, broken, tags) => ({ id: i, mode: 'D', level: lv, score: 950000 - i * 1000, grade: 'AA', plate: null, broken, tagBars: tags, song: { id: i, title: `Song ${i}`, jacket: null } });
+  const charts = [];
+  for (let i = 0; i < 8; i++) charts.push(mk(i + 1, 22 - (i % 3), false, [['twist', 80], ['run', 60]]));
+  for (let i = 0; i < 4; i++) charts.push(mk(i + 20, 22, true, [['jump', 70], ['twist', 55]]));
+  return <div className="page"><PlayStyle charts={charts} stats={[{ mode: 'D', max: 22 }, { mode: 'S', max: 0 }]} name="X" me /></div>;
+}

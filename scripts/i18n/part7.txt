@@ -1388,3 +1388,7 @@ Mostrando {n} de {m}. Veja todas e priorize as skills que você quer melhorar. |
 Recomendações: todas e com prioridade nas skills que você quer melhorar | Recommendations: all of them, prioritizing the skills you want to improve | Recomendaciones: todas y con prioridad en las skills que quieres mejorar | 추천: 전체 보기와 늘리고 싶은 스킬 우선 | おすすめ:すべて表示し、上達したいスキルを優先 | Recommandations : toutes, avec priorité aux skills à améliorer | Consigli: tutti e con priorità alle skill da migliorare
 Dias nos gráficos de evolução | Days in progress charts | Días en los gráficos de evolución | 진행 그래프 기간(일) | 進捗グラフの日数 | Jours dans les graphiques d'évolution | Giorni nei grafici di evoluzione
 Recomendações por aba | Recommendations per tab | Recomendaciones por pestaña | 탭별 추천 수 | タブごとのおすすめ数 | Recommandations par onglet | Consigli per scheda
+Toque numa tag para ver os charts. | Tap a tag to see the charts. | Toca una tag para ver los charts. | 태그를 누르면 차트를 볼 수 있습니다. | タグをタップすると譜面が見られます。 | Touchez un tag pour voir les charts. | Tocca un tag per vedere i chart.
+passou | passed | pasó | 클리어 | クリア | passé | superato
+Ver {n} chart | See {n} chart | Ver {n} chart | 차트 {n}개 보기 | 譜面{n}件を見る | Voir {n} chart | Vedi {n} chart
+Ver {n} charts | See {n} charts | Ver {n} charts | 차트 {n}개 보기 | 譜面{n}件を見る | Voir {n} charts | Vedi {n} chart

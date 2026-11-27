@@ -7,7 +7,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtScore, pbTier, PLATE_ORDER, pumbility, VERSIONS } from '../lib/piu.js';
-import { Award, Lock, MessageCircle, Swords, TrendingUp } from '../components/Icons.jsx';
+import { Award, ChevronRight, Lock, MessageCircle, Swords, TrendingUp, X } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
@@ -505,23 +505,27 @@ export function ChartRanking({ chartId }) {
  * Estilo de jogo de outro jogador: dos charts que ele passou perto do topo dele (até 4 níveis abaixo do maior passe
  * em cada modo), em quantos cada tag do ArcadeStat é forte (peso 50%+). Mostra também onde ele mais quebra.
  */
-function PlayStyle({ charts, stats, name, me = false }) {
+export function PlayStyle({ charts, stats, name, me = false }) {
+  const [open, setOpen] = useState(null); // { tag, kind: 'pass' | 'fail' }
   const style = useMemo(() => {
     const top = Object.fromEntries(stats.map((s) => [s.mode, s.max]));
     const near = charts.filter((c) => (c.mode === 'S' || c.mode === 'D') && top[c.mode] && c.level >= top[c.mode] - 4 && c.tagBars);
     const count = (list) => {
       const n = {};
       for (const c of list) for (const [x, v] of c.tagBars) if (v >= 50) n[x] = (n[x] || 0) + 1;
-      return Object.entries(n).map(([x, k]) => [x, Math.round((k / list.length) * 100)]).sort((a, b) => b[1] - a[1]).slice(0, 6);
+      return Object.entries(n).map(([x, k]) => [x, Math.round((k / list.length) * 100), k]).sort((a, b) => b[1] - a[1]).slice(0, 6);
     };
     const pass = near.filter((c) => !c.broken), fail = near.filter((c) => c.broken);
-    return { pass: pass.length >= 5 ? count(pass) : [], fail: fail.length >= 3 ? count(fail) : [], n: pass.length, nf: fail.length };
+    return { pass: pass.length >= 5 ? count(pass) : [], fail: fail.length >= 3 ? count(fail) : [], n: pass.length, nf: fail.length, passList: pass, failList: fail };
   }, [charts, stats]);
   if (!style.pass.length) return null;
-  const Bars = ({ list }) => (
+  const Bars = ({ list, kind }) => (
     <div className="cp-skill">
-      {list.map(([x, v]) => (
-        <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%`, background: tagColor(x) }} /></i><em>{v}%</em></div>
+      {list.map(([x, v, k]) => (
+        <button key={x} type="button" className="cp-skill-row as-btn" onClick={() => setOpen({ tag: x, kind })}
+          title={tn(k, 'Ver {n} chart', 'Ver {n} charts')}>
+          <span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%`, background: tagColor(x) }} /></i><em>{v}%</em><ChevronRight size={14} className="muted" />
+        </button>
       ))}
     </div>
   );
@@ -530,15 +534,53 @@ function PlayStyle({ charts, stats, name, me = false }) {
       <h3>{t('Estilo de jogo')}</h3>
       <p className="muted small">{me
         ? t('Nos {n} charts que você passou perto do seu nível máximo, quantos têm cada tag forte.', { n: style.n })
-        : t('Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada tag forte.', { n: style.n, p: name })}</p>
-      <Bars list={style.pass} />
+        : t('Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada tag forte.', { n: style.n, p: name })} {t('Toque numa tag para ver os charts.')}</p>
+      <Bars list={style.pass} kind="pass" />
       {style.fail.length > 0 && (
         <>
           <h4>{t('Onde mais quebra')}</h4>
           <p className="muted small">{tn(style.nf, '{n} chart quebrado nessa faixa', '{n} charts quebrados nessa faixa')}</p>
-          <Bars list={style.fail} />
+          <Bars list={style.fail} kind="fail" />
         </>
       )}
+      {open && <StyleCharts tag={open.tag} kind={open.kind}
+        list={(open.kind === 'pass' ? style.passList : style.failList).filter((c) => c.tagBars.some(([x, v]) => x === open.tag && v >= 50))}
+        onClose={() => setOpen(null)} />}
     </section>
+  );
+}
+
+/** Lista dos charts de uma tag (passados ou quebrados perto do nível máximo), num pop-up. */
+function StyleCharts({ tag, kind, list, onClose }) {
+  useEffect(() => {
+    const k = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', k);
+    const prev = document.body.style.overflow; document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', k); document.body.style.overflow = prev; };
+  }, [onClose]);
+  const sorted = [...list].sort((a, b) => b.level - a.level || (b.score || 0) - (a.score || 0));
+  return (
+    <div className="sheet-wrap" onClick={onClose}>
+      <div className="sheet style-sheet" role="dialog" aria-modal="true" aria-label={t(chartTagLabel(tag))} onClick={(e) => e.stopPropagation()}>
+        <div className="sheet-h">
+          <span className="sheet-grip" aria-hidden />
+          <b><span className="st-dot" style={{ background: tagColor(tag) }} /> {t(chartTagLabel(tag))} · {kind === 'pass' ? t('passou') : t('quebrou')} <small className="muted">({sorted.length})</small></b>
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Fechar')}><X size={18} /></button>
+        </div>
+        <div className="sheet-body">
+          <div className="style-list">
+            {sorted.map((c) => (
+              <Link key={c.id} to={`/chart/${c.id}`} className="pp-top-row style-row" onClick={onClose}>
+                <Jacket song={c.song} width={64} />
+                <Ball chart={c} size="sm" />
+                <span className="pp-top-name">{c.song.title}<small className="muted">{fmtScore(c.score)}</small></span>
+                <span className="pp-top-gp"><Grade grade={c.grade} broken={c.broken} size="xs" /><Plate plate={c.plate} size="xs" /></span>
+                <ChevronRight size={16} className="muted" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
