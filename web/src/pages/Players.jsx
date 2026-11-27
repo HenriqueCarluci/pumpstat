@@ -7,7 +7,7 @@ import { useData } from '../App.jsx';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
 import { rpc } from '../lib/api.js';
 import { fmtScore, pbTier, PLATE_ORDER, pumbility, VERSIONS } from '../lib/piu.js';
-import { Award, MessageCircle, Swords } from '../components/Icons.jsx';
+import { Award, MessageCircle, Swords, TrendingUp } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
@@ -202,18 +202,23 @@ export function PlayerProfile() {
   const teamOf = useTeams([id]);
   const ccOf = useCountries([id]);
 
+  const isMe = !!myId && id === myId;
   useEffect(() => {
     setRows(null); setErr('');
+    if (isMe) { setRows([]); return; }
     Promise.all([rpc('compare_player', { p_other: id, p_version: version }), rpc('players', { p_version: version })])
       .then(([r, ps]) => { setRows(r || []); setOther(ps.find((p) => p.id === id) || null); })
       .catch((e) => setErr(tErr(e.message)));
-  }, [id, version]);
+  }, [id, version, isMe]);
 
-  // os recordes dele, no mesmo formato dos charts do app (para reaproveitar o cálculo do PUMBILITY)
-  const charts = useMemo(() => (rows || []).filter((r) => r[5] != null).map(([chartId, , , , , os, og, op, ob]) => {
+  // os recordes dele, no mesmo formato dos charts do app (para reaproveitar o cálculo do PUMBILITY); no seu perfil, os seus
+  const charts = useMemo(() => (isMe ? data.charts.filter((c) => c.score != null) : (rows || []).filter((r) => r[5] != null).map(([chartId, , , , , os, og, op, ob]) => {
     const c = data.byId.get(chartId);
     return c ? { ...c, score: os, grade: og, plate: op, broken: !!ob } : null;
-  }).filter(Boolean), [rows, data]);
+  }).filter(Boolean)), [rows, data, isMe]);
+  const who = isMe
+    ? { nickname: data.profile?.nickname, title: data.profile?.title, avatar: data.profile?.avatar_url, pumbility: data.profile?.pumbility }
+    : other;
   const pb = useMemo(() => pumbility(version, charts), [version, charts]);
   const vs = useMemo(() => {
     const both = (rows || []).filter((r) => r[1] != null && r[5] != null);
@@ -246,11 +251,10 @@ export function PlayerProfile() {
     return PLATE_ORDER.filter((k) => p[k]).map((k) => [k, p[k]]);
   }, [charts]);
 
-  if (id === myId) return <div className="page"><p className="empty">{t('Este é o seu perfil.')}</p><Link to="/" className="btn ghost">{t('Ir para o início')}</Link></div>;
   if (err) return <div className="page"><p className="empty">{err}</p><Link to="/jogadores" className="btn ghost">{t('Ver amigos e solicitações')}</Link></div>;
   if (!rows) return <div className="page"><p className="empty">{t('Carregando perfil…')}</p></div>;
 
-  const total = other?.pumbility != null ? Number(other.pumbility) : pb.total;
+  const total = who?.pumbility != null ? Number(who.pumbility) : pb.total;
   const tier = version === 'phoenix2' ? pbTier(total) : null;
   const top = pb.top.filter((r) => mode === 'all' || r.chart.mode === mode);
   const maxLv = Math.max(1, ...stats.flatMap((s) => s.levels.map((l) => l.clear + l.broken)));
@@ -258,10 +262,10 @@ export function PlayerProfile() {
   return (
     <div className="page player-page">
       <section className="card pp-head">
-        <Avatar p={other || {}} size={72} />
+        <Avatar p={who || {}} size={72} />
         <div className="pp-id">
-          {other?.title && <span className="ptitle">{other.title}</span>}
-          <h2><Flag cc={ccOf(id)} />{other?.nickname || t('Jogador')}</h2>
+          {who?.title && <span className="ptitle">{who.title}</span>}
+          <h2><Flag cc={ccOf(id)} />{who?.nickname || t('Jogador')}</h2>
           <TeamTag team={teamOf(id)} />
         </div>
         <div className="pp-pb">
@@ -271,13 +275,20 @@ export function PlayerProfile() {
         </div>
       </section>
 
-      <div className="pp-actions">
-        <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>
-        <button type="button" className="btn ghost" onClick={openChat}><MessageCircle size={16} /> {t('Chat')}</button>
-        <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
-      </div>
+      {isMe ? (
+        <div className="pp-actions me">
+          <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
+          <Link to="/progresso" className="btn ghost"><TrendingUp size={16} /> {t('Seu progresso')}</Link>
+        </div>
+      ) : (
+        <div className="pp-actions">
+          <Link to={`/jogador/${id}/vs`} className="btn"><Swords size={16} /> {t('Comparar comigo')}</Link>
+          <button type="button" className="btn ghost" onClick={openChat}><MessageCircle size={16} /> {t('Chat')}</button>
+          <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
+        </div>
+      )}
 
-      <section className="pp-kpis">
+      <section className={`pp-kpis ${isMe ? 'me' : ''}`}>
         <div className="card pp-kpi"><small className="muted">{t('Recordes')}</small><b>{fmtNum(charts.length)}</b></div>
         {stats.map((s) => (
           <div key={s.mode} className="card pp-kpi">
@@ -286,14 +297,14 @@ export function PlayerProfile() {
             <small className="muted">{tn(s.clears, '{n} passe', '{n} passes')}</small>
           </div>
         ))}
-        <div className="card pp-kpi">
+        {!isMe && <div className="card pp-kpi">
           <small className="muted">{t('Você × {n}', { n: other?.nickname || t('Jogador') })}</small>
           <b><span className="up">{vs.wins}</span> × <span className="down">{vs.losses}</span></b>
           <small className="muted">{t('{n} charts em comum', { n: vs.both })}</small>
-        </div>
+        </div>}
       </section>
 
-      <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} />
+      <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} me={isMe} />
 
       <section className="card">
         <h3>{t('Notas e placas')}</h3>
@@ -352,8 +363,8 @@ export function PlayerProfile() {
       </section>
 
       <SocialLinks userId={id} />
-      <MiniChat user={id} name={other?.nickname} />
-      <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />
+      {!isMe && <MiniChat user={id} name={other?.nickname} />}
+      {!isMe && <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />}
     </div>
   );
 }
@@ -459,7 +470,7 @@ export function ChartRanking({ chartId }) {
  * Estilo de jogo de outro jogador: dos charts que ele passou perto do topo dele (até 4 níveis abaixo do maior passe
  * em cada modo), em quantos cada tag do ArcadeStat é forte (peso 50%+). Mostra também onde ele mais quebra.
  */
-function PlayStyle({ charts, stats, name }) {
+function PlayStyle({ charts, stats, name, me = false }) {
   const style = useMemo(() => {
     const top = Object.fromEntries(stats.map((s) => [s.mode, s.max]));
     const near = charts.filter((c) => (c.mode === 'S' || c.mode === 'D') && top[c.mode] && c.level >= top[c.mode] - 4 && c.tagBars);
@@ -482,7 +493,9 @@ function PlayStyle({ charts, stats, name }) {
   return (
     <section className="card pp-style">
       <h3>{t('Estilo de jogo')}</h3>
-      <p className="muted small">{t('Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada tag forte.', { n: style.n, p: name })}</p>
+      <p className="muted small">{me
+        ? t('Nos {n} charts que você passou perto do seu nível máximo, quantos têm cada tag forte.', { n: style.n })
+        : t('Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada tag forte.', { n: style.n, p: name })}</p>
       <Bars list={style.pass} />
       {style.fail.length > 0 && (
         <>

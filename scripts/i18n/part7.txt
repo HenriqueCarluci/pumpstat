@@ -833,3 +833,5 @@ chart não encontrado | chart not found | chart no encontrado | 차트를 찾을
 Tirar marca de R!SE | Remove R!SE mark | Quitar marca de R!SE | R!SE 표시 해제 | R!SEの印を外す | Retirer la marque R!SE | Togli il segno R!SE
 Marcar como R!SE | Mark as R!SE | Marcar como R!SE | R!SE로 표시 | R!SEとして印を付ける | Marquer comme R!SE | Segna come R!SE
 Gimmick e fora da curva | Gimmick and off-curve | Gimmick y fuera de la curva | 기믹과 이상치 | ギミックと規格外 | Gimmick et hors norme | Gimmick e fuori norma
+Ver meu perfil | See my profile | Ver mi perfil | 내 프로필 보기 | 自分のプロフィールを見る | Voir mon profil | Vedi il mio profilo
+Nos {n} charts que você passou perto do seu nível máximo, quantos têm cada tag forte. | Out of the {n} charts you cleared near your top level, how many have each tag as a strong one. | De los {n} charts que pasaste cerca de tu nivel máximo, cuántos tienen cada tag fuerte. | 최고 레벨 근처에서 클리어한 {n}개 차트 중 각 태그가 강한 비율. | 最高レベル付近でクリアした{n}譜面のうち、各タグが強い割合。 | Parmi les {n} charts que vous avez passés près de votre niveau max, combien ont chaque tag fort. | Dei {n} chart che hai passato vicino al tuo livello massimo, quanti hanno ogni tag forte.

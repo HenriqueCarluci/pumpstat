@@ -13,7 +13,7 @@ import { ChevronDown, ChevronRight, History, Logo, Tag, Target, Trophy, Users, T
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 
 export default function Home() {
-  const { data, version, reload, presence, plan } = useData();
+  const { data, version, reload, presence, plan, session } = useData();
   const [mode, setMode] = useState('D');
 
   const stats = useMemo(() => {
@@ -60,14 +60,15 @@ export default function Home() {
 
   return (
     <div className="page">
-      <section className="card profile">
+      <Link to={session?.user?.id ? `/jogador/${session.user.id}` : '/'} className="card profile profile-link" title={t('Ver meu perfil')}>
         <div className="avatar">{p?.avatar_url ? <img src={p.avatar_url} alt="" referrerPolicy="no-referrer" /> : <span>?</span>}</div>
         <div className="pinfo">
           <div className="ptitle">{p?.title || t('Sem título')}</div>
           <div className="pname">{p?.nickname || t('Faça a primeira sincronização')}</div>
           <div className="psync">{v.name} · {t('sincronizado {when}', { when: timeAgo(data.lastSync) })}</div>
         </div>
-      </section>
+        <ChevronRight size={18} className="profile-go" />
+      </Link>
 
       <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />
 
