@@ -6,6 +6,7 @@ import { rpc } from '../lib/api.js';
 import { isOn } from '../lib/plans.js';
 import { t } from '../lib/i18n.js';
 import { Ball, Jacket } from './ui.jsx';
+import { LockBadge } from './PlanLock.jsx';
 import {
   Bell, CalendarCheck, Dumbbell, History, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, SettingsIcon, Shield,
   ShieldCheck, Tag, Target, TrendingUp, Trophy, Users, Vote,
@@ -23,12 +24,12 @@ export function useSections() {
     ] },
     { g: 'Evolução', items: [
       { to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} /> },
-      isOn(plan, 'training') && { to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} /> },
-      { to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} /> },
+      isOn(plan, 'training') && { to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} />, f: 'training_list' },
+      { to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} />, f: 'recommendations_all' },
       isOn(plan, 'challenges') && { to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },
     ].filter(Boolean) },
     { g: 'Seu jogo', items: [
-      isOn(plan, 'day_report') && { to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} /> },
+      isOn(plan, 'day_report') && { to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} />, f: 'day_report' },
       { to: '/recentes', label: 'Recentes', icon: <History size={18} /> },
       { to: '/titulos', label: 'Títulos', icon: <Tag size={18} /> },
     ].filter(Boolean) },
@@ -59,6 +60,7 @@ export function Sidebar({ onSearch }) {
               <NavLink key={x.to} to={x.to} end={x.end} className={({ isActive }) => `sb-item ${isActive ? 'on' : ''}`}>
                 <span className="sb-ico">{x.icon}</span><span className="sb-l">{t(x.label)}</span>
                 {x.n > 0 && <i className="sb-n">{x.n > 99 ? '99+' : x.n}</i>}
+                {x.f && <LockBadge feature={x.f} />}
               </NavLink>
             ))}
           </div>

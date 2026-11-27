@@ -5,6 +5,7 @@
 import { styleOf } from './insights.js';
 import { chartTier, nextGrade, PLATE_ORDER, pumbilitySuggestions } from './piu.js';
 import { hasGimmick } from './special.js';
+import { entitlements } from './plans.js';
 
 const DAY = 86400000;
 const WEEK = 7 * DAY;
@@ -75,9 +76,30 @@ export const MISSION_DEFAULTS = {
   week_names: {}, streak_names: {},
   events: [],
 };
+/** Composição da semana para N missões (limite do plano). */
+export function slotsFor(n) {
+  if (n <= 2) return { slots: { easy: n, medium: 0, hard: 0 }, bonus: false };
+  if (n === 3) return { slots: { easy: 1, medium: 2, hard: 0 }, bonus: false };
+  if (n === 4) return { slots: { easy: 1, medium: 2, hard: 1 }, bonus: false };
+  return { slots: { easy: 1, medium: 2, hard: 1 }, bonus: true };
+}
+
 export function missionConfig(plan) {
   const c = plan?.config?.missions || {};
-  return { ...MISSION_DEFAULTS, ...c, slots: { ...MISSION_DEFAULTS.slots, ...(c.slots || {}) }, points_by: { ...MISSION_DEFAULTS.points_by, ...(c.points_by || {}) }, types: c.types || {} };
+  const cfg = { ...MISSION_DEFAULTS, ...c, slots: { ...MISSION_DEFAULTS.slots, ...(c.slots || {}) }, points_by: { ...MISSION_DEFAULTS.points_by, ...(c.points_by || {}) }, types: c.types || {} };
+  // com a cobrança ligada, o plano decide quantas missões, as trocas e o foco
+  const ent = entitlements(plan);
+  const n = ent.limit('missions');
+  if (n != null) {
+    const s = slotsFor(Math.max(1, n));
+    cfg.slots = s.slots;
+    cfg.bonus_pct = s.bonus ? 100 : 0;
+    cfg.event_always = s.bonus ? cfg.event_always : false;
+  }
+  const r = ent.limit('mission_rerolls');
+  if (r != null) cfg.rerolls = r;
+  if (!ent.can('missions_focus')) cfg.focus = false;
+  return cfg;
 }
 const typeOn = (cfg, id) => cfg.types[id]?.on !== false;
 // o foco "Melhorar notas" só aparece se algum tipo de missão de nota estiver ligado

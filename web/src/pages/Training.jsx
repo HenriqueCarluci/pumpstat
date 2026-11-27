@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import PlanLock from '../components/PlanLock.jsx';
 import { loadProgress } from '../lib/api.js';
 import { entitlements, isOn } from '../lib/plans.js';
 import { analyzeTraining, chanceLabel, setTraining, useTraining } from '../lib/training.js';
@@ -106,6 +107,7 @@ export default function Training() {
   }, [items, sort]);
 
   if (!isOn(plan, 'training')) return <div className="page"><p className="empty">{t('Este recurso está desligado no momento.')}</p></div>;
+  if (!ent.can('training_list')) return <div className="page training"><h2 className="ic-row"><Dumbbell size={20} /> {t('Meu treino')}</h2><PlanLock feature="training_list" title={t('Meu treino')} compact /></div>;
   const canAnalyze = ent.can('training_analysis');
   const open = (items || []).filter((x) => !x.cleared);
   const best = [...open].sort((a, b) => b.chance - a.chance)[0];

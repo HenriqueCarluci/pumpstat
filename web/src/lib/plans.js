@@ -4,35 +4,43 @@ export const PLAN_ORDER = ['free', 'plus', 'pro'];
 export const PLAN_LABEL = { free: 'Grátis', plus: 'Plus', pro: 'Pro' };
 
 export const FEATURES = [
-  { id: 'no_ads', label: 'Sem anúncios', group: 'Geral' },
-  { id: 'recommendations_all', label: 'Todas as recomendações para subir PUMBILITY', group: 'Análises' },
-  { id: 'history_full', label: 'Histórico completo de notas', group: 'Análises' },
-  { id: 'style_full', label: 'Todas as skills do chart (% de cada tag)', group: 'Análises' },
-  { id: 'evolution_chart', label: 'Gráficos de evolução', group: 'Análises' },
-  { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises' },
-  { id: 'weakness', label: 'Pontos fortes e fracos por padrão', group: 'Análises' },
-  { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar', group: 'Treino' },
-  { id: 'training_plan', label: 'Plano de treino semanal e metas', group: 'Treino' },
-  { id: 'rival', label: 'Rival: comparação completa com um amigo', group: 'Social' },
-  { id: 'team_report', label: 'Relatório do time por dia, semana e mês', group: 'Social' },
-  { id: 'auto_sync', label: 'Sincronização automática', group: 'Sincronização' },
-  { id: 'push', label: 'Notificação com o app fechado', soon: true, group: 'Sincronização' },
-  { id: 'export', label: 'Exportar tier e cards em imagem', soon: true, group: 'Social' },
+  { id: 'no_ads', label: 'Sem anúncios (inclusive na sincronização)', group: 'Geral', min: 'plus' },
+  { id: 'supporter', label: 'Selo "Apoiador" no perfil e acesso antecipado', group: 'Geral', min: 'pro' },
+  { id: 'recommendations_all', label: 'Recomendações para subir PUMBILITY', group: 'Análises', min: 'plus' },
+  { id: 'evolution_chart', label: 'Gráficos de evolução', group: 'Análises', min: 'plus' },
+  { id: 'style_full', label: 'Todas as skills do chart (% de cada tag)', group: 'Análises', min: 'plus' },
+  { id: 'tips', label: 'Dicas com base nos seus passes e quebras', group: 'Análises', min: 'plus' },
+  { id: 'day_report', label: 'Dia de jogo (relatório do dia)', group: 'Análises', min: 'plus' },
+  { id: 'weakness', label: 'Pontos fortes e fracos por padrão', group: 'Análises', min: 'pro' },
+  { id: 'training_list', label: 'Meu treino: lista de charts para treinar', group: 'Treino', min: 'plus' },
+  { id: 'training_analysis', label: 'Meu treino: chance de passar e o que treinar', group: 'Treino', min: 'plus' },
+  { id: 'training_plan', label: 'Plano de treino semanal e metas', group: 'Treino', min: 'pro' },
+  { id: 'missions_focus', label: 'Missões: foco da semana', group: 'Treino', min: 'pro' },
+  { id: 'rival', label: 'Rival: comparação completa com um amigo', group: 'Social', min: 'plus' },
+  { id: 'team_report', label: 'Relatório do time por dia, semana e mês', group: 'Social', min: 'plus' },
+  { id: 'export', label: 'Exportar tier e cards em imagem', soon: true, group: 'Social', min: 'plus' },
+  { id: 'auto_sync', label: 'Sincronização automática', group: 'Sincronização', min: 'pro' },
+  { id: 'push', label: 'Notificação com o app fechado', soon: true, group: 'Sincronização', min: 'pro' },
+  // removidos da matriz (agora livres para todos): histórico completo
+  { id: 'history_full', label: 'Histórico completo de notas', group: 'Análises', min: 'free', hidden: true },
 ];
-/** Plano mínimo de cada recurso quando o admin ainda não configurou (a base da revisão dos planos). */
-export const FEATURE_DEFAULTS = {
-  no_ads: 'plus', recommendations_all: 'plus', history_full: 'plus', style_full: 'plus', evolution_chart: 'plus', tips: 'plus',
-  weakness: 'pro', training_analysis: 'plus', training_plan: 'pro', rival: 'plus', team_report: 'plus', auto_sync: 'pro', push: 'pro', export: 'plus',
-};
+/** Plano mínimo de cada recurso quando o admin ainda não configurou. */
+export const FEATURE_DEFAULTS = Object.fromEntries(FEATURES.map((f) => [f.id, f.min]));
 /** Recursos sempre grátis (só para mostrar na matriz). */
-export const ALWAYS_FREE = ['Fila dos fliperamas', 'Amigos, chat e online', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
-  'Tier (Unique e New Tunes) e votações', 'Desafios, missões e sequência', 'Mais jogadas', 'Relatório do dia e imagem para postar',
-  'Lista do Meu treino com tentativas e passes', 'Sincronização manual'];
+export const ALWAYS_FREE = ['Recordes e histórico completo de passes e notas', 'Tier (Unique e New Tunes)', 'Lista de músicas e charts',
+  'Sincronização manual (com anúncio no Grátis)', 'Fila dos fliperamas', 'Perfil com redes sociais e bandeira', 'Meu Time e cadastro de time',
+  'Votações de tier e desafios do mês', 'Missões da semana, pontos e selos', 'Site no computador e busca'];
 export const LIMITS = [
   { id: 'friends', label: 'Amigos' },
-  { id: 'recommendations', label: 'Recomendações visíveis' },
-  { id: 'history_months', label: 'Meses de histórico' },
+  { id: 'missions', label: 'Missões por semana' },
+  { id: 'mission_rerolls', label: 'Trocas de missão por semana' },
 ];
+/** Valores padrão dos limites (vazio = sem limite). */
+export const LIMIT_DEFAULTS = {
+  free: { friends: 5, missions: 2, mission_rerolls: 0 },
+  plus: { friends: 10, missions: 4, mission_rerolls: 1 },
+  pro: { missions: 5, mission_rerolls: 2 },
+};
 
 // Liga/desliga geral (Administração → Recursos). Ausente = ligado.
 export const TOGGLES = [
@@ -54,23 +62,41 @@ export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
 
 export const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 
+const PREVIEW_KEY = 'pumpstat:preview-plan';
+/** Admin: ver o app como um plano (com a cobrança "ligada" só para ele), para conferir cadeados e limites. */
+export function previewPlan() { try { return localStorage.getItem(PREVIEW_KEY) || null; } catch { return null; } }
+export function setPreviewPlan(p) {
+  try { if (p) localStorage.setItem(PREVIEW_KEY, p); else localStorage.removeItem(PREVIEW_KEY); } catch { /* ignora */ }
+  window.dispatchEvent(new Event('pumpstat:preview-plan'));
+}
+
 /** O que o usuário pode usar, a partir de my_plan(). */
 export function entitlements(plan) {
   const cfg = plan?.config || {};
-  const enforce = !!cfg.enforce;
-  const mine = plan?.plan || 'free';
+  const preview = plan?.admin ? previewPlan() : null;
+  const enforce = !!cfg.enforce || !!preview;
+  const mine = preview || plan?.plan || 'free';
+  const bypass = !!plan?.admin && !preview;
+  const need = (feature) => cfg.features?.[feature] || FEATURE_DEFAULTS[feature] || 'free';
   const can = (feature) => {
-    if (!enforce || plan?.admin) return true;
-    const need = cfg.features?.[feature] || FEATURE_DEFAULTS[feature] || 'free';
-    return rank(mine) >= rank(need);
+    if (!enforce || bypass) return true;
+    return rank(mine) >= rank(need(feature));
   };
   // limite numérico do plano (null = sem limite)
   const limit = (key) => {
-    if (!enforce || plan?.admin) return null;
-    const v = cfg.limits?.[mine]?.[key];
+    if (!enforce || bypass) return null;
+    const v = cfg.limits?.[mine]?.[key] ?? LIMIT_DEFAULTS[mine]?.[key];
     return v == null || v === '' ? null : Number(v);
   };
-  return { plan: mine, enforce, showPlans: !!cfg.show_plans || !!plan?.admin, can, limit, config: cfg };
+  return { plan: mine, enforce, preview, showPlans: !!cfg.show_plans || !!plan?.admin, can, need, limit, config: cfg };
+}
+
+/** Preço de lançamento (os primeiros N meses) de uma região, se houver. */
+export function introPrice(cfg, region, p) {
+  const intro = cfg?.intro;
+  if (!intro?.months) return null;
+  const v = intro.prices?.[region]?.[p] ?? intro.prices?.WORLD?.[p];
+  return v == null ? null : { value: v, months: intro.months };
 }
 
 const BR_TZ = ['Sao_Paulo', 'Fortaleza', 'Recife', 'Bahia', 'Belem', 'Manaus', 'Cuiaba', 'Campo_Grande', 'Porto_Velho', 'Boa_Vista',

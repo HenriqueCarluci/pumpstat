@@ -3,6 +3,22 @@ import { accessToken } from '../lib/auth.js';
 import { API_URL } from '../lib/config.js';
 import { t, tMsg } from '../lib/i18n.js';
 import { ChevronRight, RefreshCw } from './Icons.jsx';
+import { Link } from 'react-router-dom';
+import { useData } from '../App.jsx';
+import { adsConfig } from '../lib/ads.js';
+import AdSlot from './AdSlot.jsx';
+
+/** Plano grátis: um anúncio aparece enquanto a sincronização roda (Plus e Pro sincronizam sem anúncio). */
+export function SyncAd({ running }) {
+  const { plan } = useData();
+  if (!running || !adsConfig(plan).show) return null;
+  return (
+    <div className="sync-ad">
+      <AdSlot place="sync" />
+      <p className="muted tiny">{t('Seus dados estão sendo sincronizados.')} <Link to="/planos">{t('Sincronize sem anúncio no Plus')}</Link></p>
+    </div>
+  );
+}
 
 const AMPASS_RECOVER = 'https://am-pass.net/bbs/password_lost.php';
 
@@ -72,6 +88,7 @@ export function QuickSync({ onDone }) {
       </button>
       {err && <div className="form-err">{err}</div>}
       <JobStatus job={job} />
+      <SyncAd running={running} />
       {needLogin && <PiuConnect compact onDone={onDone} />}
     </div>
   );
@@ -109,6 +126,7 @@ export default function PiuConnect({ onDone, compact }) {
       </label>
       {err && <div className="form-err">{err}</div>}
       <JobStatus job={job} />
+      <SyncAd running={running} />
       <button className="btn wide" disabled={running}>{running ? t('Sincronizando…') : t('Entrar e sincronizar')}</button>
       <button type="button" className="link small" onClick={() => setHelp((h) => !h)}>{t('Entro no piugame com Google')}</button>
       {help && (

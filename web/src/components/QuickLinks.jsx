@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
+import { LockBadge } from './PlanLock.jsx';
 import { t } from '../lib/i18n.js';
 import {
   CalendarCheck, Dumbbell, History, LayoutGrid, Shield, Star, Tag, Target, TrendingUp, Trophy, Users, X,
@@ -31,11 +32,11 @@ export default function QuickLinks() {
     isOn(plan, 'online') && { id: 'online', g: 'social', to: '/online', label: 'Online', icon: <span className="dot-on" />, n: presence?.online || 0 },
     { id: 'friends', g: 'social', to: '/jogadores', label: 'Amigos', icon: <Users size={18} /> },
     isOn(plan, 'teams') && { id: 'team', g: 'social', to: '/time', label: 'Meu Time', icon: <Shield size={18} /> },
-    isOn(plan, 'training') && { id: 'training', g: 'evo', to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} /> },
+    isOn(plan, 'training') && { id: 'training', g: 'evo', to: '/treino', label: 'Meu treino', icon: <Dumbbell size={18} />, f: 'training_list' },
     { id: 'progress', g: 'evo', to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} /> },
-    { id: 'recs', g: 'evo', to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} /> },
+    { id: 'recs', g: 'evo', to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} />, f: 'recommendations_all' },
     isOn(plan, 'challenges') && { id: 'challenges', g: 'evo', to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },
-    isOn(plan, 'day_report') && { id: 'day', g: 'game', to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} /> },
+    isOn(plan, 'day_report') && { id: 'day', g: 'game', to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} />, f: 'day_report' },
     { id: 'recent', g: 'game', to: '/recentes', label: 'Recentes', icon: <History size={18} /> },
     { id: 'titles', g: 'game', to: '/titulos', label: 'Títulos', icon: <Tag size={18} /> },
   ].filter(Boolean), [plan, presence?.online]);
@@ -62,7 +63,7 @@ export default function QuickLinks() {
       <nav className="qrow" aria-label={t('Atalhos')}>
         {row.map((x) => (
           <Link key={x.id} to={x.to} className="qtile" onClick={() => count(x.id)}>
-            <span className="qico">{x.icon}{x.n > 0 && <i className="qbadge">{x.n}</i>}</span>
+            <span className="qico">{x.icon}{x.n > 0 && <i className="qbadge">{x.n}</i>}{x.f && <LockBadge feature={x.f} className="q-lock" />}</span>
             <span className="qlabel">{t(x.label)}</span>
           </Link>
         ))}
@@ -103,7 +104,7 @@ function Sheet({ items, pins, onPin, onGo, onClose }) {
                   {list.map((x) => (
                     <div key={x.id} className="qcell">
                       <button type="button" className="qtile" onClick={() => onGo(x)}>
-                        <span className="qico">{x.icon}{x.n > 0 && <i className="qbadge">{x.n}</i>}</span>
+                        <span className="qico">{x.icon}{x.n > 0 && <i className="qbadge">{x.n}</i>}{x.f && <LockBadge feature={x.f} className="q-lock" />}</span>
                         <span className="qlabel">{t(x.label)}</span>
                       </button>
                       <button type="button" className={`qpin ${pins.includes(x.id) ? 'on' : ''}`} onClick={() => onPin(x.id)}

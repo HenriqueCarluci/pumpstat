@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
 import { cachedVersion, fetchVersion, loadProgress, sessionVersion } from '../lib/api.js';
 import {
   chartAttempts, clearTimeline, levelStats, parseProgress, patternShare, DIMENSIONS, playerLevel, playsPerWeek, tips as makeTips, trainingPlan, weaknessSums, weaknesses,
@@ -11,12 +12,12 @@ import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
-import { entitlements, isOn } from '../lib/plans.js';
+import { isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball, Jacket } from '../components/ui.jsx';
 import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
 import { Chips } from './Songs.jsx';
-import { Check, Crown, Lock, Target } from '../components/Icons.jsx';
+import { Check, Target } from '../components/Icons.jsx';
 
 export const DIM_LABEL = Object.fromEntries([...STYLE_KEYS.map((k) => [k.id, k.label]), ['speed', 'Velocidade'], ['stamina', 'Resistência'], ['gimmick', 'Gimmick']]);
 export const DIM_TIP = {
@@ -40,7 +41,6 @@ const loadProg = (v) => loadProgress(v);
 
 export default function Progress() {
   const { data, version, plan } = useData();
-  const ent = entitlements(plan);
   const [params, setParams] = useSearchParams();
   const tab = params.get('v') || 'evolucao';
   const otherV = version === 'phoenix2' ? 'phoenix' : 'phoenix2';
@@ -90,29 +90,24 @@ export default function Progress() {
       <h2>{t('Seu progresso')}</h2>
       <div className="filters">
         <Chips value={tab} onChange={(v) => set('v', v)}
-          options={[['evolucao', t('Evolução')], ['top', t('Mais jogadas')], ['fracos', t('Pontos fortes e fracos')], ['dicas', t('Dicas')], ['plano', t('Plano de treino')], ...(isOn(plan, 'rival') ? [['rival', t('Rival')]] : [])]} />
+          options={[['evolucao', <>{t('Evolução')}<LockBadge feature="evolution_chart" /></>], ['top', t('Mais jogadas')], ['fracos', <>{t('Pontos fortes e fracos')}<LockBadge feature="weakness" /></>], ['dicas', <>{t('Dicas')}<LockBadge feature="tips" /></>], ['plano', <>{t('Plano de treino')}<LockBadge feature="training_plan" /></>], ...(isOn(plan, 'rival') ? [['rival', <>{t('Rival')}<LockBadge feature="rival" /></>]] : [])]} />
         {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
       {!r && !err && tab !== 'rival' && <p className="empty">{t('Carregando…')}</p>}
-      {r && tab === 'evolucao' && (ent.can('evolution_chart') ? <Evolution a={a} r={r} mode={mode} /> : <Locked />)}
+      {r && tab === 'evolucao' && <PlanLock feature="evolution_chart" title={t('Gráficos de evolução')}><Evolution a={a} r={r} mode={mode} /></PlanLock>}
       {a && tab === 'top' && <TopPlayed plays={a.prog.plays} mode={mode} />}
-      {r && tab === 'fracos' && (ent.can('weakness') ? <Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /> : <Locked />)}
-      {r && tab === 'dicas' && (ent.can('tips') ? <Tips r={r} mode={mode} /> : <Locked />)}
-      {r && tab === 'plano' && (ent.can('training_plan') ? <Plan r={r} /> : <Locked />)}
-      {tab === 'rival' && isOn(plan, 'rival') && (ent.can('rival') ? <Rival /> : <Locked />)}
+      {r && tab === 'fracos' && <PlanLock feature="weakness" title={t('Pontos fortes e fracos')}><Weak r={r} mode={mode} hasOther={!!a.oth} otherName={VERSIONS[otherV].name} /></PlanLock>}
+      {r && tab === 'dicas' && <PlanLock feature="tips" title={t('Dicas')}><Tips r={r} mode={mode} /></PlanLock>}
+      {r && tab === 'plano' && <PlanLock feature="training_plan" title={t('Plano de treino')}><Plan r={r} /></PlanLock>}
+      {tab === 'rival' && isOn(plan, 'rival') && <PlanLock feature="rival" title={t('Rival')} compact><Rival /></PlanLock>}
     </div>
   );
 }
 
-export function Locked() {
-  return (
-    <section className="card locked-card">
-      <Lock size={20} />
-      <p>{t('Este recurso faz parte dos planos pagos.')}</p>
-      <Link className="btn" to="/planos"><Crown size={15} /> {t('Ver planos')}</Link>
-    </section>
-  );
+/** Mantido para telas antigas: cartão de recurso pago (sem prévia). */
+export function Locked({ feature = 'team_report' }) {
+  return <PlanLock feature={feature} compact />;
 }
 
 function LevelSummary({ lvl, mode }) {

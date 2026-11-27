@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { purchase, salesState, storeUrl, waitForPlan, yearlySaving } from '../lib/billing.js';
-import { locale, t, tErr } from '../lib/i18n.js';
-import { ALWAYS_FREE, entitlements, FEATURE_DEFAULTS, FEATURES, fmtPrice, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
+import { locale, t, tErr, tn } from '../lib/i18n.js';
+import { ALWAYS_FREE, entitlements, FEATURE_DEFAULTS, FEATURES, fmtPrice, introPrice, LIMIT_DEFAULTS, LIMITS, PLAN_LABEL, PLAN_ORDER, priceRegion } from '../lib/plans.js';
 import { Check, Crown, X } from '../components/Icons.jsx';
 import { Chips } from './Songs.jsx';
 
@@ -22,7 +22,7 @@ export default function Plans() {
   const cfg = ent.config;
   const prices = cfg.prices?.[region] || cfg.prices?.WORLD || {};
   const need = (f) => cfg.features?.[f] || FEATURE_DEFAULTS[f] || 'free';
-  const lim = (p, k) => cfg.limits?.[p]?.[k];
+  const lim = (p, k) => cfg.limits?.[p]?.[k] ?? LIMIT_DEFAULTS[p]?.[k];
   const sales = salesState(cfg);
   const save = Math.max(yearlySaving(prices, 'plus') || 0, yearlySaving(prices, 'pro') || 0);
   const buy = async (p) => {
@@ -55,7 +55,15 @@ export default function Plans() {
         {PLAN_ORDER.map((p) => (
           <div key={p} className={`plan-col ${p} ${ent.plan === p ? 'current' : ''}`}>
             <div className="plan-name">{p === 'free' ? t('Grátis') : PLAN_LABEL[p]}</div>
-            <div className="plan-price">{price(p)}{p !== 'free' && <small>/{yearly ? t('ano') : t('mês')}</small>}</div>
+            {(() => {
+              const intro = !yearly && p !== 'free' ? introPrice(cfg, region, p) : null;
+              return intro ? (
+                <>
+                  <div className="plan-price">{fmtPrice(intro.value, prices.currency || 'USD', locale())}<small>/{t('mês')}</small></div>
+                  <small className="plan-intro">{tn(intro.months, 'no primeiro mês, depois {v}/mês', 'nos {n} primeiros meses, depois {v}/mês', { v: price(p) })}</small>
+                </>
+              ) : <div className="plan-price">{price(p)}{p !== 'free' && <small>/{yearly ? t('ano') : t('mês')}</small>}</div>;
+            })()}
             {yearly && p !== 'free' && yearlySaving(prices, p) && <small className="plan-save">{t('{v} por mês', { v: fmtPrice(prices[`${p}_year`] / 12, prices.currency || 'USD', locale()) })} · −{yearlySaving(prices, p)}%</small>}
             {ent.plan === p ? <Link className="tag" to="/assinatura">{t('Seu plano')}</Link>
               : p !== 'free' && action(p)}
@@ -64,7 +72,7 @@ export default function Plans() {
                 const v = lim(p, l.id);
                 return <li key={l.id}><Check size={14} /> {t(l.label)}: <b>{v == null || v === '' ? t('sem limite') : v}</b></li>;
               })}
-              {FEATURES.filter((f) => f.id !== 'no_ads' || cfgAds).map((f) => {
+              {FEATURES.filter((f) => !f.hidden && (f.id !== 'no_ads' || cfgAds)).map((f) => {
                 const ok = PLAN_ORDER.indexOf(p) >= PLAN_ORDER.indexOf(need(f.id));
                 return (
                   <li key={f.id} className={ok ? '' : 'off'}>

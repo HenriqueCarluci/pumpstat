@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useData } from '../App.jsx';
-import { isOn } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { setTraining, useTraining } from '../lib/training.js';
 import { t, tErr } from '../lib/i18n.js';
-import { BookmarkCheck, BookmarkPlus } from './Icons.jsx';
+import { BookmarkCheck, BookmarkPlus, Lock } from './Icons.jsx';
 
 /** Botão "Treinar": põe ou tira o chart do Meu treino. */
 export default function TrainingToggle({ chart, compact = false, action = false }) {
@@ -12,7 +12,9 @@ export default function TrainingToggle({ chart, compact = false, action = false 
   const [busy, setBusy] = useState(false);
   if (!isOn(plan, 'training')) return null;
   const on = !!list?.has(chart.id);
+  const locked = !entitlements(plan).can('training_list');
   const flip = async () => {
+    if (locked) { window.location.hash = '#/planos'; return; }
     setBusy(true);
     try { await setTraining(chart.id, !on); } catch (e) { window.alert(tErr(e.message)); } finally { setBusy(false); }
   };
@@ -20,14 +22,14 @@ export default function TrainingToggle({ chart, compact = false, action = false 
     return (
       <button type="button" className={`cc-act train ${on ? 'on' : ''}`} disabled={busy || !list} onClick={flip} aria-pressed={on}
         title={on ? t('Tirar do Meu treino') : t('Adicionar ao Meu treino')}>
-        {on ? <BookmarkCheck size={16} /> : <BookmarkPlus size={16} />}<span>{on ? t('No treino') : t('Treinar')}</span>
+        {on ? <BookmarkCheck size={16} /> : <BookmarkPlus size={16} />}<span>{on ? t('No treino') : t('Treinar')}</span>{locked && <Lock size={12} />}
       </button>
     );
   }
   return (
     <button type="button" className={`btn ghost train-toggle ${on ? 'on' : ''} ${compact ? 'compact' : ''}`} disabled={busy || !list} onClick={flip}
       title={on ? t('Tirar do Meu treino') : t('Adicionar ao Meu treino')} aria-pressed={on}>
-      {on ? <BookmarkCheck size={15} /> : <BookmarkPlus size={15} />}{!compact && ` ${on ? t('No treino') : t('Treinar')}`}
+      {on ? <BookmarkCheck size={15} /> : <BookmarkPlus size={15} />}{!compact && ` ${on ? t('No treino') : t('Treinar')}`}{locked && <Lock size={12} />}
     </button>
   );
 }
@@ -42,6 +44,7 @@ export function TrainingAddChip({ chart }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   if (!isOn(plan, 'training')) return null;
+  if (!entitlements(plan).can('training_list')) return null;
   if (list?.has(chart.id)) {
     return <span className="train-chip in" title={t('Este chart já está no Meu treino')}><BookmarkCheck size={14} /> {t('Já no Meu treino')}</span>;
   }

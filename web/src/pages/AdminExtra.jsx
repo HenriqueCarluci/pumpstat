@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
-import { ALWAYS_FREE, FEATURE_DEFAULTS, FEATURES, LIMITS, PLAN_LABEL, PLAN_ORDER, rank, TOGGLES } from '../lib/plans.js';
+import { ALWAYS_FREE, FEATURE_DEFAULTS, FEATURES, LIMIT_DEFAULTS, LIMITS, PLAN_LABEL, PLAN_ORDER, rank, TOGGLES } from '../lib/plans.js';
 import { CHALLENGE_KINDS, goalText, PRIZE_MODES, prizeText, TEMPLATES } from '../lib/challenges.js';
 import { locale, t, tErr, tn } from '../lib/i18n.js';
 import { Check, Gift, Minus, Trophy } from '../components/Icons.jsx';
@@ -243,7 +243,7 @@ export function PlanMatrix({ cfg, set }) {
     if (p === cur) next = PLAN_ORDER[Math.min(PLAN_ORDER.length - 1, rank(p) + 1)];
     c.features = { ...(c.features || {}), [id]: next };
   });
-  const lim = (p, k) => cfg.limits?.[p]?.[k] ?? '';
+  const lim = (p, k) => cfg.limits?.[p]?.[k] ?? LIMIT_DEFAULTS[p]?.[k] ?? '';
   const setLim = (p, k, v) => set((c) => {
     c.limits = c.limits || {}; c.limits[p] = { ...(c.limits[p] || {}) };
     if (v === '') delete c.limits[p][k]; else c.limits[p][k] = Math.max(0, Number(v));
@@ -257,7 +257,7 @@ export function PlanMatrix({ cfg, set }) {
           {groups.map((g) => (
             <FragmentRows key={g}>
               <tr className="pm-group"><td colSpan={PLAN_ORDER.length + 1}>{t(g)}</td></tr>
-              {FEATURES.filter((f) => f.group === g).map((f) => (
+              {FEATURES.filter((f) => f.group === g && !f.hidden).map((f) => (
                 <tr key={f.id}>
                   <td>{t(f.label)}{f.soon && <em className="soon"> · {t('em breve')}</em>}</td>
                   {PLAN_ORDER.map((p) => {

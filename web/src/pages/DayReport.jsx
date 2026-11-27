@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
+import PlanLock from '../components/PlanLock.jsx';
 import { buildDay, highlights, loadDayReport } from '../lib/dayReport.js';
 import { Chips } from './Songs.jsx';
 import { dayLabelOf, downloadImage, drawDayImages, shareImage } from '../lib/dayImage.js';
 import { fmtNum, locale, t, tErr, tMsg, tn } from '../lib/i18n.js';
-import { isOn } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { VERSIONS } from '../lib/piu.js';
 import { isNative } from '../lib/native.js';
 import { Ball, Grade, Jacket, Plate } from '../components/ui.jsx';
-import { useSyncJob } from '../components/PiuConnect.jsx';
+import { useSyncJob, SyncAd } from '../components/PiuConnect.jsx';
 import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { CalendarCheck, ChevronLeft, ChevronRight, Flame, RefreshCw, Send, Sparkles, Target, TrendingUp, X } from '../components/Icons.jsx';
 
@@ -141,6 +142,7 @@ export default function DayReport() {
   const rep = useMemo(() => (raw ? buildDay(raw, data.byId) : null), [raw, data.byId]);
 
   if (!isOn(plan, 'day_report')) return <div className="page"><p className="empty">{t('Este recurso está desligado no momento.')}</p></div>;
+  if (!entitlements(plan).can('day_report')) return <div className="page"><h2>{t('Dia de jogo')}</h2><PlanLock feature="day_report" title={t('O relatório do dia')} compact /></div>;
 
   const days = raw?.days || [];
   const idx = rep ? days.findIndex(([d]) => d === rep.day) : -1;
@@ -158,6 +160,7 @@ export default function DayReport() {
         {syncBtn}
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
+      <SyncAd running={running} />
       {syncErr && <div className="form-err">{syncErr}</div>}
       {needLogin && <p className="small">{t('Para atualizar, conecte sua conta da Pump uma vez em')} <Link to="/ajustes">{t('Ajustes')}</Link>.</p>}
     </>

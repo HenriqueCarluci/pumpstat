@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { useData } from '../App.jsx';
+import PlanLock from '../components/PlanLock.jsx';
 import { Ball, Grade, Jacket } from '../components/ui.jsx';
 import { chartTier, fmtScore, TIERS } from '../lib/piu.js';
 import { recommendations } from '../lib/recommend.js';
@@ -9,7 +10,6 @@ import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t } from '../lib/i18n.js';
 import { entitlements } from '../lib/plans.js';
-import { Crown } from '../components/Icons.jsx';
 
 export default function Recommend() {
   const { data, version, plan } = useData();
@@ -18,8 +18,8 @@ export default function Recommend() {
   const rec = useMemo(() => recommendations(version, data.charts), [version, data]);
   const ent = entitlements(plan);
   const full = (tab === 'fresh' ? rec.fresh : rec.improve).filter((r) => mode === 'all' || r.chart.mode === mode).slice(0, 40);
-  const cap = ent.can('recommendations_all') ? null : ent.limit('recommendations');
-  const list = cap != null ? full.slice(0, cap) : full;
+  const locked = !ent.can('recommendations_all');
+  const list = locked ? full.slice(0, 3) : full;
 
   return (
     <div className="page">
@@ -34,6 +34,7 @@ export default function Recommend() {
 
       {!list.length && <p className="empty">{data.charts.some((c) => c.score != null) ? t('Nada aqui por enquanto. Jogue mais alguns charts de nível 10+ para eu entender seu nível.') : t('Sincronize suas notas para receber recomendações.')}</p>}
 
+      <PlanLock feature="recommendations_all" title={t('Recomendações para subir PUMBILITY')}>
       <div className="recs">
         {list.map((r) => {
           const c = r.chart;
@@ -61,13 +62,7 @@ export default function Recommend() {
           );
         })}
       </div>
-      {cap != null && full.length > cap && (
-        <div className="card upsell">
-          <b className="ic-row"><Crown size={16} /> {t('Mais {n} recomendações no Plus', { n: full.length - cap })}</b>
-          <p className="muted small">{t('No plano grátis aparecem as {n} primeiras.', { n: cap })}</p>
-          {ent.showPlans && <Link className="btn" to="/planos">{t('Ver planos')}</Link>}
-        </div>
-      )}
+      </PlanLock>
     </div>
   );
 }

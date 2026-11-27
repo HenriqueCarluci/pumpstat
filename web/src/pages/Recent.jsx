@@ -4,7 +4,7 @@ import { ScoreCard, timeAgo } from '../components/ui.jsx';
 import { t, tMsg, tn } from '../lib/i18n.js';
 import { isOn } from '../lib/plans.js';
 import { dayLabelOf } from '../lib/dayImage.js';
-import { useSyncJob } from '../components/PiuConnect.jsx';
+import { useSyncJob, SyncAd } from '../components/PiuConnect.jsx';
 import { CalendarCheck, RefreshCw } from '../components/Icons.jsx';
 
 /** Atualização rápida: busca só as jogadas recentes da versão aberta (sem reler todos os recordes). */
@@ -21,6 +21,7 @@ function RefreshRecent() {
         </button>
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
+      <SyncAd running={running} />
       {res && <small className="muted">{res.new_plays ? tn(res.new_plays, '{n} jogada nova', '{n} jogadas novas') : t('Nenhuma jogada nova.')}{res.new_bests ? ` · ${tn(res.new_bests, '{n} recorde novo', '{n} recordes novos')}` : ''}</small>}
       {res && res.new_plays > 0 && <Link className="link small ic-row" to="/dia"><CalendarCheck size={14} /> {t('Ver o relatório do dia')}</Link>}
       {err && <div className="form-err">{err}</div>}

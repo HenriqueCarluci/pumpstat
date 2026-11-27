@@ -155,7 +155,7 @@ const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','f
   admin: ['stats','users','ban','reports','feedback','charts','events','venues','ads','config'], moderator: ['stats','users','ban','reports'],
   curator: ['stats','charts'], events: ['stats','events','venues'], support: ['stats','users','feedback'] };
 const adminRole = new URLSearchParams(location.search).get('admin');
-const plan = { plan: 'plus', admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {} } };
+const plan = { plan: 'plus', admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {}, trial_plan: 'plus', trial_days: 15, prices: { BR: { currency: 'BRL', plus: 6.9, pro: 12.9, plus_year: 59.9, pro_year: 109.9 }, WORLD: { currency: 'USD', plus: 2.49, pro: 4.99, plus_year: 19.99, pro_year: 39.99 } }, intro: { months: 2, prices: { BR: { plus: 5.9, pro: 9.9 }, WORLD: { plus: 1.99, pro: 3.99 } } } } };
 const ctx = { version: new URLSearchParams(location.search).get('ver') || 'phoenix2', setVersion: (v) => { location.search = v === 'phoenix2' ? '' : `?ver=${v}`; }, data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
 
 function HShell({ children }) {

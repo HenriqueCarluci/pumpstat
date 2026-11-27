@@ -31,6 +31,7 @@ import FriendOnlineToast from './components/FriendOnlineToast.jsx';
 import StatusPicker from './components/StatusPicker.jsx';
 import { SearchDialog, Sidebar, useSearchHotkey } from './components/DesktopNav.jsx';
 import { useIsDesktop } from './lib/desktop.js';
+import { PreviewBanner } from './components/PlanLock.jsx';
 const noop = () => {};
 import Admin from './pages/Admin.jsx';
 import Plans from './pages/Plans.jsx';
@@ -210,6 +211,7 @@ function Shell() {
         </div>
       </header>
 
+      <PreviewBanner />
       {loading && <div className="loadbar" />}
       {error && (
         <div className="banner err">

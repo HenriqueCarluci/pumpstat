@@ -7,7 +7,7 @@ import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
-import { PLAN_LABEL } from '../lib/plans.js';
+import { PLAN_LABEL, previewPlan, setPreviewPlan } from '../lib/plans.js';
 import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
 import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
@@ -29,7 +29,7 @@ export default function Admin() {
   return (
     <div className="page admin">
       <h2>{t('Administração')}</h2>
-      <p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p>
+      <div className="admin-top"><p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p><PreviewAs /></div>
       <div className="admin-layout">
       <nav className="admin-nav" aria-label={t('Seções da administração')}>
         <Chips value={shown} onChange={setTab} options={tabs.map(([id, l]) => [id, t(l)])} />
@@ -358,11 +358,50 @@ function PlansConfig() {
         ))}
       </div>
 
+      <h3>{t('Preço de lançamento (mensal)')}</h3>
+      <div className="cfg-row">
+        <span>{t('Vale nos primeiros meses de quem assinar (0 = desligado)')}</span>
+        <input type="number" min="0" max="12" style={{ width: 72 }} value={cfg.intro?.months ?? 0}
+          onChange={(e) => set((c) => { c.intro = { ...(c.intro || {}), months: Math.max(0, Math.min(12, parseInt(e.target.value, 10) || 0)) }; })} />
+      </div>
+      {(cfg.intro?.months || 0) > 0 && (
+        <div className="cfg-grid intro">
+          <span /><b>Plus</b><b>Pro</b>
+          {regions.map((r) => (
+            <FragmentRow key={r} label={`${r} (${cfg.prices[r].currency})`}>
+              {['plus', 'pro'].map((k) => (
+                <input key={k} type="number" step="0.01" min="0" value={cfg.intro?.prices?.[r]?.[k] ?? ''}
+                  onChange={(e) => set((c) => { c.intro = { ...(c.intro || {}) }; c.intro.prices = { ...(c.intro.prices || {}) };
+                    c.intro.prices[r] = { ...(c.intro.prices[r] || {}), [k]: e.target.value === '' ? null : Number(e.target.value) }; })} />
+              ))}
+            </FragmentRow>
+          ))}
+        </div>
+      )}
+      <p className="muted small">{t('Na Google Play, crie uma oferta de "preço introdutório" em cada plano básico mensal com o mesmo valor e a mesma duração.')}</p>
+
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row">
         <button className="btn" onClick={save}>{t('Salvar')}</button>
         {saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}
       </div>
+    </div>
+  );
+}
+
+/** Admin: ver o app como Grátis, Plus ou Pro (cadeados e limites aplicados só para você). */
+function PreviewAs() {
+  const cur = previewPlan() || '';
+  const change = (v) => { setPreviewPlan(v || null); window.location.reload(); };
+  return (
+    <div className="preview-as small">
+      <span className="muted">{t('Ver o app como')}</span>
+      <select value={cur} onChange={(e) => change(e.target.value)}>
+        <option value="">{t('Administrador (tudo liberado)')}</option>
+        <option value="free">{t('Grátis')}</option>
+        <option value="plus">Plus</option>
+        <option value="pro">Pro</option>
+      </select>
     </div>
   );
 }
