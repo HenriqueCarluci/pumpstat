@@ -2123,3 +2123,4 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .desk .settings > .set-account { column-span: all; }
 .legacy-pref { display: flex; gap: 10px; align-items: flex-start; }
 .legacy-pref input { margin-top: 3px; flex: none; }
+.rn-eta { color: #ffd166; font-size: 12px; font-weight: 600; }

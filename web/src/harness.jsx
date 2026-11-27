@@ -52,7 +52,7 @@ const FAKE = {
     { id: 8, status: 'released', released_on: '2026-11-27', tag: 'new', title: { pt: 'PIU Stats no computador' }, body: { pt: 'Em piustats.com.br o site tem cara de site: menu lateral, busca com Ctrl+K e páginas em colunas.' } },
     { id: 7, status: 'released', released_on: '2026-11-27', tag: 'improved', title: { pt: 'Atalhos do início e redes no perfil' }, body: { pt: 'Os 4 atalhos que você mais usa ficam numa linha.' } },
     { id: 6, status: 'released', released_on: '2026-11-26', tag: 'fixed', title: { pt: 'Login não esquece a sessão' }, body: {} },
-    { id: 20, status: 'soon', released_on: null, tag: 'new', title: { pt: 'Planos Plus e Pro' }, body: { pt: 'Análises, treino e recursos sociais a mais, com preço de lançamento nos primeiros meses.' } },
+    { id: 20, status: 'soon', released_on: null, eta: '2026-12-01', eta_precision: 'month', tag: 'new', title: { pt: 'Planos Plus e Pro' }, body: { pt: 'Análises, treino e recursos sociais a mais, com preço de lançamento nos primeiros meses.' } },
     { id: 21, status: 'soon', released_on: null, tag: 'new', title: { pt: 'Sincronização automática' }, body: { pt: 'Suas notas atualizadas sozinhas depois de jogar.' } }],
   admin_set_preview: null,
   admin_feature_grants: [{ feature: 'player_stats', expires_at: '2027-02-25T00:00:00Z', note: 'membro do clube', active: true }],

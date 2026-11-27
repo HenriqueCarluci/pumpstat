@@ -2,12 +2,12 @@
 import { useEffect, useState } from 'react';
 import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
-import { fmtDay, NOTE_TAGS, reloadNotes } from '../components/ReleaseNotes.jsx';
+import { fmtDay, fmtEta, NOTE_TAGS, reloadNotes } from '../components/ReleaseNotes.jsx';
 import { Chips } from './Songs.jsx';
 import { Plus, Trash2 } from '../components/Icons.jsx';
 
 const LANG_TABS = [['pt', 'Português'], ['en', 'English'], ['es', 'Español']];
-const EMPTY = { status: 'released', tag: 'new', released_on: '', title: {}, body: {}, published: true, sort: 0 };
+const EMPTY = { status: 'released', tag: 'new', released_on: '', eta: '', eta_precision: 'month', title: {}, body: {}, published: true, sort: 0 };
 
 export default function ReleaseNotesAdmin() {
   const [list, setList] = useState(null);
@@ -38,7 +38,7 @@ export default function ReleaseNotesAdmin() {
                   <button type="button" className="rn-admin-row" onClick={() => setEdit(n)}>
                     <span className={`rn-tag ${st === 'soon' ? 'soon' : n.tag}`}>{st === 'soon' ? t('Em breve') : t(NOTE_TAGS[n.tag])}</span>
                     <b>{n.title?.pt}</b>
-                    <small className="muted">{n.published ? (n.released_on ? fmtDay(n.released_on) : '') : t('rascunho')}</small>
+                    <small className="muted">{!n.published ? t('rascunho') : st === 'soon' ? (fmtEta(n) || t('sem previsão')) : (n.released_on ? fmtDay(n.released_on) : '')}</small>
                   </button>
                 </li>
               ))}
@@ -73,7 +73,11 @@ function NoteForm({ note, onCancel, onSaved }) {
         <Chips value={n.tag} onChange={(v) => set({ tag: v })} options={Object.entries(NOTE_TAGS).map(([k, l]) => [k, t(l)])} />
         <label className="small">{t('Data do lançamento')} <input type="date" value={n.released_on || ''} onChange={(e) => set({ released_on: e.target.value })} /></label>
       </>}
-      {n.status === 'soon' && <label className="small">{t('Ordem (menor aparece primeiro)')} <input type="number" value={n.sort} onChange={(e) => set({ sort: Number(e.target.value) || 0 })} /></label>}
+      {n.status === 'soon' && <>
+        <label className="small">{t('Previsão de lançamento')} <input type="date" value={n.eta || ''} onChange={(e) => set({ eta: e.target.value })} /></label>
+        <Chips value={n.eta_precision || 'month'} onChange={(v) => set({ eta_precision: v })} options={[['month', t('Mostrar só o mês')], ['day', t('Mostrar o dia exato')]]} />
+        <label className="small">{t('Ordem (menor aparece primeiro)')} <input type="number" value={n.sort} onChange={(e) => set({ sort: Number(e.target.value) || 0 })} /></label>
+      </>}
       <Chips value={lang} onChange={setLang} options={LANG_TABS.map(([k, l]) => [k, l + (n.title[k] ? ' ✓' : '')])} />
       <input placeholder={lang === 'pt' ? t('Título (obrigatório)') : t('Título (opcional; sem ele vale o português)')} maxLength={120}
         value={n.title[lang] || ''} onChange={(e) => set({ title: { ...n.title, [lang]: e.target.value } })} />

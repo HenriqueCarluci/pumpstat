@@ -36,6 +36,14 @@ export function useReleaseNotes() {
 
 /** Texto no idioma da pessoa, caindo no português. */
 export const pick = (o) => (o && (o[getLang()] || o.pt)) || '';
+/** Data estimada de um próximo lançamento: o mês ("dezembro de 2026") ou o dia exato. */
+export const fmtEta = (n) => {
+  if (!n?.eta) return null;
+  const d = new Date(`${n.eta}T12:00:00`);
+  return n.eta_precision === 'day'
+    ? d.toLocaleDateString(locale(), { day: 'numeric', month: 'long', year: 'numeric' })
+    : d.toLocaleDateString(locale(), { month: 'long', year: 'numeric' });
+};
 export const fmtDay = (d) => (d ? new Date(`${d}T12:00:00`).toLocaleDateString(locale(), { day: 'numeric', month: 'short', year: 'numeric' }) : '');
 
 const maxReleased = (list) => Math.max(0, ...(list || []).filter((n) => n.status === 'released').map((n) => Number(n.id)));
@@ -69,6 +77,7 @@ export function NoteItem({ n }) {
       <div className="rn-top">
         <span className={`rn-tag ${n.status === 'soon' ? 'soon' : n.tag}`}>{n.status === 'soon' ? t('Em breve') : t(NOTE_TAGS[n.tag] || 'Novo')}</span>
         {n.status === 'released' && n.released_on && <small className="muted">{fmtDay(n.released_on)}</small>}
+        {n.status === 'soon' && <small className="rn-eta">{fmtEta(n) ? t('Previsão: {d}', { d: fmtEta(n) }) : t('Previsão a definir')}</small>}
       </div>
       <b className="rn-title">{pick(n.title)}</b>
       {body && <p className="muted small">{body}</p>}

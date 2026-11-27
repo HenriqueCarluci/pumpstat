@@ -1236,3 +1236,9 @@ Termina em {d}. Depois sua conta volta para o plano grátis, sem cobrança. | En
 Continuar no {p} depois do teste | Keep {p} after the trial | Seguir en {p} después de la prueba | 체험 후에도 {p} 계속 쓰기 | 体験後も{p}を続ける | Garder {p} après l'essai | Continua con {p} dopo la prova
 Falta {n} dia do seu teste grátis do {p} | {n} day left in your {p} free trial | Falta {n} día de tu prueba gratis del {p} | {p} 무료 체험이 {n}일 남았습니다 | {p}の無料体験は残り{n}日 | Il reste {n} jour à votre essai gratuit {p} | Manca {n} giorno alla fine della prova gratuita di {p}
 Faltam {n} dias do seu teste grátis do {p} | {n} days left in your {p} free trial | Faltan {n} días de tu prueba gratis del {p} | {p} 무료 체험이 {n}일 남았습니다 | {p}の無料体験は残り{n}日 | Il reste {n} jours à votre essai gratuit {p} | Mancano {n} giorni alla fine della prova gratuita di {p}
+Previsão: {d} | Expected: {d} | Previsto: {d} | 예정: {d} | 予定:{d} | Prévu : {d} | Previsto: {d}
+Previsão a definir | Date to be announced | Fecha por definir | 일정 미정 | 時期未定 | Date à définir | Data da definire
+sem previsão | no estimate | sin fecha | 일정 없음 | 予定なし | sans date | senza data
+Previsão de lançamento | Expected release | Previsión de lanzamiento | 출시 예정일 | リリース予定 | Sortie prévue | Uscita prevista
+Mostrar só o mês | Show month only | Mostrar solo el mes | 월만 표시 | 月だけ表示 | Afficher seulement le mois | Mostra solo il mese
+Mostrar o dia exato | Show the exact day | Mostrar el día exacto | 정확한 날짜 표시 | 正確な日付を表示 | Afficher le jour exact | Mostra il giorno esatto
