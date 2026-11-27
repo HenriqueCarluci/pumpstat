@@ -15,6 +15,7 @@ import TeamPicker from '../components/TeamPicker.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
 import AndroidTestCard from '../components/AndroidTestCard.jsx';
+import JacketCacheCard from '../components/JacketCacheCard.jsx';
 import { entitlements, isOn } from '../lib/plans.js';
 
 export default function Home() {
@@ -100,6 +101,7 @@ export default function Home() {
           </Link>
           <NewsBanner />
           {!plan?.view_as && <AndroidTestCard />}
+          <JacketCacheCard where="home" />
         </div>
         <div className="h-blk o2">
           <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} canTips={ent.can('recommendations_all')} />

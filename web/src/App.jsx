@@ -4,7 +4,8 @@ import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
 import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
-import { initNative } from './lib/native.js';
+import { initNative, isNative } from './lib/native.js';
+import { downloadJackets, jacketMode } from './lib/jacketCache.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
 import './lib/topbar.js';
@@ -207,6 +208,13 @@ function DataApp({ session, ingestKey }) {
     const h = setTimeout(finish, 3500);
     return () => clearTimeout(h);
   }, [data, warm]);
+
+  // no app, quem escolheu "baixar todas as capas" completa o que faltar em segundo plano (as novas também)
+  useEffect(() => {
+    if (!isNative || !warm || !data || jacketMode() !== 'all') return undefined;
+    const h = setTimeout(() => downloadJackets(data), 4000);
+    return () => clearTimeout(h);
+  }, [warm, data]);
 
   const setVersion = (v) => {
     try { localStorage.setItem('pumpstat:version', v); } catch { /* ignore */ }
