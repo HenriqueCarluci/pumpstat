@@ -20,4 +20,4 @@ returns jsonb language sql stable security definer set search_path = public as $
 $$;
 revoke all on function public.chart_ref_tags(text) from public;
 grant execute on function public.chart_ref_tags(text) to anon, authenticated;
--- os dados (uma tag por vez, lidos do filtro de tags do ArcadeStat) entram em 061_chart_tags_data.sql
+-- os dados vêm da função sync-arcadestat (063+)
