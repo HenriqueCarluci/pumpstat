@@ -2,7 +2,7 @@
 -- Liga/desliga em Administração → Recursos (toggles friend_pumbility e twitch_live; ausente = ligado).
 
 -- ---------- Lives da Twitch ----------
--- Preenchida pela função twitch-live (chave de serviço), que consulta a API da Twitch a cada 2 min.
+-- Preenchida pela função twitch-live (chave de serviço), que consulta a API da Twitch (a cada 30 min, ver 095).
 create table if not exists public.twitch_lives (
   stream_id   text primary key,
   user_id     uuid not null references auth.users (id) on delete cascade,
