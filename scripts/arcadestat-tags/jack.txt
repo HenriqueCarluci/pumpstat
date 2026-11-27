@@ -93,7 +93,7 @@ Barber's Madness|S16,D16
 Violet Perfume|S6
 Banya-P Classic Remix|S15,D16
 BATTLE NO.1|S14,D16
-Bamboo|S22,D25
+Bamboo|D22,D25
 Burning SuperNova feat. neur6sia|S16
 Burn Out|S11
 BEDLAM|S8,S22,D24
@@ -145,7 +145,7 @@ Silver Beat feat. ChisaUezono|S13
 Adrenaline Blaster|S8,D12
 Arirang|S22
 Amai Yuuwaku Dangerous|S6
-Asterios -ReEntry-|S4,D19
+Asterios -ReEntry-|S4,S19
 I Want U|S12
 Iolite Sky|S16
 Arch of Darkness|S15
@@ -215,3 +215,47 @@ Cleaner|S4,S14,D25
 Kitty Cat|D6
 Time Attack <BLUE>|S18,D20
 Naissance|S21
+Turkey March|S7,S12,S17
+Take Out|S12,D23
+Toccata|S17,D18
+Tribe Attacker|D17
+Travel to future|S19,D21
+Transmission|S9
+Tritium|D10
+Pavane|D23
+Passacaglia|D25
+Final Audition|S19
+Final Audition Ep. 2-1|D23
+Final Audition Ep. 2-2|S23
+Papasito (feat. KuTiNA)|S7,S15,D11
+Papasito (feat. KuTiNA) - FULL SONG -|S19,D20
+Pastry mix|S17,S23,D25
+Passing Rider|S12
+Phantom|S13,D21
+Phantom -Intermezzo-|S12,S20,S22,D17,D21
+Further|D17
+%X (Percent X)|S10
+Pumptris 8Bit ver.|C2
+Pumptris Quattro|S14
+Pump Me Amadeus|D19
+Pumping Jumping|S2,D19
+Paved Garden|S8
+PRiMA MATERiA|D26
+PRiMA MATERiA - SHORT CUT -|S21
+PRIME Opening - SHORT CUT -|S15
+Freedom Dive|S17,S22,D18,D24
+Le Nozze di Figaro ~Celebrazione Remix~|C2
+Phoenix Opening - SHORT CUT -|S12,S16,D16,D20
+Feel My Happiness|S11,S17,C4
+HYPERCUBE|S17
+HEART RABBIT COASTER|S14,S17,S21
+Heart Attack|S7,D10
+Halloween Party ~Multiverse~|S12,S18,S20
+HUSH|D15
+Headless Chicken|S21
+hercules|S14,S24,D26
+HELIX|S16
+Hellfire|S18,D19
+Higgledy Piggledy|S16
+Hymn of Golden Glory - SHORT CUT -|D17
+Hypnosis(SynthWulf Mix)|S20,D22

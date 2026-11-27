@@ -1,0 +1,612 @@
+* this game does not exist *|S16,S22,D18
+1948|S18,S21,S24,S26
+1949|S16,S23,D22
+1950|S16,D22,D25,D27
+404 (New Era)|S16
+4NT|S22,D20,D24
+8 6 - FULL SONG -|S15
+::POINT_NEMO::|S23,D19,D23
+B2|S4,S7,S16,S18,D19
+B3|S16,S18,S20,D18
+BSPower Explosion|S8,S12,S16,S19,S21,D13,D20,D23,C2
+E.O.N|S17,S19,S22,D18,D21,D24
+ESP|S18,S20,D20,D22,D24
+HTTP|S17,D20,D24,C2
+L (PIU Edit)|S12,S18,S22,S24,D19,D24,D27
+R.I.P|S16,S22,D24
+Re : End of a Dream|S12,S15,S19,S21,S23,D18,D22,D25
+V3|S17,D18,D21
+XX OPENING - SHORT CUT -|D17
+†DOOF†SENC†|S18,S21,D25
+ASDF|S17,D17
+Gargoyle|S4,S7,S11,S18,S22,D20,D23
+Gargoyle - FULL SONG -|S21,S23,D22,D25,C2
+Kasou Shinja|S18,S21,D19,D24
+Kasou Shinja - SHORT CUT -|S20
+God Mode 2.0 feat. Skizzo|S8,S17,S21,D18,D20,D22
+God Mode feat. Skizzo|S4,S8,S18,S20,D9,D17,D21
+Galaxy Collapse|S19,S23,D21,D25
+Galactic Metronome|D24
+Galactic Terminus|S18,S20,D19,D22
+Gun Rock|S20
+Get Up|S15,D19,D23
+Get Up (and go)|S17
+Get Your Groove On|D22
+DUEL|S16,S18,S21,S22,D18,D21
+DUEL - SHORT CUT -|S16,S19,S21,D21
+Gothique Resonance|S8,S18,S21,D13,D21
+T.B.H|S4,S14,S17,S20,S22,D18,D22,D24
+GOOD NIGHT|S17,S20,D19,D22,D24
+GOOD NIGHT - FULL SONG -|S18,S24,D26
+GOODBOUNCE|S7,S16,S20,D18,C2
+GOODTEK|S16,S18,S21,D24
+She Likes Pizza|S21,D24
+Ghroth|S13,S19,S23
+Ghroth - SHORT CUT -|S18,D24
+GLORIA|S17,D18
+Glimmer Gleam|D19
+La Cinquantaine|S9,S16,S19,S22,D17,D20,D24
+Guitar Man|S20
+Kimchi Fingers|S17
+Karyawisata|S7,S16
+CARMEN BUS|S16,S18,S21,D20,D22
+Nakakapagpabagabag|S15
+Falling Stars|S9,S17,S20,S22,D24
+KUGUTSU|S18,S23,D23,D25,D27
+NightTheater|S15,S18,D16,D19
+Fly high|S15,S18,S20,D21
+Nyan-turne (feat. KuTiNA)|S16,S19,D17,C2
+Nemesis|S16,S18,D20
+NEMONEMO|S21,D19
+Neo Catharsis|S17,S20,S22
+Neo Catharsis - SHORT CUT -|S19,S21,D25
+Nade Nade|S10,S20,S23
+Napalm|S19
+Necromancy|S10,S20,D19
+Nostalgia|D18
+New Rose|S19,S21,D17,D23
+Nyarlathotep|S17,S19,S21,S23,D17,D23,D25
+Nyarlathotep - SHORT CUT -|D24
+Nihilism - Another Ver.-|S8,S18,S21,D17,D19,D22
+The Quick Brown Fox Jumps Over The Lazy Dog|S19,D16,D22,D24
+Darkside Of The Mind|S14,S17,S19,S23,D18,D21
+Dr. M|S16
+Dr.KOA|D20
+Dance with me|D18
+Dancing|S20,D21
+That Kitty (PIU Edit.)|S17,S20,D18,D24
+The Deconstruction|S22,D20,D24
+The Last Rebellion|S16,S19,S21,S23,D21,D23
+The Last Stand|S19,S21,D20
+The Reverie|S15,D18
+THE REVOLUTION|S7,S17,S19,D19,D22
+The Stranger|D16
+The Apocalypse|S7,S14,S16,S18,S21,D13,D16,D18,D20,D24
+Dead End|S18,S23,D22,D26
+Demon of Laplace|S5,S8,S17,D20
+Desaparecer|S18,S20,S22,D20,D23,D25
+Destination|S7,S17,S19,S21
+Destination - SHORT CUT -|D22
+Danger & Danger|D21,D23
+Deca Dance|S16,S21,D18
+Donatello|S17,S22,D19
+Doppelganger|S9,S20,S22,D15,D24
+Dolly KiSS|S14,S17,D6
+Dual Racing <RED vs BLUE>|S7,S16,S18,S20,D13,D21,C2
+DROP FRONTIER|S16,S19,S22,S25
+Dream To Nightmare|D22,D23
+Dreamchasers|S15,S17,D17
+D|D20
+D Gang|S6,S18
+Dignity|S15,S22,D17,D20,D26
+Dignity - FULL SONG -|S15,S19,D23
+Digitalis|S18,S21,D21
+Dement ~After Legend~|S15,S18,S21,S23,D20,D24,D26
+Destr0yer|S7,S18,S22
+District 1|S19,D17,D21
+DISTRICT V|S18,S22,D20,D24
+DJ Otada|S4,S17,S19,D14,D20,D22
+Another Truth|D18
+Le Grand Bleu|S7,S18,S20,D18,D20
+Le Grand Rouge|S18,S21,D19,D23
+Ragnarok|S8,S12,S16,S18,S21,D9
+Last Rebirth|S16,D18
+Rise Up (feat. Miori Celesta)|S22,D24
+Rising Star|S6,S15,D17,D19,C2
+Like Me|S6,S10,S19
+Life is PIANO|S4,S16,S19,D21
+Radetzky Can Can|D18
+Lacrimosa|S13,S15,S17
+Latino Virus|D19
+Rock the house|S8,S16,D18
+Rock the house - SHORT CUT -|D20
+Love Witch|S13,S18,D18,D20,D23
+Love is a Danger Zone|S17,D17,D21,C2
+Love is a Danger Zone 2 - FULL SONG -|S20
+Love is a Danger Zone 2 Try To B.P.M|S16,D17,D23
+Love is a Danger Zone pt. 2|S7,S16,S22,D18,D24
+Love is a Danger Zone pt.2 [Another]|S17,S18,C2
+Love Is A Danger Zone(Cranky Mix)|S17,S21,D20,D23
+Rush-More|S18,S22,D17,D19
+Rush-Hour|S13,S16,S20,D17,D22
+Lucky Star|S20,D21
+Red Snow|S19,D18,D22
+Red Swan|S18,D20
+Redline|S5,S16,D19,D20,D22
+Reminiscence|S19,D11,D17,D20
+Rave'til the earth's end|S15,S17,S20,D15,D21
+Rage of Fire|S7,S16,S18,S20,D17,D19,D22
+Legendary Dominion|S16,S20,S22,D21,D25,D27
+Requiem|S7,S19,D18
+Log In|S18,S20,D19
+Robot battle|S9,S22,D19,D24
+Loki|S16,S20,D20
+Lohxia|S7,S21,D22
+Rolling Christmas|S20
+Lucid Dream|S19,S20,D20
+Lucid(PIU Edit)|S19,D20
+Leather|S18,S24,D22,D26
+Removable Disk0|S15
+Reality|S18,D16
+Reincarnate in "A"|S19,D21
+Leakage Voltage|S15,D18,D23
+Little Munchkin|S19,S21,D17,D19,D22,C2
+Repeatorment Remix|D22
+Lepton Strike|S19,S21,D21,D23
+Maria|S18,D16
+The Devil|S9
+My Dreams|S18,S19,D19,D22
+My way|S16,D16,D18
+Macaron Day|S17,D13
+MATADOR|S4,S7,S18,S21,D16,D19,D23
+Mahika|S13,S19,S22,D21,D24
+Mad5cience|D16
+Magical Vacation|D18,D21
+Money|S15,D17
+Money Fingers|S10
+MURDOCH|S18,S20,S22,D19,D24
+Murdoch vs Otada|S9,S16,S19,D17,D21,D24
+Murdoch vs Otada - SHORT CUT -|S15,S21,D20,D24
+MEGAHEARTZ|S21,S23,D14,D23,D25
+Meteo5cience (GADGET mix)|S18,D18,D22
+Meteorize|S5,S16,D17
+Mephitz|S16,S18,S20,S22,D21,D24
+Mental Rider|S21,D20,D23,D24
+Monolith|S5,S15,S21,D14,D17
+Morrighan|D20
+Moment Day|S15,S17,D16,D18,D23
+Mopemope|S21,D24,D26
+Monkey Fingers 2|D19
+Move That Body!|S17,D18
+Move That Body! - FULL SONG -|S18,D19
+untitled|S21,D24
+Solitary|D17
+Solitary 1.5|D18
+Solitary 2|S18,D20
+Mission Possible -Blow Back-|D20,D21
+Mr. Larpus|S15,S20,D22
+Mitotsudaira|S19,D16,D19
+MilK|S17,D16,D22
+Milky Way Galaxy|D20
+Baroque Virus|S17,D18,D21
+Baroque Virus - FULL SONG -|S15,S18,S21,D20,D23
+Barber's Madness|S11,S22,C2
+Binary star|S5,S17,S20,D19,D23
+Violet Perfume|S6,S17,D19
+Banya Classic Remix|S19
+B.P Classic Remix|D19
+B.P Classic Remix 2|S13
+BANYA HIPHOP REMIX|S6
+Banya-P Classic Remix|S15
+VANISH|S17,D18,D24
+Vanish 2 - Roar of the invisible dragon|S17,S20,S22,D18,D24
+Bad Apple!! feat. Nomico|S13,S15,D18
+Bad Apple!! feat. Nomico - FULL SONG -|S10,D18,D22
+BATTLE NO.1|S9,S14,S17,S20,S22,D16,D22,D24
+BANG BANG|S16,S18,S21,D18,D20,D23
+Burning SuperNova feat. neur6sia|S16,S19
+Butterfly|S17
+Burn Out|S11,S15,S17,S20,D20,D23
+BEDLAM|S8,S15,S18,S22,D15,D20
+Versailles|S7,S10,S16,S19,S21,D20,D23
+Can I friend you on Bassbook? lol|S17,S19,S22,D25
+Beethoven Virus|S16,D18,D24
+Beethoven Influenza|S18,D20
+VECTOR|S14,S18,S22,D15,D19,D24
+Vook|S7
+Vulcan|S19,S22,D24
+Unfelicitas|S20,D21,D24
+BOOOM!!|S12,S15,S17
+Break Through Myself feat. Risa Yuzuki|S18,S21,S23,D23
+Break Out|S16,S19,D18
+Break It Down|D17
+BRAIN POWER|D14,D20
+Broken Karma (PIU EDIT)|S11,S16,S19,S21,D20,D23
+Bring Back The Beat|S7,S17,S19,D19
+Black Dragon|S8,D19,D23
+Black Swan|S15,S19
+BLAZOR|S15,S18,S20,S22,D22,D24
+Blaze Emotion|S16,S17,D18,D19
+Blaze Emotion (band version)|D18
+Blazing|S17,S20
+Bluish Rose|S20,D18
+Bee|S7,S19,D20,D23,D24
+video out c|D23
+BEMERA|S18,S24,D26
+Bemera - SHORT CUT -|S23
+Viyella's Nightmare|S19,S23
+Visual Dream II (In Fiction)|S8,S18,D19
+Becouse of You|S14,S16,S18,D17,D20,D22
+Beat the ghost|S18
+Beat of The War|D24
+Beat of The War 2|D15
+Beat of The War 2 - FULL SONG -|S21,D22
+Airplane|D16
+Big Daddy|S14,S16,D17,D20,D23
+Do the Dance|S15,S17,D16,D18
+Sarabande|S7,S16,S19,D18,D21,D24,C2
+Sarabande - SHORT CUT -|S17
+The People didn't know|S16,D17,C2
+The People didn't know "Pumping up"|S8,D18
+Death Moon|S17,S20,D17,D22
+Death Moon - SHORT CUT -|S19,S23,D19,D24
+Festival of Death Moon|S5,S11,S15,D15
+Simon Says, EURODANCE!! (feat. Sara☆M)|S7,S18,D19,D22
+Sudden Romance [PIU Edit]|S14,D15
+Sudden Appearance Image|S19,D21
+Sugar Conspiracy Theory|S10,S14,S18,D16,D20
+Selfishness|S17,D19,D21
+Selfishness - SHORT CUT -|S17
+Set Up Me2 Mix|S18
+SONIC BOOM|S16,S19,S23,D18,D24
+Sorceress Elise|S18,S22,D18
+Solve My Hurt - SHORT CUT -|S20
+Soldiers (TANO*C W TEAM RED ANTHEM)|S15,S18,D19,D22
+Solfeggietto|S9,S15,S19,S21,S22,D11,D16,D20,D23,D25
+Showdown|S17,S20,D18
+Sugar Plum|S15,S19
+Shub Niggurath|S12,S21,D26
+Shub Niggurath - SHORT CUT -|S18
+Shub Sothoth|S25,D27
+Xuxa|S15,D17,C2
+Super Stylin'|D18,D21
+Super Capriccio|S12,S17,S19,D23
+Super Fantasy|S7,S10,S16,S19,S21,D19,D22,C2
+Super Fantasy - SHORT CUT -|D18
+SUPER☆HARAGURO☆POP|S16,S18,S20,D20,D24
+Smile Diary|S7,S16,D9,D19
+Smells Like A Chocolate|S17
+SWEET WONDERLAND|S3,S5,S8,S15,S17,S21,D14,D18,D23
+Switronic|S8,S15,S17,D16,D18,C2
+Switronic - SHORT CUT -|S14,D4,D17
+Skybound|D22
+Skeptic|S22
+Scorpion King|S15,D16,D20
+Star Command|S13,S15,D15,D23
+Stardust Overdrive|D19,D23
+Stardream (feat. Romelon)|S18,S21,D16,D19,D21,C2
+Stardream -Eurobeat Remix-|S7,S17,S19,S21,D13,D18,D20,D23
+Stardream -Eurobeat Remix- - SHORT CUT -|S16,S18,S21,D18,D20,D22
+Start On RED|S8,S16,S19,D19,D20
+STAGER|D16,D20
+STEP|S17,D18,D20
+STORM|S15,S17,D17,D19
+Street show down|S16,D19
+Spooky Macaron|S14,S17,S20,S22,D22,D25
+Slam|C2
+Slapstick Parfait|S7,S16,D18,D21,D23
+See|S16
+Kokugen Kairou Labyrinth|S13,S17,D22,D26
+Cygnus|S11,S19,D18,D20
+Cynical|S8,S16,S18,D19
+Sylaphz|D20
+Silhouette Effect|S18,D20,C2
+Silhouette Effect - SHORT CUT -|D17
+Silver Beat feat. ChisaUezono|S18,D19,D22
+Cycling!|S10,S16,D20
+Adrenaline Blaster|S15,S18,S21,D19,D23
+Aragami|S19,S22,S24,D17,D21,D24
+Arcana Force|D17,D20
+Arirang|D22
+Harmagedon|S19,S22,D21
+Avalanche|S4,S7,S16,S19,S22,D19,D20,D25
+Avalanquiem|S21,S23,D25
+Asterios -ReEntry-|D18,D22,C2
+I DONT CARE|D23
+I Want U|S7,S17,S20,D14,D18,D22
+I Want U - SHORT CUT -|D21
+Idealized Romance|S7,S16,S18,D11,D18
+Ice of Death|S17,S20,D20
+Iolite Sky|S20,D18,D24
+Arch of Darkness|D18
+Achluoias|S9,S17,S22,D17,D24
+Athena's Shield|S16,S19,S21,D20,D23
+Hello William|D20
+Allegro Con Fuoco|S17,S22,D18
+Allegro Con Fuoco - FULL SONG -|S18,S23,D21,D25
+Allegro furioso|D15
+Allegro Più Mosso|D19
+Altale|S9,D19
+Amphitryon|S7,S18,D21
+Alice in Misanthrope|S15,S17,S20,S22,D13,D18,D21,D24
+Anguished Unmaking|S8
+Night Duty|S20
+JANUS|S8,S20,D19
+A Site De La Rue|S9,S11,S16,D14,D20
+Annihilator Method|S16,S19,D20
+About The Universe|D20,D24
+Assault TAXI|S15,S18,D20,D23
+Awakening|S16,D17,D24
+Acquire|D16
+Under the Christmas Stars|S18
+Underworld ft. Skizzo (PIU Edit.)|S8,S11,S22,S23,D18
+Until Defined|S15,S19,S21,D21,D23,C2
+ALiVE|S15,S18,D24
+Ultimatum|S17,S21,S23,S25,D25,D27
+Ultimate Eyes|S16,S19,S22,D21,D24
+Up & Up (Produced by AWAL)|S17,D18,D21
+Energy Synergy Matrix|S7,S18,S20,D19,D21
+ERRORCODE: 0|S19,S23,D24
+Earendel|S17,S19,S22,D21,D24
+Ercitite|S18,S21,D19
+EMOMOMO|S16,D18
+Everybody Got 2 Know|S21,D19
+FFF|S19,S22
+X-Rave|D13,D21
+X-Rave - SHORT CUT -|D18
+EXTRA BanYa Remix|S12,D15
+Extravaganza|S19,D18
+XTREE|S15,S20,D20,D22
+X-Tream|D21
+Enjoy The Show|S18,S21,S23,D19,D23,D25
+ELEVATE|S18,S21,D23
+Elysium|D15
+Elise|S18,D12,D17,D23
+msgoon RMX pt.6|S21,D21
+Yeo rae a|S1
+Appassionata|S16,S19,S22,S25,D21
+Odin|S17,S20,S23,D14,D18,D23,D25
+Orbit Stabilizer|S19,S21,D18,D21,D23
+Over The Horizon|S11,S17,D15,D21
+OVERNIGHT FLOWER|S12,S16,S19,S22,D24
+Overblow|S7,S16,S18,S21,D18,D19
+Overblow - SHORT CUT -|S18,D17
+Overblow2|S15
+Obelisque|D15
+Obliteration|S7,S15,S18,D20
+What Are You Doin?|S18,D23
+Waltz of Doge|D20
+Yo! Say!! Fairy!!!|S11,S16,D18
+Yog-Sothoth|S10,S16,S21,D18,D24
+Yog-Sothoth - SHORT CUT -|S21
+Yoropiku Pikuyoro !|S10,S15,D16,D24
+Uranium|S9,S22,D20,D25
+Utsushiyo No Kaze feat. Kana|S7,S17,D18,D21
+Csikos Post|S7,S15,D16
+ULTRA SYNERGY MATRIX|S18,D20,D23
+Moonlight|S8,S18,S20,D25
+Wedding Crashers|S4,S6,S10,S16,S18,S21,D14,D19,D23,C3
+We Got 2 Know|S17,D18
+We Love Your Step|S11,S14,S18,S20,S22,D24,C2
+wither garden|S14,S17,S20,D18
+WI-EX-DOC-VA|S17,D24
+Witch Doctor|S17,D23
+Witch Doctor #1|S18,S19
+Witch Doctor - SHORT CUT -|S21
+Wicked Legend|S16,D18,D21
+Windmill|S13,S21,D18,C2
+Winter|S16,S20,D21
+Winter - SHORT CUT -|D13
+Will-O-The-Wisp|D14
+U Got Me Rocking|S17
+U Got Me Rocking - SHORT CUT -|S17
+You Got Me Crazy|S18,D18
+U GOT 2 KNOW|S17,S19,S20,D18
+YOU AND I|S17,S21,D15,D17,D20
+You again my love|S6
+Unique|S14,S16,D23
+Unique - SHORT CUT -|S18
+The Festival of Ghost2 (Sneak)|S16,D17
+Ghost Bloody Train|S21,D17,D23,D25
+Your Mind|S17,S21
+Utopia|S7,S20,D18,D22
+Euphorianic|S5,S8,S16,S19,D18,D21,D23
+Euphorianic - SHORT CUT -|S7,S17,D19
+Punishment Restaurant|S17,S21,D18
+Ignis Fatuus(DM Ashura Mix)|D17,C2
+Ignis Fatuus(DM Ashura Mix) - SHORT CUT -|S21
+Eagle Strike|S17,S19,S21,D19,D21,D24
+iRELLiA|S18,S22,S24,D19,D24,D26
+Imaginarized City|S16,S19,D18,D20,D23
+Imagination|S12,S15,D17
+ESCAPE|S18,S24,D20,D22
+Eternal Universe|S16,S20,D19
+Extreme Music School 1st period feat. Nanahira|S15,S18,S20
+Extreme Music School 2nd period feat. Nanahira|S16,S18,S22,D24,D26
+Indestructible|S19,S22,D20,D25,C2
+INVASION|S17,S23,D18
+Interference|D19,D22
+Interference - FULL SONG -|S19,D16,D18
+INFiNiTE ENERZY -Overdoze-|S13,S16,S18,S21,S23,D19,D22,D25
+INFINITY|D19,D23,C3
+Infinity RMX|S19
+Cutie Song|S8,S11,S15,S19,D13,D21,C3
+Imperium|S14,S18,S22,D20,D23,D25
+Imprinting|S8,S17,S21,D14,D17,D22
+Pine Nut|S15,D17,D23
+Jam O Beat|S16
+Just Hold On (To All Fighters)|S7,S21,D19,D22,D25
+Jump|D18
+Chopsticks Challenge|S17,D16
+Chopsticks Challenge - FULL SONG -|S17,D20
+Xenesis|S4,S7,D18
+Xeroize|S17,D18,C3
+J Bong|D18
+Jogging|D18,D22
+Jonathan's Dream|S6,S8,S16,S18,D19
+Jupin|S17,S19,S21,S23,D18,D23,D25
+Jupin - SHORT CUT -|S23,D23,D24
+Giselle|S20,S22,D24
+Vacuum|S16,S19,S21
+Vacuum Cleaner|S16,S20,S25,D20,D26
+Chinese restaurant|S7,D19
+After a thousand years|S4,S7,S18,S19,D20,D23
+Chess and Chase|S14
+Chase Me|S15,S17,S20,D18,D23,C2
+Super Akuma Emperor|S15,S18,S20,D24
+Chobit Flavor|D17
+Etude Op 10-4|S4,S17,S23,D25
+Dizzy Dance, Street Light|S20
+CHICKEN WING|S9,S17,S20,S22
+CHAOS AGAIN|S20,D24
+Catastrophe|S15,S18,S23,D20,D26
+Caprice of DJ Otada|D23,D25
+Caprice of Otada|S4,S17,D19,D22
+Campanella|D17
+Katkoi|S8,S18,S22,D19,D24
+Can-can ~Orpheus in The Party Mix~|S16,S19,D12,D15,D18,D23
+Can-can ~Orpheus in The Party Mix~ - SHORT CUT -|D15
+Cannon X.1|S7,S13,S20,D15,D22
+Canon D|S17,S20,S21,D17,D23,C2
+Canon D - FULL SONG -|S15,S17,D23,D24
+Conflict|S6,S15,S17,S19,S22,D13,D18,D21,D25,D26,C2
+Come to Me|D15
+K.O.A : Alice In Wonderworld|S17,D19
+Cosmical Rhythm|S17
+CO5M1C R4ILR0AD|S15,S21,D22
+CALL ME BACK|S16
+QUATTUORUX|S15,S19,S22,S24,D17,D21,D24,D26
+Queen Of The Red|S15,D14,D16,D19
+Curiosity Overdrive|S10,S18,S20,S22,D21
+Crash-Landing Rendezvous|S16,S19,S22,D17,D21,D24
+Cross Ray|S16,D20,D24
+CROSS SOUL|S17,S20,D18,D20,D24
+Cross Over feat. LyuU|S11,S15,S18,S22,D15,D19,D23,C2
+Cross Time|S7,S12,S16,S18,D17,D20
+Crossing Delta|S17,S20
+Christmas Memories|S8,D15
+Crimson hood|S16,S20,D21
+Club Night|S9,S17,S19,S22,D12,D19,D22
+Clematis Rapsodia|S15,S18,D16,D19,D23
+Clue|D21
+Cleaner|S17,S21
+Chimera|S13,S18,D18,D26
+Kill Them!|S15,D19
+Keep On!|S15,S21,D17,D22
+Timing|S18,D19
+Time Attack <BLUE>|S18
+Time wanderer|S19,D21,D24
+Tantanmen|S14,S17,S20,D20,D24
+Naissance|S21
+Naissance 2|D16
+Turkey March|S12,S19,D21
+Turkey March -Minimal Tunes-|S6,D18
+Take Out|S17,S21,D20,D23,D24
+Tales of Pumpnia|S9,D21
+Tepris|S7,S17,D20,C2
+Telling Fortune Flower|S10,S17,S19,S21,S23,D20,D22,D26
+Bullfighter's Song|D22
+Tribe Attacker|D17
+Transacaglia in G-minor|S16,S19,D20
+Travel to future|S19,D18,D21,D23
+Tropicanic|S7,S16,S19,D18,D21
+Tritium|S8,S20,D14,D19,D21
+TRICKL4SH 220|S23
+Tream Vook of the war|S19,D22
+Twist of Fate (feat. Ruriling)|D17,C2
+DESTRUCIMATE|S9,S12,S16,S19,D14,D23
+Pavane|S17,D17
+Passacaglia|S8,S12,S17,D18,D22,D23,D25
+Passacaglia - SHORT CUT -|D18
+Passacaglia II|S19
+Final Audition|S18,S19,D17,D19
+Final Audition 2|S18,D18,D20
+Final Audition 3|S16,S17
+Final Audition 3 - SHORT CUT -|D18
+Final Audition Ep. 1|S8,S13,S17,D15,D22,D23
+Final Audition Ep. 2-1|S21,D22
+Final Audition Ep. 2-2|S23,D23,D24
+Final Audition Ep. 2-X|S18
+Final Audition Ep. 2-X - SHORT CUT -|D20
+Fire Noodle Challenge|S15,S19,S23,D20,D25
+Fires of Destiny|S6,S18,S20,D18,D22
+Papa Gonzales|S22,D19,D24
+PaPa helloizing|S10,S19
+Papasito (feat. KuTiNA)|S15,S16,S20,D16,D18
+Papasito (feat. KuTiNA) - FULL SONG -|S19,S22,D20,D23
+Phalanx "RS2018 edit"|S17,S19,S22,D18,D21
+Follow me|S6,S9,D10,D17,C2
+Pop The Track|D18,D20
+Pop Sequence|S15
+Poppin' Shower|S15,S18,S21,D19,D22
+Paradoxx|S21,S23,D25
+Paradoxx - SHORT CUT -|D26
+Faster Z|S7,S17,S19
+Pastry mix|S20,S23,D22
+Passing Rider|S8,S19,D20
+Phantom|S7,S18,D20,D21
+Phantom -Intermezzo-|S7,S16,S20,D20,D21
+Further|S16,S18,S22,S24,D17,D22,D25
+%X (Percent X)|S20
+Perpetual|S19,S21,D14,D18,D21,D24
+Pumptris 8Bit ver.|S8,S18
+Pumptris Quattro|D20
+Pump Me Amadeus|S13,S18,D19
+Pump Jump|S15
+Pumping Jumping|S14
+Paved Garden|S22,D20,D24
+Forgotten Vampire|S16,S18,C2
+Poseidon|S21,D8,D23
+Poseidon - SHORT CUT -|S11,S18,S21,D21
+Force of Ra|S8,D20
+POINT ZERO 2|S11,S16,S19,D20,D22
+Point Zero One|S20
+Fallen Angel|S19,D16,D21
+PUPA|S11,S19,S21,S23,D21
+Full Moon|S19,S21,D14,D19
+Full Moon - FULL SONG -|S20,S22,D24
+Pull me up (Feat. Monya)|S16,S19,D21
+PRIMA MATERIA|S18,S21,S24,D17,D24,D26
+PRIMA MATERIA - SHORT CUT -|S18,S22,D24
+PRIME|S7,S16,S18,D13,D16,D18
+Prime Time|S15,S23,D20,D23,D26
+Fracture Temporelle|S18
+F(R)IEND|S10,S19,S23,D17
+Freedom Dive|S13,S22,S25,D27
+FLVSH OUT|S7,S16,S21
+Flavor Step!|S14,S18,S20,D19,D22
+Le Nozze di Figaro ~Celebrazione Remix~|S20
+PHYSALIS|S15,S19,S22,S24,D17,D20,D24,D26
+Feel My Happiness|D18
+Brown Sky|S19,S21,S25,D21,D24,D26
+Hardkore of the North|S7,S12,S22
+Houseplan|D19
+Hi Bi|D21
+Highway Chaser|S16,S20,D18,D22
+HYPERCUBE|D19
+HEART RABBIT COASTER|S10,S14,S17,S21,S23,D18,D22,D25
+Heart Attack|S16,S18,D18,D21
+Halloween Party ~Multiverse~|S8,S12,S16,S18,S20,D17
+Halloween Party ~Multiverse~ - SHORT CUT -|S14,D21
+Halcyon|S18,S20,D20,D24
+HUSH|S8,D15
+HUSH - FULL SONG -|S15,D16
+Hungarian Dance V|S17,D17
+Headless Chicken|S19,D17
+hercules|S14,S19,S22,D24,D26
+Hestia|S7,S19,D21
+Hey U|S10,S15,D10,D17
+Hello|D19
+Heliosphere|S14,S18,S21,S23,D20,D23,D25
+HELIX|S7,S16,S18,D19,D23
+Hellfire|S11,S15,S18,S22,D19
+Horang Pungryuga|S16,S19,S21,D16,D22,D24,C2
+Whitemare|S18,S21,D23
+Human Extinction (PIU Edit.)|S18,S20,S21,S24,D20,D23,D25
+Higgledy Piggledy|S16,S20
+Hyacinth|S14
+Hyperion|S4,S17,D18,D20
+Hyperion - SHORT CUT -|S16,D21
+Hymn of Golden Glory|S15,S19,S22,S25,D25
+Hymn of Golden Glory - SHORT CUT -|S15,S20,S23,D17,D22
+Hypnosis(SynthWulf Mix)|S17
