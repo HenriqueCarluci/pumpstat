@@ -378,7 +378,7 @@ export function PlayerProfile() {
 
         <section className="card">
           <h3>{t('Top 50 do PUMBILITY')}</h3>
-          <p className="muted small">{t('As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale.')}</p>
+          <p className="muted small">{isMe ? t('As 50 notas que somam o seu PUMBILITY, com os pontos que cada uma vale.') : t('As 50 notas que somam o PUMBILITY dele, com os pontos que cada uma vale.')}</p>
           <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
           {!top.length && <p className="empty">{t('Sem notas que contam para o PUMBILITY nesta versão.')}</p>}
           <div className="pp-top">
@@ -543,7 +543,7 @@ export function PlayStyle({ charts, stats, name, me = false }) {
       <Bars list={style.pass} kind="pass" />
       {style.fail.length > 0 && (
         <>
-          <h4>{t('Onde mais quebra')}</h4>
+          <h4>{me ? t('Onde você mais quebra') : t('Onde mais quebra')}</h4>
           <p className="muted small">{tn(style.nf, '{n} chart quebrado nessa faixa', '{n} charts quebrados nessa faixa')}</p>
           <Bars list={style.fail} kind="fail" />
         </>
@@ -576,7 +576,7 @@ function StyleCharts({ tag, kind, list, onClose }) {
           <div className="style-list">
             {sorted.map((c) => (
               <Link key={c.id} to={`/chart/${c.id}`} className="pp-top-row style-row" onClick={onClose}>
-                <Jacket song={c.song} width={64} />
+                <Jacket song={c.song} width={48} />
                 <Ball chart={c} size="sm" />
                 <span className="pp-top-name">{c.song.title}<small className="muted">{fmtScore(c.score)}</small></span>
                 <span className="pp-top-gp"><Grade grade={c.grade} broken={c.broken} size="xs" /><Plate plate={c.plate} size="xs" /></span>

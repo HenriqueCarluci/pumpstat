@@ -205,7 +205,7 @@ function Evolution({ a, r, mode }) {
         </div>
         {pbAll.length < 2 ? <p className="muted small">{t('O gráfico aparece a partir da segunda sincronização.')}</p>
           : pbFlat || pb.length < 2 ? (
-            <p className="muted small">{t('Sem mudança no PUMBILITY desde {d}. Bata recordes no seu top 50 para subir.', { d: fmtDay(lastChange) })}</p>
+            <p className="muted small">{t('Sem mudança no PUMBILITY desde {d}. Bata recordes no seu top 50 para subir.', { d: fmtDay(lastChange).replace(/\.$/, '') })}</p>
           ) : (
             <>
               <LineChart points={pb} color={SERIES.gold} fmtY={(v) => fmtNum(Math.round(v))} fmtX={fmtMonth} label="PUMBILITY" minSpan={20} />
@@ -296,7 +296,7 @@ function PatternCharts({ slice, kind, list, otherName, onClose }) {
   const sorted = [...list].sort((a, b) => b.chart.level - a.chart.level || (kind === 'pass' ? b.passes - a.passes : b.fails - a.fails));
   const Row = ({ r }) => (
     <>
-      <Jacket song={r.chart.song} width={64} />
+      <Jacket song={r.chart.song} width={48} />
       <Ball chart={r.chart} size="sm" />
       <span className="pp-top-name">{r.chart.song.title}{r.other && <small className="muted">{otherName}</small>}</span>
       <span className="pc-counts">

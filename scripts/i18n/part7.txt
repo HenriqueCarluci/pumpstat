@@ -1453,3 +1453,6 @@ recurso desligado | feature turned off | función desactivada | 기능이 꺼져
 ative o treino em casa em Ajustes | turn on home practice in Settings | activa la práctica en casa en Ajustes | 설정에서 집 연습을 켜 주세요 | 設定で自宅練習をオンにしてください | activez l'entraînement à la maison dans les Réglages | attiva l'allenamento a casa nelle Impostazioni
 simulador inválido | invalid simulator | simulador inválido | 잘못된 시뮬레이터 | 無効なシミュレーター | simulateur invalide | simulatore non valido
 arquivo grande demais | file is too large | archivo demasiado grande | 파일이 너무 커요 | ファイルが大きすぎます | fichier trop volumineux | file troppo grande
+Votações | Votes | Votaciones | 투표 | 投票 | Votes | Votazioni
+As 50 notas que somam o seu PUMBILITY, com os pontos que cada uma vale. | The 50 scores that make up your PUMBILITY, with the points each one is worth. | Las 50 notas que suman tu PUMBILITY, con los puntos que vale cada una. | 내 PUMBILITY를 이루는 50개 기록과 각각의 점수입니다. | あなたのPUMBILITYを構成する50件のスコアと、それぞれのポイントです。 | Les 50 scores qui composent ton PUMBILITY, avec les points de chacun. | I 50 punteggi che compongono il tuo PUMBILITY, con i punti di ognuno.
+Onde você mais quebra | Where you break most | Dónde más quiebras | 가장 많이 끊기는 곳 | 一番ブレイクしやすいところ | Là où tu casses le plus | Dove rompi di più

@@ -2238,7 +2238,13 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .style-list { display: flex; flex-direction: column; gap: 6px; }
 .st-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 .cp-skill-row.as-btn { grid-template-columns: minmax(90px, 34%) 1fr 36px 14px; padding: 2px 0; }
-.pp-top-row.style-row { grid-template-columns: 64px auto minmax(0, 1fr) auto 16px; }
+.pp-top-row.style-row { grid-template-columns: 48px auto minmax(0, 1fr) auto 16px; }
+.pp-top-row.style-row .jacket { display: block; }
+@media (max-width: 520px) {
+  /* no celular a lista do top 50 esconde a capa; nas listas de tag/padrão ela fica */
+  .pp-top-row.style-row { grid-template-columns: 48px auto minmax(0, 1fr) auto 14px; gap: 8px; }
+  .pp-top-row.style-row .jacket { display: block; }
+}
 .style-row .pp-top-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: flex; flex-direction: column; }
 
 /* ---------- Notificações em pop-up (descem no topo) ---------- */
