@@ -37,7 +37,7 @@ export default function Players() {
   const [err, setErr] = useState('');
   const load = () => {
     rpc('players', { p_version: version }).then(setList).catch((e) => setErr(tErr(e.message)));
-    rpc('friend_requests').then(setReqs).catch(() => {});
+    rpc('friend_requests').then((r) => setReqs({ incoming: r?.incoming || [], outgoing: r?.outgoing || [] })).catch(() => {});
     rpc('friends_in_queue').then((r) => setPlaying(r || [])).catch(() => {});
   };
   useEffect(() => {

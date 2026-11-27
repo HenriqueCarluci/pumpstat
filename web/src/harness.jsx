@@ -22,6 +22,22 @@ const D = 86400000; const now = Date.now();
 const hist = [700000, 720000, 740000, 760000, 780000, 905000, 912000].map((sc, i) => ({ at: now - (20 - i * 3) * D, score: sc, grade: sc > 900000 ? 'AA' : 'A', broken: sc < 900000, miss: 30 - i * 3 }));
 function A() { return <div className="page"><div className="train-item"><Attempts x={{ history: hist, added: now - 10 * D, clearedInTraining: true, cleared: true, triesSince: 3, failsSince: 1 }} /></div></div>; }
 function M() { const [cfg, setCfg] = useState({ features: { weakness: 'pro' }, limits: { free: { friends: 15, recommendations: 5, history_months: 3 }, plus: { friends: 50 } } }); const set = (fn) => setCfg((c) => { const n = structuredClone(c); fn(n); return n; }); return <div className="page"><PlanMatrix cfg={cfg} set={set} /></div>; }
+import HomeP from './pages/Home.jsx';
+import SongsP from './pages/Songs.jsx';
+import RecentP from './pages/Recent.jsx';
+import SettingsP from './pages/Settings.jsx';
+import VenuesP from './pages/Venues.jsx';
+import QueueP from './pages/Queue.jsx';
+import TitlesP from './pages/Titles.jsx';
+import PlayersP from './pages/Players.jsx';
+import VotesP from './pages/Votes.jsx';
+import ProgressP from './pages/Progress.jsx';
+import NotificationsP from './pages/Notifications.jsx';
+import OnlineP from './pages/Online.jsx';
+import PlansP from './pages/Plans.jsx';
+import SubscriptionP from './pages/Subscription.jsx';
+import TrainingP from './pages/Training.jsx';
+import ChallengesP from './pages/Challenges.jsx';
 import './styles.css';
 import { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
 import ChartPage from './pages/Chart.jsx';
@@ -99,10 +115,10 @@ const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','f
   curator: ['stats','charts'], events: ['stats','events','venues'], support: ['stats','users','feedback'] };
 const adminRole = new URLSearchParams(location.search).get('admin');
 const plan = { plan: 'plus', admin: adminRole != null, admin_role: adminRole || null, perms: adminRole != null ? ADMIN_PERMS[adminRole || 'owner'] : [], config: { toggles: {} } };
-const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { list: [] }, presence: {} };
+const ctx = { version: 'phoenix2', data, reload: () => {}, plan, reloadPlan: async () => plan, session: { user: { id: 'eu' } }, notifications: { items: [], unread: 0, markSeen: () => {}, markAll: () => {} }, presence: {} };
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
+    <HashRouter><div className="app"><Tour /><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></div></HashRouter>
   </DataCtx.Provider>,
 );

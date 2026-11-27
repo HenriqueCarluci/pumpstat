@@ -60,7 +60,7 @@ export default function Progress() {
 
   const a = useMemo(() => {
     if (!raw) return null;
-    const prog = parseProgress(raw.cur, data);
+    const prog = parseProgress(raw.cur || {}, data);
     const attempts = chartAttempts(data, prog);
     const oth = raw.oth && raw.othData ? (() => { const p = parseProgress(raw.oth, raw.othData); return { prog: p, attempts: chartAttempts(raw.othData, p) }; })() : null;
     const count = (m) => attempts.filter((r) => r.chart.mode === m).reduce((s, r) => s + r.attempts, 0);

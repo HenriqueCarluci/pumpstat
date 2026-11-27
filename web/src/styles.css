@@ -215,7 +215,8 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .up { color: var(--neon); font: 700 12px var(--num); } .down { color: #ff8a96; font: 700 12px var(--num); }
 /* rodapé do chart: data do recorde + 5 ações do mesmo tamanho (no celular, ícone em cima do texto) */
 .cc-date { font-size: 12px; margin-top: 10px; }
-.cc-actions { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.cc-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+.cc-actions > .cc-act { flex-direction: row; min-height: 40px; gap: 5px; padding: 6px 4px; }
 .cc-act { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 48px; padding: 6px 2px;
   border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: var(--text);
   font-family: inherit; font-size: 11.5px; font-weight: 600; line-height: 1.15;
@@ -682,6 +683,7 @@ a.q-city:hover { color: var(--text); }
 
 /* Progresso: gráficos, pontos fracos, dicas e plano */
 .progress .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.progress .filters > .chips { max-width: 100%; min-width: 0; }
 .mchart { position: relative; margin: 8px 0 0; }
 .mchart svg { width: 100%; height: auto; display: block; touch-action: pan-y; }
 .mchart .grid { stroke: rgba(255, 255, 255, 0.08); stroke-width: 1; }
@@ -1639,3 +1641,14 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .vm-pin.me span { background: #fff; box-shadow: 0 0 0 4px #ffffff44, 0 0 16px #fff; }
 @media (min-width: 900px) { .venue-map { height: 440px; } }
 .venue-map .vm-tiles { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
+
+/* revisão mobile: atalhos da home e ações do perfil não podem passar da largura da tela */
+.quick-links { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ql { min-width: 0; justify-content: center; }
+.player-page .pp-actions { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr); }
+.player-page .pp-actions.me { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.player-page .pp-actions .btn { min-width: 0; }
+@media (max-width: 420px) {
+  .ql { flex-direction: column; gap: 4px; padding: 9px 4px; font-size: 12.5px; line-height: 1.15; }
+  .player-page .pp-actions:not(.me) .btn { flex-direction: column; gap: 3px; font-size: 12.5px; padding: 8px 4px; white-space: normal; line-height: 1.15; }
+}

@@ -17,7 +17,7 @@ const DAY = 86400000;
 export function parseProgress(raw, data) {
   const byId = data.byId;
   const styles = new Map();
-  for (const r of raw.styles || []) {
+  for (const r of raw?.styles || []) {
     const pct = {};
     PATTERNS.forEach((p, i) => { pct[p] = Number(r[i + 1]) || 0; });
     styles.set(r[0], { pct, nps: r[9] == null ? null : Number(r[9]), sustained: !!r[10] });
