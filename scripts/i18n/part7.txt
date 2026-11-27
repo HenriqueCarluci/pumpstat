@@ -1199,3 +1199,4 @@ situação inválida | invalid status | estado inválido | 잘못된 상태 | �
 tipo inválido | invalid type | tipo inválido | 잘못된 유형 | 無効な種類 | type invalide | tipo non valido
 novidade não encontrada | item not found | novedad no encontrada | 소식을 찾을 수 없습니다 | お知らせが見つかりません | nouveauté introuvable | novità non trovata
 plano inválido | invalid plan | plan inválido | 잘못된 요금제 | 無効なプラン | forfait invalide | piano non valido
+Pump It Up é marca da Andamiro. Projeto independente, sem vínculo com a Andamiro. | Pump It Up is a trademark of Andamiro. Independent project, not affiliated with Andamiro. | Pump It Up es una marca de Andamiro. Proyecto independiente, sin vínculo con Andamiro. | Pump It Up는 Andamiro의 상표입니다. Andamiro와 관련 없는 독립 프로젝트입니다. | Pump It UpはAndamiroの商標です。Andamiroとは関係のない独立プロジェクトです。 | Pump It Up est une marque d'Andamiro. Projet indépendant, sans lien avec Andamiro. | Pump It Up è un marchio di Andamiro. Progetto indipendente, senza legami con Andamiro.

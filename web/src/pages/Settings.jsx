@@ -125,12 +125,7 @@ export default function Settings() {
         <DeleteAccount />
       </section>
 
-      <section className="card muted small">
-        <p>{t('Catálogo de charts e dificuldades:')} <a href="https://piuscores.arroweclip.se" target="_blank" rel="noreferrer">PIU Scores</a>.{' '}
-          {t('Tags e skills dos charts: comunidade')} <a href="https://arcadestat.app" target="_blank" rel="noreferrer">ArcadeStat</a>.{' '}
-          {t('Imagens de capa, grades, plates e bolinhas: © Andamiro, carregadas direto do piugame.com.')}{' '}
-          {t('Projeto independente, sem vínculo com a Andamiro.')}</p>
-      </section>
+      <p className="muted tiny legal-note">{t('Pump It Up é marca da Andamiro. Projeto independente, sem vínculo com a Andamiro.')}</p>
 
       <footer className="signature">
         <Logo size={22} />
