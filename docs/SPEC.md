@@ -86,6 +86,7 @@ carregadas de `piugame.com/l_img/p2/…`, acento verde-neon do logo.
 5. **Fila do fliperama** — ✅ primeira versão no ar (`#/fila/liberdade`, modo TV em `#/fila/liberdade/tv`).
 6. **Competições no perfil (CBPIU e LBPIU)** — ver 6.2.
 7. **Liberação de recursos por usuário** — o admin dá (ou tira) um recurso de uma pessoa sem mudar o plano dela, com prazo e motivo. Ver 6.3.
+8. **Seguidores** — seguir o perfil de um jogador que deixou o perfil público. Ver 6.4.
 
 ### 6.2 Competições no perfil (CBPIU e LBPIU)
 
@@ -118,6 +119,20 @@ Pedido em 27/11/2026: mostrar no perfil as etapas do CBPIU (últimas etapas joga
 | Regra | Admin (sem prévia) tem tudo → recurso desligado no geral → bloqueado para a pessoa → liberado para a pessoa → "só usuários liberados" → regra do plano. Vale mesmo com a cobrança desligada |
 | Servidor | `plan_can` segue a mesma regra; `my_plan()` devolve `grants` |
 | Admin | No usuário: "Recursos liberados" (recurso, liberar/bloquear, 30 dias / 3 meses / 1 ano / sem prazo, motivo). Em Planos: coluna "Liberação" por recurso e lista de quem tem cada recurso liberado |
+
+### 6.4 Seguidores
+
+Pedido em 27/11/2026: poder seguir o perfil de um jogador dentro da plataforma, se ele deixar o perfil público. Adiado para depois (a migração do banco não chegou a ser aplicada).
+
+| Item | Proposta |
+|---|---|
+| Perfil público | Opção em Ajustes → Privacidade, desligada por padrão (`user_settings.public_profile`). Ligada: qualquer jogador pode ver as notas e seguir, sem aprovação. "Ocultar minhas estatísticas" continua valendo por cima |
+| Seguir | Um lado só (`follows(follower, followee)`), botão Seguir/Seguindo no perfil e na busca; o dono pode tirar um seguidor; bloqueio desfaz tudo |
+| O que quem segue ganha | Ver as notas como um amigo (`can_view` = amigo ou perfil público), aparecer nos rankings dos charts e nas notas da música, e receber passes, recordes, PUMBILITY e lives (live só se as redes estiverem abertas para todos). Chat, convites e rival continuam só entre amigos |
+| Telas | Contadores de seguidores e seguindo no perfil; aba "Seguindo" em Jogadores com as duas listas; notificação "{nick} começou a te seguir" |
+| Admin | Chave geral `followers` em Administração → Recursos |
+
+O SQL pronto (ainda não aplicado) está em `supabase/backlog/followers.sql`. Antes de aplicar: renumerar como migração, revisar contra as funções que mudaram desde então (`my_notifications`, `twitch_live_report`, `compare_player`, `chart_ranking`, `song_friend_scores`, `search_players`) e fazer a parte do app.
 
 ### 6.1 Fila do fliperama
 
