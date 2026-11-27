@@ -101,7 +101,36 @@ function Team() {
             : <span className="tag admin-tag">{t(roleLabel(m.role))}</span>}
         </div>
       ))}
+      {canAdmin(plan, 'view_as') && <ViewAsHistory />}
     </div>
+  );
+}
+
+/** Dono: quem usou o "ver como usuário", quando e por quanto tempo. */
+function ViewAsHistory() {
+  const [list, setList] = useState(null);
+  useEffect(() => { rpc('admin_view_as_history', { p_limit: 50 }).then(setList).catch(() => setList([])); }, []);
+  const who = (nick, email) => nick || email || '—';
+  return (
+    <section className="card viewas-log">
+      <h3 className="ic-row"><Eye size={16} /> {t('Registro do "ver como usuário"')}</h3>
+      <p className="muted small">{t('Cada vez que alguém da equipe abre o app como outra pessoa (só leitura).')}</p>
+      {!list && <p className="muted small">{t('Carregando…')}</p>}
+      {list && !list.length && <p className="muted small">{t('Ninguém usou ainda.')}</p>}
+      {list?.length > 0 && (
+        <ul className="nu-list">
+          {list.map((r) => {
+            const mins = r.ended_at ? Math.max(1, Math.round((new Date(r.ended_at) - new Date(r.started_at)) / 60000)) : null;
+            return (
+              <li key={r.id}>
+                <span>{t('{a} viu como {b}', { a: who(r.admin_nick, r.admin_email), b: who(r.target_nick, r.target_email) })}</span>
+                <small className="muted">{fmtDate(r.started_at)} · {r.ended_at ? t('{n} min', { n: mins }) : r.expires_at && new Date(r.expires_at) > new Date() ? t('em andamento') : t('expirou')}</small>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
   );
 }
 
@@ -200,7 +229,7 @@ function UserRow({ u, open, onToggle, onChange }) {
               <button disabled={busy} onClick={() => run('admin_set_plan', { p_user: u.id, p_plan: 'free' }, t('Remover o plano deste usuário?'))}>{t('Remover plano')}</button>
             )}
           </div>
-          <FeatureGrants userId={u.id} />
+          <FeatureGrants userId={u.id} userPlan={u.plan} name={u.nickname || u.email} />
           </>}
           {canAdmin(plan, 'roles') && <>
             <div className="rv-label">{t('Equipe')}</div>
@@ -231,51 +260,114 @@ function UserRow({ u, open, onToggle, onChange }) {
   );
 }
 
-/** Recursos liberados para uma pessoa, sem mudar o plano dela (com prazo e motivo). */
-function FeatureGrants({ userId }) {
+/** Recursos liberados para uma pessoa, sem mudar o plano dela: resumo + matriz num modal. */
+function FeatureGrants({ userId, userPlan, name }) {
   const [list, setList] = useState(null);
-  const [feature, setFeature] = useState('');
-  const [note, setNote] = useState('');
-  const [busy, setBusy] = useState(false);
+  const [open, setOpen] = useState(false);
   const [err, setErr] = useState('');
   const load = () => rpc('admin_feature_grants', { p_user: userId }).then((r) => setList(r || [])).catch((e) => setErr(tErr(e.message)));
   useEffect(() => { load(); }, [userId]);
+  const active = (list || []).filter((g) => g.active);
   const label = (id) => FEATURES.find((f) => f.id === id)?.label || id;
-  const run = async (fn, args) => {
-    setBusy(true); setErr('');
-    try { await rpc(fn, args); await load(); } catch (e) { setErr(tErr(e.message)); }
-    setBusy(false);
-  };
-  const options = FEATURES.filter((f) => !f.hidden && !f.soon && f.min !== 'free');
   return (
     <div className="feature-grants">
       <div className="rv-label">{t('Recursos liberados (sem mudar o plano)')}</div>
-      {list?.length > 0 && (
-        <ul className="fg-list">
-          {list.map((g) => (
-            <li key={g.feature} className={g.active ? '' : 'expired'}>
-              <span className="fg-name">{t(label(g.feature))}<small className="muted">
-                {g.expires_at ? (g.active ? t('até {d}', { d: fmtDate(g.expires_at) }) : t('venceu em {d}', { d: fmtDate(g.expires_at) })) : t('sem prazo')}
-                {g.note ? ` · ${g.note}` : ''}</small></span>
-              <button type="button" className="link" disabled={busy} onClick={() => run('admin_remove_feature_grant', { p_user: userId, p_feature: g.feature })} title={t('Remover')}><X size={14} /></button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {list && !list.length && <p className="muted small">{t('Nenhum recurso liberado para esta pessoa.')}</p>}
-      <select value={feature} onChange={(e) => setFeature(e.target.value)}>
-        <option value="">{t('Escolha um recurso…')}</option>
-        {options.map((f) => <option key={f.id} value={f.id}>{t(f.label)} ({PLAN_LABEL[f.min]})</option>)}
-      </select>
-      {feature && <>
-        <input placeholder={t('Motivo (opcional), ex.: membro do clube')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} />
-        <div className="chips">
-          {[[30, '30 dias'], [90, '3 meses'], [365, '1 ano'], [null, 'Sem prazo']].map(([d, l]) => (
-            <button key={l} type="button" disabled={busy} onClick={() => run('admin_set_feature_grant', { p_user: userId, p_feature: feature, p_days: d, p_note: note || null }).then(() => { setFeature(''); setNote(''); })}>{t(l)}</button>
-          ))}
-        </div>
-      </>}
+      {list && (active.length
+        ? <p className="small">{active.map((g) => t(label(g.feature))).join(' · ')}</p>
+        : <p className="muted small">{t('Nenhum recurso liberado para esta pessoa.')}</p>)}
+      <button type="button" className="btn ghost" onClick={() => setOpen(true)}>{t('Gerenciar recursos')}{active.length ? ` (${active.length})` : ''}</button>
       {err && <div className="form-err">{err}</div>}
+      {open && list && <GrantsSheet userId={userId} userPlan={userPlan} name={name} list={list} onClose={() => setOpen(false)} onSaved={() => { setOpen(false); load(); }} />}
+    </div>
+  );
+}
+
+const rankOf = (p) => ['free', 'plus', 'pro'].indexOf(p || 'free');
+
+/** Matriz de recursos: marque o que liberar, escolha o prazo e salve de uma vez. */
+function GrantsSheet({ userId, userPlan, name, list, onClose, onSaved }) {
+  const { plan } = useData();
+  const options = FEATURES.filter((f) => !f.hidden && !f.soon && f.min !== 'free');
+  const need = (f) => plan?.config?.features?.[f.id] || f.min;
+  const current = new Map(list.filter((g) => g.active).map((g) => [g.feature, g]));
+  const [sel, setSel] = useState(() => new Set(current.keys()));
+  const [days, setDays] = useState(30);
+  const [note, setNote] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  useEffect(() => {
+    const k = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', k);
+    const prev = document.body.style.overflow; document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', k); document.body.style.overflow = prev; };
+  }, [onClose]);
+  const toggle = (id) => setSel((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const pick = (tier) => setSel(new Set(options.filter((f) => rankOf(need(f)) <= rankOf(tier) && rankOf(userPlan) < rankOf(need(f))).map((f) => f.id)));
+  const add = [...sel].filter((id) => !current.has(id));
+  const remove = [...current.keys()].filter((id) => !sel.has(id));
+  const save = async () => {
+    setBusy(true); setErr('');
+    try {
+      for (const id of add) await rpc('admin_set_feature_grant', { p_user: userId, p_feature: id, p_days: days, p_note: note || null });
+      for (const id of remove) await rpc('admin_remove_feature_grant', { p_user: userId, p_feature: id });
+      onSaved();
+    } catch (e) { setErr(tErr(e.message)); setBusy(false); }
+  };
+  const groups = [...new Set(options.map((f) => f.group))];
+  return (
+    <div className="sheet-wrap" onClick={onClose}>
+      <div className="sheet grants-sheet" role="dialog" aria-modal="true" aria-label={t('Recursos liberados')} onClick={(e) => e.stopPropagation()}>
+        <div className="sheet-h">
+          <span className="sheet-grip" aria-hidden />
+          <b>{t('Recursos de {n}', { n: name })} <small className="muted">· {t('plano {p}', { p: PLAN_LABEL[userPlan || 'free'] })}</small></b>
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Fechar')}><X size={18} /></button>
+        </div>
+        <div className="sheet-body">
+          <div className="chips">
+            <button type="button" onClick={() => pick('plus')}>{t('Marcar tudo do Plus')}</button>
+            <button type="button" onClick={() => pick('pro')}>{t('Marcar tudo do Pro')}</button>
+            <button type="button" onClick={() => setSel(new Set())}>{t('Desmarcar tudo')}</button>
+          </div>
+          <table className="grants-matrix">
+            <thead><tr><th>{t('Recurso')}</th><th>{t('Plano')}</th><th>{t('Situação')}</th><th>{t('Liberar')}</th></tr></thead>
+            <tbody>
+              {groups.map((g) => [
+                <tr key={`g-${g}`} className="gm-group"><td colSpan={4}>{t(g)}</td></tr>,
+                ...options.filter((f) => f.group === g).map((f) => {
+                  const byPlan = rankOf(userPlan) >= rankOf(need(f));
+                  const cur = current.get(f.id);
+                  return (
+                    <tr key={f.id} className={sel.has(f.id) ? 'on' : ''} onClick={() => toggle(f.id)}>
+                      <td>{t(f.label)}</td>
+                      <td><span className={`tag ${need(f) === 'free' ? '' : 'plus'}`}>{PLAN_LABEL[need(f)]}</span></td>
+                      <td className="small muted">{cur ? (cur.expires_at ? t('liberado até {d}', { d: fmtDate(cur.expires_at) }) : t('liberado sem prazo')) : byPlan ? t('já tem pelo plano') : '—'}</td>
+                      <td><input type="checkbox" checked={sel.has(f.id)} onChange={() => toggle(f.id)} onClick={(e) => e.stopPropagation()} aria-label={t(f.label)} /></td>
+                    </tr>
+                  );
+                }),
+              ])}
+            </tbody>
+          </table>
+          {add.length > 0 && <>
+            <div>
+              <h4>{t('Prazo dos novos ({n})', { n: add.length })}</h4>
+              <div className="chips">
+                {[[30, '30 dias'], [90, '3 meses'], [365, '1 ano'], [null, 'Sem prazo']].map(([d, l]) => (
+                  <button key={l} type="button" className={days === d ? 'on' : ''} onClick={() => setDays(d)}>{t(l)}</button>
+                ))}
+              </div>
+            </div>
+            <input placeholder={t('Motivo (opcional), ex.: membro do clube')} value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} />
+          </>}
+          {err && <div className="form-err">{err}</div>}
+        </div>
+        <div className="sheet-foot">
+          <button type="button" className="btn ghost" onClick={onClose}>{t('Cancelar')}</button>
+          <button type="button" className="btn" disabled={busy || (!add.length && !remove.length)} onClick={save}>
+            {!add.length && !remove.length ? t('Nada para salvar') : t('Salvar (+{a} / −{r})', { a: add.length, r: remove.length })}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

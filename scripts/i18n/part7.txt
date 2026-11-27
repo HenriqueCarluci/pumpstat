@@ -1283,3 +1283,25 @@ Tudo: planos, preços, cortesias, equipe e ver o app como um usuário. | Everyth
 Tudo, menos planos e cobrança, gestão da equipe e ver como usuário. | Everything except plans and billing, team management and viewing as a user. | Todo, menos planes y cobro, gestión del equipo y ver como usuario. | 플랜과 결제, 팀 관리, 사용자로 보기를 제외한 전체. | プランと課金、チーム管理、ユーザーとしての表示以外のすべて。 | Tout sauf forfaits et facturation, gestion de l'équipe et vue en tant qu'utilisateur. | Tutto tranne piani e fatturazione, gestione del team e vista come utente.
 Tier do clube, votações de tier, tags, gimmicks, R!SE e vídeos. | Club tier, tier votes, tags, gimmicks, R!SE and videos. | Tier del club, votaciones de tier, tags, gimmicks, R!SE y videos. | 클럽 티어, 티어 투표, 태그, 기믹, R!SE, 영상. | クラブのティア、ティア投票、タグ、ギミック、R!SE、動画。 | Tier du club, votes de tier, tags, gimmicks, R!SE et vidéos. | Tier del club, votazioni di tier, tag, gimmick, R!SE e video.
 Desafios, missões, fliperamas e times. | Challenges, missions, arcades and teams. | Desafíos, misiones, arcades y equipos. | 챌린지, 미션, 오락실, 팀. | チャレンジ、ミッション、ゲーセン、チーム。 | Défis, missions, arcades et équipes. | Sfide, missioni, sale giochi e squadre.
+Gerenciar recursos | Manage features | Gestionar funciones | 기능 관리 | 機能を管理 | Gérer les fonctions | Gestisci funzioni
+Recursos liberados | Unlocked features | Funciones liberadas | 허용된 기능 | 解放した機能 | Fonctions débloquées | Funzioni sbloccate
+Recursos de {n} | Features for {n} | Funciones de {n} | {n}의 기능 | {n}の機能 | Fonctions de {n} | Funzioni di {n}
+plano {p} | {p} plan | plan {p} | {p} 플랜 | {p}プラン | forfait {p} | piano {p}
+Marcar tudo do Plus | Select all Plus | Marcar todo el Plus | Plus 전체 선택 | Plusをすべて選択 | Tout le Plus | Seleziona tutto il Plus
+Marcar tudo do Pro | Select all Pro | Marcar todo el Pro | Pro 전체 선택 | Proをすべて選択 | Tout le Pro | Seleziona tutto il Pro
+Desmarcar tudo | Clear all | Desmarcar todo | 전체 해제 | すべて解除 | Tout décocher | Deseleziona tutto
+Plano | Plan | Plan | 플랜 | プラン | Forfait | Piano
+Situação | Status | Situación | 상태 | 状態 | Statut | Stato
+Liberar | Unlock | Liberar | 허용 | 解放 | Débloquer | Sblocca
+liberado até {d} | unlocked until {d} | liberado hasta {d} | {d}까지 허용 | {d}まで解放 | débloqué jusqu'au {d} | sbloccato fino al {d}
+liberado sem prazo | unlocked, no end date | liberado sin plazo | 기한 없이 허용 | 期限なしで解放 | débloqué sans date limite | sbloccato senza scadenza
+já tem pelo plano | already in their plan | ya lo tiene por el plan | 플랜에 이미 포함 | プランに含まれています | déjà inclus dans son forfait | già incluso nel piano
+Prazo dos novos ({n}) | Duration for new ones ({n}) | Plazo de los nuevos ({n}) | 새 항목 기간 ({n}) | 新規分の期間({n}) | Durée des nouveaux ({n}) | Durata dei nuovi ({n})
+Nada para salvar | Nothing to save | Nada para guardar | 저장할 내용 없음 | 保存する変更なし | Rien à enregistrer | Niente da salvare
+Salvar (+{a} / −{r}) | Save (+{a} / −{r}) | Guardar (+{a} / −{r}) | 저장 (+{a} / −{r}) | 保存(+{a} / −{r}) | Enregistrer (+{a} / −{r}) | Salva (+{a} / −{r})
+Registro do "ver como usuário" | "View as user" log | Registro de "ver como usuario" | "사용자로 보기" 기록 | 「ユーザーとして表示」の記録 | Journal « voir en tant qu'utilisateur » | Registro di "vedi come utente"
+Cada vez que alguém da equipe abre o app como outra pessoa (só leitura). | Every time someone on the team opens the app as another person (read-only). | Cada vez que alguien del equipo abre la app como otra persona (solo lectura). | 팀원이 다른 사람으로 앱을 열 때마다 기록됩니다 (읽기 전용). | チームの誰かが別の人としてアプリを開くたびに記録されます(閲覧のみ)。 | Chaque fois qu'un membre de l'équipe ouvre l'app en tant qu'une autre personne (lecture seule). | Ogni volta che qualcuno del team apre l'app come un'altra persona (sola lettura).
+Ninguém usou ainda. | Nobody has used it yet. | Nadie lo usó todavía. | 아직 사용한 사람이 없습니다. | まだ誰も使っていません。 | Personne ne l'a encore utilisé. | Nessuno l'ha ancora usato.
+{a} viu como {b} | {a} viewed as {b} | {a} vio como {b} | {a}님이 {b}(으)로 봄 | {a}が{b}として表示 | {a} a vu en tant que {b} | {a} ha visto come {b}
+em andamento | in progress | en curso | 진행 중 | 進行中 | en cours | in corso
+expirou | expired | expiró | 만료됨 | 期限切れ | expiré | scaduto

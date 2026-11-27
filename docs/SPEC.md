@@ -309,4 +309,4 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Ver como usuário (só leitura)
 - Dono e admin geral: Admin → Usuários → "Ver como esta pessoa" (30 min). O gancho `check_request` (PostgREST `db_pre_request`) troca o `auth.uid()` dos pedidos do admin pelo da pessoa e só deixa passar leituras (GET nas tabelas e funções STABLE). Conversas (`chat_with`) e notificações ficam bloqueadas. Não dá para ver como o dono.
-- Faixa vermelha no topo com o tempo que falta e "Sair" (`admin_stop_view_as`, que roda como o admin). Cada acesso vai para `admin_view_as_log`. Política de privacidade atualizada.
+- Faixa vermelha no topo com o tempo que falta e "Sair" (`admin_stop_view_as`, que roda como o admin). Cada acesso vai para `admin_view_as_log` e aparece para o dono em Admin → Equipe → "Registro do ver como usuário" (`admin_view_as_history`). Política de privacidade atualizada.
