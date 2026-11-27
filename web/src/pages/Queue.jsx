@@ -2,17 +2,21 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { currentUserId, getSession } from '../lib/auth.js';
 import {
-  backFromAway, joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
+  addGuest, backFromAway, joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
 } from '../lib/queue.js';
 import { locale, t, tErr } from '../lib/i18n.js';
 import { rememberVenue } from '../lib/presence.js';
-import { ArrowUpToLine, MapPin, SkipForward, X, Zap } from '../components/Icons.jsx';
+import { ArrowUpToLine, MapPin, SkipForward, UserPlus, X, Zap } from '../components/Icons.jsx';
 import { isNative } from '../lib/native.js';
 import { APP_SCHEME } from '../lib/config.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
 const rememberEntry = (machine, id) => { try { localStorage.setItem(MY_ENTRIES, JSON.stringify({ ...myEntryIds(), [machine]: id })); } catch { /* ignore */ } };
+// convidados que este aparelho colocou na fila (para quem não tem conta; com conta vale o guest_of)
+const MY_GUESTS = 'stepclub:queue-guests';
+const myGuestIds = () => { try { return JSON.parse(localStorage.getItem(MY_GUESTS) || '[]'); } catch { return []; } };
+const rememberGuest = (id) => { try { localStorage.setItem(MY_GUESTS, JSON.stringify([...myGuestIds().slice(-20), id])); } catch { /* ignore */ } };
 
 // entrar na fila (e voltar de ausente) sempre pede a localização; o raio só é conferido onde o local tem coordenadas
 const needsCheckin = () => true;
@@ -153,6 +157,9 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
   const [name, setName] = useState(() => { try { return localStorage.getItem('stepclub:queue-name') || ''; } catch { return ''; } });
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [guestOpen, setGuestOpen] = useState(false);
+  const [guestName, setGuestName] = useState('');
+  const isMyGuest = (e) => e.is_guest && ((uid && e.guest_of === uid) || myGuestIds().includes(e.id));
   const waiting = entries.filter((e) => e.status === 'waiting');
   const playing = waiting[0];
   const myPos = mine && mine.status === 'waiting' ? waiting.findIndex((e) => e.id === mine.id) : -1;
@@ -167,6 +174,11 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
     e.preventDefault();
     try { localStorage.setItem('stepclub:queue-name', name); } catch { /* ignore */ }
     act(async () => { const id = await joinQueue(machine.id, name, checkin); rememberEntry(machine.id, id); });
+  };
+
+  const addG = (e) => {
+    e.preventDefault();
+    act(async () => { const id = await addGuest(machine.id, guestName, checkin); rememberGuest(id); setGuestName(''); setGuestOpen(false); });
   };
 
   return (
@@ -188,6 +200,14 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
           <li key={e.id} className={`${e.status === 'away' ? 'away' : ''} ${mine?.id === e.id ? 'me' : ''}`}>
             <Person entry={e} />
             {e.status === 'away' && <span className="tag">{t('ausente há {n} min', { n: mins(e.away_since) })}</span>}
+            {isMyGuest(e) && !isAdmin && (
+              <span className="q-admin">
+                <button className="link small" disabled={busy} onClick={() => act(() => (e.status === 'away' ? backFromAway(e.id, checkin) : setAway(e.id, true)))}>
+                  {e.status === 'away' ? t('Voltou') : t('Ausente')}
+                </button>
+                <button className="link" disabled={busy} onClick={() => act(() => leaveQueue(e.id))} title={t('Tirar da fila')}><X size={16} /></button>
+              </span>
+            )}
             {isAdmin && (
               <span className="q-admin">
                 <button className="link" onClick={() => act(() => toFront(e.id))} title={t('Mover para o topo')}><ArrowUpToLine size={16} /></button>
@@ -224,6 +244,17 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
         </form>
       )}
 
+      {guestOpen ? (
+        <form className="q-join q-guest" onSubmit={addG}>
+          <input placeholder={t('nome do convidado')} value={guestName} maxLength={24} required autoFocus onChange={(e) => setGuestName(e.target.value)} />
+          <button className="btn" disabled={busy}>{busy ? t('Conferindo local…') : checkin ? <><MapPin size={16} /> {t('Check-in e adicionar')}</> : t('Adicionar')}</button>
+          <button type="button" className="btn ghost" onClick={() => setGuestOpen(false)}>{t('Cancelar')}</button>
+          <p className="muted tiny">{t('Para quem está no fliperama sem celular. Você cuida da vaga dele: pode marcar ausente e tirar da fila. Até 2 convidados por pessoa.')}</p>
+        </form>
+      ) : (
+        <button type="button" className="btn ghost wide q-add-guest" disabled={busy} onClick={() => setGuestOpen(true)}><UserPlus size={16} /> {t('Adicionar convidado na fila')}</button>
+      )}
+
       {isAdmin && entries.length > 0 && (
         <button className="link small q-reset" onClick={() => window.confirm(t('Zerar a fila desta máquina?')) && act(() => resetQueue(machine.id))}>{t('Zerar fila')}</button>
       )}
@@ -236,7 +267,7 @@ export function Person({ entry, big }) {
   return (
     <span className={`q-person ${big ? 'big' : ''}`}>
       <span className="q-avatar">{entry.avatar_url ? <img src={entry.avatar_url} alt="" referrerPolicy="no-referrer" /> : initials}</span>
-      <span className="q-name">{entry.display_name}</span>
+      <span className="q-name">{entry.display_name}{entry.is_guest && <small className="q-guest-of">{entry.guest_label ? t('convidado de {n}', { n: entry.guest_label }) : t('convidado')}</small>}</span>
       {entry.turns > 0 && <span className="q-turns">{t('{n}× jogou', { n: entry.turns })}</span>}
     </span>
   );

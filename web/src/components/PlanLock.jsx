@@ -118,7 +118,7 @@ function TestAccounts() {
   return (
     <div className="test-accounts">
       <b className="small">{t('Contas de teste')}</b>
-      <p className="muted small">{t('Abra o app como uma conta de teste para ver a navegação nessa situação (só leitura, 30 minutos).')}</p>
+      <p className="muted small">{t('Abra o app como uma conta de teste para usar o app nessa situação. Como é uma conta de teste, dá para gravar (entrar em time, na fila, responder o questionário). Dura 30 minutos.')}</p>
       {list.map((a) => (
         <div key={a.id} className="ta-row">
           <span className="small">{t(a.label)}</span>
@@ -184,7 +184,9 @@ export function ViewAsBanner() {
   };
   return (
     <div className="viewas-banner" role="status">
-      <span className="ic-row"><Eye size={15} /> {t('Vendo como {u} · só leitura · faltam {t}', { u: v.email || t('usuário'), t: left })}</span>
+      <span className="ic-row"><Eye size={15} /> {v.test
+        ? t('Vendo como a conta de teste {u} · pode gravar · faltam {t}', { u: v.email || t('usuário'), t: left })
+        : t('Vendo como {u} · só leitura · faltam {t}', { u: v.email || t('usuário'), t: left })}</span>
       <button type="button" className="link" disabled={busy} onClick={stop}>{t('Sair')}</button>
     </div>
   );

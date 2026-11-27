@@ -2492,3 +2492,11 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .test-accounts p { margin: 0; }
 .ta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel2); }
 .ta-row .btn { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+/* fila: convidado (quem está sem celular) */
+.q-guest { flex-wrap: wrap; }
+.q-guest input { flex: 1 1 100%; }
+.q-guest .btn { flex: 1 1 auto; }
+.q-guest .btn.ghost { background: transparent; }
+.q-guest p { flex-basis: 100%; margin: 0; }
+.q-add-guest { margin-top: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.q-guest-of { display: block; font: 500 11px var(--sans, inherit); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

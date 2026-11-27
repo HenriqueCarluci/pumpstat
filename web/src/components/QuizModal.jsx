@@ -21,7 +21,9 @@ export default function QuizModal({ initial, onClose, first = false }) {
     if (q.multi) {
       setAns((a) => {
         const cur = a[q.id] || [];
-        return { ...a, [q.id]: cur.includes(v) ? cur.filter((x) => x !== v) : cur.length >= q.multi ? cur : [...cur, v] };
+        if (q.exclusive && v === q.exclusive) return { ...a, [q.id]: cur.includes(v) ? [] : [v] };
+        const rest = cur.filter((x) => x !== q.exclusive);
+        return { ...a, [q.id]: rest.includes(v) ? rest.filter((x) => x !== v) : rest.length >= q.multi ? rest : [...rest, v] };
       });
     } else {
       setAns((a) => ({ ...a, [q.id]: v }));
@@ -92,7 +94,7 @@ export function QuizPrompt() {
   const s = useQuiz();
   const [closed, setClosed] = useState(false);
   const [active, setActive] = useState(false);
-  const pending = !!session && !plan?.view_as && quizPending(s);
+  const pending = !!session && !!plan && (!plan.view_as || plan.view_as.test) && quizPending(s);
   // depois de aberto, fica na tela até a pessoa fechar (mesmo já respondido, para mostrar o "Pronto!")
   useEffect(() => { if (pending && !closed) { setActive(true); setQuizPromptOpen(true); } }, [pending, closed]);
   if (closed || !(active || pending)) return null;

@@ -10,7 +10,10 @@ export const QUESTIONS = [
   { id: 'mode', q: 'Qual modo você mais joga?', opts: [['S', 'Single'], ['D', 'Double'], ['both', 'Os dois']] },
   { id: 'skills', q: 'Quer melhorar algo específico?', hint: 'Escolha até 3 (opcional).', multi: 3,
     opts: [['twist', 'Twist'], ['drill', 'Drill'], ['run', 'Corrida'], ['bracket', 'Bracket'], ['jump', 'Pulo'], ['stamina', 'Resistência'],
-      ['switch', 'Troca de pé'], ['gimmick', 'Gimmick'], ['fast', 'Leitura de charts rápidos'], ['accuracy', 'Precisão (notas e timing)']] },
+      ['switch', 'Troca de pé'], ['gimmick', 'Gimmick'], ['fast', 'Leitura de charts rápidos'], ['accuracy', 'Precisão (notas e timing)'],
+      ['auto', 'Não sei, recomende para mim']],
+    // "não sei" vale sozinho: o app escolhe pelos pontos fracos que aparecem nas suas jogadas
+    exclusive: 'auto' },
 ];
 export const optLabel = (qid, v) => QUESTIONS.find((x) => x.id === qid)?.opts.find(([k]) => k === v)?.[1] || v;
 
@@ -76,4 +79,4 @@ export const quizDays = (quiz) => ({ rare: 1, weekly: 1, few: 2, daily: 3 })[qui
 /** Aba inicial das Recomendadas. */
 export const quizRecTab = (quiz) => (quiz?.goal === 'score' || quiz?.goal === 'pumbility' ? 'improve' : 'fresh');
 /** Tags de chart que a pessoa quer treinar (as que existem como tag). */
-export const quizTags = (quiz) => (quiz?.skills || []).filter((s) => s !== 'accuracy');
+export const quizTags = (quiz) => (quiz?.skills || []).filter((s) => s !== 'accuracy' && s !== 'auto');

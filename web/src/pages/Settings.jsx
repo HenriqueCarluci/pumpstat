@@ -111,9 +111,11 @@ export default function Settings() {
         </Group>
       )}
 
-      <Group id="seguranca" title="Segurança">
-        <TwoFactorCard />
-      </Group>
+      {!plan?.view_as && (
+        <Group id="seguranca" title="Segurança">
+          <TwoFactorCard />
+        </Group>
+      )}
 
       <Group id="ajuda" title="Ajuda">
         <section className="card">
