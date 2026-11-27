@@ -914,14 +914,14 @@ function TeamAdminRow({ team }) {
     <div className="card adm-team">
       <div className="adm-team-row"><b>{team.name}</b><span className="muted tiny">{t('{n} membros', { n: info?.members.length ?? team.members })}{info?.requests ? ` · ${t('{n} pedidos', { n: info.requests })}` : ''}</span></div>
       {admins.length ? admins.map((m) => (
-        <div key={m.id} className="adm-team-row"><span className="ic-row"><Crown size={12} /> {m.nickname || '—'}</span>
+        <div key={m.id} className="adm-team-row"><span className="ic-row"><Crown size={12} /> {m.nickname || '—'}{m.no_pump && <span className="tag no-pump">{t('sem conta da Pump')}</span>}</span>
           <button className="btn ghost sm" onClick={() => set({ p_user: m.id, p_on: false })}>{t('Tirar admin')}</button></div>
       )) : <p className="muted tiny">{t('Sem administrador: a entrada é livre.')}</p>}
       {others.length > 0 && (
         <details>
           <summary className="muted tiny">{t('Participantes')}</summary>
           {others.map((m) => (
-            <div key={m.id} className="adm-team-row"><span>{m.nickname || '—'}</span>
+            <div key={m.id} className="adm-team-row"><span>{m.nickname || '—'}{m.no_pump && <span className="tag no-pump">{t('sem conta da Pump')}</span>}</span>
               <button className="btn ghost sm" onClick={() => set({ p_user: m.id, p_on: true })}><Crown size={12} /> {t('Tornar admin')}</button></div>
           ))}
         </details>

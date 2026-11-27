@@ -10,10 +10,11 @@ import ChallengeBanner from '../components/ChallengeBanner.jsx';
 import { Ball, Grade, Jacket, Plate, ScoreCard, Stat, timeAgo } from '../components/ui.jsx';
 import { chartLabel, fmtScore, GRADE_ORDER, gradeTier, pbTier, pumbility, pumbilitySuggestions, VERSIONS } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { ChevronDown, ChevronRight, Logo } from '../components/Icons.jsx';
+import { ChevronDown, ChevronRight, LayoutGrid, ListOrdered, Logo, Music2 } from '../components/Icons.jsx';
+import TeamPicker from '../components/TeamPicker.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
-import { entitlements } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 
 export default function Home() {
   const { data, version, reload, session, plan } = useData();
@@ -52,13 +53,30 @@ export default function Home() {
   const v = VERSIONS[version];
 
   if (!p && !stats.played.length) {
+    // ainda sem a AM.PASS vinculada: o que já dá para usar + o convite para conectar
+    const go = [
+      ['/fila', <ListOrdered key="i" size={20} />, t('Filas dos fliperamas'), t('Veja quem está jogando e entre na fila.')],
+      ['/musicas', <Music2 key="i" size={20} />, t('Músicas'), t('Catálogo da Phoenix 2 e da Phoenix, com níveis e vídeos.')],
+      ['/tier', <LayoutGrid key="i" size={20} />, t('Tier'), t('Os charts de cada nível, do mais fácil ao mais difícil.')],
+    ];
     return (
-      <div className="page">
+      <div className="page home-nopump">
         <section className="card hero-connect">
           <div className="login-brand"><Logo size={30} /> PIU Stats</div>
-          <p className="center">{t('Entre com a sua conta da Pump It Up e trazemos seus recordes da Phoenix 2 e da Phoenix.')}</p>
+          <p className="center">{t('Conecte a sua conta da Pump It Up (AM.PASS) para ver seus recordes, PUMBILITY, missões e recomendações. Enquanto isso, já dá para usar o resto do app.')}</p>
+          <PiuConnect onDone={() => reload()} />
         </section>
-        <section className="card"><PiuConnect onDone={() => reload()} /></section>
+        {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
+        <section className="card np-links">
+          <h3>{t('Já dá para usar')}</h3>
+          {go.map(([to, ic, h, d]) => (
+            <Link key={to} to={to} className="np-link">
+              <span className="np-ic">{ic}</span>
+              <span><b>{h}</b><small className="muted">{d}</small></span>
+              <ChevronRight size={18} className="muted" />
+            </Link>
+          ))}
+        </section>
       </div>
     );
   }

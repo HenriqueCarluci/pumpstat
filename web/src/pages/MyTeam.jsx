@@ -99,7 +99,7 @@ export default function MyTeam() {
             <div key={r.id} className="mt-req">
               <Avatar p={r} size={36} />
               <div className="mt-main">
-                <b>{r.nickname || t('Jogador')}</b>
+                <b>{r.nickname || t('Jogador')}</b>{r.no_pump && <span className="tag no-pump">{t('sem conta da Pump')}</span>}
                 <div className="muted tiny">{[r.title, r.pumbility != null ? `PUMBILITY ${fmtP(r.pumbility)}` : null].filter(Boolean).join(' · ')}</div>
               </div>
               <div className="mt-req-btns">
@@ -124,7 +124,7 @@ export default function MyTeam() {
               <span className={`mt-rank r${i + 1}`}>{i < 3 ? <Trophy size={14} /> : null}{i + 1}</span>
               <Avatar p={m} size={40} />
               <div className="mt-main">
-                <div className="mt-nick"><Flag cc={ccOf(m.id)} /><b>{m.nickname || t('Jogador')}</b>{m.admin && <span className="tag team-admin-tag" title={t('Administrador do time')}><Crown size={11} /> {t('admin')}</span>}{m.me && <span className="tag">{t('você')}</span>}{m.online && !m.me && <span className="dot-on" title={t('online agora')} />}</div>
+                <div className="mt-nick"><Flag cc={ccOf(m.id)} /><b>{m.nickname || t('Jogador')}</b>{m.no_pump && <span className="tag no-pump">{t('sem conta da Pump')}</span>}{m.admin && <span className="tag team-admin-tag" title={t('Administrador do time')}><Crown size={11} /> {t('admin')}</span>}{m.me && <span className="tag">{t('você')}</span>}{m.online && !m.me && <span className="dot-on" title={t('online agora')} />}</div>
                 {m.title && <div className="muted tiny mt-title">{m.title}</div>}
                 <div className="mt-levels">
                   {m.max_d != null && <Ball chart={{ mode: 'D', level: m.max_d }} size="sm" />}

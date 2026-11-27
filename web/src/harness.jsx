@@ -178,7 +178,9 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
 });
 song.charts = charts;
 charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; c.tags = [['twist', 'spin'], ['half', 'crossover'], ['gimmick', 'drill'], [], ['run'], ['jack']][i % 6]; });
-const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
+const noPump = new URLSearchParams(location.search).has('nopump'); // ?nopump: conta sem AM.PASS vinculada
+const hCharts = noPump ? charts.map((c) => ({ ...c, score: null, grade: null, plate: null, broken: null, played_at: null })) : charts;
+const data = { version: 'phoenix2', songs: [song], charts: hCharts, byId: new Map(hCharts.map((c) => [c.id, c])), plays: [], profile: noPump ? null : { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
 import { ROLE_PERMS as ADMIN_PERMS } from './lib/admin.js';
 const adminRole = new URLSearchParams(location.search).get('admin');
 const previewQ = new URLSearchParams(location.search).get('preview');
