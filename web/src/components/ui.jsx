@@ -9,6 +9,16 @@ const GRADE_CODE = { 'SSS+': 'sss_p', SSS: 'sss', 'SS+': 'ss_p', SS: 'ss', 'S+':
   'AA+': 'aa_p', AA: 'aa', 'A+': 'a_p', A: 'a', B: 'b', C: 'c', D: 'd', F: 'f' };
 const imgProps = { alt: '', loading: 'lazy', referrerPolicy: 'no-referrer', draggable: false };
 export const gradeImgUrl = (grade, broken) => (grade ? `${IMG}/grade/${(broken ? 'x_' : '') + (GRADE_CODE[grade] || grade.toLowerCase())}.png` : null);
+/** Imagens fixas do jogo usadas no app (notas, plates e bolinhas de nível), para baixar tudo de uma vez no app. */
+export function staticImageUrls() {
+  const codes = Object.values(GRADE_CODE);
+  return [
+    ...codes.flatMap((c) => [`${IMG}/grade/${c}.png`, `${IMG}/grade/x_${c}.png`]),
+    ...Object.keys(PLATES).map((p) => `${IMG}/plate/${p.toLowerCase()}.png`),
+    ...['s', 'd', 'hd', 'c'].flatMap((k) => [`${IMG}/stepball/full/${k}_bg.png`, `${IMG}/stepball/full/${k}_text.png`]),
+    ...[...'0123456789'].map((d) => `${IMG}/stepball/full/s_num_${d}.png`),
+  ];
+}
 export const plateImgUrl = (plate) => (plate ? `${IMG}/plate/${plate.toLowerCase()}.png` : null);
 
 /** Bolinha de nível no estilo do jogo (single vermelho, double verde, half-double azul, co-op amarelo). */

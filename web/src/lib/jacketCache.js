@@ -1,5 +1,8 @@
-// Capas das músicas: por padrão baixam conforme aparecem; quem quiser pode baixar todas de uma vez
-// (ficam no cache do aparelho e a lista de músicas abre com tudo pronto, mesmo com internet ruim).
+// Imagens do app (capas das músicas, notas, plates, bolinhas de nível e fotos de perfil dos amigos):
+// por padrão baixam conforme aparecem; no app dá para baixar todas de uma vez e elas ficam no cache do aparelho.
+import { rpc } from './api.js';
+import { staticImageUrls } from '../components/ui.jsx';
+
 const MODE = 'pumpstat:jackets';
 const DONE = 'pumpstat:jackets-done';
 
@@ -9,23 +12,35 @@ export const setJacketMode = (m) => { try { localStorage.setItem(MODE, m); } cat
 
 const readDone = () => { try { return new Set(JSON.parse(localStorage.getItem(DONE) || '[]')); } catch { return new Set(); } };
 const saveDone = (set) => { try { localStorage.setItem(DONE, JSON.stringify([...set])); } catch { /* ignore */ } };
-const key = (u) => u.split('/').pop();
+const key = (u) => u.replace(/^https?:\/\/[^/]+\//, '');
 
-export const jacketUrls = (data) => [...new Set((data?.songs || []).map((s) => s.jacket).filter(Boolean))];
+/** Tudo o que dá para saber sem ir ao servidor: capas da versão atual, imagens fixas do jogo e a sua foto. */
+export const jacketUrls = (data) => [...new Set([
+  ...(data?.songs || []).map((s) => s.jacket),
+  ...staticImageUrls(),
+  data?.profile?.avatar_url,
+].filter(Boolean))];
+
+/** Fotos de perfil dos amigos e da comunidade (lista de jogadores). */
+async function avatarUrls(version) {
+  try {
+    const list = await rpc('players', { p_version: version });
+    return (list || []).map((p) => p.avatar).filter((u) => typeof u === 'string' && /^https:\/\//.test(u));
+  } catch { return []; }
+}
+
 export const pendingJackets = (data) => { const done = readDone(); return jacketUrls(data).filter((u) => !done.has(key(u))); };
 
 let running = null;
-/** Baixa as capas que faltam, 6 por vez. onProgress(feitas, total). Devolve quando termina ou é cancelado. */
+/** Baixa as imagens que faltam, 6 por vez. onProgress(feitas, total). */
 export function downloadJackets(data, onProgress) {
-  if (running) { running.listeners.add(onProgress); return running.promise; }
-  const urls = pendingJackets(data);
-  const done = readDone();
-  const total = urls.length;
-  let n = 0;
+  if (running) { if (onProgress) running.listeners.add(onProgress); return running.promise; }
   const listeners = new Set(onProgress ? [onProgress] : []);
-  const emit = () => listeners.forEach((fn) => fn(n, total));
   const ctl = { stop: false };
-  const one = (u) => new Promise((res) => {
+  let n = 0;
+  let total = 0;
+  const emit = () => listeners.forEach((fn) => fn(n, total));
+  const one = (u, done) => new Promise((res) => {
     const im = new Image();
     im.referrerPolicy = 'no-referrer';
     im.decoding = 'async';
@@ -34,15 +49,19 @@ export function downloadJackets(data, onProgress) {
     im.src = u;
   });
   const promise = (async () => {
+    const done = readDone();
+    const extra = await avatarUrls(data?.version);
+    const urls = [...new Set([...jacketUrls(data), ...extra])].filter((u) => !done.has(key(u)));
+    total = urls.length;
+    emit();
     const queue = [...urls];
     const worker = async () => {
       while (queue.length && !ctl.stop) {
-        await one(queue.shift());
+        await one(queue.shift(), done);
         n += 1; emit();
         if (n % 20 === 0) saveDone(done);
       }
     };
-    emit();
     await Promise.all(Array.from({ length: 6 }, worker));
     saveDone(done);
     running = null;

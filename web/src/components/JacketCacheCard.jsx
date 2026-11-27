@@ -31,8 +31,8 @@ export default function JacketCacheCard({ where = 'settings' }) {
   const left = prog ? prog[1] - prog[0] : pending;
   return (
     <section className="card jcache">
-      <h3 className="ic-row"><ImagePlus size={18} /> {t('Capas das músicas')}</h3>
-      <p className="small muted">{t('Baixar todas deixa a lista de músicas e o Tier com as capas prontas, mesmo com internet ruim. Usa alguns MB de dados (melhor no Wi-Fi).')}</p>
+      <h3 className="ic-row"><ImagePlus size={18} /> {t('Imagens do app')}</h3>
+      <p className="small muted">{t('Capas das músicas, notas, plates, níveis e fotos dos amigos. Baixar todas deixa o app com as imagens prontas, mesmo com internet ruim. Usa alguns MB de dados (melhor no Wi-Fi).')}</p>
       {where === 'home' && !chosen ? (
         <div className="card-actions">
           <button className="btn" onClick={() => pick('all')}>{t('Baixar todas agora')}</button>
@@ -44,10 +44,10 @@ export default function JacketCacheCard({ where = 'settings' }) {
       {mode === 'all' && (prog ? (
         <div className="jcache-prog">
           <div className="jcache-bar"><span style={{ width: `${prog[1] ? Math.round((prog[0] / prog[1]) * 100) : 100}%` }} /></div>
-          <small className="muted">{t('Baixando capas: {n} de {t}', { n: prog[0], t: prog[1] })}</small>
+          <small className="muted">{t('Baixando imagens: {n} de {t}', { n: prog[0], t: prog[1] })}</small>
         </div>
       ) : (
-        <small className="muted">{left ? t('Faltam {n} capas. Elas baixam sozinhas quando o app abre.', { n: left }) : t('Todas as {n} capas já estão no aparelho.', { n: total })}</small>
+        <small className="muted">{left ? t('Faltam {n} imagens. Elas baixam sozinhas quando o app abre.', { n: left }) : t('Todas as imagens já estão no aparelho ({n}).', { n: total })}</small>
       ))}
     </section>
   );
