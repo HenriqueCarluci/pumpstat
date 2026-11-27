@@ -21,6 +21,7 @@ import Feedback from '../components/Feedback.jsx';
 import TeamPicker from '../components/TeamPicker.jsx';
 import { NotesCard } from '../components/ReleaseNotes.jsx';
 import { QuizCard } from '../components/QuizModal.jsx';
+import AndroidTestCard from '../components/AndroidTestCard.jsx';
 import { clearUserCaches, TestMode } from '../components/PlanLock.jsx';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
@@ -78,6 +79,7 @@ export default function Settings() {
 
       <Group id="app" title="App">
         <NotesCard />
+        {!plan?.view_as && <AndroidTestCard where="settings" />}
         <section className="card">
           <h3>{t('Idioma e exibição')}</h3>
           <LangPicker compact />

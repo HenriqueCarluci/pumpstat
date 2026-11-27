@@ -14,6 +14,7 @@ import { ChevronDown, ChevronRight, LayoutGrid, ListOrdered, Logo, Music2 } from
 import TeamPicker from '../components/TeamPicker.jsx';
 import Panel, { usePanelOpen } from '../components/Panel.jsx';
 import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
+import AndroidTestCard from '../components/AndroidTestCard.jsx';
 import { entitlements, isOn } from '../lib/plans.js';
 
 export default function Home() {
@@ -68,6 +69,7 @@ export default function Home() {
             ? <p className="muted small center">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p>
             : <PiuConnect onDone={() => reload()} />}
         </section>
+        {!plan?.view_as && <AndroidTestCard />}
         {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
         <section className="card np-links">
           <h3>{t('Já dá para usar')}</h3>
@@ -97,6 +99,7 @@ export default function Home() {
             <ChevronRight size={18} className="profile-go" />
           </Link>
           <NewsBanner />
+          {!plan?.view_as && <AndroidTestCard />}
         </div>
         <div className="h-blk o2">
           <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} canTips={ent.can('recommendations_all')} />

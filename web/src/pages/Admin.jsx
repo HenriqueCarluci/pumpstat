@@ -18,6 +18,7 @@ import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
 import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 import MissionsAdmin from './MissionsAdmin.jsx';
 import AdminHealth from './AdminHealth.jsx';
+import AndroidTestersAdmin from '../components/AndroidTestersAdmin.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -41,7 +42,7 @@ export default function Admin() {
       <div className="admin-body">
       {canAdmin(plan, 'stats') && shown !== 'health' && <Stats />}
       {shown === 'health' && <AdminHealth />}
-      {shown === 'users' && <Users />}
+      {shown === 'users' && <><AndroidTestersAdmin /><Users /></>}
       {shown === 'team' && <Team />}
       {shown === 'curation' && <><CommunityConfig /><p className="muted small">{t('O tier do clube, os gimmicks, o R!SE e os vídeos são ajustados direto na página de cada música e chart.')}</p></>}
       {shown === 'approvals' && <Approvals />}

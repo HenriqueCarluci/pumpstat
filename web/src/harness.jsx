@@ -52,6 +52,8 @@ import { asPreviewUser } from './lib/plans.js';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
+  android_tester_status: { joined: !!window.__AT, added: window.__AT === 2, email: 'eu@gmail.com', link: 'https://play.google.com/apps/internaltest/1' },
+  admin_android_testers: [{ user_id: 'a', email: 'novo.jogador@gmail.com', added: false, nick: 'NOVO #0001', at: new Date().toISOString() }, { user_id: 'b', email: 'amigo.antigo@gmail.com', added: true, nick: 'AMIGO #0002', at: new Date().toISOString() }],
   venue_data: { venue: { slug: 'laqua', name: "L'Aqua Liberdade", city: 'São Paulo', address: 'R. Galvão Bueno, 100', radius_m: 150, latitude: -23.56, longitude: -46.63 }, machines: [{ id: 1, name: 'Phoenix', avg_turn_sec: 1080 }], is_admin: false },
   push_public_key: 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',
   release_notes: [
