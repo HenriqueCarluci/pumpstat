@@ -147,6 +147,8 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
     if (!hist) { try { setHist(await chartHistory(c.id)); } catch { setHist({ bests: [], plays: [] }); } }
   };
 
+  // o gimmick já aparece no selo de gimmick do chart; aqui ficam as outras tags com %
+  const skills = (c.tagBars || []).filter(([x]) => x !== 'gimmick').slice(0, 3);
   return (
     <div id={`chart-${c.id}`} className={`chartcard ${c.score != null ? 'played' : ''} ${focus ? 'focus' : ''}`}>
       <div className="cc-top">
@@ -180,9 +182,9 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
           </span>
         )}
       </div>
-      {c.tagBars && (
+      {skills.length > 0 && (
         <div className="cc-style">
-          {c.tagBars.slice(0, 3).map(([x, v]) => <span key={x} className="st-chip" style={{ '--c': tagColor(x) }}>{t(chartTagLabel(x))} {v}%</span>)}
+          {skills.map(([x, v]) => <span key={x} className="st-chip" style={{ '--c': tagColor(x) }}>{t(chartTagLabel(x))} {v}%</span>)}
         </div>
       )}
 
