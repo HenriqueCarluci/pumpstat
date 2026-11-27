@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { HashRouter, NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { cachedVersion, clearCache, fetchVersion, rpc } from './lib/api.js';
 import { API_URL } from './lib/config.js';
@@ -202,7 +202,13 @@ function DataApp({ session, ingestKey }) {
 function Shell() {
   const { version, setVersion, data, loading, error, reload, notifications } = useData();
   const loc = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [loc.pathname]);
+  const scroller = useRef(null);
+  // no celular a página rola dentro do app (não a janela): a barra de baixo fica presa no fundo
+  useEffect(() => {
+    document.documentElement.classList.add('app-shell');
+    return () => document.documentElement.classList.remove('app-shell');
+  }, []);
+  useEffect(() => { window.scrollTo(0, 0); scroller.current?.scrollTo(0, 0); }, [loc.pathname]);
   const desk = useIsDesktop();
   const [search, setSearch] = useState(false);
   const openSearch = useCallback(() => setSearch(true), []);
@@ -210,7 +216,7 @@ function Shell() {
   if (/^\/fila\/[^/]+\/tv$/.test(loc.pathname)) return <Routes><Route path="/fila/:slug/tv" element={<QueueTV />} /></Routes>;
 
   return (
-    <div className="app">
+    <div className="app shell" ref={scroller}>
       {desk && <Sidebar onSearch={openSearch} />}
       {search && <SearchDialog onClose={() => setSearch(false)} />}
       <header className="topbar">

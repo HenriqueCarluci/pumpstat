@@ -2312,3 +2312,13 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .pp-live { margin: 4px 0 2px; max-width: 100%; display: flex; }
 .tag.on-st.away { border-color: #ffc83d; color: #ffd978; }
 .tag.on-st.busy { border-color: #ff6b6b; color: #ff9d9d; }
+
+/* ---------- celular: a página rola dentro do app, não a janela ----------
+   No iPhone (e às vezes no Android) a janela "estica" no fim da rolagem e a barra do navegador encolhe/cresce,
+   e a barra de baixo (position: fixed) descola do fundo. Com a janela parada e a rolagem num contêiner,
+   não há o que empurrar a barra. No desktop continua a rolagem normal da janela. */
+html.app-shell:not(.desk), html.app-shell:not(.desk) body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+html.app-shell:not(.desk) #root { height: 100%; }
+html.app-shell:not(.desk) .app.shell { height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior-y: contain; -webkit-overflow-scrolling: touch; }
+html.app-shell:not(.desk) .tabbar { transform: none; will-change: auto; }
