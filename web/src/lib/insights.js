@@ -221,8 +221,8 @@ export function weaknesses(...sumsList) {
   }).filter(Boolean).sort((a, b) => b.index - a.index);
 }
 
-// Sem estilo do piucenter (músicas novas da Phoenix 2), o estilo vem dos padrões do PIU Scores (c.skills)
-// e das tags que a comunidade do PIU Stats marca nos charts.
+// Sem estilo do piucenter (músicas novas da Phoenix 2), o estilo vem das tags votadas no ArcadeStat (c.tagBars),
+// dos padrões do PIU Scores (c.skills) e das tags que a comunidade do PIU Stats marca nos charts.
 const TAG_TO_DIM = { twist: 'twist', drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', doublestep: 'doublestep',
   footswitch: 'footswitch', stamina: 'stamina', speed: 'speed', gimmick: null };
 const BADGE_RULES = [
@@ -241,12 +241,30 @@ export function badgeStyle(c) {
   if (hasGimmick(c)) pct.gimmick = 60;
   return Object.keys(pct).length ? pct : null;
 }
+// Tags do ArcadeStat (com peso 0–100, 100 = a mais votada do chart) → dimensões das métricas.
+const ARC_TO_DIM = { twist: 'twist', high_twist: 'twist', horizontal_twist: 'twist', spin: 'twist', crossover: 'twist',
+  drill: 'drill', run: 'run', bracket: 'bracket', jump: 'jump', jack: 'jack', switch: 'footswitch',
+  stamina: 'stamina', fast: 'speed', gimmick: 'gimmick' };
+export function arcStyle(c) {
+  if (!c.tagBars) return null;
+  const pct = {};
+  for (const [tag, v] of c.tagBars) { const d = ARC_TO_DIM[tag]; if (d) pct[d] = Math.max(pct[d] || 0, v); }
+  return Object.keys(pct).length ? pct : null;
+}
 export function styleOf(prog, c) {
   const st = prog.styles.get(c.id);
-  // gimmick vem da marcação (admin ou comunidade), não das anotações de pé
-  if (st) return hasGimmick(c) ? { ...st, pct: { ...st.pct, gimmick: 60 } } : st;
-  const pct = badgeStyle(c);
-  return pct ? { pct, nps: null, sustained: false, derived: true } : null;
+  const arc = arcStyle(c);
+  if (st) {
+    // padrões de pé: % de notas do piucenter (objetivo); velocidade/resistência/gimmick também pelos votos do ArcadeStat
+    const extra = {};
+    for (const d of ['speed', 'stamina', 'gimmick']) if ((arc?.[d] || 0) >= 50) extra[d] = 60;
+    if (hasGimmick(c)) extra.gimmick = 60;
+    return Object.keys(extra).length ? { ...st, pct: { ...st.pct, ...extra } } : st;
+  }
+  // sem piucenter: tags votadas do ArcadeStat, completadas pelos padrões do PIU Scores e da comunidade
+  const pct = { ...(badgeStyle(c) || {}) };
+  for (const [d, v] of Object.entries(arc || {})) pct[d] = Math.max(pct[d] || 0, v);
+  return Object.keys(pct).length ? { pct, nps: null, sustained: false, derived: true } : null;
 }
 
 /** Precisão nas jogadas passadas perto do nível do jogador (julgamentos). */
