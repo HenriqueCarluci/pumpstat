@@ -31,8 +31,11 @@ export function useTraining() {
   const [list, setList] = useState(ids);
   useEffect(() => {
     listeners.add(setList);
-    if (!ids) loadTraining().catch(() => {});
-    return () => listeners.delete(setList);
+    // lista vazia pode ter vindo de uma sessão que ainda não tinha o login renovado: busca de novo
+    if (!ids || !ids.size) loadTraining(!!ids).catch(() => {});
+    const onShow = () => { if (!document.hidden) loadTraining(true).catch(() => {}); };
+    document.addEventListener('visibilitychange', onShow);
+    return () => { listeners.delete(setList); document.removeEventListener('visibilitychange', onShow); };
   }, []);
   return list;
 }

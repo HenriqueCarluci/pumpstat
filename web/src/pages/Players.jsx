@@ -13,6 +13,7 @@ import { fmtNum, t, tErr, tn } from '../lib/i18n.js';
 import MiniChat from '../components/MiniChat.jsx';
 import ReportBlock from '../components/ReportBlock.jsx';
 import { entitlements } from '../lib/plans.js';
+import { chartTagLabel, tagColor } from '../lib/tags.js';
 
 export function Avatar({ p, size = 44 }) {
   return (
@@ -292,6 +293,8 @@ export function PlayerProfile() {
         </div>
       </section>
 
+      <PlayStyle charts={charts} stats={stats} name={other?.nickname || t('Jogador')} />
+
       <section className="card">
         <h3>{t('Notas e placas')}</h3>
         <div className="pp-grades">
@@ -449,5 +452,45 @@ export function ChartRanking({ chartId }) {
         </Link>
       ))}
     </div>
+  );
+}
+
+/**
+ * Estilo de jogo de outro jogador: dos charts que ele passou perto do topo dele (até 4 níveis abaixo do maior passe
+ * em cada modo), em quantos cada tag do ArcadeStat é forte (peso 50%+). Mostra também onde ele mais quebra.
+ */
+function PlayStyle({ charts, stats, name }) {
+  const style = useMemo(() => {
+    const top = Object.fromEntries(stats.map((s) => [s.mode, s.max]));
+    const near = charts.filter((c) => (c.mode === 'S' || c.mode === 'D') && top[c.mode] && c.level >= top[c.mode] - 4 && c.tagBars);
+    const count = (list) => {
+      const n = {};
+      for (const c of list) for (const [x, v] of c.tagBars) if (v >= 50) n[x] = (n[x] || 0) + 1;
+      return Object.entries(n).map(([x, k]) => [x, Math.round((k / list.length) * 100)]).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    };
+    const pass = near.filter((c) => !c.broken), fail = near.filter((c) => c.broken);
+    return { pass: pass.length >= 5 ? count(pass) : [], fail: fail.length >= 3 ? count(fail) : [], n: pass.length, nf: fail.length };
+  }, [charts, stats]);
+  if (!style.pass.length) return null;
+  const Bars = ({ list }) => (
+    <div className="cp-skill">
+      {list.map(([x, v]) => (
+        <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%`, background: tagColor(x) }} /></i><em>{v}%</em></div>
+      ))}
+    </div>
+  );
+  return (
+    <section className="card pp-style">
+      <h3>{t('Estilo de jogo')}</h3>
+      <p className="muted small">{t('Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada tag forte.', { n: style.n, p: name })}</p>
+      <Bars list={style.pass} />
+      {style.fail.length > 0 && (
+        <>
+          <h4>{t('Onde mais quebra')}</h4>
+          <p className="muted small">{tn(style.nf, '{n} chart quebrado nessa faixa', '{n} charts quebrados nessa faixa')}</p>
+          <Bars list={style.fail} />
+        </>
+      )}
+    </section>
   );
 }

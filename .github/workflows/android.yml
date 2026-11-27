@@ -1,8 +1,11 @@
-# Gera o pacote do app para a Google Play (.aab assinado com a chave de upload).
-# Rode em Actions → "Android (Play Store)" → Run workflow, ou crie uma tag v1.0.0.
-# Segredos necessários (Settings → Secrets and variables → Actions):
+# Gera o pacote do app para a Google Play (.aab assinado com a chave de upload) e publica sozinho.
+# Roda a cada push na main que mexe no app, em Actions → "Android (Play Store)" → Run workflow, ou numa tag v1.0.0.
+# Segredos (Settings → Secrets and variables → Actions):
 #   ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD (obrigatórios).
 #   ANDROID_KEY_ALIAS (padrão: upload) e ANDROID_KEY_PASSWORD (padrão: a mesma senha do keystore) são opcionais.
+#   PLAY_SERVICE_ACCOUNT_JSON: chave da conta de serviço com acesso ao app no Play Console. Sem ela, só gera o .aab.
+# Variáveis (opcionais): PLAY_TRACK (padrão: internal) e PLAY_STATUS (padrão: draft; mude para completed
+#   depois que o app for aprovado, para a versão sair direto para os testadores).
 name: Android (Play Store)
 
 on:
@@ -14,11 +17,19 @@ on:
         default: "1.0.0"
   push:
     tags: ["v*"]
+    branches: [main]
+    paths: ["web/**", "android/**", "capacitor.config.*", "package.json", ".github/workflows/android.yml"]
+
+concurrency:
+  group: android-play
+  cancel-in-progress: true
 
 jobs:
   bundle:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      HAS_PLAY: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON != '' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -60,7 +71,7 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS || 'upload' }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD || secrets.ANDROID_KEYSTORE_PASSWORD }}
           VERSION_CODE: ${{ github.run_number }}
-          VERSION_NAME: ${{ github.event.inputs.version_name || github.ref_name }}
+          VERSION_NAME: ${{ github.event.inputs.version_name || (startsWith(github.ref, 'refs/tags/v') && github.ref_name) || format('1.0.{0}', github.run_number) }}
         run: |
           chmod +x gradlew
           ./gradlew --no-daemon bundleRelease
@@ -71,3 +82,13 @@ jobs:
           name: piu-stats-${{ github.run_number }}-aab
           path: android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
+
+      - name: Publicar na Google Play
+        if: ${{ env.HAS_PLAY == 'true' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.henriquecarluci.stepclub
+          releaseFiles: android/app/build/outputs/bundle/release/*.aab
+          track: ${{ vars.PLAY_TRACK || 'internal' }}
+          status: ${{ vars.PLAY_STATUS || 'draft' }}
