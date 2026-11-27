@@ -1,3 +1,4 @@
+import { TwoFactorCard } from '../components/TwoFactor.jsx';
 import { startTour } from '../lib/tour.js';
 import CountryPicker from '../components/CountryPicker.jsx';
 import { SocialsEditor } from '../components/Socials.jsx';
@@ -22,7 +23,7 @@ import { NotesCard } from '../components/ReleaseNotes.jsx';
 import { QuizCard } from '../components/QuizModal.jsx';
 import { TestMode } from '../components/PlanLock.jsx';
 
-const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
+const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
 
 function Group({ id, title, children }) {
   return (
@@ -110,6 +111,10 @@ export default function Settings() {
         </Group>
       )}
 
+      <Group id="seguranca" title="Segurança">
+        <TwoFactorCard />
+      </Group>
+
       <Group id="ajuda" title="Ajuda">
         <section className="card">
           <h3>{t('Ajuda e feedback')}</h3>
@@ -127,10 +132,10 @@ export default function Settings() {
         <BlockedUsers />
         <section className="card">
           <h3>{t('Privacidade e dados')}</h3>
-          <div className="bm-row">
+          <div className="card-actions">
             <Link className="btn ghost" to="/privacidade"><Lock size={15} /> {t('Política de privacidade')}</Link>
+            <DeleteAccount />
           </div>
-          <DeleteAccount />
         </section>
       </Group>
 
@@ -219,7 +224,7 @@ function AccountCard() {
         <p className="muted small">{plan.source === 'lifetime' ? t('Acesso vitalício.') : plan.expires_at ? t('Ativo até {d}.', { d: fmtDay(plan.expires_at) }) : t('Assinatura ativa.')}</p>
       )}
 
-      <div className="bm-row set-actions">
+      <div className="card-actions set-actions">
         {ent.showPlans && <Link className="btn ghost" to={paid ? '/assinatura' : '/planos'}><Crown size={15} /> {paid ? t('Minha assinatura') : t('Ver planos')}</Link>}
         {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
         <button className="btn ghost" onClick={() => reload()}>{t('Recarregar dados')}</button>
@@ -284,7 +289,7 @@ function DeleteAccount() {
     try { await rpc('delete_my_account', { p_confirm: text }); await signOut(); } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };
-  if (!open) return <button className="link small danger ic-row delete-link" onClick={() => setOpen(true)}><Trash2 size={13} /> {t('Excluir minha conta')}</button>;
+  if (!open) return <button className="btn ghost danger-text" onClick={() => setOpen(true)}><Trash2 size={15} /> {t('Excluir minha conta')}</button>;
   return (
     <div className="delete-box">
       <p className="small">{t('Isso apaga sua conta do PIU Stats e todos os dados ligados a ela (notas importadas, amigos, mensagens, avaliações). Não dá para desfazer. Sua conta da Pump It Up não é afetada.')}</p>

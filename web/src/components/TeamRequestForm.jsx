@@ -155,7 +155,7 @@ export default function TeamRequestForm({ userId, onSent, onCancel }) {
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row">
         <button className="btn ic-row" type="submit" disabled={busy}><Send size={14} /> {busy ? t('Enviando…') : t('Enviar pedido')}</button>
-        <button type="button" className="link muted" onClick={onCancel}>{t('Cancelar')}</button>
+        <button type="button" className="btn ghost" onClick={onCancel}>{t('Cancelar')}</button>
       </div>
     </form>
   );

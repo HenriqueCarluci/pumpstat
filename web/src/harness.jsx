@@ -92,7 +92,7 @@ const FAKE = {
       [5137, s0 + 5400, 991200, 'SSS+', 'MG', false, 1250, 40, 5, 1, 4], [5769, s0 + 5700, 970000, 'S', 'TG', false, 1000, 150, 20, 4, 15], [6270, s0 + 6000, 850000, 'A', null, true, 700, 250, 50, 20, 35], [6270, s0 + 6300, 870000, 'A+', null, true, 750, 230, 40, 15, 20], [4864, s0 + 6600, 800000, 'A', null, true, 800, 300, 60, 30, 70], [4864, s0 + 6900, 0, null, null, true, 400, 100, 20, 10, 90], [6270, s0 + 7000, null, null, null, false, 0, 0, 0, 0, 777], [5137, s0 + 7200, 985000, 'SS+', 'TG', true, 1200, 80, 10, 3, 10]],
     prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
     days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
-  list_teams: { teams: [], mine: null, pending: null },
+  list_teams: { teams: [], mine: { id: 1, name: "Team L'Aqua", tag: 'LAQUA', logo: '/teams/laqua.jpg', instagram: 'team.laqua' }, pending: null },
   online_players: [
     { id: 'amigo', nickname: 'OINOMORI #7461', title: '[D] ADVANCED LV.7', pumbility: 17046, max: { S: 21, D: 24, version: 'phoenix2' }, match: 'close', venue: 'HotZone ParkShopping São Caetano', friend: true, status: 'online' },
     { id: 'm2', nickname: 'FROZEN07 #1125', title: '[THE 1ST] BOSS BREAKER', pumbility: 3811, max: { S: 13, D: 8, version: 'phoenix2' }, status: 'online' },

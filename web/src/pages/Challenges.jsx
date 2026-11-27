@@ -86,11 +86,11 @@ function ChallengeCard({ c, onChange }) {
       {c.status === 'ended' && !c.drawn_at && <p className="small muted">{t('Resultado em breve.')}</p>}
 
       {err && <div className="form-err">{err}</div>}
-      <div className="bm-row">
+      <div className="card-actions">
         {c.status !== 'ended' && !c.joined && <button className="btn" disabled={busy} onClick={() => join(true)}>{t('Participar')}</button>}
-        {c.status !== 'ended' && c.joined && <button className="link muted small" disabled={busy} onClick={() => join(false)}>{t('Sair do desafio')}</button>}
-        {c.song && <Link className="link small" to={`/musica/${c.song}`}>{t('Ver a música')}</Link>}
-        <button className="link small ic-row" onClick={toggle}><Users size={14} /> {t('Participantes')} {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
+        {c.status !== 'ended' && c.joined && <button className="btn ghost danger-text" disabled={busy} onClick={() => join(false)}>{t('Sair do desafio')}</button>}
+        {c.song && <Link className="btn ghost" to={`/musica/${c.song}`}>{t('Ver a música')}</Link>}
+        <button className="btn ghost" onClick={toggle}><Users size={14} /> {t('Participantes')} {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
       </div>
       {open && (
         <div className="ch-board">

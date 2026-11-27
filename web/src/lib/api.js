@@ -12,7 +12,11 @@ export async function rpc(fn, args) {
     body: JSON.stringify(args || {}),
   });
   const body = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(body?.message || `Erro ${res.status} em ${fn}`);
+  if (!res.ok) {
+    // sessão sem o código do autenticador (ex.: ativou a verificação em outro aparelho): o app pede o código
+    if (body?.hint === 'mfa_required') window.dispatchEvent(new Event('pumpstat:mfa-required'));
+    throw new Error(body?.message || `Erro ${res.status} em ${fn}`);
+  }
   return body;
 }
 

@@ -97,6 +97,26 @@ function store(data) {
   return s;
 }
 
+/** Chamada autenticada ao /auth/v1 (usada pela verificação em duas etapas). */
+export async function authRequest(path, { method = 'GET', body } = {}) {
+  const token = await accessToken();
+  const res = await authFetch(path, {
+    method,
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}`, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(translate(data.msg || data.error_description || data.message || `Erro ${res.status}`));
+    err.status = res.status;
+    err.code = data.error_code || data.code;
+    throw err;
+  }
+  return data;
+}
+/** Troca a sessão pela que o servidor devolveu (ex.: depois de confirmar o código do autenticador). */
+export const adoptSession = (data) => store(data);
+
 export async function signIn(email, password) {
   return store(await call('token?grant_type=password', { email, password }));
 }
@@ -212,6 +232,8 @@ function translate(m) {
     'Email not confirmed': 'Confirme o e-mail pelo link que enviamos antes de entrar.',
     'User already registered': 'Este e-mail já tem conta. Use "Entrar".',
     'Password should be at least 6 characters.': 'A senha precisa ter pelo menos 6 caracteres.',
+    'Invalid TOTP code entered': 'Código inválido ou expirado. Confira o relógio do celular e tente de novo.',
+    'Invalid MFA code entered': 'Código inválido ou expirado. Confira o relógio do celular e tente de novo.',
   };
   return map[m] || m;
 }

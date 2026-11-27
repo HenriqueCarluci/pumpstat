@@ -114,7 +114,7 @@ function LinkConfirm({ job, onConfirm }) {
       )}
       <div className="bm-row">
         <button type="button" className="btn" disabled={!ready} onClick={go}>{t('Continuar')}</button>
-        <button type="button" className="link muted" onClick={() => onConfirm({ cancel: true })}>{t('Cancelar sem gravar')}</button>
+        <button type="button" className="btn ghost" onClick={() => onConfirm({ cancel: true })}>{t('Cancelar sem gravar')}</button>
       </div>
     </div>
   );

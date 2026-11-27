@@ -66,7 +66,7 @@ export default function VenueRequest() {
           {err && <div className="form-err">{err}</div>}
           <div className="bm-row">
             <button className="btn" type="submit" disabled={busy}>{busy ? t('Enviando…') : t('Enviar para aprovação')}</button>
-            <button type="button" className="link muted" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
+            <button type="button" className="btn ghost" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
           </div>
         </form>
       ) : (
@@ -88,7 +88,7 @@ export default function VenueRequest() {
           {err && <div className="form-err">{err}</div>}
           <div className="bm-row">
             <button className="btn" type="submit" disabled={busy}>{busy ? t('Enviando…') : t('Enviar para aprovação')}</button>
-            <button type="button" className="link muted" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
+            <button type="button" className="btn ghost" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
           </div>
         </form>
       )}

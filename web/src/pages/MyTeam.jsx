@@ -77,8 +77,8 @@ export default function MyTeam() {
             <span className="tag"><Users size={12} /> {tn(members.length, '{n} participante', '{n} participantes')}</span>
             {online.length > 0 && <span className="tag on"><span className="dot-on" /> {tn(online.length, '{n} online agora', '{n} online agora')}</span>}
           </div>
-          <TeamSocialLinks team={tm} />
         </div>
+        <TeamSocialLinks team={tm} />
       </section>
 
       <section className="mt-stats">

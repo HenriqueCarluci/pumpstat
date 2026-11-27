@@ -5,6 +5,8 @@ import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, updatePassword } from './lib/auth.js';
 import { initNative } from './lib/native.js';
+import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
+import { MfaLogin } from './components/TwoFactor.jsx';
 import './lib/topbar.js';
 import { VERSIONS } from './lib/piu.js';
 import Home from './pages/Home.jsx';
@@ -96,12 +98,34 @@ export default function App() {
     if (isGuest()) return <GuestApp />;
     return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
-  return (
-    <>
-      {recovery && <NewPassword onDone={() => setRecovery(false)} />}
-      <DataApp session={session} ingestKey={ingestKey} />
-    </>
-  );
+  return <MfaGate session={session}>
+    {recovery && <NewPassword onDone={() => setRecovery(false)} />}
+    <DataApp session={session} ingestKey={ingestKey} />
+  </MfaGate>;
+}
+
+/** Verificação em duas etapas: com autenticador cadastrado, o app só abre depois do código (sessão aal2). */
+function MfaGate({ session, children }) {
+  const uid = session.user?.id;
+  const aal2 = sessionAal(session) === 'aal2';
+  const [need, setNeed] = useState(() => !aal2 && hasHint(uid));
+  useEffect(() => {
+    if (aal2) { setNeed(false); return undefined; }
+    let alive = true;
+    listFactors().then((l) => {
+      const on = !!verifiedFactor(l);
+      rememberHint(uid, on);
+      if (alive) setNeed(on);
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [uid, aal2]);
+  useEffect(() => {
+    const f = () => { if (sessionAal(getSession()) !== 'aal2') setNeed(true); };
+    window.addEventListener('pumpstat:mfa-required', f);
+    return () => window.removeEventListener('pumpstat:mfa-required', f);
+  }, []);
+  if (need && !aal2) return <MfaLogin session={session} onDone={() => setNeed(false)} />;
+  return children;
 }
 
 const isQueueHash = () => /^#\/fila/.test(window.location.hash);

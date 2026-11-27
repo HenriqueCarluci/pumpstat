@@ -40,6 +40,8 @@ const feedbackSent = new Map(); // userId -> [timestamps]
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const parseHtml = (html) => new DOMParser().parseFromString(html, 'text/html');
 
+const jwtAal = (t) => { try { return JSON.parse(Buffer.from(t.split('.')[1], 'base64url').toString()).aal || 'aal1'; } catch { return 'aal1'; } };
+
 async function supabaseUser(token) {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}` } });
   if (!res.ok) return null;
@@ -374,6 +376,10 @@ const server = http.createServer(async (req, res) => {
     const token = (req.headers.authorization || '').replace(/^Bearer /, '');
     const user = token ? await supabaseUser(token) : null;
     if (!user?.id) return send(res, 401, { error: 'Faça login no PIU Stats.' }, origin);
+    // verificação em duas etapas: quem cadastrou o autenticador precisa ter confirmado o código nesta sessão
+    if ((user.factors || []).some((f) => f.status === 'verified') && jwtAal(token) !== 'aal2') {
+      return send(res, 403, { error: 'Confirme o código do autenticador para continuar.', code: 'mfa_required' }, origin);
+    }
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
       const { login, password, versions, useSaved, partial, account } = await readJson(req);

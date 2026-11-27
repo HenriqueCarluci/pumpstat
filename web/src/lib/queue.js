@@ -68,7 +68,7 @@ export const backFromAway = async (entry, needsCheckin) => {
   const p = await withPosition(needsCheckin);
   return rpc('queue_back', { p_entry: entry, p_token: deviceToken(), p_lat: p.lat, p_lng: p.lng, p_acc: p.acc });
 };
-export const passTurn = (machine) => rpc('queue_pass', { p_machine: machine });
+export const passTurn = (machine) => rpc('queue_pass', { p_machine: machine, p_token: deviceToken() });
 export const setAway = (entry, away) => rpc('queue_set_away', { p_entry: entry, p_away: away, p_token: deviceToken() });
 export const leaveQueue = (entry) => rpc('queue_leave', { p_entry: entry, p_token: deviceToken() });
 export const toFront = (entry) => rpc('queue_to_front', { p_entry: entry });

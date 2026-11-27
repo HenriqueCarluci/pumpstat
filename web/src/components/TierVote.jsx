@@ -112,7 +112,7 @@ export default function TierVote({ chart, canPropose, clubTier, onChange }) {
           {err && <div className="form-err">{err}</div>}
           <div className="bm-row">
             <button className="btn" disabled={to == null} onClick={propose}>{t('Abrir votação')}</button>
-            <button className="link muted" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
+            <button className="btn ghost" onClick={() => setOpen(false)}>{t('Cancelar')}</button>
           </div>
         </div>
       )}

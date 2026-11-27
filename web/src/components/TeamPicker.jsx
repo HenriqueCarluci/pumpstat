@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { rpc } from '../lib/api.js';
 import { forgetTeam, TeamLogo } from '../lib/teams.jsx';
 import { t, tErr } from '../lib/i18n.js';
-import { Check, Crown, Users } from './Icons.jsx';
+import { Link } from 'react-router-dom';
+import { ArrowLeftRight, Check, ChevronRight, Crown, LogOut, Plus, Users } from './Icons.jsx';
 import TeamRequestForm, { TeamSocialLinks } from './TeamRequestForm.jsx';
 
 /** Seu time: escolhe um da lista ou pede o cadastro de um novo (o admin aprova). */
@@ -39,8 +40,17 @@ export default function TeamPicker({ userId }) {
     <section className="card team-card">
       <h3 className="ic-row"><Users size={18} /> {t('Seu time')}</h3>
       {data.mine
-        ? <p className="team-mine">{data.mine.logo && <TeamLogo team={data.mine} size={40} />}<b>{data.mine.name}</b>{data.mine.tag && <span className="team-tag">{data.mine.tag}</span>}
-          {data.mine.admin && <span className="tag team-admin-tag"><Crown size={11} /> {t('Administrador')}</span>}</p>
+        ? <Link to="/time" className="team-mine">
+            {data.mine.logo && <TeamLogo team={data.mine} size={44} />}
+            <span className="team-mine-txt">
+              <b>{data.mine.name}</b>
+              <span className="team-mine-tags">
+                {data.mine.tag && <span className="team-tag">{data.mine.tag}</span>}
+                {data.mine.admin && <span className="tag team-admin-tag"><Crown size={11} /> {t('Administrador')}</span>}
+              </span>
+            </span>
+            <ChevronRight size={18} className="muted" />
+          </Link>
         : <p className="muted small">{t('Você ainda não está em nenhum time.')}</p>}
       {data.mine && <TeamSocialLinks team={data.mine} />}
       {data.requested && (
@@ -60,10 +70,10 @@ export default function TeamPicker({ userId }) {
       {err && <div className="form-err">{err}</div>}
 
       {mode === 'view' && (
-        <div className="bm-row">
-          <button className="btn ghost" onClick={() => { setMode('pick'); setMsg(''); }}>{data.mine ? t('Trocar de time') : t('Escolher time')}</button>
-          {!data.pending || data.pending.status !== 'pending' ? <button className="link" onClick={() => { setMode('request'); setMsg(''); }}>{t('Pedir cadastro de time novo')}</button> : null}
-          {data.mine && <button className="link muted" onClick={() => pick(null)}>{t('Sair do time')}</button>}
+        <div className="card-actions">
+          <button className="btn ghost" onClick={() => { setMode('pick'); setMsg(''); }}><ArrowLeftRight size={15} /> {data.mine ? t('Trocar de time') : t('Escolher time')}</button>
+          {!data.pending || data.pending.status !== 'pending' ? <button className="btn ghost" onClick={() => { setMode('request'); setMsg(''); }}><Plus size={15} /> {t('Pedir time novo')}</button> : null}
+          {data.mine && <button className="btn ghost danger-text" onClick={() => pick(null)}><LogOut size={15} /> {t('Sair do time')}</button>}
         </div>
       )}
 
