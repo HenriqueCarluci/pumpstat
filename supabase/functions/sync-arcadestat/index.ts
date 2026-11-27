@@ -1,6 +1,6 @@
 // Sincroniza as barrinhas de skill (topTag) do ArcadeStat para chart_tags_ref.
 // Fonte: comunidade ArcadeStat (arcadestat.app) - crédito na tela de Configurações.
-// Uma chamada por execução, no máximo uma vez a cada 6 horas.
+// Uma chamada por execução, no máximo uma vez por hora. Atualiza tags com peso e a faixa de tier.
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const SRC = 'https://arcadestat.app/pump/song/all';
@@ -8,7 +8,7 @@ const SRC = 'https://arcadestat.app/pump/song/all';
 Deno.serve(async () => {
   const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
   const { data: last } = await db.from('arcadestat_sync').select('ran_at').order('ran_at', { ascending: false }).limit(1);
-  if (last?.[0] && Date.now() - new Date(last[0].ran_at).getTime() < 6 * 3600 * 1000) {
+  if (last?.[0] && Date.now() - new Date(last[0].ran_at).getTime() < 3600 * 1000) {
     return Response.json({ skipped: true, last: last[0].ran_at });
   }
   const r = await fetch(SRC, {
@@ -27,6 +27,8 @@ Deno.serve(async () => {
       d: x.difficulty,
       n: x.topTag.n,
       v: x.topTag.v,
+      q: x.voteDifficulty ?? null,
+      u: (x.specialRatio ?? 0) >= 0.5,
     }));
   const { data, error } = await db.rpc('import_arcadestat', { p: rows });
   if (error) return Response.json({ error: error.message }, { status: 500 });
