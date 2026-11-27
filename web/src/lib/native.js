@@ -20,6 +20,9 @@ export async function initNative({ onAuthHash }) {
   ]);
   try { await StatusBar.setStyle({ style: Style.Dark }); } catch { /* iOS/Android antigos */ }
   App.addListener('appUrlOpen', async ({ url }) => {
+    // QR da fila aberto no app: com.henriquecarluci.stepclub://fila/<local>?checkin=1
+    const m = url?.match(/^[a-z.]+:\/\/fila\/([^?#/]+)(\?[^#]*)?/i);
+    if (m) { window.location.hash = `#/fila/${m[1]}${m[2] || ''}`; return; }
     if (!url?.startsWith(AUTH_REDIRECT)) return;
     const hash = url.includes('#') ? url.slice(url.indexOf('#')) : `#${url.split('?')[1] || ''}`;
     try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch { /* já fechado */ }

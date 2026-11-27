@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { currentUserId, getSession } from '../lib/auth.js';
 import {
   backFromAway, joinQueue, leaveQueue, passTurn, queueEntries, recentEvents, resetQueue, setAway, subscribeQueue, toFront, venueData,
 } from '../lib/queue.js';
 import { locale, t, tErr } from '../lib/i18n.js';
 import { rememberVenue } from '../lib/presence.js';
-import { ArrowUpToLine, MapPin, SkipForward, X } from '../components/Icons.jsx';
+import { ArrowUpToLine, MapPin, SkipForward, X, Zap } from '../components/Icons.jsx';
+import { isNative } from '../lib/native.js';
+import { APP_SCHEME } from '../lib/config.js';
 
 const MY_ENTRIES = 'stepclub:queue-entries';
 const myEntryIds = () => { try { return JSON.parse(localStorage.getItem(MY_ENTRIES) || '{}'); } catch { return {}; } };
@@ -53,6 +55,8 @@ export default function Queue() {
   const { venue, entries, events, error, refresh } = useVenue(slug);
   useEffect(() => { rememberVenue(slug); }, [slug]);
   const [showRules, setShowRules] = useState(false);
+  const [params] = useSearchParams();
+  const fromQr = params.get('checkin') === '1';
 
   if (error && !venue) return <div className="page"><p className="empty">{error}</p></div>;
   if (!venue) return <div className="page"><p className="empty">{t('Carregando a fila…')}</p></div>;
@@ -78,6 +82,7 @@ export default function Queue() {
         </div>
       </header>
       {error && <div className="banner err">{error}</div>}
+      <FastCheckin venue={venue} entries={entries} onChange={refresh} highlight={fromQr} slug={slug} />
       {venue.machines.map((m) => (
         <MachineQueue key={m.id} machine={m} isAdmin={venue.is_admin} checkin={needsCheckin(venue)}
           entries={entries.filter((e) => e.machine_id === m.id)} onChange={refresh} />
@@ -93,6 +98,52 @@ export default function Queue() {
       )}
       {showRules && <Rules onClose={() => setShowRules(false)} />}
     </div>
+  );
+}
+
+/**
+ * Check-in rápido: quem está logado entra na fila com um toque, com o nome e a foto da Pump.
+ * Quem chega pelo QR da TV sem conta vê o convite para o app ou para digitar o nome na máquina.
+ */
+function FastCheckin({ venue, entries, onChange, highlight, slug }) {
+  const logged = !!getSession();
+  const uid = currentUserId();
+  const [busy, setBusy] = useState(0);
+  const [err, setErr] = useState('');
+  const inQueue = entries.some((e) => (uid && e.user_id === uid) || Object.values(myEntryIds()).includes(e.id));
+  const android = /android/i.test(navigator.userAgent);
+  if (inQueue) return null;
+  if (!logged) {
+    if (!highlight) return null;
+    return (
+      <section className="card q-fast guest">
+        <h3 className="ic-row"><Zap size={18} /> {t('Entrar na fila')}</h3>
+        <p className="small">{t('Sem conta: digite seu nome na máquina aqui embaixo e toque em Check-in.')}</p>
+        {!isNative && android && (
+          <a className="btn ghost wide" href={`intent://fila/${slug}?checkin=1#Intent;scheme=${APP_SCHEME};package=${APP_SCHEME};end`}>{t('Tenho o PIU Stats: abrir no app')}</a>
+        )}
+      </section>
+    );
+  }
+  const go = async (m) => {
+    setBusy(m.id); setErr('');
+    try { const id = await joinQueue(m.id, null, true); rememberEntry(m.id, id); await onChange(); } catch (e) { setErr(tErr(e.message)); }
+    setBusy(0);
+  };
+  const count = (m) => entries.filter((e) => e.machine_id === m.id).length;
+  return (
+    <section className={`card q-fast ${highlight ? 'hl' : ''}`}>
+      <h3 className="ic-row"><Zap size={18} /> {t('Check-in rápido')}</h3>
+      <p className="muted small">{t('Entra na fila com o seu nome e foto da Pump. O app confere a sua localização.')}</p>
+      <div className="q-fast-btns">
+        {venue.machines.map((m) => (
+          <button key={m.id} className="btn" disabled={!!busy} onClick={() => go(m)}>
+            {busy === m.id ? t('Conferindo local…') : <>{venue.machines.length > 1 ? m.name : t('Entrar na fila')} <small>· {t('{n} na fila', { n: count(m) })}</small></>}
+          </button>
+        ))}
+      </div>
+      {err && <div className="form-err">{err}</div>}
+    </section>
   );
 }
 

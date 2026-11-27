@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { SITE_URL } from '../lib/config.js';
 import { Person, useVenue } from './Queue.jsx';
 import { locale, t } from '../lib/i18n.js';
 import { Logo } from '../components/Icons.jsx';
@@ -8,7 +10,7 @@ export default function QueueTV() {
   const { slug } = useParams();
   const { venue, entries } = useVenue(slug);
   if (!venue) return <div className="tv"><p>{t('Carregando…')}</p></div>;
-  const url = `${window.location.origin}${window.location.pathname}#/fila/${slug}`;
+  const url = `${SITE_URL}/#/fila/${slug}?checkin=1`;
   return (
     <div className="tv">
       <header>
@@ -33,7 +35,26 @@ export default function QueueTV() {
           );
         })}
       </div>
-      <footer>{t('Entre na fila pelo celular:')} <b>{url.replace(/^https?:\/\//, '')}</b></footer>
+      <footer className="tv-foot">
+        <QR url={url} />
+        <div>
+          <b className="tv-qr-title">{t('Aponte a câmera para entrar na fila')}</b>
+          <p>{t('Com o PIU Stats: check-in rápido com um toque. Sem conta: é só digitar seu nome.')}</p>
+          <small>{url.replace(/^https?:\/\//, '')}</small>
+        </div>
+      </footer>
     </div>
   );
+}
+
+/** QR code do link da fila (gerado no aparelho, sem serviço externo). */
+function QR({ url }) {
+  const [src, setSrc] = useState('');
+  useEffect(() => {
+    let alive = true;
+    import('qrcode').then(({ default: QRCode }) => QRCode.toDataURL(url, { margin: 1, width: 360, color: { dark: '#000000', light: '#ffffff' } }))
+      .then((d) => alive && setSrc(d)).catch(() => {});
+    return () => { alive = false; };
+  }, [url]);
+  return src ? <img className="tv-qr" src={src} alt={t('QR code para entrar na fila')} /> : <div className="tv-qr" />;
 }

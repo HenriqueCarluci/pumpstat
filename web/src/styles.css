@@ -1608,3 +1608,18 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .profile-link:active { transform: scale(.99); }
 .player-page .pp-actions.me { grid-template-columns: 1fr 1fr; }
 .pp-kpis.me { grid-template-columns: repeat(3, 1fr); } .pp-kpis.me .pp-kpi b { font-size: 21px; }
+
+/* TV: QR code para entrar na fila */
+.tv .tv-foot { display: flex; align-items: center; gap: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px 22px; text-align: left; }
+.tv .tv-qr { width: 170px; height: 170px; border-radius: 12px; background: #fff; padding: 6px; flex: none; }
+.tv .tv-qr-title { display: block; font: 800 26px var(--num); color: var(--neon); margin-bottom: 6px; }
+.tv .tv-foot p { margin: 0 0 6px; font-size: 18px; }
+.tv .tv-foot small { color: var(--muted); font-size: 15px; }
+/* fila: check-in rápido */
+.q-fast { border-color: rgba(140,255,58,.35); }
+.q-fast.hl { box-shadow: 0 0 0 2px var(--neon), 0 0 24px rgba(140,255,58,.25); }
+.q-fast h3 { margin: 0 0 4px; color: var(--neon); }
+.q-fast-btns { display: grid; gap: 8px; margin-top: 10px; }
+.q-fast-btns .btn { width: 100%; justify-content: center; }
+.q-fast-btns .btn small { font-weight: 500; opacity: .75; }
+.q-fast.guest .btn { margin-top: 8px; }

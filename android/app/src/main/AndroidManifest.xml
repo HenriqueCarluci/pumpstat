@@ -26,6 +26,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="com.henriquecarluci.stepclub" android:host="auth" />
             </intent-filter>
+
+            <!-- QR da fila: abre o local direto no app (check-in rápido) -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.henriquecarluci.stepclub" android:host="fila" />
+            </intent-filter>
         </activity>
 
         <provider

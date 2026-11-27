@@ -6,8 +6,13 @@ const STORE = 'pumpstat:session';
 let session = read();
 const listeners = new Set();
 
+function jwtSub(t) {
+  try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub || null; } catch { return null; }
+}
+// a sessão leva user.id (o "sub" do token) para as telas saberem quem está logado
+const withUser = (s) => (s && s.access_token && !s.user?.id ? { ...s, user: { id: jwtSub(s.access_token), email: s.email } } : s);
 function read() {
-  try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch { return null; }
+  try { return withUser(JSON.parse(localStorage.getItem(STORE) || 'null')); } catch { return null; }
 }
 function save(s) {
   session = s;
@@ -40,6 +45,7 @@ function store(data) {
     expires_at: data.expires_at || Math.floor(Date.now() / 1000) + (data.expires_in || 3600),
     email: data.user?.email || data.email || emailFromJwt(data.access_token),
   };
+  s.user = { id: data.user?.id || jwtSub(data.access_token), email: s.email };
   save(s);
   return s;
 }
