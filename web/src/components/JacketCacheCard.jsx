@@ -14,11 +14,14 @@ export default function JacketCacheCard({ where = 'settings' }) {
   const { data } = useData();
   const [mode, setMode] = useState(jacketMode);
   const [chosen, setChosen] = useState(jacketModeChosen);
+  // na Início o cartão some só se a escolha já tinha sido feita antes; quem acabou de tocar vê o progresso aqui
+  const [hideHome] = useState(jacketModeChosen);
   const [prog, setProg] = useState(null);
   const total = jacketUrls(data).length;
   const pending = data ? pendingJackets(data).length : 0;
   useEffect(() => { if (jacketsRunning()) downloadJackets(data, (n, tot) => setProg([n, tot])).then(() => setProg(null)); }, []); // eslint-disable-line
-  if (!isNative || !data || (where === 'home' && chosen)) return null;
+  if (!isNative || !data || (where === 'home' && hideHome)) return null;
+  if (where === 'home' && chosen && mode === 'lazy') return null;
 
   const pick = (m) => {
     setJacketMode(m); setMode(m); setChosen(true);
