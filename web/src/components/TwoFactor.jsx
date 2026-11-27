@@ -6,7 +6,8 @@ import { useData } from '../App.jsx';
 import { quizPending, useQuiz } from '../lib/quiz.js';
 import { useTour } from '../lib/tour.js';
 import { t, tErr } from '../lib/i18n.js';
-import { Check, Logo, ShieldCheck, X } from './Icons.jsx';
+import { Check, Copy, ExternalLink, Logo, ShieldCheck, X } from './Icons.jsx';
+import { isNative, openExternal } from '../lib/native.js';
 
 const digits = (v) => String(v || '').replace(/\D/g, '').slice(0, 6);
 
@@ -53,13 +54,26 @@ export function MfaLogin({ session, onDone }) {
   );
 }
 
+// otpauth:// abre o app autenticador instalado (Google Authenticator, Microsoft Authenticator, 1Password…)
+function openUri(uri) {
+  if (isNative) openExternal(uri); else window.location.href = uri;
+}
+
 /** QR code + chave + código: cadastra o autenticador e já deixa a sessão verificada. */
 function EnrollForm({ onDone, onCancel }) {
   const [enroll, setEnroll] = useState(null);
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [copied, setCopied] = useState(false);
   useEffect(() => { startEnroll().then(setEnroll).catch((e) => setErr(tErr(e.message))); }, []);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(enroll.secret); } catch {
+      const i = document.createElement('textarea'); i.value = enroll.secret; document.body.appendChild(i); i.select();
+      try { document.execCommand('copy'); } catch { /* ignore */ } i.remove();
+    }
+    setCopied(true); setTimeout(() => setCopied(false), 2500);
+  };
   const confirm = async (e) => {
     e.preventDefault();
     if (code.length !== 6) { setErr(t('Digite os 6 números do autenticador.')); return; }
@@ -69,12 +83,18 @@ function EnrollForm({ onDone, onCancel }) {
   return (
     <form className="mfa-enroll" onSubmit={confirm}>
       <ol className="mfa-steps small">
-        <li>{t('No app autenticador, adicione uma conta lendo o QR code.')}</li>
+        <li>{t('No celular, toque em "Abrir no app autenticador". No computador, leia o QR code com o app do celular.')}</li>
         <li>{t('Digite abaixo o código de 6 números que aparecer.')}</li>
       </ol>
       {!enroll && !err && <p className="muted small">{t('Carregando…')}</p>}
+      {enroll?.uri && (
+        <div className="mfa-links">
+          <button type="button" className="btn" onClick={() => openUri(enroll.uri)}><ExternalLink size={15} /> {t('Abrir no app autenticador')}</button>
+          <button type="button" className="btn ghost" onClick={copy}><Copy size={15} /> {copied ? t('Chave copiada') : t('Copiar chave')}</button>
+        </div>
+      )}
       {enroll?.qr && <img className="mfa-qr" src={enroll.qr} alt={t('QR code do autenticador')} />}
-      {enroll?.secret && <p className="muted small mfa-secret">{t('Sem câmera? Digite a chave:')} <code>{enroll.secret}</code></p>}
+      {enroll?.secret && <p className="muted small mfa-secret">{t('Ou digite a chave no app:')} <code>{enroll.secret}</code></p>}
       <CodeInput value={code} onChange={setCode} autoFocus />
       {err && <div className="form-err">{err}</div>}
       <div className="card-actions">

@@ -39,12 +39,21 @@ export function hasHint(uid) {
   try { return localStorage.getItem(HINT + uid) === '1'; } catch { return false; }
 }
 
+// o Supabase devolve o QR como "data:image/svg+xml;utf-8,<svg…>" sem codificar, e o Safari não desenha; codifica aqui
+function qrSrc(q) {
+  if (!q) return null;
+  const m = q.match(/^data:image\/svg\+xml;(?:utf-?8|charset=utf-?8),(.*)$/is);
+  if (!m) return q;
+  const svg = m[1].trim().startsWith('<') ? m[1] : decodeURIComponent(m[1]);
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 /** Começa o cadastro: apaga tentativas não concluídas e devolve { id, qr, secret }. */
 export async function startEnroll() {
   const list = await listFactors();
   for (const f of list.filter((x) => x.status !== 'verified')) await authRequest(`factors/${f.id}`, { method: 'DELETE' });
   const d = await authRequest('factors', { method: 'POST', body: { factor_type: 'totp', issuer: NAME, friendly_name: NAME } });
-  return { id: d.id, qr: d.totp?.qr_code, secret: d.totp?.secret };
+  return { id: d.id, qr: qrSrc(d.totp?.qr_code), secret: d.totp?.secret, uri: d.totp?.uri };
 }
 
 /** Confere o código de 6 dígitos; a sessão passa a valer como verificada (aal2). */
