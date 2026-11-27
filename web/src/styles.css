@@ -1511,3 +1511,23 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .dr-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.25); }
 .dr-dots i.on { background: var(--neon); }
 .center-block { display: block; margin: 6px auto 0; }
+
+/* Recomendadas: cartão com capa + bolinha, ganho em destaque e rodapé com nota esperada e treino */
+.rc { border-radius: 16px; background: var(--card, rgba(255,255,255,.05)); border: 1px solid rgba(255,255,255,.06); overflow: hidden; }
+.rc-top { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 12px 14px; color: inherit; text-decoration: none; }
+.rc-jk { position: relative; }
+.rc-jk .jacket { border-radius: 10px; }
+.rc-ball { position: absolute; left: -6px; bottom: -10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+.rc-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 1.25; }
+.rc-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.rc-tags .st-chip, .rc-tags .tag { font-size: 11px; padding: 1px 7px; }
+.rc-gain { text-align: right; align-self: start; }
+.rc-gain b { display: block; font: 800 20px var(--num); color: #4be38a; line-height: 1.1; }
+.rc-gain small { font-size: 9px; letter-spacing: .04em; opacity: .65; }
+.rc-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border-top: 1px solid rgba(255,255,255,.06); background: rgba(0,0,0,.18); }
+.rc-exp { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: wrap; }
+.rc-exp small { color: var(--muted); font-size: 11px; }
+.rc-exp b { font: 700 15px var(--num); }
+.rc-exp .grade-img { height: 22px; width: auto; }
+.rc-foot .train-chip { min-height: 32px; }
+@media (max-width: 380px) { .rc-top { grid-template-columns: 92px minmax(0, 1fr) auto; gap: 10px; } }

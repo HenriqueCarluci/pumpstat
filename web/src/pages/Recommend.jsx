@@ -40,26 +40,24 @@ export default function Recommend() {
           const c = r.chart;
           const tier = TIERS.find((x) => x.id === chartTier(c));
           return (
-            <div key={c.id} className="rec-wrap">
-            <Link to={`/chart/${c.id}`} className="rec">
-              <Jacket song={c.song} width={84} />
-              <div className="rec-main">
-                <div className="title">{c.song.title}</div>
-                <div className="rec-line">
-                  <Ball chart={c} size="sm" />
-                  {tab === 'fresh'
-                    ? <span className="muted small">{t('esperado ~{n}', { n: fmtScore(Math.round(r.expected / 1000) * 1000) })}</span>
-                    : <span className="muted small">{fmtScore(c.score)} · {t('faltam {n}', { n: fmtScore(r.need) })}</span>}
-                  <Grade grade={r.grade} size="sm" />
-                  {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}</span>}
+            <div key={c.id} className="rc">
+              <Link to={`/chart/${c.id}`} className="rc-top">
+                <div className="rc-jk"><Jacket song={c.song} width={112} /><span className="rc-ball"><Ball chart={c} size="sm" /></span></div>
+                <div className="rc-info">
+                  <b className="rc-title">{c.song.title}</b>
+                  <div className="rc-tags">
+                    {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}</span>}
+                    {topStyles(styleOf(c)).slice(0, 3).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
+                  </div>
                 </div>
-                <div className="rec-style">
-                  {topStyles(styleOf(c)).map((k) => <span key={k.id} className="st-chip" style={{ '--c': k.color }}>{t(k.label)} {Math.round(k.v)}%</span>)}
-                </div>
+                <div className="rc-gain"><b>+{r.gain.toFixed(1)}</b><small>PUMBILITY</small></div>
+              </Link>
+              <div className="rc-foot">
+                {tab === 'fresh'
+                  ? <div className="rc-exp"><small>{t('Nota esperada')}</small><b>~{fmtScore(Math.round(r.expected / 1000) * 1000)}</b><Grade grade={r.grade} size="sm" /></div>
+                  : <div className="rc-exp"><small>{t('Recorde')}</small><b>{fmtScore(c.score)}</b><small>{t('faltam {n}', { n: fmtScore(r.need) })}</small><Grade grade={r.grade} size="sm" /></div>}
+                <TrainingAddChip chart={c} />
               </div>
-              <div className="rec-gain"><b>+{r.gain.toFixed(1)}</b><small>PUMBILITY</small></div>
-            </Link>
-            <div className="rec-actions"><TrainingAddChip chart={c} /></div>
             </div>
           );
         })}
