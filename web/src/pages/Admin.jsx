@@ -426,6 +426,8 @@ function AdsConfig() {
         <span><b>{t('Mostrar anúncios no plano grátis')}</b><br /><small className="muted">{t('Plus e Pro nunca veem anúncios. Aparecem no início, na lista de músicas, na página da música e no Tier; nunca na fila, no chat ou nos ajustes.')}</small></span></label>
       <label className="check"><input type="checkbox" checked={!!ads.show_admin} onChange={(e) => set((a) => { a.show_admin = e.target.checked; })} />
         <span><b>{t('Mostrar também para administradores')}</b><br /><small className="muted">{t('Para conferir como fica antes de ligar para todos.')}</small></span></label>
+      <label className="check"><input type="checkbox" checked={ads.sync_always !== false} onChange={(e) => set((a) => { a.sync_always = e.target.checked; })} />
+        <span><b>{t('Sincronização do grátis sempre com anúncio')}</b><br /><small className="muted">{t('Vale mesmo com os anúncios acima desligados, a partir do momento em que a cobrança está ligada. Sem anúncio próprio ativo, aparece o convite do Plus.')}</small></span></label>
 
       <h3>{t('Rede de anúncios')}</h3>
       <Chips value={ads.provider || 'house'} onChange={(v) => set((a) => { a.provider = v; })}

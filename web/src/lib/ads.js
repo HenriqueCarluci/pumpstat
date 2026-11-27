@@ -4,14 +4,15 @@
 import { rpc } from './api.js';
 import { isNative } from './native.js';
 
-import { FEATURE_DEFAULTS, rank } from './plans.js';
+import { entitlements, FEATURE_DEFAULTS, previewPlan, rank } from './plans.js';
 
 export function adsConfig(plan) {
   const ads = plan?.config?.ads || {};
-  const mine = plan?.plan || 'free';
+  const preview = previewPlan(plan);
+  const mine = preview || plan?.plan || 'free';
   // "Sem anúncios" é um recurso da matriz de planos (padrão: a partir do Plus)
   const need = plan?.config?.features?.no_ads || FEATURE_DEFAULTS.no_ads;
-  const show = !!ads.enabled && rank(mine) < rank(need) && (!plan?.admin || !!ads.show_admin);
+  const show = !!ads.enabled && rank(mine) < rank(need) && (!plan?.admin || !!preview || !!ads.show_admin);
   return { ...ads, show, everyN: Math.max(4, Number(ads.every_n) || 12) };
 }
 
@@ -46,3 +47,12 @@ export function loadAdsense(client) {
 }
 
 export const logAd = (id, kind, place) => rpc('log_ad_event', { p_ad: String(id).slice(0, 40), p_kind: kind, p_place: place || null }).catch(() => {});
+
+/**
+ * Anúncio da sincronização: no plano grátis ele SEMPRE aparece (mesmo com os anúncios gerais desligados),
+ * a partir do momento em que a cobrança está ligada (ou no modo de teste do admin).
+ */
+export function syncAdOn(plan) {
+  if (plan?.config?.ads?.sync_always === false) return adsConfig(plan).show;
+  return !entitlements(plan).can('no_ads');
+}

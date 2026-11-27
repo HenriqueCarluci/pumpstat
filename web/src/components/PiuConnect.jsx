@@ -5,16 +5,16 @@ import { t, tMsg } from '../lib/i18n.js';
 import { ChevronRight, RefreshCw } from './Icons.jsx';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
-import { adsConfig } from '../lib/ads.js';
+import { syncAdOn } from '../lib/ads.js';
 import AdSlot from './AdSlot.jsx';
 
-/** Plano grátis: um anúncio aparece enquanto a sincronização roda (Plus e Pro sincronizam sem anúncio). */
+/** Plano grátis: a sincronização sempre mostra um anúncio enquanto roda (Plus e Pro sincronizam sem anúncio). */
 export function SyncAd({ running }) {
   const { plan } = useData();
-  if (!running || !adsConfig(plan).show) return null;
+  if (!running || !syncAdOn(plan)) return null;
   return (
     <div className="sync-ad">
-      <AdSlot place="sync" />
+      <AdSlot place="sync" force />
       <p className="muted tiny">{t('Seus dados estão sendo sincronizados.')} <Link to="/planos">{t('Sincronize sem anúncio no Plus')}</Link></p>
     </div>
   );

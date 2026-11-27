@@ -8,15 +8,18 @@ import { t } from '../lib/i18n.js';
 import { ChevronRight } from './Icons.jsx';
 
 /** Espaço de anúncio. Só aparece no plano grátis quando o admin liga os anúncios. */
-export default function AdSlot({ place, seed = 0 }) {
+export default function AdSlot({ place, seed = 0, force = false }) {
   const { plan } = useData();
   const ads = adsConfig(plan);
-  if (!ads.show) return null;
+  if (!ads.show && !force) return null;
   if (isAdsense(ads)) return <AdsenseUnit ads={ads} place={place} />;
-  const ad = pickHouse(ads, seed + place.length);
+  const ad = pickHouse(ads, seed + place.length) || (force ? plusAd() : null);
   if (!ad) return null;
   return <HouseAd ad={ad} place={place} showPlans={entitlements(plan).showPlans} />;
 }
+
+// anúncio de reserva (quando não há nenhum anúncio próprio ativo): o próprio Plus
+const plusAd = () => ({ id: 'plus', title: 'PIU Stats Plus', text: t('Sincronize sem anúncio e veja todas as estatísticas e recomendações.'), cta: t('Ver planos'), url: '#/planos' });
 
 function HouseAd({ ad, place, showPlans }) {
   const nav = useNavigate();
