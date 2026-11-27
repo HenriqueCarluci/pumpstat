@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { distanceM, getPosition, listVenues } from '../lib/queue.js';
 import { t, tErr } from '../lib/i18n.js';
-import { MapPin, PadArrow } from '../components/Icons.jsx';
+import { Map as MapIcon, MapPin, PadArrow } from '../components/Icons.jsx';
 import VenueRequest from '../components/VenueRequest.jsx';
+import VenueMap from '../components/VenueMap.jsx';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
 import { getSession } from '../lib/auth.js';
@@ -19,6 +20,8 @@ export default function Venues() {
   const [error, setError] = useState('');
   const [near, setNear] = useState(null); // lista por distância
   const [locating, setLocating] = useState(false);
+  const [me, setMe] = useState(null);
+  const [showMap, setShowMap] = useState(false);
   const last = (() => { try { return localStorage.getItem('stepclub:venue'); } catch { return null; } })();
 
   useEffect(() => { listVenues().then(setVenues).catch((e) => setError(tErr(e.message))); }, []);
@@ -34,6 +37,7 @@ export default function Venues() {
     setLocating(true); setError('');
     try {
       const p = await getPosition();
+      setMe(p); setShowMap(true);
       setNear(venues.filter((v) => v.latitude != null)
         .map((v) => ({ ...v, dist: distanceM(p, { lat: v.latitude, lng: v.longitude }) }))
         .sort((a, b) => a.dist - b.dist).slice(0, 8));
@@ -47,7 +51,11 @@ export default function Venues() {
       {lastVenue && !city && (
         <Link to={`/fila/${lastVenue.slug}`} className="v-last">{t('Voltar para')} <b>{lastVenue.name}</b> · {lastVenue.city}</Link>
       )}
-      <button className="btn ghost wide" onClick={findNear} disabled={locating}>{locating ? t('Procurando…') : <><MapPin size={16} /> {t('Pumps perto de mim')}</>}</button>
+      <div className="v-near-btns">
+        <button className="btn ghost" onClick={findNear} disabled={locating}>{locating ? t('Procurando…') : <><MapPin size={16} /> {t('Pumps perto de mim')}</>}</button>
+        <button className={`btn ghost ${showMap ? 'on' : ''}`} onClick={() => setShowMap((s) => !s)}><MapIcon size={16} /> {showMap ? t('Esconder mapa') : t('Ver no mapa')}</button>
+      </div>
+      {showMap && <VenueMap venues={venues} me={me} focus={near?.map((v) => v.slug)} />}
       {near && (
         <div className="v-near">
           {near.map((v) => (

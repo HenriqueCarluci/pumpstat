@@ -844,3 +844,8 @@ Tenho o PIU Stats: abrir no app | I have PIU Stats: open in the app | Tengo PIU 
 Check-in rápido | Fast check-in | Check-in rápido | 빠른 체크인 | クイックチェックイン | Check-in rapide | Check-in rapido
 Entra na fila com o seu nome e foto da Pump. O app confere a sua localização. | Joins the queue with your Pump name and photo. The app checks your location. | Entra en la fila con tu nombre y foto de la Pump. La app confirma tu ubicación. | Pump 이름과 사진으로 대기열에 참여해요. 앱이 위치를 확인해요. | Pumpの名前と写真で列に並びます。アプリが位置を確認します。 | Rejoint la file avec votre nom et photo Pump. L'app vérifie votre position. | Entra in coda con il tuo nome e foto della Pump. L'app controlla la tua posizione.
 {n} na fila | {n} in line | {n} en la fila | 대기 {n}명 | {n}人待ち | {n} dans la file | {n} in coda
+Abrir fila | Open queue | Abrir fila | 대기열 열기 | 列を開く | Ouvrir la file | Apri la coda
+Você está aqui | You are here | Estás aquí | 현재 위치 | 現在地 | Vous êtes ici | Sei qui
+Mapa dos fliperamas com Pump | Map of arcades with Pump | Mapa de salones con Pump | Pump 오락실 지도 | Pumpがあるゲーセンの地図 | Carte des salles avec Pump | Mappa delle sale con Pump
+Esconder mapa | Hide map | Ocultar mapa | 지도 숨기기 | 地図を隠す | Masquer la carte | Nascondi mappa
+Ver no mapa | See on map | Ver en el mapa | 지도에서 보기 | 地図で見る | Voir sur la carte | Vedi sulla mappa

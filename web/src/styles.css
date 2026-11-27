@@ -1623,3 +1623,18 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .q-fast-btns .btn { width: 100%; justify-content: center; }
 .q-fast-btns .btn small { font-weight: 500; opacity: .75; }
 .q-fast.guest .btn { margin-top: 8px; }
+
+/* mapa dos fliperamas */
+.v-near-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.v-near-btns .btn { justify-content: center; display: inline-flex; align-items: center; gap: 6px; }
+.v-near-btns .btn.on { border-color: var(--neon); color: var(--neon); }
+.venue-map { height: 340px; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); margin: 10px 0; background: #1b1d21; z-index: 0; }
+.venue-map .leaflet-popup-content-wrapper, .venue-map .leaflet-popup-tip { background: #22262c; color: #e8eaef; }
+.venue-map .leaflet-container a { color: var(--neon); }
+.vm-pop { display: grid; gap: 4px; min-width: 160px; }
+.vm-pop small { color: #9aa4b2; }
+.vm-pop .btn { margin-top: 6px; padding: 6px 10px; font-size: 13px; }
+.vm-pin span { display: block; width: 16px; height: 16px; margin: 3px; border-radius: 50%; background: #2bd2ff; border: 2px solid #0e1013; box-shadow: 0 0 0 2px #2bd2ff66, 0 0 12px #2bd2ff; }
+.vm-pin.near span { background: var(--neon); box-shadow: 0 0 0 2px #8cff3a66, 0 0 14px var(--neon); }
+.vm-pin.me span { background: #fff; box-shadow: 0 0 0 4px #ffffff44, 0 0 16px #fff; }
+@media (min-width: 900px) { .venue-map { height: 440px; } }
