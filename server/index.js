@@ -11,7 +11,10 @@ import { refreshCatalog } from './catalog.js';
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_8_e3UpVPrgDdQbNlFitBvw_9uSoJG_t';
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'https://stepclub.onrender.com,https://pumpstat.onrender.com,http://localhost:5173').split(',');
+const ALLOWED_ORIGINS = [...new Set([
+  ...(process.env.ALLOWED_ORIGINS || 'https://stepclub.onrender.com,https://pumpstat.onrender.com,http://localhost:5173').split(','),
+  'https://piustats.com.br', 'https://www.piustats.com.br', 'https://stepclub.onrender.com',
+].map((o) => o.trim()).filter(Boolean))];
 const SITES = { phoenix2: 'https://piugame.com', phoenix: 'https://phoenix.piugame.com' };
 const PAGE_DELAY_MS = 250;
 // chave para criptografar a sessão do piugame guardada no Supabase (nunca a senha)
@@ -373,7 +376,7 @@ const server = http.createServer(async (req, res) => {
           Instagram: tr.instagram ? `https://instagram.com/${tr.instagram}` : '—', 'Outras redes': redes,
           'Sobre o time': String(tr.about || '—').slice(0, 500), Contato: String(tr.contact || '—').slice(0, 120),
           'Pedido por': tr.nickname || '—', Conta: user.email || user.id, 'ID do pedido': Number(tr.id) || '—',
-          Aprovar: 'https://stepclub.onrender.com/#/admin?tab=approvals',
+          Aprovar: 'https://piustats.com.br/#/admin?tab=approvals',
           ...(tr.logo ? { _attachments: [{ name: `logo-${Number(tr.id) || 'time'}.${String(tr.logo).split('.').pop()}`, url: tr.logo }] } : {}),
         }),
       }).catch(() => null);
