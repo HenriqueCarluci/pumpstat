@@ -43,8 +43,8 @@ export function useSyncJob(onDone) {
   const poll = async (id) => {
     try {
       const j = await call(`/api/piu/jobs/${id}`);
-      setJob(j);
-      if (j.state === 'running') timer.current = setTimeout(() => poll(id), 1500);
+      setJob((prev) => ({ ...j, id, login: prev?.login }));
+      if (j.state === 'running' || j.state === 'choose') timer.current = setTimeout(() => poll(id), j.state === 'choose' ? 2500 : 1500);
       else if (j.state === 'done') onDone?.(j);
       else if (j.needLogin) setNeedLogin(true);
     } catch (e) { setErr(tMsg(e.message)); setJob(null); }
@@ -53,16 +53,53 @@ export function useSyncJob(onDone) {
     setErr(''); setNeedLogin(false);
     setJob({ state: 'running', message: t('Conectando… (na primeira vez pode levar até 1 minuto)') });
     try {
-      const r = await call('/api/piu/sync', { method: 'POST', body: JSON.stringify(body) });
-      if (r.jobId) poll(r.jobId);
+      const r = await call('/api/piu/sync', { method: 'POST', body: JSON.stringify({ ...body, account: body.account || (body.login ? accountFor(body.login) : undefined) }) });
+      if (r.jobId) { setJob((j) => ({ ...j, id: r.jobId, login: body.login })); poll(r.jobId); }
       return true;
     } catch (ex) { setErr(tMsg(ex.message)); setJob(null); if (ex.needLogin) setNeedLogin(true); return false; }
   };
-  return { job, err, needLogin, start, running: job?.state === 'running' };
+  /** Conta com mais de um ID de jogo: manda o escolhido e a sincronização continua. */
+  const choose = async (account) => {
+    if (!job?.id) return;
+    rememberAccount(job.login, account);
+    setJob({ ...job, state: 'running', message: t('Trocando de conta…') });
+    try { await call(`/api/piu/jobs/${job.id}/choose`, { method: 'POST', body: JSON.stringify({ account }) }); } catch (e) { setErr(tMsg(e.message)); }
+  };
+  return { job, err, needLogin, start, choose, running: job?.state === 'running' || job?.state === 'choose' };
 }
 
-export function JobStatus({ job }) {
+const ACC_KEY = 'pumpstat:piu-accounts';
+const savedAccounts = () => { try { return JSON.parse(localStorage.getItem(ACC_KEY) || '{}'); } catch { return {}; } };
+function rememberAccount(login, account) {
+  try { localStorage.setItem(ACC_KEY, JSON.stringify({ ...savedAccounts(), [(login || '*').toLowerCase()]: account })); } catch { /* ignore */ }
+}
+const accountFor = (login) => savedAccounts()[(login || '*').toLowerCase()] || null;
+
+const piuImg = (src) => (!src ? null : /^https?:/i.test(src) ? src : `https://piugame.com${src.startsWith('/') ? '' : '/'}${src}`);
+
+/** Escolha do ID de jogo (conta AM.PASS com mais de um cartão). */
+function AccountChooser({ job, onChoose }) {
+  return (
+    <div className="acc-choose">
+      <p className="small">{t('Sua conta AM.PASS tem mais de um ID de jogo. Qual você quer vincular ao PIU Stats?')}</p>
+      <div className="acc-cards">
+        {(job.accounts || []).map((a) => (
+          <button key={a.nickname} type="button" className={`acc-card${a.current ? ' on' : ''}`} onClick={() => onChoose(a.nickname)}>
+            {a.avatar ? <img src={piuImg(a.avatar)} alt="" referrerPolicy="no-referrer" /> : <span className="acc-ph" />}
+            {a.title && <small className="acc-title">{a.title}</small>}
+            <b>{a.nickname}</b>
+            {a.current && <small className="muted">{t('ativa agora no site')}</small>}
+          </button>
+        ))}
+      </div>
+      <p className="muted tiny">{t('Dá para trocar depois: entre de novo com a sua senha e escolha outro ID.')}</p>
+    </div>
+  );
+}
+
+export function JobStatus({ job, onChoose }) {
   if (!job) return null;
+  if (job.state === 'choose') return <AccountChooser job={job} onChoose={onChoose} />;
   return (
     <div className={`job ${job.state}`}>
       {job.state === 'running' && <span className="spinner" />}
@@ -80,14 +117,14 @@ export function JobStatus({ job }) {
 
 /** Botão "Sincronizar agora": usa a sessão do piugame guardada (criptografada) sem pedir a senha. */
 export function QuickSync({ onDone }) {
-  const { job, err, needLogin, start, running } = useSyncJob(onDone);
+  const { job, err, needLogin, start, choose, running } = useSyncJob(onDone);
   return (
     <div className="piu-connect">
       <button className="btn wide" disabled={running} onClick={() => start({ useSaved: true })}>
         {running ? t('Sincronizando…') : <><RefreshCw size={16} /> {t('Sincronizar agora')}</>}
       </button>
       {err && <div className="form-err">{err}</div>}
-      <JobStatus job={job} />
+      <JobStatus job={job} onChoose={choose} />
       <SyncAd running={running} />
       {needLogin && <PiuConnect compact onDone={onDone} />}
     </div>
@@ -99,7 +136,7 @@ export default function PiuConnect({ onDone, compact }) {
   const [login, setLogin] = useState(() => { try { return localStorage.getItem('pumpstat:piu-login') || ''; } catch { return ''; } });
   const [password, setPassword] = useState('');
   const [help, setHelp] = useState(false);
-  const { job, err, start, running } = useSyncJob(onDone);
+  const { job, err, start, choose, running } = useSyncJob(onDone);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -125,7 +162,7 @@ export default function PiuConnect({ onDone, compact }) {
         <input name="password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={running} />
       </label>
       {err && <div className="form-err">{err}</div>}
-      <JobStatus job={job} />
+      <JobStatus job={job} onChoose={choose} />
       <SyncAd running={running} />
       <button className="btn wide" disabled={running}>{running ? t('Sincronizando…') : t('Entrar e sincronizar')}</button>
       <button type="button" className="link small" onClick={() => setHelp((h) => !h)}>{t('Entro no piugame com Google')}</button>

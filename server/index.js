@@ -5,6 +5,7 @@ import { createCipheriv, createDecipheriv, randomBytes, randomUUID, timingSafeEq
 import { DOMParser } from 'linkedom';
 import { lastPage, parseProfile, parseRow, parseTitles, rowsOf, toPayload, isLoginPage } from './piu-parser.js';
 import { getDispatcher, isSessionAlive, piuLogin, PiuSession, switchSite } from './piu-session.js';
+import { normNick, parseAccounts, switchTo } from './piu-accounts.js';
 import { resolveVideo, searchUrl } from './videos.js';
 import { refreshCatalog } from './catalog.js';
 
@@ -132,6 +133,54 @@ async function rpcAsServer(fn, args) {
   return body;
 }
 
+// guarda (uma vez por conta, no máximo) o HTML da janela "Switch Account" para ajustarmos a leitura dela
+const sampled = new Set();
+function sampleAccounts(userId, modal, accounts, extra = {}) {
+  if (!process.env.INGEST_KEY || !modal) return;
+  const key = `${userId}:${extra.reason || 'list'}`;
+  if (sampled.has(key)) return;
+  sampled.add(key);
+  rpcAsServer('save_piu_sample', { p_kind: 'switch_account', p_info: { accounts: accounts.map(({ el, ...a }) => a), ...extra }, p_html: modal.outerHTML })
+    .catch((e) => console.warn('sample', e.message));
+}
+
+/**
+ * Conta AM.PASS com mais de um ID de jogo: pergunta qual usar (só na sincronização manual) e troca para ele.
+ * Sem escolha possível (sincronização automática sem preferência), segue com a conta que o site já deixou ativa.
+ */
+async function pickAccount(session, job, version) {
+  const getDoc = async (path) => { const r = await session.get(path); return { doc: parseHtml(r.html), html: r.html }; };
+  const { doc } = await getDoc('/my_page/play_data.php');
+  const { modal, accounts } = parseAccounts(doc);
+  if (accounts.length < 2) return;
+  sampleAccounts(job.userId, modal, accounts);
+  if (!job.account) {
+    if (!job.interactive) return;
+    job.accounts = accounts.map(({ el, ...a }) => a);
+    job.state = 'choose';
+    job.message = 'Sua conta tem mais de um ID de jogo. Escolha qual vincular.';
+    job.account = await new Promise((resolve, reject) => {
+      job.choose = resolve;
+      setTimeout(() => reject(new Error('Tempo esgotado para escolher a conta. Sincronize de novo.')), 5 * 60_000).unref();
+    });
+    delete job.choose; delete job.accounts;
+    job.state = 'running';
+  }
+  const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
+  job.message = `${label}: trocando para ${job.account}…`;
+  let done;
+  try { done = await switchTo(session, getDoc, job.account); } catch (e) {
+    sampleAccounts(job.userId, modal, accounts, { reason: 'switch_failed', error: e.code || e.message, want: job.account });
+    throw new Error('Não consegui trocar de conta automaticamente. Troque a conta em piugame.com (Switch Account) e sincronize de novo; já avisamos o suporte.');
+  }
+  if (!done) return; // esse ID não existe nesta versão
+  const now = normNick(parseProfile((await getDoc('/my_page/pumbility.php')).doc).nickname);
+  if (now !== normNick(job.account)) {
+    sampleAccounts(job.userId, modal, accounts, { reason: 'switch_unverified', want: job.account, got: now });
+    throw new Error('Não consegui trocar de conta automaticamente. Troque a conta em piugame.com (Switch Account) e sincronize de novo; já avisamos o suporte.');
+  }
+}
+
 async function runJob(job, { login, password, versions, token, saved, partial = false, writer = userWriter(token) }) {
   try {
     let session;
@@ -151,6 +200,7 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
       const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
       job.message = `${label}: abrindo a sessão…`;
       await switchSite(session, SITES[version]);
+      await pickAccount(session, job, version);
       const payload = await scrapeVersion(session, version, job, partial);
       job.message = `${label}: gravando ${payload.bests.length} recordes…`;
       const { titles, ...scores } = payload;
@@ -158,6 +208,7 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
       if (titles.length) job.results[version].titles = await writer.titles(version, titles);
       job.progress = Object.keys(job.results).length / versions.length;
     }
+    if (job.account) session.account = job.account;
     job.session = session;
     if (SESSION_KEY && writer.session) {
       try { session.base = SITES.phoenix2; await writer.session(seal(session.toJSON())); } catch { /* opcional */ }
@@ -293,7 +344,7 @@ const server = http.createServer(async (req, res) => {
     if (!user?.id) return send(res, 401, { error: 'Faça login no PIU Stats.' }, origin);
 
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
-      const { login, password, versions, useSaved, partial } = await readJson(req);
+      const { login, password, versions, useSaved, partial, account } = await readJson(req);
       let saved = null;
       if (useSaved) {
         if (!SESSION_KEY) return send(res, 400, { error: 'Sincronização rápida indisponível.', needLogin: true }, origin);
@@ -313,7 +364,8 @@ const server = http.createServer(async (req, res) => {
       attempts.set(user.id, [...hist, now]);
       const running = [...jobs.values()].find((j) => j.userId === user.id && j.state === 'running');
       if (running) return send(res, 409, { error: 'Já existe uma sincronização em andamento.', jobId: running.id }, origin);
-      const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now() };
+      const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now(),
+        interactive: !saved, account: account ? String(account).slice(0, 40) : (saved?.account || null) };
       jobs.set(job.id, job);
       runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved, partial: !!partial && !!saved });
       return send(res, 202, { jobId: job.id }, origin);
@@ -384,11 +436,23 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { emailed: !!body && body.ok !== false }, origin);
     }
 
+    // conta com mais de um ID de jogo: o app manda o nick escolhido e a sincronização continua
+    const mc = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)\/choose$/);
+    if (req.method === 'POST' && mc) {
+      const job = jobs.get(mc[1]);
+      if (!job || job.userId !== user.id) return send(res, 404, { error: 'Sincronização não encontrada.' }, origin);
+      const { account } = await readJson(req);
+      const ok = job.state === 'choose' && job.choose && (job.accounts || []).some((a) => a.nickname === account);
+      if (!ok) return send(res, 409, { error: 'Essa escolha não vale mais. Sincronize de novo.' }, origin);
+      job.state = 'running'; job.message = 'Trocando de conta…';
+      job.choose(account);
+      return send(res, 200, { ok: true }, origin);
+    }
     const m = url.pathname.match(/^\/api\/piu\/jobs\/([\w-]+)$/);
     if (req.method === 'GET' && m) {
       const job = jobs.get(m[1]);
       if (!job || job.userId !== user.id) return send(res, 404, { error: 'Sincronização não encontrada.' }, origin);
-      const { userId, ...pub } = job;
+      const { userId, choose, session, interactive, ...pub } = job;
       return send(res, 200, pub, origin);
     }
     return send(res, 404, { error: 'not found' }, origin);
@@ -407,7 +471,7 @@ async function autoSyncTick() {
     for (const c of list) {
       let saved = null;
       try { saved = unseal(c.blob); } catch { await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: null, p_error: 'session_expired' }).catch(() => {}); continue; }
-      const job = { id: `auto-${c.user}`, userId: c.user, state: 'running', message: '', progress: 0, results: {}, at: Date.now() };
+      const job = { id: `auto-${c.user}`, userId: c.user, state: 'running', message: '', progress: 0, results: {}, at: Date.now(), account: saved.account || null };
       await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, writer: serverWriter(c.user) });
       let blob = null;
       if (job.state === 'done' && job.session) { try { job.session.base = SITES.phoenix2; blob = seal(job.session.toJSON()); } catch { /* ignora */ } }

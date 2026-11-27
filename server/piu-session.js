@@ -105,10 +105,12 @@ export class PiuSession {
 
   get(path) { return this.request(path); }
 
-  toJSON() { return { base: this.base, cookies: [...this.cookies].map(([h, jar]) => [h, [...jar]]) }; }
+  // account: o ID de jogo escolhido quando a conta AM.PASS tem mais de um
+  toJSON() { return { base: this.base, cookies: [...this.cookies].map(([h, jar]) => [h, [...jar]]), ...(this.account ? { account: this.account } : {}) }; }
   static fromJSON(o) {
     const s = new PiuSession(o.base || 'https://piugame.com');
     for (const [h, entries] of o.cookies || []) s.cookies.set(h, new Map(entries));
+    if (o.account) s.account = o.account;
     return s;
   }
 }

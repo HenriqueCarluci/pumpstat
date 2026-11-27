@@ -2349,3 +2349,13 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
   .mt-req { grid-template-columns: 36px minmax(0, 1fr); }
   .mt-req-btns { grid-column: 2 / -1; justify-content: flex-start; }
 }
+
+/* escolha do ID de jogo (AM.PASS com mais de um cartão) */
+.acc-choose { display: grid; gap: 10px; }
+.acc-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.acc-card { display: grid; justify-items: center; gap: 4px; padding: 12px 10px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .03); color: inherit; cursor: pointer; text-align: center; }
+.acc-card:hover, .acc-card:focus-visible { border-color: rgba(140, 255, 58, .6); background: rgba(140, 255, 58, .06); }
+.acc-card img, .acc-card .acc-ph { width: 72px; height: 72px; border-radius: 12px; object-fit: cover; background: #1b1d22; }
+.acc-card b { font-family: Oxanium, Inter, sans-serif; letter-spacing: .02em; }
+.acc-title { color: #ffd166; font-weight: 700; font-size: 11px; }
+.acc-card.on { border-color: rgba(140, 255, 58, .35); }
