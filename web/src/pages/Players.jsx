@@ -268,6 +268,7 @@ export function PlayerProfile() {
           {who?.title && <span className="ptitle">{who.title}</span>}
           <h2><Flag cc={ccOf(id)} />{who?.nickname || t('Jogador')}</h2>
           <TeamTag team={teamOf(id)} />
+          <SocialLinks userId={id} me={isMe} />
           <Badges userId={id} />
         </div>
         <div className="pp-pb">
@@ -276,8 +277,6 @@ export function PlayerProfile() {
           <small className="muted">PUMBILITY{tier?.name && tier.lv ? ` · ${tier.name} ${tier.lv}` : ''}</small>
         </div>
       </section>
-
-      <SocialLinks userId={id} me={isMe} />
 
       {isMe ? (
         <div className="pp-actions me">

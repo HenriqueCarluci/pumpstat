@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
-import { AtSign, Check, Copy, ExternalLink } from './Icons.jsx';
+import { AtSign, Check } from './Icons.jsx';
+import { BRAND } from './brandIcons.js';
 
 /** Redes do perfil: guardamos só o nome de usuário; o link é montado aqui. */
 export const SOCIALS = [
@@ -14,7 +15,17 @@ export const SOCIALS = [
   { id: 'discord', label: 'Discord', url: null, ph: 'seuusuario' },
 ];
 
-/** Links das redes de um jogador (só aparecem se ele deixou visível para você). */
+/** Ícone da rede (SVG do Simple Icons). */
+export function BrandIcon({ id, size = 18 }) {
+  const b = BRAND[id];
+  if (!b) return null;
+  return <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" style={{ color: b.color }}><path d={b.path} fill="currentColor" /></svg>;
+}
+
+/**
+ * Redes de um jogador como ícones (só aparecem se ele deixou visível para você). Toque abre o perfil na rede;
+ * o Discord não tem link público, então o toque copia o usuário. No próprio perfil sem redes, um atalho para preencher.
+ */
 export function SocialLinks({ userId, me = false }) {
   const [s, setS] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -26,20 +37,19 @@ export function SocialLinks({ userId, me = false }) {
   const list = SOCIALS.filter((n) => s?.[n.id]);
   if (!list.length) {
     return me && s
-      ? <Link to="/ajustes?s=redes" className="socials-add small ic-row"><AtSign size={14} /> {t('Adicione suas redes sociais para aparecerem no seu perfil')}</Link>
+      ? <Link to="/ajustes?s=redes" className="socials-add small ic-row"><AtSign size={14} /> {t('Adicionar redes sociais')}</Link>
       : null;
   }
-  const copy = async (v) => { try { await navigator.clipboard.writeText(v); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* sem clipboard */ } };
+  const copy = async (v) => { try { await navigator.clipboard.writeText(v); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* sem clipboard */ } };
   return (
-    <section className="socials" aria-label={t('Redes sociais')}>
+    <div className="socials-ic" aria-label={t('Redes sociais')}>
       {list.map((n) => (n.url
-        ? <a key={n.id} className={`social ${n.id}`} href={n.url(s[n.id])} target="_blank" rel="noopener noreferrer"><b>{n.label}</b><span>@{s[n.id]}</span><ExternalLink size={12} /></a>
-        : (
-          <button key={n.id} type="button" className={`social ${n.id}`} onClick={() => copy(s[n.id])} title={t('Copiar usuário do Discord')}>
-            <b>{n.label}</b><span>{s[n.id]}</span>{copied ? <Check size={12} /> : <Copy size={12} />}
-          </button>
-        )))}
-    </section>
+        ? <a key={n.id} className="soc-ic" href={n.url(s[n.id])} target="_blank" rel="noopener noreferrer"
+            aria-label={`${n.label}: @${s[n.id]}`} title={`${n.label} · @${s[n.id]}`}><BrandIcon id={n.id} /></a>
+        : <button key={n.id} type="button" className="soc-ic" onClick={() => copy(s[n.id])}
+            aria-label={t('Copiar usuário do Discord')} title={`${n.label} · ${s[n.id]}`}><BrandIcon id={n.id} /></button>))}
+      {copied && <span className="soc-copied" role="status"><Check size={12} /> {t('Discord copiado: {u}', { u: s.discord })}</span>}
+    </div>
   );
 }
 
