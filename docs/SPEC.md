@@ -315,3 +315,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 - Ajustes → Privacidade → "Ocultar minhas estatísticas, até dos amigos" (`user_settings.private_stats`).
 - Esconde dos outros o que o app gera: notas e recordes, jogadas, top 50, notas e placas, passes por nível, estilo, comparação, rival, pontos e selos e os avisos de recorde. As funções sociais leem as views `visible_scores`, `visible_score_history`, `visible_plays` e `visible_profiles` (que só filtram quem é privado; os próprios dados continuam).
 - Continua público o que o jogo mostra: nick, foto, título e PUMBILITY (com a faixa), além de bandeira, time e redes (com a visibilidade delas).
+
+## Questionário do jogador
+- No primeiro acesso (antes do convite do tutorial) o app pede 5 perguntas: tempo de jogo, frequência, objetivo, modo e até 3 coisas para melhorar. Dá para pular ("Depois"); fica em Ajustes → Seu perfil → "Seu jeito de jogar" para responder ou refazer (`save_quiz`, `skip_quiz`, `my_quiz`; `user_settings.quiz`).
+- Calibração: missões pesam a categoria do objetivo (`quizMul`), metas mais leves para iniciantes e um pouco mais puxadas para veteranos frequentes (`quizAdj`), dias de jogo pela frequência quando não há histórico e modo preferido quando o histórico é pequeno. Recomendadas abrem na aba do objetivo, no modo preferido, e mostram primeiro os charts com as skills escolhidas.

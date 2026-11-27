@@ -45,6 +45,7 @@ import { ComparePlayer, PlayerProfile } from './pages/Players.jsx';
 import ChartPage from './pages/Chart.jsx';
 import ReleaseNotesP from './pages/ReleaseNotes.jsx';
 import { PreviewBanner, ViewAsBanner } from './components/PlanLock.jsx';
+import { QuizPrompt } from './components/QuizModal.jsx';
 
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
@@ -69,7 +70,9 @@ const FAKE = {
   search_players: [{ id: 'amigo', nickname: 'PUMPKING', title: 'Twist Master', avatar: null, relation: 'friend' }],
   admin_health: { at: new Date().toISOString(), db: { size: 38770355, max_connections: 60, connections: { active: 1, idle: 9 }, cache_hit: 100, index_hit: 99.98, tables: [{ name: 'chart_tags_ref', rows: 30906, bytes: 6791168, dead: 0 }, { name: 'charts', rows: 9511, bytes: 6103040, dead: 0 }, { name: 'user_titles', rows: 4277, bytes: 1277952, dead: 469 }], statements: [{ q: 'SELECT wal->>$5 as type', calls: 30798, mean_ms: 5.6, total_s: 171.7 }, { q: 'app_data', calls: 721, mean_ms: 188, total_s: 135.6 }, { q: 'my_progress', calls: 477, mean_ms: 176.9, total_s: 84.4 }, { q: 'my_notifications', calls: 1736, mean_ms: 32.9, total_s: 57.1 }] }, usage: { users: 10, new_7d: 10, online_now: 1, active_24h: 9, active_7d: 9, syncs_24h: 50, plays_24h: 12, queue_now: 0, last_sync: new Date(Date.now() - 2 * 3600e3).toISOString(), sources_7d: { server: 72 }, unmatched_7d: 0, syncs_by_hour: Array.from({ length: 14 }, (_, i) => [new Date(Date.now() - i * 3600e3).toISOString(), (i * 7) % 6 + 1]) }, jobs: [{ name: 'stepclub-queue-housekeeping', schedule: '*/5 * * * *', active: true, fails_24h: 0, last: { status: 'succeeded', start: new Date().toISOString(), ms: 31 } }], arcadestat: { at: new Date(Date.now() - 7 * 3600e3).toISOString(), rows: 5482, matched: 5482, unmatched: 0 }, errors: { count_24h: 3, users_24h: 2, top: [{ message: "Cannot read properties of undefined (reading 'map')", n: 3, users: 2, platform: 'android', last: new Date().toISOString(), route: '#/progresso', build: '2026-11-27 10:40', stack: 'TypeError: Cannot read properties of undefined\n    at Progress (Progress.jsx:120)' }] } },
   players: [{ id: 'amigo', nickname: 'PUMPKING', avatar: null, title: 'Twist Master', pumbility: 16565.7, bests: 812, private: location.search.includes('private') }],
-  my_privacy: { private_stats: false }, socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
+  my_privacy: { private_stats: false },
+  my_quiz: location.search.includes('quiz=new') ? { quiz: null } : { quiz: { exp: 'y1_3', freq: 'few', goal: 'level', mode: 'D', skills: ['twist', 'drill'] }, at: '2026-11-27T10:00:00Z' },
+  save_quiz: null, skip_quiz: null, socials_of: { instagram: 'pumpking.br', twitch: 'pumpking', discord: 'pumpking' },
   team_report: (() => { const st = Math.floor(new Date('2026-11-23T03:00:00Z').getTime() / 1000);
     return { period: 'week', offset: 0, start: '2026-11-23T03:00:00Z', end: '2026-11-30T03:00:00Z',
       totals: { plays: 161, passes: 116, active: 5, songs: 107, avg_level: 19.7, max_d: 23, max_s: 24, new_clears: 22 },
@@ -180,7 +183,7 @@ function HShell({ children }) {
   useSearchHotkey(desk ? open : () => {});
   return <div className="app">{desk && <Sidebar onSearch={open} />}{q && <SearchDialog onClose={() => setQ(false)} />}
     <header className="topbar">{desk && <button type="button" className="top-search" onClick={open}><span>Buscar música, artista, jogador ou página…</span><kbd>Ctrl K</kbd></button>}<span className="brand">PIU Stats</span></header>
-    <ViewAsBanner /><PreviewBanner /><Tour />{children}</div>;
+    <ViewAsBanner /><PreviewBanner /><QuizPrompt /><Tour />{children}</div>;
 }
 
 createRoot(document.getElementById('root')).render(

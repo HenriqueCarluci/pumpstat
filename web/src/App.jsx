@@ -41,6 +41,7 @@ import Training from './pages/Training.jsx';
 import MyTeam from './pages/MyTeam.jsx';
 import DayReport from './pages/DayReport.jsx';
 import Tour from './components/Tour.jsx';
+import { QuizPrompt } from './components/QuizModal.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import ReleaseNotes from './pages/ReleaseNotes.jsx';
@@ -271,7 +272,7 @@ function Shell() {
       <InviteToast />
       <FriendOnlineToast />
       <AdminSignupToast />
-      <Tour />
+      <QuizPrompt /><Tour />
 
       <nav className="tabbar">
         <Tab to="/" icon={<HomeIcon size={21} />} label={t('Início')} />

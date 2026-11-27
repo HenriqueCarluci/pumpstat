@@ -19,6 +19,7 @@ import LangPicker from '../components/LangPicker.jsx';
 import Feedback from '../components/Feedback.jsx';
 import TeamPicker from '../components/TeamPicker.jsx';
 import { NotesCard } from '../components/ReleaseNotes.jsx';
+import { QuizCard } from '../components/QuizModal.jsx';
 import { TestMode } from '../components/PlanLock.jsx';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
@@ -62,6 +63,7 @@ export default function Settings() {
       </Group>
 
       <Group id="perfil" title="Seu perfil">
+        <QuizCard />
         <CountryPicker />
         {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
         <SocialsEditor />

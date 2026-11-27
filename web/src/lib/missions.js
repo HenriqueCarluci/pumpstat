@@ -6,6 +6,7 @@ import { styleOf } from './insights.js';
 import { chartTier, nextGrade, PLATE_ORDER, pumbilitySuggestions } from './piu.js';
 import { hasGimmick } from './special.js';
 import { entitlements } from './plans.js';
+import { quizAdj, quizDays, quizMul } from './quiz.js';
 
 const DAY = 86400000;
 const WEEK = 7 * DAY;
@@ -209,7 +210,7 @@ const chartsOf = (ctx, pred) => ctx.data.charts.filter((c) => sd(c) && pred(c));
 const take = (ctx, list, n) => { const out = []; for (const c of list) { if (out.length >= n) break; if (!ctx.used.has(c.id)) { out.push(c); ctx.used.add(c.id); } } return out; };
 
 const GEN = {
-  days(ctx) { const n = goalOf(ctx, ctx.base?.days, 2, 1, 6); return { goal: n, vars: { n } }; },
+  days(ctx) { const n = goalOf(ctx, ctx.base?.days, quizDays(ctx.quiz) || 2, 1, 6); return { goal: n, vars: { n } }; },
   plays(ctx) {
     let n = goalOf(ctx, ctx.base?.plays, 10, 5, 80);
     if (n > 20) n = Math.round(n / 5) * 5;
@@ -343,8 +344,8 @@ export function activeEvents(cfg, ws) {
 }
 
 /** Contexto comum: o que é preciso para gerar e para calcular o progresso. */
-export function missionCtx({ data, version, prog, attempts, mode, lvl, weak, training, social, past, cfg, ws = weekStart() }) {
-  const ctx = { data, version, prog, attempts, mode, lvl, weak, training, social, past: past || [], cfg, ws, heavyCache: new Map() };
+export function missionCtx({ data, version, prog, attempts, mode, lvl, weak, training, social, past, cfg, ws = weekStart(), quiz = null }) {
+  const ctx = { data, version, prog, attempts, mode, lvl, weak, training, social, past: past || [], cfg, ws, quiz, heavyCache: new Map() };
   ctx.cleared = new Set(attempts.filter((a) => a.cleared).map((a) => a.chart.id));
   return ctx;
 }
@@ -366,9 +367,11 @@ export function generateMissions(ctx, { focus = 'auto', seed = 1 } = {}) {
   const cfg = ctx.cfg;
   const r = rng(seed);
   ctx.base = weeklyStats(ctx, clamp(Number(cfg.lookback) || 6, 2, 12));
-  ctx.adj = adjustFactor(ctx.past, cfg).f;
+  ctx.adj = adjustFactor(ctx.past, cfg).f * quizAdj(ctx.quiz);
   const last = new Set(cfg.no_repeat ? ctx.past[0]?.types || [] : []);
-  const mul = FOCUS_MUL[focus] || {};
+  const qmul = quizMul(ctx.quiz);
+  const mul = { ...FOCUS_MUL[focus] };
+  for (const [k, v] of Object.entries(qmul)) mul[k] = (mul[k] ?? 1) * v;
   const slots = { ...cfg.slots };
   let bonusPct = Number(cfg.bonus_pct) || 0;
   if (focus === 'fun') { slots.medium = (slots.medium || 0) + (slots.hard || 0); slots.hard = 0; bonusPct = 100; }
@@ -411,12 +414,13 @@ export function rerollMission(ctx, defs, index, { focus = 'auto', seed = 1 } = {
   const cfg = ctx.cfg;
   const r = rng(seed);
   if (!ctx.base) ctx.base = weeklyStats(ctx, clamp(Number(cfg.lookback) || 6, 2, 12));
-  if (ctx.adj == null) ctx.adj = adjustFactor(ctx.past, cfg).f;
+  if (ctx.adj == null) ctx.adj = adjustFactor(ctx.past, cfg).f * quizAdj(ctx.quiz);
   const cur = defs[index];
   const taken = new Set(defs.map((d) => d.type));
   const usedCharts = new Set(defs.filter((_, i) => i !== index).flatMap((d) => d.charts || []));
   (cur.charts || []).forEach((id) => usedCharts.add(id));
-  const mul = FOCUS_MUL[focus] || {};
+  const mul = { ...FOCUS_MUL[focus] };
+  for (const [k, v] of Object.entries(quizMul(ctx.quiz))) mul[k] = (mul[k] ?? 1) * v;
   const tiers = cur.tier === 'bonus' ? ['bonus', 'medium', 'easy'] : [cur.tier, ...['medium', 'easy', 'hard'].filter((x) => x !== cur.tier)];
   for (const tier of tiers) {
     const cands = [];

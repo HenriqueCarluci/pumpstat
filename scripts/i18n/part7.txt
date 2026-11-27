@@ -1329,3 +1329,44 @@ PUMBILITY até (%) | PUMBILITY up to (%) | PUMBILITY hasta (%) | PUMBILITY 차�
 mínimo de pontos | minimum points | mínimo de puntos | 최소 점수 | 最小ポイント | points minimum | punti minimi
 níveis de diferença | level difference | niveles de diferencia | 레벨 차이 | レベル差 | écart de niveaux | differenza di livelli
 Jogadores online com PUMBILITY e maior nível passado parecidos com os seus (Phoenix 2). | Online players with PUMBILITY and highest passed level close to yours (Phoenix 2). | Jugadores en línea con PUMBILITY y mayor nivel pasado parecidos a los tuyos (Phoenix 2). | PUMBILITY와 최고 클리어 레벨이 나와 비슷한 온라인 플레이어 (Phoenix 2). | PUMBILITYと最高クリアレベルがあなたに近いオンラインのプレイヤー(Phoenix 2)。 | Joueurs en ligne avec un PUMBILITY et un niveau max passé proches des vôtres (Phoenix 2). | Giocatori online con PUMBILITY e livello massimo superato simili ai tuoi (Phoenix 2).
+Conte um pouco sobre o seu jogo | Tell us a bit about how you play | Cuéntanos un poco sobre tu juego | 플레이 스타일을 조금 알려주세요 | あなたのプレイについて少し教えてください | Parlez-nous un peu de votre jeu | Raccontaci un po' come giochi
+São 5 perguntas rápidas. Com elas, as missões da semana e as recomendações ficam do seu jeito desde o começo. | Just 5 quick questions. With them, weekly missions and recommendations fit you from the start. | Son 5 preguntas rápidas. Con ellas, las misiones de la semana y las recomendaciones se ajustan a ti desde el principio. | 간단한 질문 5개입니다. 답하면 주간 미션과 추천이 처음부터 나에게 맞춰집니다. | 簡単な質問が5つ。答えると週間ミッションとおすすめが最初からあなた向けになります。 | 5 questions rapides. Avec elles, les missions de la semaine et les recommandations vous correspondent dès le début. | 5 domande veloci. Così le missioni settimanali e i consigli sono su misura per te fin dall'inizio.
+Responder agora | Answer now | Responder ahora | 지금 답하기 | 今すぐ答える | Répondre maintenant | Rispondi ora
+Depois | Later | Después | 나중에 | あとで | Plus tard | Più tardi
+Dá para responder ou refazer quando quiser em Ajustes. | You can answer or redo it anytime in Settings. | Puedes responder o rehacerlo cuando quieras en Ajustes. | 설정에서 언제든지 답하거나 다시 할 수 있습니다. | 設定からいつでも回答・やり直しができます。 | Vous pouvez répondre ou recommencer quand vous voulez dans Réglages. | Puoi rispondere o rifarlo quando vuoi nelle Impostazioni.
+Pergunta {n} de {m} | Question {n} of {m} | Pregunta {n} de {m} | 질문 {n}/{m} | 質問 {n}/{m} | Question {n} sur {m} | Domanda {n} di {m}
+Suas próximas missões e as recomendações já levam as respostas em conta. Para mudar, é só refazer em Ajustes. | Your next missions and recommendations already take your answers into account. To change them, redo it in Settings. | Tus próximas misiones y las recomendaciones ya tienen en cuenta tus respuestas. Para cambiar, rehazlo en Ajustes. | 다음 미션과 추천에 답변이 반영됩니다. 바꾸려면 설정에서 다시 하세요. | 次のミッションとおすすめに回答が反映されます。変えるときは設定でやり直してください。 | Vos prochaines missions et recommandations tiennent déjà compte de vos réponses. Pour changer, recommencez dans Réglages. | Le prossime missioni e i consigli tengono già conto delle risposte. Per cambiare, rifallo nelle Impostazioni.
+Seu jeito de jogar | How you play | Tu forma de jugar | 나의 플레이 스타일 | あなたのプレイスタイル | Votre façon de jouer | Il tuo modo di giocare
+As respostas ajustam as missões da semana e as recomendações. | Your answers tune weekly missions and recommendations. | Las respuestas ajustan las misiones de la semana y las recomendaciones. | 답변에 따라 주간 미션과 추천이 조정됩니다. | 回答に合わせて週間ミッションとおすすめを調整します。 | Vos réponses ajustent les missions de la semaine et les recommandations. | Le risposte regolano missioni settimanali e consigli.
+Refazer o questionário | Redo the questionnaire | Rehacer el cuestionario | 설문 다시 하기 | アンケートをやり直す | Refaire le questionnaire | Rifai il questionario
+Responder o questionário | Answer the questionnaire | Responder el cuestionario | 설문에 답하기 | アンケートに答える | Répondre au questionnaire | Rispondi al questionario
+Primeiro: {s} | First: {s} | Primero: {s} | 먼저: {s} | 優先:{s} | D'abord : {s} | Prima: {s}
+Há quanto tempo você joga Pump It Up? | How long have you been playing Pump It Up? | ¿Hace cuánto juegas Pump It Up? | Pump It Up을 한 지 얼마나 됐나요? | Pump It Upを始めてどのくらいですか? | Depuis combien de temps jouez-vous à Pump It Up ? | Da quanto tempo giochi a Pump It Up?
+Com que frequência você joga? | How often do you play? | ¿Con qué frecuencia juegas? | 얼마나 자주 플레이하나요? | どのくらいの頻度で遊びますか? | À quelle fréquence jouez-vous ? | Quanto spesso giochi?
+O que você mais quer agora? | What do you want most right now? | ¿Qué es lo que más quieres ahora? | 지금 가장 원하는 것은? | 今いちばんやりたいことは? | Que voulez-vous le plus en ce moment ? | Cosa vuoi di più adesso?
+Qual modo você mais joga? | Which mode do you play most? | ¿Qué modo juegas más? | 어떤 모드를 가장 많이 하나요? | どのモードをよく遊びますか? | Quel mode jouez-vous le plus ? | Quale modalità giochi di più?
+Quer melhorar algo específico? | Anything specific you want to improve? | ¿Quieres mejorar algo específico? | 특별히 늘리고 싶은 게 있나요? | 特に上達したいことはありますか? | Voulez-vous améliorer quelque chose en particulier ? | Vuoi migliorare qualcosa di specifico?
+Escolha até 3 (opcional). | Pick up to 3 (optional). | Elige hasta 3 (opcional). | 최대 3개 선택 (선택 사항). | 3つまで選べます(任意)。 | Choisissez jusqu'à 3 (facultatif). | Scegline fino a 3 (facoltativo).
+Estou começando | I'm just starting | Estoy empezando | 이제 막 시작했어요 | 始めたばかり | Je débute | Sto iniziando
+Menos de 1 ano | Less than 1 year | Menos de 1 año | 1년 미만 | 1年未満 | Moins d'un an | Meno di 1 anno
+De 1 a 3 anos | 1 to 3 years | De 1 a 3 años | 1~3년 | 1〜3年 | De 1 à 3 ans | Da 1 a 3 anni
+Mais de 3 anos | More than 3 years | Más de 3 años | 3년 이상 | 3年以上 | Plus de 3 ans | Più di 3 anni
+De vez em quando | Now and then | De vez en cuando | 가끔 | ときどき | De temps en temps | Ogni tanto
+1 vez por semana | Once a week | 1 vez por semana | 주 1회 | 週1回 | 1 fois par semaine | 1 volta a settimana
+2 ou 3 vezes por semana | 2 or 3 times a week | 2 o 3 veces por semana | 주 2~3회 | 週2〜3回 | 2 ou 3 fois par semaine | 2 o 3 volte a settimana
+Quase todo dia | Almost every day | Casi todos los días | 거의 매일 | ほぼ毎日 | Presque tous les jours | Quasi ogni giorno
+Me divertir | Have fun | Divertirme | 즐기기 | 楽しむ | M'amuser | Divertirmi
+Passar charts mais difíceis | Pass harder charts | Pasar charts más difíciles | 더 어려운 차트 클리어 | もっと難しい譜面をクリア | Passer des charts plus difficiles | Superare chart più difficili
+Melhorar minhas notas | Improve my scores | Mejorar mis notas | 점수 올리기 | スコアを上げる | Améliorer mes scores | Migliorare i miei punteggi
+Subir o PUMBILITY | Raise my PUMBILITY | Subir el PUMBILITY | PUMBILITY 올리기 | PUMBILITYを上げる | Monter mon PUMBILITY | Alzare il PUMBILITY
+Competir em campeonatos | Compete in tournaments | Competir en campeonatos | 대회 참가 | 大会に出る | Participer à des compétitions | Gareggiare nei tornei
+Os dois | Both | Los dos | 둘 다 | 両方 | Les deux | Entrambi
+Leitura de charts rápidos | Reading fast charts | Lectura de charts rápidos | 빠른 차트 읽기 | 速い譜面の読み | Lecture des charts rapides | Lettura dei chart veloci
+Precisão (notas e timing) | Accuracy (scores and timing) | Precisión (notas y timing) | 정확도 (점수와 타이밍) | 精度(スコアとタイミング) | Précision (scores et timing) | Precisione (punteggi e timing)
+Experiência | Experience | Experiencia | 경력 | 経験 | Expérience | Esperienza
+Frequência | Frequency | Frecuencia | 빈도 | 頻度 | Fréquence | Frequenza
+Objetivo | Goal | Objetivo | 목표 | 目標 | Objectif | Obiettivo
+Quer melhorar | Wants to improve | Quiere mejorar | 늘리고 싶은 것 | 上達したいこと | Veut améliorer | Vuole migliorare
+respostas inválidas | invalid answers | respuestas inválidas | 잘못된 답변 | 無効な回答 | réponses invalides | risposte non valide
+Single | Single | Single | Single | シングル | Single | Single
+Double | Double | Double | Double | ダブル | Double | Double

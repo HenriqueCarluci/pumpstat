@@ -12,6 +12,7 @@ import {
 import { loadTraining } from '../lib/training.js';
 import { DIM_LABEL } from '../pages/Progress.jsx';
 import { entitlements, isOn } from '../lib/plans.js';
+import { useQuiz } from '../lib/quiz.js';
 import { fmtNum, locale, t, tErr, tn } from '../lib/i18n.js';
 import { Ball } from './ui.jsx';
 import Panel from './Panel.jsx';
@@ -93,6 +94,8 @@ export default function WeekCard() {
   const [newBadges, setNewBadges] = useState([]);
   const [points, setPoints] = useState(null);
   const sent = useRef(null);
+  const quizState = useQuiz();
+  const quiz = quizState?.quiz || null;
   const [seen, setSeen] = useState(() => { try { return localStorage.getItem(SEEN_KEY); } catch { return null; } });
 
   const any = on.missions || on.streak || on.summary;
@@ -118,19 +121,21 @@ export default function WeekCard() {
     const prog = parseProgress(raw, data);
     const attempts = chartAttempts(data, prog);
     const count = (m) => attempts.filter((r) => r.chart.mode === m).reduce((s, r) => s + r.attempts, 0);
-    const mode = count('S') > count('D') ? 'S' : 'D';
+    // modo: o que mais joga; quem respondeu Single ou Double no questionário e ainda tem pouco histórico fica no escolhido
+    const total = count('S') + count('D');
+    const mode = (quiz?.mode === 'S' || quiz?.mode === 'D') && (total < 30 || count(quiz.mode) > 0) ? quiz.mode : count('S') > count('D') ? 'S' : 'D';
     const lvl = playerLevel(levelStats(attempts, mode));
     const weak = lvl ? weaknesses(weaknessSums(attempts, prog, mode, lvl), new Map()) : [];
     return { prog, attempts, mode, lvl, weak };
-  }, [raw, data]);
+  }, [raw, data, quiz]);
 
-  const mkCtx = () => missionCtx({ ...base, mode: row?.mode || base.mode, data, version, training: training || [], social: mctx, past: mctx?.past, cfg, ws });
+  const mkCtx = () => missionCtx({ ...base, mode: row?.mode || base.mode, data, version, training: training || [], social: mctx, past: mctx?.past, cfg, ws, quiz });
 
   // missões da semana: as guardadas ou, na primeira abertura, geradas e guardadas
   useEffect(() => {
     if (!on.missions || !base || !mctx || training == null || row) return;
     if (mctx.row) { setRow(mctx.row); return; }
-    const ctx = missionCtx({ ...base, data, version, training, social: mctx, past: mctx.past, cfg, ws });
+    const ctx = missionCtx({ ...base, data, version, training, social: mctx, past: mctx.past, cfg, ws, quiz });
     const defs = generateMissions(ctx, { focus: 'auto', seed: hashSeed(`${uid}:${wk}:auto`) });
     const local = { week: wk, missions: defs, focus: 'auto', rerolls: 0, focus_changes: 0, mode: base.mode, offline: true };
     const offline = () => {
@@ -180,7 +185,7 @@ export default function WeekCard() {
     setOpenFocus(false);
     if (f === row.focus) return;
     setErr(''); setBusy(true);
-    const defs = generateMissions(missionCtx({ ...base, data, version, training: training || [], social: mctx, past: mctx.past, cfg, ws }), { focus: f, seed: hashSeed(`${uid}:${wk}:${f}`) });
+    const defs = generateMissions(missionCtx({ ...base, data, version, training: training || [], social: mctx, past: mctx.past, cfg, ws, quiz }), { focus: f, seed: hashSeed(`${uid}:${wk}:${f}`) });
     try { setRow(await rpc('set_week_missions', { p_week: wk, p_mode: base.mode, p_focus: f, p_missions: defs, p_action: 'focus' })); sent.current = null; } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };

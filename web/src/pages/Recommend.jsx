@@ -10,14 +10,24 @@ import { chartTagLabel, tagColor } from '../lib/tags.js';
 import { Chips } from './Songs.jsx';
 import { fmtNum, t } from '../lib/i18n.js';
 import { entitlements } from '../lib/plans.js';
+import { quizRecTab, quizTags, useQuiz } from '../lib/quiz.js';
 
 export default function Recommend() {
   const { data, version, plan } = useData();
-  const [mode, setMode] = useState('all');
-  const [tab, setTab] = useState('fresh');
+  const quiz = useQuiz()?.quiz;
+  const prefMode = quiz?.mode === 'S' || quiz?.mode === 'D' ? quiz.mode : 'all';
+  const [mode, setMode] = useState(null);
+  const [tab, setTab] = useState(null);
+  const [focusSkills, setFocusSkills] = useState(true);
+  const curMode = mode ?? prefMode;
+  const curTab = tab ?? quizRecTab(quiz);
+  const skills = quizTags(quiz);
   const rec = useMemo(() => recommendations(version, data.charts), [version, data]);
   const ent = entitlements(plan);
-  const full = (tab === 'fresh' ? rec.fresh : rec.improve).filter((r) => mode === 'all' || r.chart.mode === mode).slice(0, 40);
+  // quem escolheu o que quer melhorar no questionário vê primeiro os charts com essas skills (sem esconder os outros)
+  const hits = (c) => (c.tagBars || []).filter(([x, v]) => skills.includes(x) && v >= 40).length;
+  const base = (curTab === 'fresh' ? rec.fresh : rec.improve).filter((r) => curMode === 'all' || r.chart.mode === curMode);
+  const full = (skills.length && focusSkills ? [...base].sort((a, b) => hits(b.chart) - hits(a.chart)) : base).slice(0, 40);
   const locked = !ent.can('recommendations_all');
   const list = locked ? full.slice(0, 3) : full;
 
@@ -29,8 +39,13 @@ export default function Recommend() {
         {' · '}{rec.full ? t('um chart novo precisa valer mais de {v} para entrar no seu top 50.', { v: rec.floor.toFixed(1) }) : t('seu top 50 ainda não está cheio, qualquer chart nível 10+ soma.')}{' '}
         {t('A nota esperada vem das suas notas em charts do mesmo nível, ajustada pela dificuldade de cada chart.')}
       </p>
-      <Chips value={tab} onChange={setTab} options={[['fresh', `${t('Para jogar')} (${rec.fresh.length})`], ['improve', `${t('Melhorar recorde')} (${rec.improve.length})`]]} />
-      <Chips value={mode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+      <Chips value={curTab} onChange={setTab} options={[['fresh', `${t('Para jogar')} (${rec.fresh.length})`], ['improve', `${t('Melhorar recorde')} (${rec.improve.length})`]]} />
+      <Chips value={curMode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
+      {skills.length > 0 && (
+        <button type="button" className={`chip-toggle ${focusSkills ? 'on' : ''}`} aria-pressed={focusSkills} onClick={() => setFocusSkills((v) => !v)}>
+          {t('Primeiro: {s}', { s: skills.map((x) => t(chartTagLabel(x))).join(', ') })}
+        </button>
+      )}
 
       {!list.length && <p className="empty">{data.charts.some((c) => c.score != null) ? t('Nada aqui por enquanto. Jogue mais alguns charts de nível 10+ para eu entender seu nível.') : t('Sincronize suas notas para receber recomendações.')}</p>}
 
@@ -53,7 +68,7 @@ export default function Recommend() {
                 <div className="rc-gain"><b>+{r.gain.toFixed(1)}</b><small>PUMBILITY</small></div>
               </Link>
               <div className="rc-foot">
-                {tab === 'fresh'
+                {curTab === 'fresh'
                   ? <div className="rc-exp"><small>{t('Nota esperada')}</small><b>~{fmtScore(Math.round(r.expected / 1000) * 1000)}</b><Grade grade={r.grade} size="sm" /></div>
                   : <div className="rc-exp"><small>{t('Recorde')}</small><b>{fmtScore(c.score)}</b><small>{t('faltam {n}', { n: fmtScore(r.need) })}</small><Grade grade={r.grade} size="sm" /></div>}
                 <TrainingAddChip chart={c} />
