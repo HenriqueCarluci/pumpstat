@@ -164,9 +164,7 @@ const charts = rows.map(([id, mode, level, stepArtist, notes, skills, pd, sd, sl
 song.charts = charts;
 charts.forEach((c, i) => { c.ref = [3, 1, 0, -1, 9, -3][i % 6]; c.tags = [['twist', 'spin'], ['half', 'crossover'], ['gimmick', 'drill'], [], ['run'], ['jack']][i % 6]; });
 const data = { version: 'phoenix2', songs: [song], charts, byId: new Map(charts.map((c) => [c.id, c])), plays: [], profile: { nickname: 'HENRIQUE', avatar_url: null, title: 'Drill Expert' }, lastSync: null, pumbilityHistory: [] };
-const ADMIN_PERMS = { owner: ['plans','roles','stats','users','ban','reports','feedback','charts','events','venues','ads','config'],
-  admin: ['stats','users','ban','reports','feedback','charts','events','venues','ads','config'], moderator: ['stats','users','ban','reports'],
-  curator: ['stats','charts'], events: ['stats','events','venues'], support: ['stats','users','feedback'] };
+import { ROLE_PERMS as ADMIN_PERMS } from './lib/admin.js';
 const adminRole = new URLSearchParams(location.search).get('admin');
 const previewQ = new URLSearchParams(location.search).get('preview');
 const trialQ = new URLSearchParams(location.search).get('trial');

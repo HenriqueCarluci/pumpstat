@@ -24,6 +24,7 @@ pat = {
   'web/src/lib/queue.js': [r"Error\('([^']+)'\)", r"\? '([^']+)'", r": '([^']+)'\)"],
   'web/src/pages/Progress.jsx': [r"(?m)^  \w+: '([^']+)',$", r"\['(?:speed|stamina)', '([^']+)'\]", r"(?:warm|focus|consolidate|challenge|score): '([^']+)'"],
   'web/src/lib/plans.js': [r"label: '([^']+)'"],
+  'web/src/lib/admin.js': [r"\['\w+', '([A-ZÀ-Ú][^']+)'", r"', '([^']{20,})'\]"],
 }
 for f, ps in pat.items():
     s = open(f, encoding='utf-8').read()

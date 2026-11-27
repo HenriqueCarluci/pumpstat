@@ -10,7 +10,7 @@ import { Check, Crown, Eye, ShieldCheck, UserX, UserCheck, X } from '../componen
 import { FEATURES, PLAN_LABEL } from '../lib/plans.js';
 import { startViewAs, TestMode } from '../components/PlanLock.jsx';
 import ReleaseNotesAdmin from './ReleaseNotesAdmin.jsx';
-import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
+import { ADMIN_PERMS, ADMIN_ROLES, canAdmin, ROLE_PERMS, roleLabel } from '../lib/admin.js';
 import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
 import { ChallengesAdmin, FeatureToggles } from './AdminExtra.jsx';
@@ -22,7 +22,7 @@ import AdminHealth from './AdminHealth.jsx';
 export default function Admin() {
   const { plan } = useData();
   const [params] = useSearchParams();
-  const tabs = [['health', 'Monitoramento', 'stats'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
+  const tabs = [['health', 'Monitoramento', 'health'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
     ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
     ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['notes', 'Novidades', 'config'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
@@ -74,6 +74,17 @@ function Team() {
     <div className="admin-team">
       <div className="card admin-roles">
         {ADMIN_ROLES.map(([id, l, d]) => <p key={id} className="small"><b>{t(l)}</b> · <span className="muted">{t(d)}</span></p>)}
+        <div className="perm-matrix-wrap">
+          <table className="perm-matrix">
+            <thead><tr><th>{t('Permissão')}</th>{ADMIN_ROLES.map(([id, l]) => <th key={id}>{t(l)}</th>)}</tr></thead>
+            <tbody>
+              {ADMIN_PERMS.map(([p, l]) => (
+                <tr key={p}><td>{t(l)}</td>{ADMIN_ROLES.map(([id]) => <td key={id} className={ROLE_PERMS[id].includes(p) ? 'yes' : 'no'}>{ROLE_PERMS[id].includes(p) ? '✓' : '—'}</td>)}</tr>
+              ))}
+              <tr><td>{t('Modo de teste (ver o próprio app como Grátis, Plus ou Pro)')}</td>{ADMIN_ROLES.map(([id]) => <td key={id} className="yes">✓</td>)}</tr>
+            </tbody>
+          </table>
+        </div>
         {edit && <p className="tiny muted">{t('Para chamar alguém para a equipe, busque a pessoa em Usuários e escolha o perfil.')}</p>}
       </div>
       {err && <div className="form-err">{err}</div>}
@@ -205,7 +216,7 @@ function UserRow({ u, open, onToggle, onChange }) {
               ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: false })}><UserCheck size={15} /> {t('Desbloquear')}</button>
               : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
-            {['owner', 'admin'].includes(plan.admin_role) && u.admin_role !== 'owner' && (
+            {canAdmin(plan, 'view_as') && u.admin_role !== 'owner' && (
               <button className="btn ghost" disabled={busy} onClick={async () => {
                 if (!window.confirm(t('Ver o app como {n} por 30 minutos? É só leitura: nada pode ser alterado, e conversas e notificações dessa pessoa ficam ocultas. O acesso fica registrado.', { n: u.nickname || u.email }))) return;
                 setBusy(true); setErr('');
