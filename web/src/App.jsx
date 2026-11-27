@@ -190,6 +190,24 @@ function DataApp({ session, ingestKey }) {
 
   useEffect(() => { setData(cachedVersion(version)); reload(version); }, [version]); // eslint-disable-line
 
+  // primeira entrada sem nada guardado: antes de mostrar o app, baixa as capas que aparecem primeiro
+  // (jogadas recentes e o começo da lista de músicas), com limite de tempo para não prender ninguém
+  const [warm, setWarm] = useState(() => !!cachedVersion(readVersion()));
+  useEffect(() => {
+    if (warm || !data) return undefined;
+    let done = false;
+    const finish = () => { if (!done) { done = true; setWarm(true); } };
+    const urls = [...new Set([
+      ...data.plays.slice(0, 12).map((p) => p.chart.song.jacket),
+      ...[...data.songs].sort((a, b) => a.title.localeCompare(b.title)).slice(0, 16).map((s) => s.jacket),
+    ].filter(Boolean))];
+    let left = urls.length;
+    if (!left) { finish(); return undefined; }
+    urls.forEach((u) => { const im = new Image(); im.referrerPolicy = 'no-referrer'; im.onload = im.onerror = () => { left -= 1; if (!left) finish(); }; im.src = u; });
+    const h = setTimeout(finish, 3500);
+    return () => clearTimeout(h);
+  }, [data, warm]);
+
   const setVersion = (v) => {
     try { localStorage.setItem('pumpstat:version', v); } catch { /* ignore */ }
     setVersionState(v);
@@ -228,8 +246,8 @@ function DataApp({ session, ingestKey }) {
   const viewNotifications = useMemo(() => (viewPlan?.realAdmin
     ? { ...notifications, items: notifications.items.filter((n) => !String(n.kind).startsWith('admin_')), unread: notifications.items.filter((n) => n.unread && !String(n.kind).startsWith('admin_')).length }
     : notifications), [viewPlan, notifications]);
-  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, planReady, reloadPlan, home, reloadHome }),
-    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, planReady, reloadPlan, home, reloadHome]);
+  const ctx = useMemo(() => ({ version, setVersion, data: viewData, loading, error, reload, session, ingestKey, notifications: viewNotifications, presence, plan: viewPlan, planReady: planReady && (warm || !!error), reloadPlan, home, reloadHome }),
+    [version, viewData, loading, error, reload, session, ingestKey, viewNotifications, presence, viewPlan, planReady, warm, reloadPlan, home, reloadHome]);
 
   return (
     <DataCtx.Provider value={ctx}>

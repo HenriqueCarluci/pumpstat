@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { chartLabel, fmtBpm, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
@@ -51,9 +52,15 @@ export function Plate({ plate, size = 'md' }) {
 export function Jacket({ song, width = 96, className = '' }) {
   const initials = (song.title || '?').replace(/[^\p{L}\p{N} ]/gu, '').split(' ').filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
   const hue = [...(song.title || '')].reduce((h, ch) => (h * 31 + ch.codePointAt(0)) % 360, 7);
+  // 0 carregando, 1 ok, 2 falhou (tenta de novo uma vez; se falhar de novo fica a capa com as iniciais, sem o ícone de imagem quebrada)
+  const [st, setSt] = useState(0);
+  const [retry, setRetry] = useState(0);
+  const src = song.jacket && (retry ? `${song.jacket}${song.jacket.includes('?') ? '&' : '?'}r=${retry}` : song.jacket);
+  const fail = () => { if (retry < 1) setTimeout(() => setRetry((r) => r + 1), 1200); else setSt(2); };
   return (
-    <div className={`jacket ${className}`} style={{ width, '--hue': hue }}>
-      {song.jacket ? <img src={song.jacket} {...imgProps} /> : <span>{initials}</span>}
+    <div className={`jacket ${className} ${src && st === 0 ? 'loading' : ''}`} style={{ width, '--hue': hue }}>
+      {(!src || st !== 1) && <span>{initials}</span>}
+      {src && st !== 2 && <img key={retry} src={src} {...imgProps} className={st === 1 ? 'on' : ''} onLoad={() => setSt(1)} onError={fail} />}
     </div>
   );
 }
