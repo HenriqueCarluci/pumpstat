@@ -277,6 +277,8 @@ export function PlayerProfile() {
         </div>
       </section>
 
+      <SocialLinks userId={id} me={isMe} />
+
       {isMe ? (
         <div className="pp-actions me">
           <Link to={`/titulos/${id}`} className="btn ghost"><Award size={16} /> {t('Títulos')}</Link>
@@ -364,7 +366,6 @@ export function PlayerProfile() {
         </div>
       </section>
 
-      <SocialLinks userId={id} />
       {!isMe && <MiniChat user={id} name={other?.nickname} />}
       {!isMe && <ReportBlock user={id} name={other?.nickname} context={{ where: 'perfil' }} onBlocked={() => window.history.back()} />}
     </div>

@@ -363,7 +363,7 @@ export function Badges({ userId }) {
   return (
     <div className="badges">
       {showPoints && pts > 0 && <span className="badge-chip b-points" title={t('Pontos ganhos completando missões')}><Star size={13} /> {t('{n} pts', { n: fmtNum(pts) })}</span>}
-      {showBadges && (list || []).map(([b, l, at]) => (
+      {showBadges && ['weeks', 'streak'].map((k) => (list || []).filter(([b]) => b === k).sort((x, y) => y[1] - x[1])[0]).filter(Boolean).map(([b, l, at]) => (
         <span key={`${b}${l}`} className={`badge-chip b-${b}`} title={new Date(at * 1000).toLocaleDateString(locale())}>
           {b === 'streak' ? <Flame size={13} /> : <Award size={13} />} {badgeName(cfg, b, l, t)}
         </span>

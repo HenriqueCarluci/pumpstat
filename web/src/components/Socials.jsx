@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { AtSign, Check, Copy, ExternalLink } from './Icons.jsx';
@@ -14,16 +15,20 @@ export const SOCIALS = [
 ];
 
 /** Links das redes de um jogador (só aparecem se ele deixou visível para você). */
-export function SocialLinks({ userId }) {
+export function SocialLinks({ userId, me = false }) {
   const [s, setS] = useState(null);
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     let alive = true;
-    rpc('socials_of', { p_user: userId }).then((r) => alive && setS(r)).catch(() => {});
+    rpc('socials_of', { p_user: userId }).then((r) => alive && setS(r || {})).catch(() => {});
     return () => { alive = false; };
   }, [userId]);
   const list = SOCIALS.filter((n) => s?.[n.id]);
-  if (!list.length) return null;
+  if (!list.length) {
+    return me && s
+      ? <Link to="/ajustes?s=redes" className="socials-add small ic-row"><AtSign size={14} /> {t('Adicione suas redes sociais para aparecerem no seu perfil')}</Link>
+      : null;
+  }
   const copy = async (v) => { try { await navigator.clipboard.writeText(v); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* sem clipboard */ } };
   return (
     <section className="socials" aria-label={t('Redes sociais')}>
@@ -44,13 +49,17 @@ export function SocialsEditor() {
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
   useEffect(() => { rpc('my_socials').then((r) => setForm(r || { visibility: 'friends' })).catch((e) => setMsg(tErr(e.message))); }, []);
+  // vindo do perfil (?s=redes): rola até aqui
+  useEffect(() => {
+    if (form && /[?&]s=redes/.test(window.location.hash)) setTimeout(() => document.getElementById('redes')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  }, [!!form]); // eslint-disable-line
   if (!form) return null;
   const save = async () => {
     setBusy(true); setMsg('');
     try { setForm(await rpc('set_socials', { p: form })); setMsg(t('Salvo')); } catch (e) { setMsg(tErr(e.message)); } finally { setBusy(false); }
   };
   return (
-    <section className="card socials-edit">
+    <section className="card socials-edit" id="redes">
       <h3 className="ic-row"><AtSign size={18} /> {t('Redes sociais')}</h3>
       <p className="muted small">{t('Opcional. Seus amigos podem entrar no seu perfil e te seguir. Coloque só o nome de usuário (ou cole o link).')}</p>
       <div className="se-grid">
