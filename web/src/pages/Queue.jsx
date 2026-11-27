@@ -205,7 +205,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
                 <button className="link small" disabled={busy} onClick={() => act(() => (e.status === 'away' ? backFromAway(e.id, checkin) : setAway(e.id, true)))}>
                   {e.status === 'away' ? t('Voltou') : t('Ausente')}
                 </button>
-                <button className="link" disabled={busy} onClick={() => act(() => leaveQueue(e.id))} title={t('Tirar da fila')}><X size={16} /></button>
+                <button className="link" disabled={busy} onClick={() => window.confirm(t('Tirar {n} da fila?', { n: e.display_name })) && act(() => leaveQueue(e.id))} title={t('Tirar da fila')}><X size={16} /></button>
               </span>
             )}
             {isAdmin && (
@@ -233,7 +233,7 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
             <button className="btn ghost" disabled={busy} onClick={() => act(() => (mine.status === 'away' ? backFromAway(mine.id, checkin) : setAway(mine.id, true)))}>
               {mine.status === 'away' ? t('Voltei') : t('Estou ausente')}
             </button>
-            <button className="btn ghost" disabled={busy} onClick={() => act(() => leaveQueue(mine.id))}>{t('Sair da fila')}</button>
+            <button className="btn ghost" disabled={busy} onClick={() => window.confirm(t('Sair da fila? Se voltar, entra no fim.')) && act(() => leaveQueue(mine.id))}>{t('Sair da fila')}</button>
           </div>
         </div>
       ) : (

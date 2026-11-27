@@ -73,7 +73,7 @@ export default function TeamPicker({ userId }) {
         <div className="card-actions">
           <button className="btn ghost" onClick={() => { setMode('pick'); setMsg(''); }}><ArrowLeftRight size={15} /> {data.mine ? t('Trocar de time') : t('Escolher time')}</button>
           {!data.pending || data.pending.status !== 'pending' ? <button className="btn ghost" onClick={() => { setMode('request'); setMsg(''); }}><Plus size={15} /> {t('Pedir time novo')}</button> : null}
-          {data.mine && <button className="btn ghost danger-text" onClick={() => pick(null)}><LogOut size={15} /> {t('Sair do time')}</button>}
+          {data.mine && <button className="btn ghost danger-text" onClick={() => window.confirm(t('Sair do time {n}?', { n: data.mine.name })) && pick(null)}><LogOut size={15} /> {t('Sair do time')}</button>}
         </div>
       )}
 

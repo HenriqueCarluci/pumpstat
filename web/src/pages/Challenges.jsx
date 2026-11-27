@@ -88,7 +88,7 @@ function ChallengeCard({ c, onChange }) {
       {err && <div className="form-err">{err}</div>}
       <div className="card-actions">
         {c.status !== 'ended' && !c.joined && <button className="btn" disabled={busy} onClick={() => join(true)}>{t('Participar')}</button>}
-        {c.status !== 'ended' && c.joined && <button className="btn ghost danger-text" disabled={busy} onClick={() => join(false)}>{t('Sair do desafio')}</button>}
+        {c.status !== 'ended' && c.joined && <button className="btn ghost danger-text" disabled={busy} onClick={() => window.confirm(t('Sair deste desafio?')) && join(false)}>{t('Sair do desafio')}</button>}
         {c.song && <Link className="btn ghost" to={`/musica/${c.song}`}>{t('Ver a música')}</Link>}
         <button className="btn ghost" onClick={toggle}><Users size={14} /> {t('Participantes')} {open ? <ChevronUp size={14} /> : <ChevronDown size={14} />}</button>
       </div>

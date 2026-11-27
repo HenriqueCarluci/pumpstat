@@ -46,7 +46,7 @@ export function MfaLogin({ session, onDone }) {
         <CodeInput value={code} onChange={setCode} autoFocus />
         {err && <div className="form-err">{err}</div>}
         <button className="btn wide" disabled={busy || !factor}>{busy ? t('Aguarde…') : t('Confirmar e entrar')}</button>
-        <button type="button" className="btn ghost wide" onClick={signOut}>{t('Sair e usar outra conta')}</button>
+        <button type="button" className="btn ghost wide" onClick={() => window.confirm(t('Sair da sua conta neste aparelho?')) && signOut()}>{t('Sair e usar outra conta')}</button>
         <p className="muted small">{t('Perdeu o acesso ao autenticador? Fale com o suporte pelo Ajuda, no e-mail da conta.')}</p>
       </form>
     </div>

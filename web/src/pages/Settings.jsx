@@ -236,7 +236,7 @@ function AccountCard() {
         {ent.showPlans && <Link className="btn ghost" to={paid ? '/assinatura' : '/planos'}><Crown size={15} /> {paid ? t('Minha assinatura') : t('Ver planos')}</Link>}
         {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
         <button className="btn ghost" onClick={() => reload()}>{t('Recarregar dados')}</button>
-        <button className="btn ghost" onClick={signOut}>{t('Sair')}</button>
+        <button className="btn ghost" onClick={() => window.confirm(t('Sair da sua conta neste aparelho?')) && signOut()}>{t('Sair')}</button>
       </div>
       {plan?.admin && <TestMode compact />}
     </section>

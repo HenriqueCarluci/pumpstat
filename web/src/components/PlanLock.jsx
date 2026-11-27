@@ -100,7 +100,7 @@ export function TestMode({ compact = false }) {
           {DURATIONS.map(([m, l]) => <option key={m} value={m}>{l}</option>)}
         </select>
         <button type="button" className="btn" disabled={busy} onClick={() => go(pick, mins)}>{ent.preview ? t('Trocar') : t('Começar teste')}</button>
-        {ent.preview && <button type="button" className="btn ghost" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>}
+        {ent.preview && <button type="button" className="btn ghost" disabled={busy} onClick={() => window.confirm(t('Sair do modo de teste?')) && go(null)}>{t('Sair do teste')}</button>}
       </div>
       {err && <div className="form-err">{err}</div>}
       {!compact && canAdmin(plan, 'view_as') && <TestAccounts />}
@@ -148,7 +148,7 @@ export function PreviewBanner() {
         {PLANS.filter(([id]) => id !== ent.preview).map(([id, l]) => (
           <button key={id} type="button" className="link" disabled={busy} onClick={() => go(id)}>{t('Ver como {p}', { p: t(l) })}</button>
         ))}
-        <button type="button" className="link" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>
+        <button type="button" className="link" disabled={busy} onClick={() => window.confirm(t('Sair do modo de teste?')) && go(null)}>{t('Sair do teste')}</button>
       </span>
     </div>
   );
@@ -187,7 +187,7 @@ export function ViewAsBanner() {
       <span className="ic-row"><Eye size={15} /> {v.test
         ? t('Vendo como a conta de teste {u} · pode gravar · faltam {t}', { u: v.email || t('usuário'), t: left })
         : t('Vendo como {u} · só leitura · faltam {t}', { u: v.email || t('usuário'), t: left })}</span>
-      <button type="button" className="link" disabled={busy} onClick={stop}>{t('Sair')}</button>
+      <button type="button" className="link" disabled={busy} onClick={() => window.confirm(t('Sair do "ver como" e voltar para a sua conta?')) && stop()}>{t('Sair')}</button>
     </div>
   );
 }
