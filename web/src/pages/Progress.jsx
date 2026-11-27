@@ -12,12 +12,12 @@ import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { recommendations } from '../lib/recommend.js';
 import { chartLabel, fmtScore, VERSIONS } from '../lib/piu.js';
 import { STYLE_KEYS } from '../lib/style.js';
-import { isOn } from '../lib/plans.js';
+import { entitlements, isOn } from '../lib/plans.js';
 import { fmtNum, locale, t, tn } from '../lib/i18n.js';
 import { Ball, Jacket } from '../components/ui.jsx';
 import { ChartTable, Donut, LineChart, SERIES, StackedBars } from '../components/MiniChart.jsx';
 import { Chips } from './Songs.jsx';
-import { Check, Target } from '../components/Icons.jsx';
+import { Check, Lock, Target } from '../components/Icons.jsx';
 
 export const DIM_LABEL = Object.fromEntries([...STYLE_KEYS.map((k) => [k.id, k.label]), ['speed', 'Velocidade'], ['stamina', 'Resistência'], ['gimmick', 'Gimmick']]);
 export const DIM_TIP = {
@@ -163,8 +163,12 @@ function clearsSeries(timeline) {
 }
 
 function Evolution({ a, r, mode }) {
-  const { data } = useData();
-  const [days, setDays] = useState(90);
+  const { data, plan } = useData();
+  // Plus vê os últimos N dias (padrão 90); o histórico inteiro fica no Pro
+  const maxDays = entitlements(plan).limit('evolution_days');
+  const periods = maxDays ? PERIODS.filter(([d]) => d && d <= maxDays) : PERIODS;
+  const [pick, setDays] = useState(90);
+  const days = maxDays ? Math.min(pick || maxDays, maxDays) : pick;
   const since = days ? Date.now() - days * DAY_MS : 0;
   const pbAll = (data.pumbilityHistory || []).map(([at, v]) => ({ x: Date.parse(at), y: Number(v) }));
   const pb = pbAll.filter((p) => p.x >= since);
@@ -188,7 +192,8 @@ function Evolution({ a, r, mode }) {
 
       <div className="prog-period">
         <span className="muted small">{t('Período')}</span>
-        <Chips value={days} onChange={setDays} options={PERIODS.map(([d, l]) => [d, t(l)])} />
+        <Chips value={days} onChange={setDays} options={periods.map(([d, l]) => [d, t(l)])} />
+        {maxDays && <Link to="/planos" className="chip-lock">{t('Tudo')} <span className="lock-badge"><Lock size={11} /> Pro</span></Link>}
       </div>
 
       <section className="card">

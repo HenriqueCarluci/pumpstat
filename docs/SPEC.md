@@ -323,3 +323,8 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 ## Permissões por pessoa (equipe)
 - Admin → Equipe → "Permissões por pessoa" (só o dono, permissão `roles`): matriz pessoa × permissão. Cada célula parte do padrão do perfil; tocar dá ou tira só para aquela pessoa (`admin_perm_overrides`), tocar de novo volta ao padrão; "Padrão" limpa os ajustes da pessoa.
 - `effective_perms` = permissões do perfil + ajustes; `has_admin_perm`, `my_plan().perms` e o alerta de conta nova usam ela. Não vale para donos, e gerenciar a equipe (`roles`) não pode ser dado por ajuste.
+
+## Matriz de planos (27/11/2026)
+- Grátis: histórico, recordes, Tier, PUMBILITY; 5 amigos, 2 missões; sync com anúncio; comparar com amigo resumido.
+- Plus ("ver tudo sobre você"): sem anúncios, estatísticas do jogador, Dia de jogo, resumo da semana, todas as skills, comparar completo, Meu treino (lista), evolução dos últimos 90 dias (`evolution_days`), recomendações e Como subir (10 por aba, `rec_limit`); 10 amigos, 4 missões, 1 troca.
+- Pro ("treinar para evoluir"): tudo do Plus + evolução completa, recomendações todas com prioridade nas skills do questionário (`recommendations_skills`), Dicas, análise do Meu treino, plano de treino, pontos fortes e fracos, Rival, relatório do time, foco nas missões, sync automático, selo; amigos ilimitados, 5 missões, 2 trocas.

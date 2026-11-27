@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { TrainingAddChip } from '../components/TrainingToggle.jsx';
 import { useData } from '../App.jsx';
-import PlanLock from '../components/PlanLock.jsx';
+import PlanLock, { LockBadge } from '../components/PlanLock.jsx';
 import { Ball, Grade, Jacket } from '../components/ui.jsx';
 import { chartTier, fmtScore, TIERS } from '../lib/piu.js';
 import { recommendations } from '../lib/recommend.js';
@@ -27,9 +27,13 @@ export default function Recommend() {
   // quem escolheu o que quer melhorar no questionário vê primeiro os charts com essas skills (sem esconder os outros)
   const hits = (c) => (c.tagBars || []).filter(([x, v]) => skills.includes(x) && v >= 40).length;
   const base = (curTab === 'fresh' ? rec.fresh : rec.improve).filter((r) => curMode === 'all' || r.chart.mode === curMode);
-  const full = (skills.length && focusSkills ? [...base].sort((a, b) => hits(b.chart) - hits(a.chart)) : base).slice(0, 40);
+  const skillsOk = ent.can('recommendations_skills');
+  const full = (skills.length && focusSkills && skillsOk ? [...base].sort((a, b) => hits(b.chart) - hits(a.chart)) : base).slice(0, 40);
   const locked = !ent.can('recommendations_all');
-  const list = locked ? full.slice(0, 3) : full;
+  // Plus: as N melhores de cada aba (padrão 10); todas no Pro
+  const cap = ent.limit('rec_limit');
+  const list = locked ? full.slice(0, 3) : cap ? full.slice(0, cap) : full;
+  const capped = !locked && cap && full.length > cap;
 
   return (
     <div className="page">
@@ -41,11 +45,11 @@ export default function Recommend() {
       </p>
       <Chips value={curTab} onChange={setTab} options={[['fresh', `${t('Para jogar')} (${rec.fresh.length})`], ['improve', `${t('Melhorar recorde')} (${rec.improve.length})`]]} />
       <Chips value={curMode} onChange={setMode} options={[['all', t('Todos')], ['S', 'Single'], ['D', 'Double']]} />
-      {skills.length > 0 && (
-        <button type="button" className={`chip-toggle ${focusSkills ? 'on' : ''}`} aria-pressed={focusSkills} onClick={() => setFocusSkills((v) => !v)}>
-          {t('Primeiro: {s}', { s: skills.map((x) => t(chartTagLabel(x))).join(', ') })}
-        </button>
-      )}
+      {skills.length > 0 && (skillsOk
+        ? <button type="button" className={`chip-toggle ${focusSkills ? 'on' : ''}`} aria-pressed={focusSkills} onClick={() => setFocusSkills((v) => !v)}>
+            {t('Primeiro: {s}', { s: skills.map((x) => t(chartTagLabel(x))).join(', ') })}
+          </button>
+        : <Link to="/planos" className="chip-toggle">{t('Primeiro: {s}', { s: skills.map((x) => t(chartTagLabel(x))).join(', ') })} <LockBadge feature="recommendations_skills" /></Link>)}
 
       {!list.length && <p className="empty">{data.charts.some((c) => c.score != null) ? t('Nada aqui por enquanto. Jogue mais alguns charts de nível 10+ para eu entender seu nível.') : t('Sincronize suas notas para receber recomendações.')}</p>}
 
@@ -78,6 +82,12 @@ export default function Recommend() {
         })}
       </div>
       </PlanLock>
+      {capped && (
+        <Link to="/planos" className="rec-more card">
+          <span>{t('Mostrando {n} de {m}. Veja todas e priorize as skills que você quer melhorar.', { n: cap, m: full.length })}</span>
+          <LockBadge feature="recommendations_skills" />
+        </Link>
+      )}
     </div>
   );
 }

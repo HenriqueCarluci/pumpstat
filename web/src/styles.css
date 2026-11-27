@@ -2221,3 +2221,5 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .pm-cell.yes { color: #39d98a; border-color: rgba(57, 217, 138, .4); background: rgba(57, 217, 138, .08); }
 .pm-cell.custom i { position: absolute; top: 3px; right: 3px; width: 6px; height: 6px; border-radius: 50%; background: #ffd166; }
 .pm-cell:disabled { opacity: .6; cursor: default; }
+.chip-lock { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 1px dashed var(--line); color: var(--muted); font-size: 13px; text-decoration: none; }
+.rec-more { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; text-decoration: none; color: var(--text); font-size: 13.5px; }
