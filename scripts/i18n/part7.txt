@@ -780,3 +780,6 @@ depois de {n} tentativas | after {n} tries | después de {n} intentos | {n}번 �
 Charts que você nunca tinha passado e passou hoje. | Charts you had never cleared and cleared today. | Charts que nunca habías pasado y pasaste hoy. | 처음으로 클리어한 차트예요. | 今日初めてクリアした譜面です。 | Charts jamais réussis avant et réussis aujourd'hui. | Chart mai superati prima e superati oggi.
 Charts que você já tinha passado e melhorou o score hoje. | Charts you had already cleared and improved the score today. | Charts que ya habías pasado y mejoraste el score hoy. | 이미 클리어했고 오늘 점수를 올린 차트예요. | クリア済みで今日スコアを更新した譜面です。 | Charts déjà réussis dont vous avez amélioré le score aujourd'hui. | Chart già superati in cui hai migliorato il punteggio oggi.
 Chat | Chat | Chat | 채팅 | チャット | Chat | Chat
+Passou depois de {n} tentativas | Cleared after {n} tries | Pasó después de {n} intentos | {n}번 시도 끝에 클리어 | {n}回目でクリア | Réussi après {n} essais | Superato dopo {n} tentativi
+Passou de primeira | Cleared first try | Pasó a la primera | 한 번에 클리어 | 一発クリア | Réussi du premier coup | Superato al primo colpo
+Recorde: {s} | Best: {s} | Récord: {s} | 최고 기록: {s} | 自己ベスト: {s} | Record : {s} | Record: {s}

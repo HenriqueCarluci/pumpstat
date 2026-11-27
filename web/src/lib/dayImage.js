@@ -5,7 +5,7 @@ import { isNative } from './native.js';
 import { API_URL } from './config.js';
 import { gradeImgUrl, plateImgUrl } from '../components/ui.jsx';
 
-export const FORMATS = { feed: { w: 1080, h: 1350, rows: 4 }, story: { w: 1080, h: 1920, rows: 7 } };
+export const FORMATS = { feed: { w: 1080, h: 1350 }, story: { w: 1080, h: 1920 } };
 const MODE_COLOR = { S: '#ff6a3d', D: '#3ddc84', HD: '#b06cff', C: '#ffd23f' };
 const NEON = '#8cff3a';
 // primeiro passe (nunca tinha passado) e upscore (já tinha passado, melhorou o score): cores próprias para não confundir
@@ -18,8 +18,6 @@ const TXT = '#f2f3f5';
 const MUTED = '#a3a6b0';
 const NUM = "'Oxanium', 'Pretendard', system-ui, sans-serif";
 const SANS = "'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif";
-// PERFECT, GREAT, GOOD, BAD, MISS
-const JUDG = [['perfect', 'P', '#38e1ff'], ['great', 'GR', '#58e07a'], ['good', 'GD', '#ffd23f'], ['bad', 'B', '#ff9a3c'], ['miss', 'M', '#ff4b5c']];
 
 const proxied = (u) => (u ? `${API_URL}/api/img?u=${encodeURIComponent(u)}` : null);
 const loadImg = (src) => new Promise((ok) => {
@@ -59,34 +57,140 @@ function contain(ctx, img, x, y, w, h) {
   return true;
 }
 
-/** Desenha a imagem do dia e devolve um PNG. */
+const MODE_NAME = { S: 'SINGLE', D: 'DOUBLE', HD: 'HALF-DOUBLE', C: 'CO-OP' };
+// PERFECT, GREAT, GOOD, BAD, MISS com nome completo (como na tela de detalhes da jogada)
+const JUDG_FULL = [['perfect', 'PERFECT', '#8fd3ff'], ['great', 'GREAT', '#9bef7d'], ['good', 'GOOD', '#ffd76a'], ['bad', 'BAD', '#c59bff'], ['miss', 'MISS', '#ff7f86']];
+const CARD_H = 244; const CARD_H_SHORT = 176;
+const hasJudg = (r) => r.best && r.best.perfect != null;
+const cardH = (r) => (hasJudg(r) ? CARD_H : CARD_H_SHORT);
+
+/** Bolinha do nível: aro na cor do modo, SINGLE/DOUBLE em cima e o número grande. */
+function levelBall(ctx, chart, cx, cy, R) {
+  const col = MODE_COLOR[chart.mode] || TXT;
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  const g = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.35, R * 0.1, cx, cy, R);
+  g.addColorStop(0, `${col}ee`); g.addColorStop(0.7, `${col}88`); g.addColorStop(1, '#0d0f13');
+  ctx.fillStyle = g; ctx.fill();
+  ctx.lineWidth = R * 0.12; ctx.strokeStyle = '#d9dde4'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, R * 0.78, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.fill();
+  ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
+  ctx.font = `900 ${Math.round(R * 0.26)}px ${SANS}`; ctx.fillText(MODE_NAME[chart.mode] || chart.mode, cx, cy - R * 0.36);
+  ctx.font = `900 ${Math.round(R * 0.92)}px ${NUM}`; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(0,0,0,.65)';
+  ctx.strokeText(String(chart.level), cx, cy + R * 0.42); ctx.fillText(String(chart.level), cx, cy + R * 0.42);
+  ctx.restore();
+}
+
+/** Texto que cabe: tenta a fonte maior e vai diminuindo até o mínimo antes de cortar com reticências. */
+function fitFont(ctx, text, max, weight, size, min, family) {
+  for (let sz = size; sz >= min; sz -= 2) { ctx.font = `${weight} ${sz}px ${family}`; if (ctx.measureText(text).width <= max) return text; }
+  return fit(ctx, text, max);
+}
+
+/** Linha de apoio de cada chart: o que aconteceu nele no dia. */
+function detailLine(r) {
+  if (r.newClear || r.kind === 'clear') return r.triesBefore ? t('Passou depois de {n} tentativas', { n: r.triesBefore + r.tries }) : tn2(r.tries);
+  if (r.pb || r.kind === 'pb') return [t('antes {s}', { s: fmtNum(r.prevScore) }), r.gradeUp && `${r.prevGrade} → ${r.grade}`].filter(Boolean).join(' · ');
+  return r.prevScore != null ? t('Recorde: {s}', { s: fmtNum(r.prevScore) }) : tn2(r.tries);
+}
+const tn2 = (n) => (n > 1 ? t('{n} tentativas', { n }) : t('Passou de primeira'));
+
+/** Cartão de um chart, no padrão da tela de detalhes da jogada: capa ao fundo, nome completo, bolinha do nível, score e julgamentos. */
+function drawCard(ctx, r, x, y, w, h, jkImg, gdImg, plImg) {
+  const kt = kindTag(r);
+  ctx.save(); rr(ctx, x, y, w, h, 28); ctx.clip();
+  ctx.fillStyle = '#15171d'; ctx.fillRect(x, y, w, h);
+  if (jkImg) { ctx.globalAlpha = 0.5; cover(ctx, jkImg, x, y, w, h, 0); ctx.globalAlpha = 1; }
+  const g = ctx.createLinearGradient(x, y, x + w, y);
+  g.addColorStop(0, 'rgba(14,15,19,.93)'); g.addColorStop(0.55, 'rgba(14,15,19,.80)'); g.addColorStop(1, 'rgba(14,15,19,.62)');
+  ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+  ctx.restore();
+  rr(ctx, x, y, w, h, 28); ctx.lineWidth = 3; ctx.strokeStyle = kt ? `${kt[1]}aa` : 'rgba(255,255,255,.22)'; ctx.stroke();
+
+  const P = 22;
+  // etiqueta (primeiro passe / upscore) no canto
+  let pillW = 0;
+  if (kt) {
+    ctx.font = `800 21px ${SANS}`; pillW = ctx.measureText(kt[0]).width + 28;
+    rr(ctx, x + w - P - pillW, y + P - 4, pillW, 38, 19); ctx.fillStyle = `${kt[1]}26`; ctx.fill();
+    ctx.strokeStyle = `${kt[1]}99`; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = kt[1]; ctx.fillText(kt[0], x + w - P - pillW + 14, y + P + 22);
+  }
+  // nome completo
+  ctx.fillStyle = TXT;
+  const title = fitFont(ctx, r.chart.song.title, w - P * 2 - pillW - 18, 800, 32, 24, SANS);
+  ctx.fillText(title, x + P, y + P + 26);
+
+  // bolinha, score, detalhe, grade e plate
+  const R = 42; const my = y + P + 42;
+  levelBall(ctx, r.chart, x + P + R, my + R, R);
+  const sx = x + P + R * 2 + 24;
+  ctx.fillStyle = TXT; ctx.font = `800 52px ${NUM}`; ctx.fillText(fmtNum(r.score), sx, my + 50);
+  ctx.fillStyle = MUTED; ctx.font = `600 21px ${SANS}`;
+  const gw = 118;
+  ctx.fillText(fit(ctx, detailLine(r), x + w - P - gw - 16 - sx), sx, my + 80);
+  const gx = x + w - P - gw;
+  if (!contain(ctx, gdImg, gx, my - 2, gw, gw * 0.6)) {
+    ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 44px ${NUM}`; ctx.fillText(r.grade || '', x + w - P, my + 44); ctx.textAlign = 'left';
+  }
+  if (r.plate && !contain(ctx, plImg, gx, my + gw * 0.6 + 2, gw, gw * 0.3)) {
+    ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `800 24px ${NUM}`; ctx.fillText(r.plate, x + w - P, my + 92); ctx.textAlign = 'left';
+  }
+
+  // PERFECT / GREAT / GOOD / BAD / MISS da melhor jogada do dia
+  if (hasJudg(r)) {
+    const b = r.best; const by = my + R * 2 + 10; const bh = 60; const bg = 10;
+    const bw = (w - P * 2 - bg * 4) / 5;
+    JUDG_FULL.forEach(([k, label, col], i) => {
+      const bx = x + P + i * (bw + bg);
+      rr(ctx, bx, by, bw, bh, 14); ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.fill();
+      ctx.textAlign = 'center'; ctx.fillStyle = col;
+      ctx.font = `800 17px ${SANS}`; ctx.fillText(label, bx + bw / 2, by + 23);
+      ctx.font = `800 29px ${NUM}`; ctx.fillText(fmtNum(b[k] || 0), bx + bw / 2, by + 52);
+      ctx.textAlign = 'left';
+    });
+  }
+}
+
+const loadCardImgs = (rows) => Promise.all(rows.flatMap((r) => [loadImg(proxied(r.chart.song.jacket)), loadImg(proxied(gradeImgUrl(r.grade))), loadImg(proxied(plateImgUrl(r.plate)))]));
+
+/** Quantos itens (com títulos de grupo) cabem numa altura. */
+function takeFitting(groups, avail, gap, GH) {
+  const out = []; let used = 0;
+  for (const [label, col, rows] of groups) {
+    const taken = [];
+    for (const r of rows) {
+      const need = (taken.length ? 0 : GH) + cardH(r) + gap;
+      if (used + need > avail) break;
+      used += need; taken.push(r);
+    }
+    if (taken.length) out.push([label, col, taken]);
+    if (taken.length < rows.length) break;
+  }
+  return out;
+}
+
+/** Desenha a capa do dia (números e destaques) e devolve um PNG e quantos destaques couberam. */
 export async function drawDayImage({ rep, nickname, versionName, dayLabel, list, format = 'feed', pageLabel = null }) {
   const F = FORMATS[format] || FORMATS.feed;
   const W = F.w; const H = F.h;
   try { await Promise.all([document.fonts?.load(`800 40px ${NUM}`), document.fonts?.load(`700 30px ${SANS}`)]); } catch { /* fonte do sistema */ }
-  // capa separada em grupos: primeiros passes, upscores (ou só os melhores passes, se não houve nenhum dos dois)
-  const picked = list.slice(0, F.rows);
-  const groups = [
-    [`★ ${t('Primeiros passes')}`, CLEAR, picked.filter((r) => r.kind === 'clear')],
-    [`▲ ${t('Upscores')}`, UP, picked.filter((r) => r.kind === 'pb')],
-    [t('Melhores passes do dia'), TXT, picked.filter((r) => r.kind === 'pass')],
+  const M = 60; const foot = 96; const gap = 14; const GH = 48; const top = 404;
+  const allGroups = [
+    [`★ ${t('Primeiros passes')}`, CLEAR, list.filter((r) => r.kind === 'clear')],
+    [`▲ ${t('Upscores')}`, UP, list.filter((r) => r.kind === 'pb')],
+    [t('Melhores passes do dia'), TXT, list.filter((r) => r.kind === 'pass')],
   ].filter((g) => g[2].length);
+  const groups = takeFitting(allGroups, H - foot - 10 - top, gap, GH);
   const items = groups.flatMap((g) => g[2]);
-  // carrega tudo em paralelo: capas, grades, plates e o logo
-  const [logo, ...imgs] = await Promise.all([
-    loadImg(new URL('icons/icon-192.png', document.baseURI).href),
-    ...items.flatMap((r) => [loadImg(proxied(r.chart.song.jacket)), loadImg(proxied(gradeImgUrl(r.grade))), loadImg(proxied(plateImgUrl(r.plate)))]),
-  ]);
-  const jk = (i) => imgs[i * 3]; const gd = (i) => imgs[i * 3 + 1]; const pl = (i) => imgs[i * 3 + 2];
+  const [logo, ...imgs] = await Promise.all([loadImg(new URL('icons/icon-192.png', document.baseURI).href), ...await loadCardImgs(items)]);
 
   const c = document.createElement('canvas');
   c.width = W; c.height = H;
   const ctx = c.getContext('2d');
-
-  background(ctx, W, H, jk(0));
+  background(ctx, W, H, imgs[0]);
 
   // cabeçalho
-  const M = 60;
   if (logo) { ctx.save(); rr(ctx, M, 56, 84, 84, 22); ctx.clip(); ctx.drawImage(logo, M, 56, 84, 84); ctx.restore(); }
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = NEON; ctx.font = `800 24px ${SANS}`;
@@ -98,7 +202,7 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   ctx.fillText(versionName, W - M, 124);
   ctx.textAlign = 'left';
 
-  // números do dia (4 cartões)
+  // números do dia: 4 cartões com nome completo
   const tt = rep.totals;
   const kpis = [
     [t('Jogadas'), fmtNum(tt.plays), null, TXT],
@@ -106,24 +210,24 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     [t('Primeiros passes'), fmtNum(tt.newClears), null, tt.newClears ? CLEAR : TXT],
     [t('Upscores'), fmtNum(tt.pbs), null, tt.pbs ? UP : TXT],
   ];
-  const kw = (W - M * 2 - 3 * 16) / 4; const ky = 184;
+  const kw = (W - M * 2 - 3 * 16) / 4; const ky = 172;
   kpis.forEach(([label, val, sub, col], i) => {
     const x = M + i * (kw + 16);
-    rr(ctx, x, ky, kw, 132, 24); ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fill();
+    rr(ctx, x, ky, kw, 124, 22); ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,.09)'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = MUTED; ctx.font = `600 21px ${SANS}`; ctx.fillText(fit(ctx, label, kw - 36), x + 20, ky + 40);
-    ctx.fillStyle = col; ctx.font = `800 56px ${NUM}`; ctx.fillText(val, x + 20, ky + 106);
-    if (sub) { const vw = ctx.measureText(val).width; ctx.fillStyle = MUTED; ctx.font = `700 24px ${NUM}`; ctx.fillText(sub, x + 28 + vw, ky + 106); }
+    ctx.fillStyle = MUTED; ctx.fillText(fitFont(ctx, label, kw - 36, 600, 21, 16, SANS), x + 20, ky + 38);
+    ctx.fillStyle = col; ctx.font = `800 54px ${NUM}`; ctx.fillText(val, x + 20, ky + 100);
+    if (sub) { const vw = ctx.measureText(val).width; ctx.fillStyle = MUTED; ctx.font = `700 24px ${NUM}`; ctx.fillText(sub, x + 28 + vw, ky + 100); }
   });
 
-  // linha de selos: maior D/S, acerto, tempo
+  // selos: maior D/S, acerto, tempo
   const chips = [
     tt.maxD && [t('Maior Double'), `D${tt.maxD}`, MODE_COLOR.D],
     tt.maxS && [t('Maior Single'), `S${tt.maxS}`, MODE_COLOR.S],
     tt.accuracy != null && [t('Acerto'), `${(tt.accuracy * 100).toFixed(1)}%`, TXT],
     tt.first && tt.last && tt.last > tt.first && [t('Tempo'), `${Math.round((tt.last - tt.first) / 60)} min`, TXT],
   ].filter(Boolean);
-  let cx = M; const cy = 338;
+  let cx = M; const cy = 314;
   for (const [label, val, col] of chips) {
     ctx.font = `600 20px ${SANS}`; const lw = ctx.measureText(label).width;
     ctx.font = `800 26px ${NUM}`; const vw = ctx.measureText(val).width;
@@ -135,89 +239,38 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
     cx += w + 12;
   }
 
-  // destaques, um título por grupo
-  const top = 470; const foot = 96; const gap = 16; const GH = 58;
-  const extraHead = GH * Math.max(0, groups.length - 1);
-  const ch = Math.min(196, (H - top - foot - gap * (F.rows - 1) - extraHead) / F.rows);
-  const rowY = [];
-  { let y = top; let i = 0;
-    groups.forEach(([label, col, rows], gi) => {
-      if (gi > 0) y += GH - gap + 16;
-      ctx.fillStyle = col; ctx.font = `800 32px ${SANS}`; ctx.fillText(label, M, y - 26);
-      rows.forEach(() => { rowY[i++] = y; y += ch + gap; });
-    }); }
-  items.forEach((r, i) => {
-    const y = rowY[i];
-    const kt = kindTag(r);
-    rr(ctx, M, y, W - M * 2, ch, 26); ctx.fillStyle = 'rgba(20,22,28,.86)'; ctx.fill();
-    ctx.strokeStyle = kt ? `${kt[1]}66` : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
-    // capa com o nível por cima
-    const jh = ch - 28; const jw = Math.round(jh * 16 / 9); const jx = M + 14; const jy = y + 14;
-    cover(ctx, jk(i), jx, jy, jw, jh, 18);
-    const col = MODE_COLOR[r.chart.mode] || TXT; const lab = `${r.chart.mode}${r.chart.level}`;
-    ctx.font = `800 30px ${NUM}`; const lw = ctx.measureText(lab).width + 24;
-    rr(ctx, jx + 10, jy + jh - 50, lw, 40, 12); ctx.fillStyle = 'rgba(0,0,0,.72)'; ctx.fill();
-    ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = col; ctx.fillText(lab, jx + 22, jy + jh - 19);
-
-    // texto
-    const tx = jx + jw + 24; const right = W - M - 20;
-    const gw = Math.min(112, ch * 0.62);
-    const textMax = right - gw - 14 - tx;
-    ctx.fillStyle = TXT; ctx.font = `800 31px ${SANS}`;
-    ctx.fillText(fit(ctx, r.chart.song.title, textMax), tx, y + 50);
-    let tag; let tagCol = MUTED;
-    if (kt) { [tag, tagCol] = kt; if (r.kind === 'pb' && r.gradeUp) tag += `  ${r.prevGrade} → ${r.grade}`; if (r.kind === 'clear' && r.triesBefore) tag += ` · ${t('depois de {n} tentativas', { n: r.triesBefore + r.tries })}`; }
-    else tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou');
-    ctx.fillStyle = tagCol; ctx.font = `700 22px ${SANS}`; ctx.fillText(fit(ctx, tag, textMax), tx, y + 82);
-    ctx.fillStyle = TXT; ctx.font = `800 40px ${NUM}`; ctx.fillText(fmtNum(r.score), tx, y + 128);
-
-    // PERFECT / GREAT / GOOD / BAD / MISS da melhor jogada do dia
-    const b = r.best;
-    if (b && b.perfect != null && ch > 150) {
-      const tot = JUDG.reduce((a, [k]) => a + (b[k] || 0), 0) || 1;
-      const bw = right - tx; const by = y + ch - 44;
-      let bx = tx;
-      ctx.save(); rr(ctx, tx, by, bw, 10, 5); ctx.clip();
-      for (const [k, , cl] of JUDG) { const w = bw * (b[k] || 0) / tot; ctx.fillStyle = cl; ctx.fillRect(bx, by, w, 10); bx += w; }
-      ctx.restore();
-      let jx2 = tx; ctx.font = `700 19px ${NUM}`;
-      for (const [k, l, cl] of JUDG) {
-        ctx.fillStyle = cl; ctx.fillText(l, jx2, by + 34); jx2 += ctx.measureText(l).width + 6;
-        ctx.fillStyle = TXT; const v = fmtNum(b[k] || 0); ctx.fillText(v, jx2, by + 34); jx2 += ctx.measureText(v).width + 18;
-      }
+  // destaques em grupos, cada chart no cartão completo
+  let y = top; let i = 0;
+  for (const [label, col, rows] of groups) {
+    ctx.fillStyle = col; ctx.font = `800 29px ${SANS}`; ctx.fillText(label, M, y + 32); y += GH;
+    for (const r of rows) {
+      const h = cardH(r);
+      drawCard(ctx, r, M, y, W - M * 2, h, imgs[i * 3], imgs[i * 3 + 1], imgs[i * 3 + 2]);
+      y += h + gap; i++;
     }
-    // grade e plate à direita
-    const gx = right - gw; const gy = y + 16;
-    if (!contain(ctx, gd(i), gx, gy, gw, gw * 0.62)) {
-      ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 40px ${NUM}`; ctx.fillText(r.grade || '', right, gy + 48); ctx.textAlign = 'left';
-    }
-    if (r.plate && !contain(ctx, pl(i), gx, gy + gw * 0.62 + 4, gw, gw * 0.34)) {
-      ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `800 24px ${NUM}`; ctx.fillText(r.plate, right, gy + gw * 0.62 + 30); ctx.textAlign = 'left';
-    }
-  });
+  }
   // espaço sobrando: passes por nível
-  let y0 = (items.length ? rowY[items.length - 1] + ch + gap : top) + (items.length ? 34 : 110);
+  let y0 = y + (items.length ? 30 : 80);
   const lv = rep.levels.slice(0, Math.max(0, Math.floor((H - foot - 30 - y0 - 44) / 50)));
   if (lv.length >= 2) {
     ctx.fillStyle = TXT; ctx.font = `800 30px ${SANS}`; ctx.fillText(t('Por nível'), M, y0);
     y0 += 22;
-    lv.forEach((l, i) => {
-      const y = y0 + i * 50; const col = MODE_COLOR[l.mode] || TXT;
-      ctx.fillStyle = col; ctx.font = `800 28px ${NUM}`; ctx.fillText(`${l.mode}${l.level}`, M, y + 32);
+    lv.forEach((l, k) => {
+      const yy = y0 + k * 50; const lc = MODE_COLOR[l.mode] || TXT;
+      ctx.fillStyle = lc; ctx.font = `800 28px ${NUM}`; ctx.fillText(`${l.mode}${l.level}`, M, yy + 32);
       const bx = M + 100; const bw = W - M * 2 - 100 - 110;
-      rr(ctx, bx, y + 14, bw, 20, 10); ctx.fillStyle = 'rgba(255,90,90,.22)'; ctx.fill();
-      if (l.passes) { rr(ctx, bx, y + 14, Math.max(20, bw * (l.passes / l.tries)), 20, 10); ctx.fillStyle = NEON; ctx.fill(); }
-      ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 26px ${NUM}`; ctx.fillText(`${l.passes}/${l.tries}`, W - M, y + 32); ctx.textAlign = 'left';
+      rr(ctx, bx, yy + 14, bw, 20, 10); ctx.fillStyle = 'rgba(255,90,90,.22)'; ctx.fill();
+      if (l.passes) { rr(ctx, bx, yy + 14, Math.max(20, bw * (l.passes / l.tries)), 20, 10); ctx.fillStyle = NEON; ctx.fill(); }
+      ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 26px ${NUM}`; ctx.fillText(`${l.passes}/${l.tries}`, W - M, yy + 32); ctx.textAlign = 'left';
     });
   }
-  if (!items.length) {
+  if (!list.length) {
     ctx.fillStyle = MUTED; ctx.font = `600 30px ${SANS}`;
     ctx.fillText(t('Nenhum passe neste dia. Bora treinar!'), M, top + 40);
   }
 
   footer(ctx, W, H, M, foot, pageLabel);
-  return new Promise((ok) => c.toBlob(ok, 'image/png'));
+  return { blob: await new Promise((ok) => c.toBlob(ok, 'image/png')), shown: items.length };
 }
 
 function background(ctx, W, H, img) {
@@ -247,20 +300,29 @@ function footer(ctx, W, H, M, foot, pageLabel) {
   ctx.textAlign = 'left';
 }
 
-/** Linhas por página na lista de todos os passes. */
-const LIST_ROWS = { feed: 8, story: 13 };
+const LIST_TOP = 150; const LIST_GAP = 18;
+/** Divide os passes em páginas pela altura dos cartões. */
+function paginate(rows, H) {
+  const avail = H - LIST_TOP - 96 - 10;
+  const pages = []; let cur = []; let used = 0;
+  for (const r of rows) {
+    const need = cardH(r) + LIST_GAP;
+    if (cur.length && used + need > avail) { pages.push(cur); cur = []; used = 0; }
+    cur.push(r); used += need;
+  }
+  if (cur.length) pages.push(cur);
+  return pages;
+}
 
-/** Página extra: todos os passes do dia, em linhas compactas. */
+/** Página extra: todos os passes do dia, no mesmo cartão da capa. */
 async function drawListPage({ rows, nickname, dayLabel, format, page, pages, logo }) {
   const F = FORMATS[format] || FORMATS.feed;
   const W = F.w; const H = F.h; const M = 60; const foot = 96;
-  const imgs = await Promise.all(rows.flatMap((r) => [loadImg(proxied(r.chart.song.jacket)), loadImg(proxied(gradeImgUrl(r.grade))), loadImg(proxied(plateImgUrl(r.plate)))]));
-  const jk = (i) => imgs[i * 3]; const gd = (i) => imgs[i * 3 + 1]; const pl = (i) => imgs[i * 3 + 2];
+  const imgs = await loadCardImgs(rows);
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const ctx = c.getContext('2d');
-  background(ctx, W, H, jk(0));
+  background(ctx, W, H, imgs[0]);
 
-  // cabeçalho menor
   if (logo) { ctx.save(); rr(ctx, M, 50, 64, 64, 18); ctx.clip(); ctx.drawImage(logo, M, 50, 64, 64); ctx.restore(); }
   ctx.fillStyle = NEON; ctx.font = `800 22px ${SANS}`;
   ctx.fillText(`${t('Dia de jogo').toUpperCase()} · ${t('Todos os passes')}`, M + 84, 76);
@@ -271,49 +333,11 @@ async function drawListPage({ rows, nickname, dayLabel, format, page, pages, log
   ctx.font = `800 26px ${NUM}`; ctx.fillStyle = TXT; ctx.fillText(`${page}/${pages}`, W - M, 114);
   ctx.textAlign = 'left';
 
-  const top = 150; const n = LIST_ROWS[format] || 8; const gap = 12;
-  const rh = Math.floor((H - top - foot - 20 - gap * (n - 1)) / n);
+  let y = LIST_TOP;
   rows.forEach((r, i) => {
-    const y = top + i * (rh + gap);
-    rr(ctx, M, y, W - M * 2, rh, 20); ctx.fillStyle = 'rgba(20,22,28,.86)'; ctx.fill();
-    const kt = kindTag(r);
-    ctx.strokeStyle = kt ? `${kt[1]}73` : 'rgba(255,255,255,.07)'; ctx.lineWidth = 2; ctx.stroke();
-    const jh = rh - 20; const jw = Math.round(jh * 16 / 9); const jx = M + 10; const jy = y + 10;
-    cover(ctx, jk(i), jx, jy, jw, jh, 12);
-    const col = MODE_COLOR[r.chart.mode] || TXT; const lab = `${r.chart.mode}${r.chart.level}`;
-    ctx.font = `800 24px ${NUM}`; const lw = ctx.measureText(lab).width + 18;
-    rr(ctx, jx + 6, jy + jh - 38, lw, 32, 10); ctx.fillStyle = 'rgba(0,0,0,.75)'; ctx.fill();
-    ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.fillStyle = col; ctx.fillText(lab, jx + 15, jy + jh - 14);
-
-    const tx = jx + jw + 20; const right = W - M - 16;
-    const gw = Math.min(96, rh * 0.9);
-    const textMax = right - gw - 12 - tx;
-    ctx.fillStyle = TXT; ctx.font = `800 26px ${SANS}`;
-    ctx.fillText(fit(ctx, r.chart.song.title, textMax), tx, y + 36);
-    let tag; let tagCol = MUTED;
-    if (kt) [tag, tagCol] = kt;
-    else tag = r.tries > 1 ? t('{n} tentativas', { n: r.tries }) : t('Passou');
-    ctx.font = `800 30px ${NUM}`; ctx.fillStyle = TXT; const sc = fmtNum(r.score); ctx.fillText(sc, tx, y + rh - 18);
-    const sw = ctx.measureText(sc).width;
-    ctx.fillStyle = tagCol; ctx.font = `700 19px ${SANS}`; ctx.fillText(fit(ctx, tag, textMax - sw - 16), tx + sw + 16, y + rh - 21);
-    // perfects/misses da melhor jogada, em uma linha curta
-    const b = r.best;
-    if (b && b.perfect != null && rh >= 96) {
-      ctx.font = `700 17px ${NUM}`; let jx2 = tx; const jy2 = y + 62;
-      for (const [k, l, cl] of JUDG) {
-        ctx.fillStyle = cl; ctx.fillText(l, jx2, jy2); jx2 += ctx.measureText(l).width + 4;
-        ctx.fillStyle = MUTED; const v = fmtNum(b[k] || 0); ctx.fillText(v, jx2, jy2); jx2 += ctx.measureText(v).width + 12;
-        if (jx2 > tx + textMax) break;
-      }
-    }
-    const gx = right - gw; const gh = rh * 0.5;
-    if (!contain(ctx, gd(i), gx, y + 8, gw, gh)) {
-      ctx.textAlign = 'right'; ctx.fillStyle = TXT; ctx.font = `800 30px ${NUM}`; ctx.fillText(r.grade || '', right, y + 40); ctx.textAlign = 'left';
-    }
-    if (r.plate && !contain(ctx, pl(i), gx, y + 12 + gh, gw, rh * 0.3)) {
-      ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `800 20px ${NUM}`; ctx.fillText(r.plate, right, y + rh - 18); ctx.textAlign = 'left';
-    }
+    const h = cardH(r);
+    drawCard(ctx, r, M, y, W - M * 2, h, imgs[i * 3], imgs[i * 3 + 1], imgs[i * 3 + 2]);
+    y += h + LIST_GAP;
   });
   footer(ctx, W, H, M, foot, null);
   return new Promise((ok) => c.toBlob(ok, 'image/png'));
@@ -328,16 +352,16 @@ export async function drawDayImages(opts) {
   const F = FORMATS[format] || FORMATS.feed;
   const passes = opts.rep.rows.filter((r) => r.passed)
     .sort((a, b) => b.chart.level - a.chart.level || (b.newClear - a.newClear) || (b.pb - a.pb) || b.score - a.score);
-  const shownOnCover = Math.min(opts.list.length, F.rows);
-  const extra = passes.length > shownOnCover || opts.list.some((r) => r.kind !== 'pass') ? passes : [];
-  const per = LIST_ROWS[format] || 8;
-  const listPages = extra.length && !(extra.length <= shownOnCover && opts.list.every((r) => r.kind === 'pass')) ? Math.ceil(extra.length / per) : 0;
-  const pages = 1 + listPages;
-  const coverBlob = await drawDayImage({ ...opts, format, pageLabel: pages > 1 ? `1/${pages}` : null });
+  // a capa sem número de página primeiro, só para saber quantos destaques couberam
+  const first = await drawDayImage({ ...opts, format });
+  const allOnCover = first.shown >= passes.length && opts.list.every((r) => r.kind === 'pass');
+  const listPages = allOnCover ? [] : paginate(passes, F.h);
+  const pages = 1 + listPages.length;
+  const coverBlob = pages > 1 ? (await drawDayImage({ ...opts, format, pageLabel: `1/${pages}` })).blob : first.blob;
   const logo = await loadImg(new URL('icons/icon-192.png', document.baseURI).href);
   const out = [coverBlob];
-  for (let p = 0; p < listPages; p++) {
-    out.push(await drawListPage({ rows: extra.slice(p * per, (p + 1) * per), nickname: opts.nickname, dayLabel: opts.dayLabel, format, page: p + 2, pages, logo }));
+  for (let p = 0; p < listPages.length; p++) {
+    out.push(await drawListPage({ rows: listPages[p], nickname: opts.nickname, dayLabel: opts.dayLabel, format, page: p + 2, pages, logo }));
   }
   return out;
 }
