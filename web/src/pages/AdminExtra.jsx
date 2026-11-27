@@ -50,6 +50,12 @@ export function FeatureToggles() {
           </div>
         );
       })}
+      <h3>{t('Fila')}</h3>
+      <div className="cfg-row">
+        <span>{t('Minutos por ficha (para a espera estimada; depois de 10 passadas de vez, a fila usa o tempo medido)')}</span>
+        <input type="number" min="1" max="60" value={cfg.queue_turn_min ?? 18}
+          onChange={(e) => { setSaved(false); const v = Math.max(1, Math.min(60, Number(e.target.value) || 18)); setCfg((c) => ({ ...c, queue_turn_min: v })); }} />
+      </div>
       <h3>{t('Visitante (sem login)')}</h3>
       <label className="check toggle-row">
         <input type="checkbox" checked={!!cfg.guest?.enabled} onChange={(e) => { setSaved(false); setCfg((c) => ({ ...c, guest: { ...(c.guest || {}), enabled: e.target.checked } })); }} />

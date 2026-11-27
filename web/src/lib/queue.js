@@ -23,6 +23,8 @@ async function rest(path) {
 }
 
 export const venueData = (slug) => rpc('venue_data', { p_slug: slug });
+export const venuesSummary = () => rpc('venues_queue_summary');
+export const myRecentVenues = () => rpc('my_recent_venues', { p_limit: 4 });
 export const listVenues = () => rest('venues?select=slug,name,city,address,latitude,longitude,radius_m,sort&active=eq.true&order=sort,name');
 export const queueEntries = (machineIds) =>
   machineIds.length ? rest(`queue_entries?machine_id=in.(${machineIds.join(',')})&order=pos`) : Promise.resolve([]);

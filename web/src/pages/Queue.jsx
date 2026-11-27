@@ -185,7 +185,9 @@ function MachineQueue({ machine, entries, isAdmin, checkin, onChange }) {
     <section className="card q-machine">
       <div className="row-between">
         <h3>{machine.name}</h3>
-        <span className="muted small">{t('{n} na fila · ~{m} min por vez', { n: entries.length, m: Math.round(machine.avg_turn_sec / 60) })}</span>
+        <span className="muted small">{waiting.length
+          ? t('{n} na fila · espera ~{w} min', { n: waiting.length, w: Math.round((waiting.length * machine.avg_turn_sec) / 60) })
+          : t('sem fila')} · {t('~{m} min por ficha', { m: Math.round(machine.avg_turn_sec / 60) })}</span>
       </div>
 
       {playing ? (

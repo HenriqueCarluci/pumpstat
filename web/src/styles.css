@@ -2504,3 +2504,18 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .unlink-pump p { margin: 0; }
 /* faixa do "ver como" respeita o entalhe do iPhone */
 .viewas-banner { padding-top: max(8px, env(safe-area-inset-top)); }
+/* Fila: primeiro a localização */
+.v-ask { display: grid; gap: 10px; justify-items: center; text-align: center; }
+.v-ask h3, .v-ask p { margin: 0; }
+.v-ask-ic { width: 56px; height: 56px; border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; background: rgba(140, 255, 58, .1); color: var(--neon); }
+.v-near-h h3 { margin: 0; }
+.v-near-h .btn { display: inline-flex; align-items: center; gap: 5px; }
+.v-all { justify-self: center; }
+.v-geo-note { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 4px 8px; align-items: start; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid rgba(255, 209, 102, .35); background: rgba(255, 209, 102, .07); color: #ffe2a3; }
+.v-geo-note > svg { margin-top: 2px; }
+.v-geo-note .link { grid-column: 2; justify-self: start; }
+.v-recent h3 { margin: 0 0 8px; font-size: 15px; }
+.v-wait { display: block; margin-top: 2px; font: 600 11.5px var(--sans, inherit); color: #ffd166; }
+.v-wait.free { color: var(--neon); }
+.v-btn .v-wait { margin-top: 4px; }

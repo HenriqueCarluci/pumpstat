@@ -13,7 +13,15 @@ export function currentVenue() {
   } catch { return null; }
 }
 export function rememberVenue(slug) {
-  try { localStorage.setItem('stepclub:venue', slug); localStorage.setItem('stepclub:venue-at', String(Date.now())); } catch { /* ignora */ }
+  try {
+    localStorage.setItem('stepclub:venue', slug); localStorage.setItem('stepclub:venue-at', String(Date.now()));
+    // últimos fliperamas abertos neste aparelho (para quem não tem conta ou ainda não fez check-in)
+    const list = JSON.parse(localStorage.getItem('stepclub:venues-recent') || '[]').filter((x) => x !== slug);
+    localStorage.setItem('stepclub:venues-recent', JSON.stringify([slug, ...list].slice(0, 6)));
+  } catch { /* ignora */ }
+}
+export function recentVenueSlugs() {
+  try { return JSON.parse(localStorage.getItem('stepclub:venues-recent') || '[]'); } catch { return []; }
 }
 
 export function usePresence(enabled) {
