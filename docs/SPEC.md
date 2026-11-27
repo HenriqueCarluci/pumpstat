@@ -298,3 +298,10 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Modo de teste do admin
 - O admin simula Grátis, Plus ou Pro por 30 min a 24 h (`admin_set_preview`, tabela `admin_plan_preview`). Vale no app (cadeados, limites, anúncios) e no servidor (`plan_can`/`plan_limit`), sem mudar a assinatura nem o perfil de administração. Expira sozinho; faixa no topo para trocar de plano ou sair. Fica em Admin e em Ajustes.
+
+## Modo visitante (sem login)
+- Ligado pelo admin em Recursos → Visitante (`app_config().guest.enabled`, começa desligado). Botão "Ver o tier sem conta" na tela de login.
+- O visitante vê só o Tier e a página do chart (tier, 3 skills, tags, detalhes), pela função `guest_data` (catálogo sem notas de ninguém). Faixa no topo leva ao login.
+
+## Liberação de recursos por usuário
+- Admin → Usuários → "Recursos liberados": recurso + prazo (30 dias, 3 meses, 1 ano, sem prazo) + motivo, sem mudar o plano (`user_feature_grants`). Vale no app (`my_plan().grants`) e no servidor (`plan_can`), com ou sem a cobrança ligada.

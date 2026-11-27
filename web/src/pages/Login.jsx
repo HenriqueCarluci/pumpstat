@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { rpc } from '../lib/api.js';
+import { setGuest } from '../lib/guest.js';
 import { resetPassword, signIn, signInWithGoogle, signUp } from '../lib/auth.js';
 import { t, tErr } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
-import { ListOrdered, Logo } from '../components/Icons.jsx';
+import { LayoutGrid, ListOrdered, Logo } from '../components/Icons.jsx';
 
 export default function Login({ notice }) {
   const [mode, setMode] = useState('in'); // in | up | reset
@@ -11,6 +13,8 @@ export default function Login({ notice }) {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState(notice || '');
   const [err, setErr] = useState('');
+  const [guestOn, setGuestOn] = useState(false);
+  useEffect(() => { rpc('app_config').then((c) => setGuestOn(!!c?.guest?.enabled)).catch(() => {}); }, []);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -59,6 +63,7 @@ export default function Login({ notice }) {
             </button>
           </>
         )}
+        {guestOn && <button type="button" className="btn ghost wide guest-queue" onClick={() => { window.location.hash = '#/tier'; setGuest(true); }}><LayoutGrid size={17} /> {t('Ver o tier sem conta')}</button>}
         <a className="btn ghost wide guest-queue" href="#/fila"><ListOrdered size={17} /> {t('Entrar na fila como convidado')}</a>
         <p className="muted small center guest-hint">{t('Sem conta: veja as filas dos fliperamas e entre só com o seu nome.')}</p>
         <a className="link small privacy-link" href="#/privacidade">{t('Política de privacidade')}</a>

@@ -67,6 +67,12 @@ export async function fetchVersion(version, persist = false) {
   return shape(raw);
 }
 
+/** Modo visitante: só o catálogo (tier e tags), sem login. */
+export async function fetchGuest(version) {
+  const raw = await rpc('guest_data', { p_version: version });
+  return shape(raw);
+}
+
 function shape(raw) {
   const songs = new Map();
   for (const [id, title, artist, bpm, songType, jacket, rise] of raw.songs || []) {

@@ -36,6 +36,12 @@ export function FeatureToggles() {
           ))}
         </div>
       ))}
+      <h3>{t('Visitante (sem login)')}</h3>
+      <label className="check toggle-row">
+        <input type="checkbox" checked={!!cfg.guest?.enabled} onChange={(e) => { setSaved(false); setCfg((c) => ({ ...c, guest: { ...(c.guest || {}), enabled: e.target.checked } })); }} />
+        <span><b>{t('Modo visitante: ver o tier e as tags sem conta')}</b> <small className={cfg.guest?.enabled ? 'up' : 'muted'}>{cfg.guest?.enabled ? t('ligado') : t('desligado')}</small><br />
+          <small className="muted">{t('Aparece um botão na tela de login. O visitante vê só o Tier e a página do chart (tier, tags e detalhes), sem notas de ninguém.')}</small></span>
+      </label>
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row">
         <button className="btn" onClick={save}>{t('Salvar')}</button>

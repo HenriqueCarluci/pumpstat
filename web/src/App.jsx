@@ -43,6 +43,8 @@ import Tour from './components/Tour.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import ReleaseNotes from './pages/ReleaseNotes.jsx';
+import GuestApp from './components/GuestApp.jsx';
+import { isGuest } from './lib/guest.js';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, Search, SettingsIcon } from './components/Icons.jsx';
 import Challenges from './pages/Challenges.jsx';
@@ -69,6 +71,9 @@ export default function App() {
   // sem login, trocar de #/ para #/fila precisa redesenhar (a fila é pública)
   const [, setHash] = useState(window.location.hash);
   useEffect(() => { const f = () => setHash(window.location.hash); window.addEventListener('hashchange', f); return () => window.removeEventListener('hashchange', f); }, []);
+  // modo visitante (sem login): entra e sai sem recarregar a página
+  const [, setGuestTick] = useState(0);
+  useEffect(() => { const f = () => setGuestTick((n) => n + 1); window.addEventListener('pumpstat:guest', f); return () => window.removeEventListener('pumpstat:guest', f); }, []);
 
   useEffect(() => {
     if (!session) return;
@@ -82,6 +87,7 @@ export default function App() {
     if (isQueueHash()) return <PublicQueue />;
     if (/^#\/excluir-conta/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><DeleteInfo /></main></div>;
     if (/^#\/privacidade/.test(window.location.hash)) return <div className="app"><header className="topbar"><a href="#/" className="brand"><Logo /> PIU Stats</a></header><main className="content"><Privacy /></main></div>;
+    if (isGuest()) return <GuestApp />;
     return <Login notice={fromUrl?.error ? t('Não foi possível entrar: {e}', { e: fromUrl.error }) : ''} />;
   }
   return (

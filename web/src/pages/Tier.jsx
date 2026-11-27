@@ -15,7 +15,7 @@ import { ChartQuickSheet, useLongPress } from '../components/ChartQuickSheet.jsx
 import { useTraining } from '../lib/training.js';
 
 export default function Tier() {
-  const { data, version, plan } = useData();
+  const { data, version, plan, guest } = useData();
   const [prefs, setPrefs] = usePrefs();
   const sizeLabel = { sm: t('Capas pequenas'), md: t('Capas médias'), lg: t('Capas grandes') };
   const legacy = (c) => legacyOf(c, version, prefs.legacyP1);
@@ -64,7 +64,7 @@ export default function Tier() {
   const hold = useLongPress(setQuick);
   const training = useTraining();
   const tile = (c) => { const lg = legacy(c); return (
-              <Link key={c.id} to={`/chart/${c.id}`} {...hold.bind(c.id, c)} draggable={false}
+              <Link key={c.id} to={`/chart/${c.id}`} {...(guest ? {} : hold.bind(c.id, c))} draggable={false}
                 className={`tile ${c.score != null ? (c.broken ? 'broken' : 'clear') : lg ? 'legacy' : ''} ${hold.pressed === c.id ? 'pressing' : ''}`}
                 title={`${c.song.title}${c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}`}>
                 <div className="tile-art">
@@ -101,8 +101,9 @@ export default function Tier() {
       <section className="tier-head card">
         <Ball chart={{ mode, level }} size="lg" />
         <div>
+          {guest ? <div className="big">{charts.length}<span className="muted small"> {t('charts')}</span></div> : <>
           <div className="big">{clears.length}<span className="muted">/{charts.length}</span></div>
-          <div className="muted">{t('clears · {n} quebrados', { n: played.length - clears.length })}</div>
+          <div className="muted">{t('clears · {n} quebrados', { n: played.length - clears.length })}</div></>}
           {legacyN > 0 && <div className="muted small">{t('+{n} com recorde legado da Phoenix', { n: legacyN })}</div>}
         </div>
         {best && <div className="tier-best"><span className="muted">{t('melhor')}</span><Grade grade={best.grade} size="sm" /></div>}
@@ -124,7 +125,7 @@ export default function Tier() {
 
       {groups.map((g) => (
         <section key={g.id} className={`tier tier-${g.id}`}>
-          <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{g.charts.filter((c) => c.score != null && !c.broken).length}/{g.charts.length}</em></div>
+          <div className="tier-label"><b>{g.short}</b><span>{t(g.label)}</span><em>{guest ? g.charts.length : `${g.charts.filter((c) => c.score != null && !c.broken).length}/${g.charts.length}`}</em></div>
           <div className={`tier-grid size-${prefs.tierSize || 'md'}`}>
             {g.charts.map(tile)}
           </div>
