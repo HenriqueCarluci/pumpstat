@@ -36,6 +36,20 @@ export function FeatureToggles() {
           ))}
         </div>
       ))}
+      <h3>{t('Sugestão de x1 (Online)')}</h3>
+      <p className="muted small">{t('Bom x1 e Nível parecido exigem PUMBILITY e maior nível passado próximos. O nível compara o modo em que os dois estão mais perto.')}</p>
+      {[['close', 'Bom x1', 3, 200, 1], ['near', 'Nível parecido', 7, 500, 2]].map(([k, l, pct, min, lv]) => {
+        const x = cfg.x1 || {};
+        const setX = (key, v) => { setSaved(false); setCfg((c) => ({ ...c, x1: { ...(c.x1 || {}), [key]: Number(v) } })); };
+        return (
+          <div key={k} className="cfg-row x1-row">
+            <b>{t(l)}</b>
+            <label className="small">{t('PUMBILITY até (%)')} <input type="number" min="1" max="30" value={x[`${k}_pct`] ?? pct} onChange={(e) => setX(`${k}_pct`, e.target.value)} /></label>
+            <label className="small">{t('mínimo de pontos')} <input type="number" min="0" max="5000" value={x[`${k}_min`] ?? min} onChange={(e) => setX(`${k}_min`, e.target.value)} /></label>
+            <label className="small">{t('níveis de diferença')} <input type="number" min="0" max="5" value={x[`${k}_lv`] ?? lv} onChange={(e) => setX(`${k}_lv`, e.target.value)} /></label>
+          </div>
+        );
+      })}
       <h3>{t('Visitante (sem login)')}</h3>
       <label className="check toggle-row">
         <input type="checkbox" checked={!!cfg.guest?.enabled} onChange={(e) => { setSaved(false); setCfg((c) => ({ ...c, guest: { ...(c.guest || {}), enabled: e.target.checked } })); }} />

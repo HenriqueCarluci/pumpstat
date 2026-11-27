@@ -19,14 +19,17 @@ function niceTicks(min, max, n = 4) {
 }
 
 /** Linha única ao longo do tempo. points: [{ x: ms, y }]. */
-export function LineChart({ points, color = SERIES.gold, fmtY = (v) => v, fmtX, label, step = false }) {
+export function LineChart({ points, color = SERIES.gold, fmtY = (v) => v, fmtX, label, step = false, minSpan = 0 }) {
   const [hover, setHover] = useState(null);
   const ref = useRef(null);
   const geo = useMemo(() => {
     if (!points.length) return null;
     const xs = points.map((p) => p.x), ys = points.map((p) => p.y);
     const x0 = Math.min(...xs), x1 = Math.max(...xs);
-    const ticks = niceTicks(Math.min(...ys), Math.max(...ys));
+    let lo = Math.min(...ys), hi = Math.max(...ys);
+    // faixa mínima: evita eixo com rótulos repetidos quando a linha quase não muda
+    if (hi - lo < minSpan) { const mid = (hi + lo) / 2; lo = mid - minSpan / 2; hi = mid + minSpan / 2; }
+    const ticks = niceTicks(lo, hi);
     const y0 = ticks[0], y1 = ticks[ticks.length - 1];
     const sx = (x) => PAD.l + (x1 === x0 ? (W - PAD.l - PAD.r) / 2 : ((x - x0) / (x1 - x0)) * (W - PAD.l - PAD.r));
     const sy = (y) => PAD.t + (1 - (y - y0) / (y1 - y0 || 1)) * (H - PAD.t - PAD.b);
@@ -53,7 +56,7 @@ export function LineChart({ points, color = SERIES.gold, fmtY = (v) => v, fmtX, 
   return (
     <figure className="mchart" aria-label={label}>
       <svg ref={ref} viewBox={`0 0 ${W} ${H}`} role="img" onPointerMove={onMove} onPointerLeave={() => setHover(null)}>
-        {geo.ticks.map((v) => (
+        {geo.ticks.filter((v, i, a) => i === 0 || fmtY(v) !== fmtY(a[i - 1])).map((v) => (
           <g key={v}>
             <line x1={PAD.l} x2={W - PAD.r} y1={geo.sy(v)} y2={geo.sy(v)} className="grid" />
             <text x={PAD.l - 6} y={geo.sy(v) + 4} className="axis" textAnchor="end">{fmtY(v)}</text>

@@ -180,7 +180,7 @@ Referência: [Fila Pump](https://fila-pump.pages.dev/#/patio-paulista), app da c
 
 ## Online agora (`#/online`)
 - Com o app aberto, cada usuário manda um "heartbeat" a cada 30 s (`heartbeat`); online = visto nos últimos 3 min. Quem abriu a fila de um fliperama nas últimas 3 h aparece como "no mesmo fliperama".
-- Lista (`online_players`): nick, avatar, título, PUMBILITY (Phoenix 2) e maior single/double passado (sem stage break), para todos. Sugestão de x1 por PUMBILITY parecido (±500 = bom x1, ±1500 = nível parecido), sem revelar o número.
+- Lista (`online_players`): nick, avatar, título, PUMBILITY (Phoenix 2) e maior single/double passado (sem stage break), para todos. Sugestão de x1 por PUMBILITY e maior nível passado próximos (padrão: bom x1 = até 3% ou 200 pts e 1 nível; nível parecido = até 7% ou 500 pts e 2 níveis; editável em Admin → Recursos), sem revelar o número.
 - Convite (`send_invite`) com mensagem rápida ou texto (até 140 caracteres). Limites: 1 convite por pessoa a cada 10 min e 10 por hora. O convidado vê um aviso na hora (e notificação do sistema se permitido) e responde "Bora!" ou "Agora não"; quem chamou recebe a resposta.
 - Visibilidade: todos, só amigos ou ninguém (`set_presence_mode`).
 

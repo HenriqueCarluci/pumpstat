@@ -87,11 +87,18 @@ export default function Progress() {
 
   return (
     <div className="page progress">
-      <h2>{t('Seu progresso')}</h2>
-      <div className="filters">
+      <div className="prog-head">
+        <h2>{t('Seu progresso')}</h2>
+        {tab !== 'rival' && (
+          <div className="seg sm" role="group" aria-label={t('Modo')}>
+            {[['S', 'Single'], ['D', 'Double']].map(([m, l]) => <button key={m} type="button" className={mode === m ? 'on' : ''} onClick={() => set('m', m)}>{l}</button>)}
+          </div>
+        )}
+      </div>
+      {version === 'phoenix' && <p className="prog-note small">{t('A Phoenix não recebe jogadas novas: aqui fica o seu histórico até a troca para a Phoenix 2.')}</p>}
+      <div className="filters tabs-scroll">
         <Chips value={tab} onChange={(v) => set('v', v)}
           options={[['evolucao', <>{t('Evolução')}<LockBadge feature="evolution_chart" /></>], ['top', <>{t('Mais jogadas')}<LockBadge feature="player_stats" /></>], ['fracos', <>{t('Pontos fortes e fracos')}<LockBadge feature="weakness" /></>], ['dicas', <>{t('Dicas')}<LockBadge feature="tips" /></>], ['plano', <>{t('Plano de treino')}<LockBadge feature="training_plan" /></>], ...(isOn(plan, 'rival') ? [['rival', <>{t('Rival')}<LockBadge feature="rival" /></>]] : [])]} />
-        {tab !== 'rival' && <Chips value={mode} onChange={(v) => set('m', v)} options={[['S', 'Single'], ['D', 'Double']]} />}
       </div>
       {err && <div className="form-err">{err}</div>}
       {!r && !err && tab !== 'rival' && <p className="empty">{t('Carregando…')}</p>}
@@ -112,45 +119,104 @@ export function Locked({ feature = 'team_report' }) {
 
 function LevelSummary({ lvl, mode }) {
   if (!lvl) return <p className="empty">{t('Passe alguns charts neste modo para começar a análise.')}</p>;
+  const items = [
+    [lvl.ceiling, t('Maior nível passado'), t('o mais alto que você já passou')],
+    [lvl.comfort, t('Nível de conforto'), t('onde você passa 70% ou mais')],
+    [lvl.target, t('Próximo alvo'), t('o nível para treinar agora')],
+  ];
   return (
-    <section className="lvl-summary">
-      <div><span className="muted small">{t('Maior nível passado')}</span><Ball chart={{ mode, level: lvl.ceiling }} size="sm" /></div>
-      <div><span className="muted small">{t('Nível de conforto')}</span><Ball chart={{ mode, level: lvl.comfort }} size="sm" /></div>
-      <div><span className="muted small">{t('Próximo alvo')}</span><Ball chart={{ mode, level: lvl.target }} size="sm" /></div>
+    <section className="card lvl-summary">
+      {items.map(([lv, title, hint]) => (
+        <div key={title}>
+          <Ball chart={{ mode, level: lv }} size="sm" />
+          <b>{title}</b>
+          <small className="muted">{hint}</small>
+        </div>
+      ))}
     </section>
   );
 }
 
 // ---------- Evolução ----------
+const PERIODS = [[30, '30 dias'], [90, '90 dias'], [0, 'Tudo']];
+const DAY_MS = 86400000;
+const fmtDay = (ms) => new Date(ms).toLocaleDateString(locale(), { day: 'numeric', month: 'short' });
+
+/** Diferença com sinal para o cabeçalho dos gráficos. */
+function Delta({ v, fmt = fmtNum }) {
+  if (!v) return <span className="delta flat">{t('sem mudança')}</span>;
+  return <span className={`delta ${v > 0 ? 'up' : 'down'}`}>{v > 0 ? '+' : '−'}{fmt(Math.abs(v))}</span>;
+}
+
+/**
+ * Clears acumulados: o primeiro sync traz de uma vez tudo o que a pessoa já tinha passado. Esse salto vira o ponto de
+ * partida do gráfico (em vez de uma parede no fim), e o cabeçalho mostra quantos vieram de lá.
+ */
+function clearsSeries(timeline) {
+  if (!timeline.length) return { points: [], base: null };
+  const total = timeline[timeline.length - 1].total;
+  let k = 0;
+  timeline.forEach((w, i) => { if (w.added > timeline[k].added) k = i; });
+  const big = total > 0 && timeline[k].added / total >= 0.4;
+  const from = big ? k : 0;
+  return { points: timeline.slice(from), base: big ? { at: timeline[k].at, total: timeline[k].total } : null };
+}
+
 function Evolution({ a, r, mode }) {
   const { data } = useData();
-  const pb = (data.pumbilityHistory || []).map(([at, v]) => ({ x: Date.parse(at), y: Number(v) }));
-  const timeline = clearTimeline(a.attempts, mode);
-  const weeks = playsPerWeek(a.prog, mode);
+  const [days, setDays] = useState(90);
+  const since = days ? Date.now() - days * DAY_MS : 0;
+  const pbAll = (data.pumbilityHistory || []).map(([at, v]) => ({ x: Date.parse(at), y: Number(v) }));
+  const pb = pbAll.filter((p) => p.x >= since);
+  const pbBefore = [...pbAll].reverse().find((p) => p.x < since);
+  const pbNow = pbAll.length ? pbAll[pbAll.length - 1].y : null;
+  const pbStart = pbBefore ? pbBefore.y : pb[0]?.y;
+  const pbFlat = pb.length >= 2 && Math.max(...pb.map((p) => p.y)) - Math.min(...pb.map((p) => p.y)) < 0.5;
+  const lastChange = (() => { for (let i = pbAll.length - 1; i > 0; i--) if (Math.abs(pbAll[i].y - pbAll[i - 1].y) >= 0.5) return pbAll[i].x; return pbAll[0]?.x; })();
+
+  const cl = clearsSeries(clearTimeline(a.attempts, mode));
+  const clPts = cl.points.filter((w) => w.at >= since - 7 * DAY_MS);
+  const clNow = cl.points.length ? cl.points[cl.points.length - 1].total : 0;
+  const clBefore = [...cl.points].reverse().find((w) => w.at < since);
+  const clGain = clNow - (clBefore ? clBefore.total : (cl.base ? cl.base.total : 0));
+
+  const weeks = playsPerWeek(a.prog, mode).filter((w) => w.at >= since - 7 * DAY_MS);
   const lv = r.stats.filter((s) => s.level >= 10);
   return (
     <>
       <LevelSummary lvl={r.lvl} mode={mode} />
 
+      <div className="prog-period">
+        <span className="muted small">{t('Período')}</span>
+        <Chips value={days} onChange={setDays} options={PERIODS.map(([d, l]) => [d, t(l)])} />
+      </div>
+
       <section className="card">
-        <h3>PUMBILITY</h3>
-        {pb.length >= 2 ? (
-          <>
-            <LineChart points={pb} color={SERIES.gold} fmtY={(v) => fmtNum(Math.round(v))} fmtX={fmtMonth} label="PUMBILITY" />
-            <ChartTable head={[t('Data'), 'PUMBILITY']} rows={pb.map((p) => [fmtMonth(p.x), fmtNum(p.y)])} />
-          </>
-        ) : <p className="muted small">{t('O gráfico aparece a partir da segunda sincronização.')}</p>}
+        <div className="chart-head">
+          <h3>PUMBILITY</h3>
+          {pbNow != null && <div className="chart-kpi"><b>{fmtNum(Math.round(pbNow))}</b>{pbStart != null && <Delta v={Math.round(pbNow - pbStart)} />}</div>}
+        </div>
+        {pbAll.length < 2 ? <p className="muted small">{t('O gráfico aparece a partir da segunda sincronização.')}</p>
+          : pbFlat || pb.length < 2 ? (
+            <p className="muted small">{t('Sem mudança no PUMBILITY desde {d}. Bata recordes no seu top 50 para subir.', { d: fmtDay(lastChange) })}</p>
+          ) : (
+            <>
+              <LineChart points={pb} color={SERIES.gold} fmtY={(v) => fmtNum(Math.round(v))} fmtX={fmtMonth} label="PUMBILITY" minSpan={20} />
+              <ChartTable head={[t('Data'), 'PUMBILITY']} rows={pb.map((p) => [fmtMonth(p.x), fmtNum(Math.round(p.y))])} />
+            </>
+          )}
       </section>
 
       <section className="card">
-        <h3>{t('Clears acumulados')}</h3>
-        {timeline.length >= 2 ? (
-          <>
-            <LineChart points={timeline.map((w) => ({ x: w.at, y: w.total, note: t('maior nível: {l}', { l: chartLabel({ mode, level: w.maxLv }) }) }))}
-              color={SERIES.a} fmtY={(v) => fmtNum(v)} fmtX={fmtWeek} step label={t('Clears acumulados')} />
-            <p className="muted tiny">{t('Clears anteriores ao seu primeiro sync aparecem juntos na data em que o PIU Stats os viu pela primeira vez.')}</p>
-          </>
-        ) : <p className="muted small">{t('Ainda não há semanas suficientes para o gráfico.')}</p>}
+        <div className="chart-head">
+          <h3>{t('Clears acumulados')}</h3>
+          <div className="chart-kpi"><b>{fmtNum(clNow)}</b><Delta v={clGain} /></div>
+        </div>
+        {clPts.length >= 2 ? (
+          <LineChart points={clPts.map((w) => ({ x: w.at, y: w.total, note: t('maior nível: {l}', { l: chartLabel({ mode, level: w.maxLv }) }) }))}
+            color={SERIES.a} fmtY={(v) => fmtNum(v)} fmtX={fmtWeek} step label={t('Clears acumulados')} minSpan={4} />
+        ) : <p className="muted small">{t('O gráfico aparece depois de mais uma semana de jogo.')}</p>}
+        {cl.base && <p className="muted tiny">{t('Começa em {d}, no seu primeiro sync, com os {n} clears que você já tinha.', { d: fmtDay(cl.base.at), n: fmtNum(cl.base.total) })}</p>}
       </section>
 
       <section className="card">
@@ -171,7 +237,7 @@ function Evolution({ a, r, mode }) {
               series={[{ name: t('Passou'), color: SERIES.a }, { name: t('Quebrou'), color: SERIES.b }]} label={t('Tentativas por semana')} />
             <p className="muted tiny">{t('O site da Pump guarda só as suas 50 últimas jogadas: sincronize depois de jogar para não perder histórico.')}</p>
           </>
-        ) : <p className="muted small">{t('Nenhuma jogada registrada ainda.')}</p>}
+        ) : <p className="muted small">{t('Nenhuma jogada registrada no período.')}</p>}
       </section>
     </>
   );

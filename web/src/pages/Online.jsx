@@ -55,7 +55,7 @@ export default function Online() {
       {x1.length > 0 && (
         <section>
           <h3 className="ic-row"><Swords size={18} /> {t('Sugestões de x1')}</h3>
-          <p className="muted small">{t('Jogadores online com PUMBILITY parecido com o seu (Phoenix 2).')}</p>
+          <p className="muted small">{t('Jogadores online com PUMBILITY e maior nível passado parecidos com os seus (Phoenix 2).')}</p>
           <div className="online-list">{x1.map((p) => <OnlineRow key={`x-${p.id}`} p={p} open={open === `x-${p.id}`} onToggle={() => setOpen(open === `x-${p.id}` ? null : `x-${p.id}`)} onSent={load} />)}</div>
         </section>
       )}
