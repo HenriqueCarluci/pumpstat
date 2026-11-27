@@ -1735,3 +1735,6 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
   background: var(--panel); font-size: 14px; line-height: 20px; cursor: pointer; }
 .mc-reacts button.mine { border-color: rgba(140, 255, 58, .6); background: rgba(140, 255, 58, .12); }
 .mc-reacts b { font: 700 11px var(--num); color: var(--muted); }
+.cfg-sub { margin: 14px 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.cfg-row select { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; color: var(--text); max-width: 55%; }
+.cfg-row input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--neon); flex: none; }

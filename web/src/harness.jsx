@@ -68,6 +68,7 @@ const FAKE = {
     prev: { day: '2026-11-21', plays: 18, passes: 15, avg_level: 17.4, max_d: 21, max_s: 20 },
     days: [['2026-11-25', 13], ['2026-11-21', 18], ['2026-09-27', 31]] }; })(),
   list_teams: { teams: [], mine: null, pending: null },
+  app_config: { community: { tier_vote_hours: 48, tier_vote_min: 3 } },
   admin_stats: { users: 412, new_7d: 31, active_7d: 188, online: 12, linked: 300, plus: 40, pro: 6, feedback_open: 3, reports_open: 1, banned: 2 },
   admin_staff: [{ id: 'eu', role: 'owner', since: '2026-08-01T00:00:00Z', nickname: 'HENRIQUE', email: 'eu@exemplo.com' },
     { id: 'amigo', role: 'curator', since: '2026-11-20T00:00:00Z', nickname: 'PUMPKING', email: 'pk@exemplo.com' },

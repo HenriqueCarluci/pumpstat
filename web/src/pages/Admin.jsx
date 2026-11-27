@@ -607,6 +607,26 @@ function CommunityConfig() {
       <div className="cfg-row"><span>{t('Mínimo de votos para valer')}</span>
         <input type="number" min={1} max={50} value={c.tier_vote_min ?? 3} onChange={(e) => set('tier_vote_min', Number(e.target.value) || 3)} /></div>
       <p className="muted tiny">{t('Aprova quando há mais votos a favor do que contra e o total chega ao mínimo. Votos só de quem passou o chart.')}</p>
+      <h4 className="cfg-sub">{t('Quem é avisado quando abre uma votação')}</h4>
+      <div className="cfg-row"><span>{t('Avisar')}</span>
+        <select value={c.tier_notify ?? 'cleared'} onChange={(e) => set('tier_notify', e.target.value)}>
+          <option value="cleared">{t('Quem passou o chart')}</option>
+          <option value="reviewers">{t('Só quem avaliou o chart')}</option>
+          <option value="off">{t('Ninguém')}</option>
+        </select></div>
+      {(c.tier_notify ?? 'cleared') === 'cleared' && (
+        <label className="cfg-row"><span>{t('Incluir quem passou o mesmo chart na outra versão (Phoenix / Phoenix 2)')}</span>
+          <input type="checkbox" checked={c.tier_notify_p1 ?? true} onChange={(e) => set('tier_notify_p1', e.target.checked)} /></label>
+      )}
+      {(c.tier_notify ?? 'cleared') !== 'off' && (
+        <>
+          <div className="cfg-row"><span>{t('Só quem sincronizou nos últimos (dias, 0 = todos)')}</span>
+            <input type="number" min={0} max={365} value={c.tier_notify_days ?? 30} onChange={(e) => set('tier_notify_days', Math.max(0, Number(e.target.value) || 0))} /></div>
+          <div className="cfg-row"><span>{t('Máximo de avisos por votação')}</span>
+            <input type="number" min={1} max={5000} value={c.tier_notify_max ?? 300} onChange={(e) => set('tier_notify_max', Number(e.target.value) || 300)} /></div>
+          <p className="muted tiny">{t('Quem avaliou o chart sempre recebe. Os mais ativos vêm primeiro quando passa do máximo. Votar continua valendo só para quem passou o chart nesta versão.')}</p>
+        </>
+      )}
       {err && <div className="form-err">{err}</div>}
       <div className="bm-row"><button className="btn" onClick={save}>{t('Salvar')}</button>{saved && <span className="muted small ic-row"><Check size={14} /> {t('Salvo')}</span>}</div>
     </div>
