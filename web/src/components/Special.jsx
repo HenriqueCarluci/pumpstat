@@ -5,12 +5,12 @@ import { t, tErr } from '../lib/i18n.js';
 import { Check, Zap, Shuffle } from './Icons.jsx';
 
 /** Selos de chart Unique: gimmick (com os tipos) e fora da curva. */
-export function SpecialBadges({ chart: c, compact = false }) {
-  if (!hasGimmick(c) && !isOffCurve(c)) return null;
+export function SpecialBadges({ chart: c, compact = false, gimmick = true }) {
+  if (!(gimmick && hasGimmick(c)) && !isOffCurve(c) && !(!compact && c.special?.note)) return null;
   const types = (c.special.g || []).map((g) => t(GIMMICK_LABEL[g] || g));
   return (
     <>
-      {hasGimmick(c) && (
+      {gimmick && hasGimmick(c) && (
         <span className="tag special gimmick" title={types.join(' · ') || t('Gimmick')}>
           <Zap size={12} /> {t('Gimmick')}{!compact && types.length > 0 && `: ${types.join(' · ')}`}
         </span>

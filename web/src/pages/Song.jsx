@@ -147,7 +147,7 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
     if (!hist) { try { setHist(await chartHistory(c.id)); } catch { setHist({ bests: [], plays: [] }); } }
   };
 
-  // o gimmick já aparece no selo de gimmick do chart; aqui ficam as outras tags com %
+  // gimmick não aparece no card da música (fica na página do chart); aqui ficam as outras tags com %
   const skills = (c.tagBars || []).filter(([x]) => x !== 'gimmick').slice(0, 3);
   return (
     <div id={`chart-${c.id}`} className={`chartcard ${c.score != null ? 'played' : ''} ${focus ? 'focus' : ''}`}>
@@ -170,7 +170,7 @@ function ChartCard({ chart: c, version, other, friends, focus, onReviewed }) {
       <FriendScores list={friends} mine={c} />
 
       <div className="cc-meta">
-        <SpecialBadges chart={c} />
+        <SpecialBadges chart={c} gimmick={false} />
         {tier && tier.id !== 'unknown' && <span className={`tag tier-${tier.id}`}>{t(tier.label)}{c.scoringLevel ? ` · ${c.scoringLevel.toFixed(1)}` : ''}</span>}
         {c.passDifficulty && c.passDifficulty !== 'Unrecorded' && <span className="tag">Clear: {t(DIFF_PT[c.passDifficulty] || c.passDifficulty)}</span>}
         {c.stepArtist && <span className="tag ic-row"><PencilLine size={12} /> {c.stepArtist}</span>}
