@@ -92,10 +92,11 @@ function shape(raw) {
   // faixa de tier de referência (ArcadeStat)
   for (const [chartId, band] of raw.ref || []) { const c = byId.get(chartId); if (c) c.ref = band; }
   // tags de referência (ArcadeStat)
-  for (const [chartId, tags, scores] of raw.tags || []) {
+  for (const [chartId, tags, scores, edited] of raw.tags || []) {
     const c = byId.get(chartId);
     if (!c) continue;
     c.tags = tags || [];
+    c.tagsEdited = !!edited;
     // barrinhas de skill (peso 0–100 das tags mais votadas no ArcadeStat)
     const bars = Object.entries(scores || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
     if (bars.length) c.tagBars = bars;

@@ -818,3 +818,15 @@ Nos {n} charts que {p} passou perto do nível máximo dele, quantos têm cada ta
 Onde mais quebra | Where they break most | Dónde más rompe | 가장 많이 끊기는 곳 | よく落ちるところ | Où il casse le plus | Dove si rompe di più
 {n} chart quebrado nessa faixa | {n} broken chart in this range | {n} chart roto en este rango | 이 구간에서 끊긴 차트 {n}개 | この範囲で落ちた譜面 {n} | {n} chart cassé dans cette tranche | {n} chart rotto in questa fascia
 {n} charts quebrados nessa faixa | {n} broken charts in this range | {n} charts rotos en este rango | 이 구간에서 끊긴 차트 {n}개 | この範囲で落ちた譜面 {n} | {n} charts cassés dans cette tranche | {n} chart rotti in questa fascia
+Esta música não tem o {m}{l} na {v}. | This song has no {m}{l} in {v}. | Esta canción no tiene el {m}{l} en {v}. | 이 곡은 {v}에 {m}{l}이(가) 없어요. | この曲は{v}に{m}{l}がありません。 | Cette chanson n'a pas de {m}{l} dans {v}. | Questa canzone non ha il {m}{l} in {v}.
+Ver os níveis da música nesta versão | See the song's levels in this version | Ver los niveles de la canción en esta versión | 이 버전의 곡 레벨 보기 | このバージョンの曲のレベルを見る | Voir les niveaux de la chanson dans cette version | Vedi i livelli della canzone in questa versione
+Ajuste da equipe: fica por cima dos votos do ArcadeStat e continua valendo quando a base for atualizada. | Team adjustment: overrides the ArcadeStat votes and stays when the data is refreshed. | Ajuste del equipo: queda por encima de los votos de ArcadeStat y sigue valiendo cuando se actualice la base. | 팀 조정: ArcadeStat 투표보다 우선하며 데이터가 갱신돼도 유지돼요. | チームの調整: ArcadeStatの投票より優先され、データ更新後も残ります。 | Ajustement de l'équipe : passe avant les votes d'ArcadeStat et reste après la mise à jour. | Modifica del team: ha la precedenza sui voti di ArcadeStat e resta anche dopo l'aggiornamento.
+Tirar a tag | Remove tag | Quitar la tag | 태그 빼기 | タグを外す | Retirer le tag | Togli il tag
++ Adicionar tag | + Add tag | + Agregar tag | + 태그 추가 | + タグを追加 | + Ajouter un tag | + Aggiungi tag
+Desfazer o ajuste e voltar para as tags do ArcadeStat? | Undo the adjustment and go back to the ArcadeStat tags? | ¿Deshacer el ajuste y volver a las tags de ArcadeStat? | 조정을 취소하고 ArcadeStat 태그로 돌아갈까요? | 調整を取り消してArcadeStatのタグに戻しますか? | Annuler l'ajustement et revenir aux tags d'ArcadeStat ? | Annullare la modifica e tornare ai tag di ArcadeStat?
+Voltar ao ArcadeStat | Back to ArcadeStat | Volver a ArcadeStat | ArcadeStat로 되돌리기 | ArcadeStatに戻す | Revenir à ArcadeStat | Torna ad ArcadeStat
+ajustado pela equipe | adjusted by the team | ajustado por el equipo | 팀이 조정함 | チームが調整 | ajusté par l'équipe | modificato dal team
+Editar tags | Edit tags | Editar tags | 태그 편집 | タグを編集 | Modifier les tags | Modifica tag
+tag desconhecida: % | unknown tag: % | tag desconocida: % | 알 수 없는 태그: % | 不明なタグ: % | tag inconnu : % | tag sconosciuto: %
+tags inválidas | invalid tags | tags inválidas | 잘못된 태그 | 無効なタグ | tags invalides | tag non validi
+chart não encontrado | chart not found | chart no encontrado | 차트를 찾을 수 없어요 | 譜面が見つかりません | chart introuvable | chart non trovato

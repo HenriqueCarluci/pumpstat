@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import TrainingToggle from '../components/TrainingToggle.jsx';
 import { ChartRanking } from './Players.jsx';
 import { FriendScores, useFriendScores } from './Song.jsx';
 import { Ball, fmtDate, Grade, Jacket, Plate, RiseBadge } from '../components/ui.jsx';
-import { chartHistory, rpc } from '../lib/api.js';
-import { chartRating, chartTier, fmtScore, GRADE_ORDER, nextGrade, TIERS } from '../lib/piu.js';
+import { cachedVersion, chartHistory, rpc } from '../lib/api.js';
+import { chartRating, chartTier, fmtScore, GRADE_ORDER, nextGrade, TIERS, VERSIONS } from '../lib/piu.js';
 import { videoUrl } from '../lib/style.js';
 import ChartReviews, { reviewTagLabel } from '../components/ChartReviews.jsx';
 import { SpecialBadges } from '../components/Special.jsx';
 import { isUnique } from '../lib/special.js';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
+import ChartTagsAdmin from '../components/ChartTagsAdmin.jsx';
+import { canAdmin } from '../lib/admin.js';
 import { fmtNum, t, tn } from '../lib/i18n.js';
 import { ChevronLeft, History, PencilLine, Play, Users } from '../components/Icons.jsx';
 import { entitlements } from '../lib/plans.js';
@@ -26,6 +28,7 @@ export default function Chart() {
   const c = data.byId.get(Number(id));
   const friendsOf = useFriendScores(c?.songId, version);
   const [stats, setStats] = useState(null);
+  const [editTags, setEditTags] = useState(false);
   const [hist, setHist] = useState(null);
   const ent = entitlements(plan);
 
@@ -36,7 +39,32 @@ export default function Chart() {
     chartHistory(c.id).then(setHist).catch(() => setHist({ bests: [], plays: [] }));
   }, [c?.id]); // eslint-disable-line
 
-  if (!c) return <div className="page"><p className="empty">{t('Chart não encontrado nesta versão.')}</p><Link to="/musicas">{t('Voltar')}</Link></div>;
+  // trocou a versão da Pump estando num chart: cada versão tem os próprios ids, então procura o mesmo nível da música
+  const lastRef = useRef(null);
+  if (c) lastRef.current = { songId: c.songId, mode: c.mode, level: c.level };
+  let key = lastRef.current;
+  if (!c && !key) {
+    for (const v of Object.keys(VERSIONS)) {
+      if (v === version) continue;
+      const x = cachedVersion(v)?.byId.get(Number(id));
+      if (x) { key = { songId: x.songId, mode: x.mode, level: x.level }; break; }
+    }
+  }
+  const alt = !c && key ? data.charts.find((x) => x.songId === key.songId && x.mode === key.mode && x.level === key.level) : null;
+  useEffect(() => { if (alt) nav(`/chart/${alt.id}`, { replace: true }); }, [alt?.id]); // eslint-disable-line
+
+  if (!c) {
+    const songHere = key && data.songs.find((s) => s.id === key.songId);
+    if (alt) return <div className="page"><p className="empty">{t('Carregando…')}</p></div>;
+    return (
+      <div className="page">
+        <p className="empty">{songHere
+          ? t('Esta música não tem o {m}{l} na {v}.', { m: key.mode, l: key.level, v: VERSIONS[version]?.name || version })
+          : t('Chart não encontrado nesta versão.')}</p>
+        {songHere ? <Link className="btn ghost" to={`/musica/${songHere.id}`}>{t('Ver os níveis da música nesta versão')}</Link> : <Link to="/musicas">{t('Voltar')}</Link>}
+      </div>
+    );
+  }
 
   const song = c.song;
   const tier = TIERS.find((x) => x.id === chartTier(c));
@@ -122,10 +150,14 @@ export default function Chart() {
         {stats && stats.players == null && <p className="muted small">{t('Entre na sua conta para ver os números da comunidade.')}</p>}
       </section>
 
-      {(c.tagBars || commTags.length > 0) && (
+      {(c.tagBars || commTags.length > 0 || canAdmin(plan, 'charts')) && (
         <section className="card cp-tags">
-          <h3>{t('Tags')}</h3>
-          {c.tagBars && (
+          <div className="row-between">
+            <h3>{t('Tags')}{c.tagsEdited && <small className="muted tiny"> · {t('ajustado pela equipe')}</small>}</h3>
+            {canAdmin(plan, 'charts') && !editTags && <button className="link small" onClick={() => setEditTags(true)}>{t('Editar tags')}</button>}
+          </div>
+          {editTags && <ChartTagsAdmin chart={c} onSaved={reload} onClose={() => setEditTags(false)} />}
+          {!editTags && c.tagBars && (
             <div className="cp-skill">
               {(ent.can('style_full') ? c.tagBars : c.tagBars.slice(0, 3)).map(([x, v]) => (
                 <div key={x} className="cp-skill-row"><span>{t(chartTagLabel(x))}</span><i><b style={{ width: `${v}%`, background: tagColor(x) }} /></i><em>{v}%</em></div>

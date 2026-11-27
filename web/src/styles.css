@@ -1557,3 +1557,10 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .team-row .admin-user-info { display: flex; flex-direction: column; min-width: 0; }
 .team-row .admin-user-info b, .team-row .admin-user-info small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .team-row select { max-width: 150px; }
+
+/* editor de tags da equipe */
+.tag-admin { display: grid; gap: 8px; margin: 6px 0 12px; }
+.tag-admin-row { display: grid; grid-template-columns: minmax(90px, 30%) 1fr 56px 28px; align-items: center; gap: 8px; }
+.tag-admin-row .ta-name { font-size: 14px; border-left: 3px solid var(--c); padding-left: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tag-admin-row input[type=number] { width: 56px; padding: 4px 6px; }
+.tag-admin-row input[type=range] { width: 100%; accent-color: var(--c, #58a6f0); }
