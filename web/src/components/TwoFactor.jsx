@@ -7,7 +7,6 @@ import { quizPending, useQuiz } from '../lib/quiz.js';
 import { useTour } from '../lib/tour.js';
 import { t, tErr } from '../lib/i18n.js';
 import { Check, Copy, ExternalLink, Logo, ShieldCheck, X } from './Icons.jsx';
-import { isNative, openExternal } from '../lib/native.js';
 
 const digits = (v) => String(v || '').replace(/\D/g, '').slice(0, 6);
 
@@ -54,9 +53,10 @@ export function MfaLogin({ session, onDone }) {
   );
 }
 
-// otpauth:// abre o app autenticador instalado (Google Authenticator, Microsoft Authenticator, 1Password…)
+// otpauth:// abre o app autenticador instalado (Google Authenticator, Microsoft Authenticator, 1Password…).
+// No app Android a webview manda esquemas desconhecidos para o sistema; a aba do navegador (Browser.open) não abriria.
 function openUri(uri) {
-  if (isNative) openExternal(uri); else window.location.href = uri;
+  window.location.href = uri;
 }
 
 /** QR code + chave + código: cadastra o autenticador e já deixa a sessão verificada. */
