@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { t } from '../lib/i18n.js';
 
 /**
- * Mapa dos fliperamas com Pump (Leaflet + mapa escuro da CARTO/OpenStreetMap, sem chave de API).
+ * Mapa dos fliperamas com Pump (Leaflet + OpenStreetMap, sem chave de API; escurecido por CSS).
  * Com a sua posição, centraliza em você e nos locais mais perto; sem ela, mostra todos.
  */
 export default function VenueMap({ venues, me, focus }) {
@@ -19,9 +19,9 @@ export default function VenueMap({ venues, me, focus }) {
       if (!alive || !box.current) return;
       if (!map.current) {
         map.current = L.map(box.current, { zoomControl: true, attributionControl: true, scrollWheelZoom: false });
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19, subdomains: 'abcd',
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19, className: 'vm-tiles',
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         }).addTo(map.current);
       }
       if (layer.current) layer.current.remove();

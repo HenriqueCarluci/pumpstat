@@ -1638,3 +1638,4 @@ a.mt-row:hover { border-color: rgba(140, 255, 58, .45); }
 .vm-pin.near span { background: var(--neon); box-shadow: 0 0 0 2px #8cff3a66, 0 0 14px var(--neon); }
 .vm-pin.me span { background: #fff; box-shadow: 0 0 0 4px #ffffff44, 0 0 16px #fff; }
 @media (min-width: 900px) { .venue-map { height: 440px; } }
+.venue-map .vm-tiles { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9) saturate(.6); }
