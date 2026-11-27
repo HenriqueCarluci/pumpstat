@@ -95,7 +95,7 @@ export function SearchDialog({ onClose }) {
 
   const results = useMemo(() => {
     const n = norm(q.trim());
-    const pages = sections.flatMap((s) => s.items).concat([{ to: '/ajustes', label: 'Ajustes' }])
+    const pages = sections.flatMap((s) => s.items).concat([{ to: '/ajustes', label: 'Ajustes' }, { to: '/novidades', label: 'Novidades' }])
       .filter((x) => !n || norm(t(x.label)).includes(n)).slice(0, n ? 4 : 6)
       .map((x) => ({ kind: 'page', key: `p${x.to}`, to: x.to, label: t(x.label), icon: x.icon }));
     const songs = n.length >= 2 ? data.songs.filter((s) => norm(s.title).includes(n) || norm(s.artist).includes(n))

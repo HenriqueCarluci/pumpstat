@@ -7,7 +7,9 @@ import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
 import { fmtNum, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
-import { PLAN_LABEL, previewPlan, setPreviewPlan } from '../lib/plans.js';
+import { PLAN_LABEL } from '../lib/plans.js';
+import { TestMode } from '../components/PlanLock.jsx';
+import ReleaseNotesAdmin from './ReleaseNotesAdmin.jsx';
 import { ADMIN_ROLES, canAdmin, roleLabel } from '../lib/admin.js';
 import { PlanMatrix } from './AdminExtra.jsx';
 import { Chips } from './Songs.jsx';
@@ -22,14 +24,15 @@ export default function Admin() {
   const [params] = useSearchParams();
   const tabs = [['health', 'Monitoramento', 'stats'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
     ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
-    ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
+    ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['notes', 'Novidades', 'config'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
   if (!plan?.admin) return <div className="page"><p className="empty">{t('só administradores')}</p></div>;
   const shown = tabs.some(([id]) => id === tab) ? tab : tabs[0]?.[0];
   return (
     <div className="page admin">
       <h2>{t('Administração')}</h2>
-      <div className="admin-top"><p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p><PreviewAs /></div>
+      <div className="admin-top"><p className="muted small admin-role ic-row"><ShieldCheck size={14} /> {t('Seu perfil:')} <b>{t(roleLabel(plan.admin_role))}</b></p></div>
+      <section className="card"><TestMode /></section>
       <div className="admin-layout">
       <nav className="admin-nav" aria-label={t('Seções da administração')}>
         <Chips value={shown} onChange={setTab} options={tabs.map(([id, l]) => [id, t(l)])} />
@@ -47,6 +50,7 @@ export default function Admin() {
       {shown === 'ads' && <AdsConfig />}
       {shown === 'challenges' && <ChallengesAdmin />}
       {shown === 'missions' && <MissionsAdmin />}
+      {shown === 'notes' && <ReleaseNotesAdmin />}
       {shown === 'features' && <FeatureToggles />}
       </div>
       </div>
@@ -390,22 +394,6 @@ function PlansConfig() {
 }
 
 /** Admin: ver o app como Grátis, Plus ou Pro (cadeados e limites aplicados só para você). */
-function PreviewAs() {
-  const cur = previewPlan() || '';
-  const change = (v) => { setPreviewPlan(v || null); window.location.reload(); };
-  return (
-    <div className="preview-as small">
-      <span className="muted">{t('Ver o app como')}</span>
-      <select value={cur} onChange={(e) => change(e.target.value)}>
-        <option value="">{t('Administrador (tudo liberado)')}</option>
-        <option value="free">{t('Grátis')}</option>
-        <option value="plus">Plus</option>
-        <option value="pro">Pro</option>
-      </select>
-    </div>
-  );
-}
-
 function FragmentRow({ label, children }) {
   return <><span className="cfg-label">{label}</span>{children}</>;
 }

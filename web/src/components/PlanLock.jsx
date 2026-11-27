@@ -5,7 +5,8 @@ import { useData } from '../App.jsx';
 import { entitlements, PLAN_LABEL, setPreviewPlan } from '../lib/plans.js';
 import { isNative } from '../lib/native.js';
 import { t } from '../lib/i18n.js';
-import { Crown, Lock } from './Icons.jsx';
+import { Crown, FlaskConical, Lock } from './Icons.jsx';
+import { useEffect, useState } from 'react';
 
 const planName = (p) => PLAN_LABEL[p] || p;
 
@@ -54,15 +55,73 @@ export default function PlanLock({ feature, title, children, preview, compact = 
   );
 }
 
-/** Faixa no topo quando o admin está vendo o app como outro plano. */
+const PLANS = [['free', 'Grátis'], ['plus', 'Plus'], ['pro', 'Pro']];
+const DURATIONS = [[30, '30 min'], [60, '1 h'], [240, '4 h'], [1440, '24 h']];
+
+function useLeft(until) {
+  const [, tick] = useState(0);
+  useEffect(() => { if (!until) return undefined; const id = setInterval(() => tick((n) => n + 1), 30000); return () => clearInterval(id); }, [until]);
+  if (!until) return '';
+  const min = Math.max(0, Math.round((new Date(until) - new Date()) / 60000));
+  return min >= 60 ? `${Math.floor(min / 60)} h ${String(min % 60).padStart(2, '0')}` : `${min} min`;
+}
+
+/**
+ * Modo de teste do admin: simula um plano por um tempo (no app e no servidor), sem mudar a assinatura nem o perfil
+ * de administração. Expira sozinho.
+ */
+export function TestMode({ compact = false }) {
+  const { plan } = useData();
+  const ent = entitlements(plan);
+  const [pick, setPick] = useState(ent.preview || 'free');
+  const [mins, setMins] = useState(60);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const left = useLeft(ent.previewUntil);
+  if (!plan?.admin) return null;
+  const go = async (p, m) => {
+    setBusy(true); setErr('');
+    try { await setPreviewPlan(p, m); } catch (e) { setErr(e.message); setBusy(false); }
+  };
+  return (
+    <div className={`test-mode ${compact ? 'compact' : ''}`}>
+      <div className="tm-head">
+        <b className="ic-row"><FlaskConical size={15} /> {t('Modo de teste')}</b>
+        {ent.preview
+          ? <span className="tag plus">{t('Simulando {p} · faltam {t}', { p: t(planName(ent.preview)), t: left })}</span>
+          : <span className="muted small">{t('Desligado: você vê tudo liberado')}</span>}
+      </div>
+      {!compact && <p className="muted small">{t('Veja o app como Grátis, Plus ou Pro, com cadeados e limites valendo também no servidor. Sua assinatura e seu perfil de administração não mudam, e o teste acaba sozinho.')}</p>}
+      <div className="tm-row">
+        <div className="chips">{PLANS.map(([id, l]) => <button key={id} type="button" className={pick === id ? 'on' : ''} onClick={() => setPick(id)}>{t(l)}</button>)}</div>
+        <select value={mins} onChange={(e) => setMins(Number(e.target.value))} aria-label={t('Duração do teste')}>
+          {DURATIONS.map(([m, l]) => <option key={m} value={m}>{l}</option>)}
+        </select>
+        <button type="button" className="btn" disabled={busy} onClick={() => go(pick, mins)}>{ent.preview ? t('Trocar') : t('Começar teste')}</button>
+        {ent.preview && <button type="button" className="btn ghost" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>}
+      </div>
+      {err && <div className="form-err">{err}</div>}
+    </div>
+  );
+}
+
+/** Faixa no topo enquanto o admin está no modo de teste: troca rápida de plano e saída. */
 export function PreviewBanner() {
   const { plan } = useData();
   const ent = entitlements(plan);
+  const left = useLeft(ent.previewUntil);
+  const [busy, setBusy] = useState(false);
   if (!ent.preview) return null;
+  const go = async (p) => { setBusy(true); try { await setPreviewPlan(p, 60); } catch { setBusy(false); } };
   return (
-    <div className="preview-banner">
-      {t('Você está vendo o app como {p}.', { p: ent.preview === 'free' ? t('Grátis') : planName(ent.preview) })}
-      <button type="button" className="link" onClick={() => { setPreviewPlan(null); window.location.reload(); }}>{t('Voltar ao normal')}</button>
+    <div className="preview-banner" role="status">
+      <span className="ic-row"><FlaskConical size={14} /> {t('Modo de teste: {p}', { p: ent.preview === 'free' ? t('Grátis') : planName(ent.preview) })} · {t('faltam {t}', { t: left })}</span>
+      <span className="pb-actions">
+        {PLANS.filter(([id]) => id !== ent.preview).map(([id, l]) => (
+          <button key={id} type="button" className="link" disabled={busy} onClick={() => go(id)}>{t('Ver como {p}', { p: t(l) })}</button>
+        ))}
+        <button type="button" className="link" disabled={busy} onClick={() => go(null)}>{t('Sair do teste')}</button>
+      </span>
     </div>
   );
 }

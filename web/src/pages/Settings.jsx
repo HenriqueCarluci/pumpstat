@@ -17,6 +17,8 @@ import { t, tErr } from '../lib/i18n.js';
 import LangPicker from '../components/LangPicker.jsx';
 import Feedback from '../components/Feedback.jsx';
 import TeamPicker from '../components/TeamPicker.jsx';
+import { NotesCard } from '../components/ReleaseNotes.jsx';
+import { TestMode } from '../components/PlanLock.jsx';
 
 export default function Settings() {
   const { data, version, reload, session, plan } = useData();
@@ -58,7 +60,10 @@ export default function Settings() {
             <Link className="btn ghost" to="/planos">{t('Ver planos')}</Link>
           </div>
         )}
+        {plan?.admin && <TestMode compact />}
       </section>}
+
+      <NotesCard />
 
       <section className="card tour-settings">
         <h3 className="ic-row"><Sparkles size={18} /> {t('Tutorial guiado')}</h3>

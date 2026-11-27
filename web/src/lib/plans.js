@@ -1,3 +1,5 @@
+import { rpc } from './api.js';
+
 // Planos Grátis / Plus / Pro. A configuração (recursos, limites, preços) vem do banco e é editada pelo admin.
 // Enquanto "enforce" estiver desligado (fase de desenvolvimento), todo mundo tem tudo liberado.
 export const PLAN_ORDER = ['free', 'plus', 'pro'];
@@ -62,18 +64,23 @@ export const isOn = (plan, id) => plan?.config?.toggles?.[id] !== false;
 
 export const rank = (p) => Math.max(0, PLAN_ORDER.indexOf(p || 'free'));
 
-const PREVIEW_KEY = 'pumpstat:preview-plan';
-/** Admin: ver o app como um plano (com a cobrança "ligada" só para ele), para conferir cadeados e limites. */
-export function previewPlan() { try { return localStorage.getItem(PREVIEW_KEY) || null; } catch { return null; } }
-export function setPreviewPlan(p) {
-  try { if (p) localStorage.setItem(PREVIEW_KEY, p); else localStorage.removeItem(PREVIEW_KEY); } catch { /* ignora */ }
-  window.dispatchEvent(new Event('pumpstat:preview-plan'));
+/** Modo de teste do admin: plano simulado (vem do servidor, com prazo). Não muda a assinatura de verdade. */
+export function previewPlan(plan) {
+  const p = plan?.preview;
+  if (!plan?.admin || !p?.plan) return null;
+  return !p.expires_at || new Date(p.expires_at) > new Date() ? p.plan : null;
+}
+/** Liga (plano + minutos) ou desliga (null) o modo de teste. O servidor também passa a aplicar os limites do plano. */
+export async function setPreviewPlan(p, minutes = 60) {
+  await rpc('admin_set_preview', { p_plan: p || null, p_minutes: minutes });
+  try { localStorage.removeItem('pumpstat:preview-plan'); } catch { /* ignora */ }
+  window.location.reload();
 }
 
 /** O que o usuário pode usar, a partir de my_plan(). */
 export function entitlements(plan) {
   const cfg = plan?.config || {};
-  const preview = plan?.admin ? previewPlan() : null;
+  const preview = previewPlan(plan);
   const enforce = !!cfg.enforce || !!preview;
   const mine = preview || plan?.plan || 'free';
   const bypass = !!plan?.admin && !preview;
@@ -88,7 +95,7 @@ export function entitlements(plan) {
     const v = cfg.limits?.[mine]?.[key] ?? LIMIT_DEFAULTS[mine]?.[key];
     return v == null || v === '' ? null : Number(v);
   };
-  return { plan: mine, enforce, preview, showPlans: !!cfg.show_plans || !!plan?.admin, can, need, limit, config: cfg };
+  return { plan: mine, enforce, preview, previewUntil: preview ? plan.preview.expires_at : null, showPlans: !!cfg.show_plans || !!plan?.admin, can, need, limit, config: cfg };
 }
 
 /** Preço de lançamento (os primeiros N meses) de uma região, se houver. */

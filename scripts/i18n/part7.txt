@@ -1159,3 +1159,43 @@ Meu Time e cadastro de time | My Team and team registration | Mi equipo y regist
 Votações de tier e desafios do mês | Tier votes and monthly challenges | Votaciones de tier y desafíos del mes | 티어 투표와 월간 챌린지 | ティア投票と月間チャレンジ | Votes de tier et défis du mois | Votazioni di tier e sfide del mese
 Missões da semana, pontos e selos | Weekly missions, points and badges | Misiones de la semana, puntos e insignias | 주간 미션, 포인트, 배지 | 週間ミッション、ポイント、バッジ | Missions de la semaine, points et badges | Missioni della settimana, punti e badge
 Site no computador e busca | Desktop site and search | Sitio en la computadora y búsqueda | PC 사이트와 검색 | PCサイトと検索 | Site sur ordinateur et recherche | Sito su computer e ricerca
+Modo de teste | Test mode | Modo de prueba | 테스트 모드 | テストモード | Mode test | Modalità test
+Simulando {p} · faltam {t} | Simulating {p} · {t} left | Simulando {p} · faltan {t} | {p} 시뮬레이션 · {t} 남음 | {p}をシミュレーション中・残り{t} | Simulation {p} · reste {t} | Simulazione {p} · mancano {t}
+Desligado: você vê tudo liberado | Off: you see everything unlocked | Apagado: ves todo liberado | 꺼짐: 모든 기능이 열려 있습니다 | オフ:すべて解放された状態で表示 | Désactivé : vous voyez tout débloqué | Disattivato: vedi tutto sbloccato
+Veja o app como Grátis, Plus ou Pro, com cadeados e limites valendo também no servidor. Sua assinatura e seu perfil de administração não mudam, e o teste acaba sozinho. | See the app as Free, Plus or Pro, with locks and limits also applied on the server. Your subscription and admin role don't change, and the test ends on its own. | Mira la app como Gratis, Plus o Pro, con candados y límites aplicados también en el servidor. Tu suscripción y tu perfil de administración no cambian, y la prueba termina sola. | 무료, Plus, Pro로 앱을 확인하세요. 잠금과 한도는 서버에도 적용됩니다. 구독과 관리자 권한은 바뀌지 않으며 테스트는 자동으로 끝납니다. | 無料・Plus・Proとしてアプリを確認できます。ロックと上限はサーバーにも適用されます。サブスクリプションと管理者権限は変わらず、テストは自動で終了します。 | Voyez l'app en Gratuit, Plus ou Pro, avec cadenas et limites appliqués aussi sur le serveur. Votre abonnement et votre rôle d'admin ne changent pas, et le test s'arrête tout seul. | Guarda l'app come Gratis, Plus o Pro, con lucchetti e limiti applicati anche sul server. Il tuo abbonamento e il tuo ruolo di amministratore non cambiano e il test finisce da solo.
+Duração do teste | Test duration | Duración de la prueba | 테스트 시간 | テスト時間 | Durée du test | Durata del test
+Começar teste | Start test | Empezar prueba | 테스트 시작 | テスト開始 | Commencer le test | Inizia il test
+Sair do teste | Exit test | Salir de la prueba | 테스트 종료 | テストを終了 | Quitter le test | Esci dal test
+Modo de teste: {p} | Test mode: {p} | Modo de prueba: {p} | 테스트 모드: {p} | テストモード:{p} | Mode test : {p} | Modalità test: {p}
+faltam {t} | {t} left | faltan {t} | {t} 남음 | 残り{t} | reste {t} | mancano {t}
+Ver como {p} | View as {p} | Ver como {p} | {p}로 보기 | {p}で表示 | Voir en {p} | Vedi come {p}
+Novidades | What's new | Novedades | 새 소식 | 新着情報 | Nouveautés | Novità
+{n} novas | {n} new | {n} nuevas | 새 소식 {n}개 | 新着{n}件 | {n} nouvelles | {n} nuove
+Ver tudo | See all | Ver todo | 모두 보기 | すべて見る | Tout voir | Vedi tutto
+{n} lançamentos a caminho | {n} releases on the way | {n} lanzamientos en camino | 출시 예정 {n}개 | 近日公開{n}件 | {n} nouveautés en route | {n} novità in arrivo
+{n} novidades no app | {n} new things in the app | {n} novedades en la app | 앱 새 소식 {n}개 | アプリの新着{n}件 | {n} nouveautés dans l'app | {n} novità nell'app
+Novidade | New | Novedad | 새 소식 | 新着 | Nouveauté | Novità
+Dispensar | Dismiss | Descartar | 닫기 | 閉じる | Ignorer | Ignora
+O que chegou no PIU Stats e o que está a caminho. | What's arrived in PIU Stats and what's on the way. | Lo que llegó a PIU Stats y lo que está en camino. | PIU Stats에 새로 나온 기능과 곧 나올 기능입니다. | PIU Statsに追加されたものと近日公開のもの。 | Ce qui est arrivé dans PIU Stats et ce qui arrive. | Cosa è arrivato su PIU Stats e cosa sta arrivando.
+Lançados | Released | Lanzados | 출시됨 | リリース済み | Sortis | Rilasciati
+Próximos | Coming up | Próximos | 예정 | 近日公開 | À venir | In arrivo
+Nada anunciado por enquanto. | Nothing announced yet. | Nada anunciado por ahora. | 아직 발표된 것이 없습니다. | まだ発表はありません。 | Rien d'annoncé pour l'instant. | Ancora niente di annunciato.
+Nenhuma novidade ainda. | No news yet. | Ninguna novedad todavía. | 아직 새 소식이 없습니다. | まだ新着はありません。 | Aucune nouveauté pour l'instant. | Ancora nessuna novità.
+Planos podem mudar: a ordem e as datas não são promessa. | Plans may change: order and dates are not a promise. | Los planes pueden cambiar: el orden y las fechas no son una promesa. | 계획은 바뀔 수 있으며 순서와 날짜는 약속이 아닙니다. | 予定は変わることがあり、順番や日付は確約ではありません。 | Les projets peuvent changer : l'ordre et les dates ne sont pas une promesse. | I piani possono cambiare: ordine e date non sono una promessa.
+Novidades do app | App news | Novedades de la app | 앱 새 소식 | アプリの新着情報 | Nouveautés de l'app | Novità dell'app
+Nova | New | Nueva | 새로 만들기 | 新規 | Nouvelle | Nuova
+Aparecem em Ajustes → Novidades e num aviso no início para quem ainda não viu. Rascunhos ficam só aqui. | Shown in Settings → What's new and in a notice on the home screen for anyone who hasn't seen them. Drafts stay here only. | Aparecen en Ajustes → Novedades y en un aviso en el inicio para quien aún no las vio. Los borradores quedan solo aquí. | 설정 → 새 소식과, 아직 보지 않은 사람의 홈 화면 알림에 표시됩니다. 초안은 여기에만 남습니다. | 設定 → 新着情報と、まだ見ていない人のホーム画面のお知らせに表示されます。下書きはここだけに残ります。 | Affichées dans Réglages → Nouveautés et dans un avis sur l'accueil pour qui ne les a pas encore vues. Les brouillons restent ici. | Compaiono in Impostazioni → Novità e in un avviso nella home per chi non le ha ancora viste. Le bozze restano solo qui.
+rascunho | draft | borrador | 초안 | 下書き | brouillon | bozza
+Apagar esta novidade? Não dá para desfazer. | Delete this item? This can't be undone. | ¿Borrar esta novedad? No se puede deshacer. | 이 소식을 삭제할까요? 되돌릴 수 없습니다. | このお知らせを削除しますか?元に戻せません。 | Supprimer cette nouveauté ? Impossible d'annuler. | Eliminare questa novità? Non si può annullare.
+Lançado | Released | Lanzado | 출시됨 | リリース済み | Sorti | Rilasciato
+Data do lançamento | Release date | Fecha de lanzamiento | 출시일 | リリース日 | Date de sortie | Data di rilascio
+Ordem (menor aparece primeiro) | Order (lower shows first) | Orden (el menor aparece primero) | 순서 (작을수록 먼저) | 順番(小さいほど先に表示) | Ordre (le plus petit d'abord) | Ordine (il più basso compare prima)
+Título (obrigatório) | Title (required) | Título (obligatorio) | 제목 (필수) | タイトル(必須) | Titre (obligatoire) | Titolo (obbligatorio)
+Título (opcional; sem ele vale o português) | Title (optional; Portuguese is used if empty) | Título (opcional; sin él se usa el portugués) | 제목 (선택, 비우면 포르투갈어 사용) | タイトル(任意、空欄ならポルトガル語) | Titre (facultatif ; sinon le portugais) | Titolo (facoltativo; altrimenti il portoghese)
+O que muda para quem usa (curto e direto) | What changes for users (short and direct) | Qué cambia para quien usa (corto y directo) | 사용자에게 무엇이 바뀌는지 (짧고 명확하게) | 使う人にとって何が変わるか(短く明確に) | Ce qui change pour les utilisateurs (court et direct) | Cosa cambia per chi usa l'app (breve e diretto)
+Rascunho (não aparece no app) | Draft (not shown in the app) | Borrador (no aparece en la app) | 초안 (앱에 표시 안 됨) | 下書き(アプリに表示しない) | Brouillon (pas affiché dans l'app) | Bozza (non compare nell'app)
+escreva o título em português | write the title in Portuguese | escribe el título en portugués | 포르투갈어 제목을 입력하세요 | ポルトガル語のタイトルを入力してください | écrivez le titre en portugais | scrivi il titolo in portoghese
+situação inválida | invalid status | estado inválido | 잘못된 상태 | 無効な状態 | statut invalide | stato non valido
+tipo inválido | invalid type | tipo inválido | 잘못된 유형 | 無効な種類 | type invalide | tipo non valido
+novidade não encontrada | item not found | novedad no encontrada | 소식을 찾을 수 없습니다 | お知らせが見つかりません | nouveauté introuvable | novità non trovata
+plano inválido | invalid plan | plan inválido | 잘못된 요금제 | 無効なプラン | forfait invalide | piano non valido

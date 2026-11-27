@@ -1,4 +1,5 @@
 import AdSlot from '../components/AdSlot.jsx';
+import { NewsBanner } from '../components/ReleaseNotes.jsx';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
@@ -71,6 +72,7 @@ export default function Home() {
             </div>
             <ChevronRight size={18} className="profile-go" />
           </Link>
+          <NewsBanner />
         </div>
         <div className="h-blk o2">
           <TierCard version={version} points={p?.pumbility ?? stats.pb.total} estimated={stats.pb.total} history={data.pumbilityHistory} charts={data.charts} />

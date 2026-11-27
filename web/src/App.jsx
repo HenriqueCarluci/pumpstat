@@ -42,6 +42,7 @@ import DayReport from './pages/DayReport.jsx';
 import Tour from './components/Tour.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
+import ReleaseNotes from './pages/ReleaseNotes.jsx';
 import { t, tErr } from './lib/i18n.js';
 import { Bell, HomeIcon, LayoutGrid, ListOrdered, Logo, Music2, Search, SettingsIcon } from './components/Icons.jsx';
 import Challenges from './pages/Challenges.jsx';
@@ -251,6 +252,7 @@ function Shell() {
             <Route path="/time" element={<MyTeam />} />
             <Route path="/dia" element={<DayReport />} />
             <Route path="/dia/:day" element={<DayReport />} />
+            <Route path="/novidades" element={<ReleaseNotes />} />
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />
