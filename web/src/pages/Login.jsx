@@ -66,7 +66,7 @@ export default function Login({ notice }) {
         {guestOn && <button type="button" className="btn ghost wide guest-queue" onClick={() => { window.location.hash = '#/tier'; setGuest(true); }}><LayoutGrid size={17} /> {t('Ver o tier sem conta')}</button>}
         <a className="btn ghost wide guest-queue" href="#/fila"><ListOrdered size={17} /> {t('Entrar na fila como convidado')}</a>
         <p className="muted small center guest-hint">{t('Sem conta: veja as filas dos fliperamas e entre só com o seu nome.')}</p>
-        <a className="link small privacy-link" href="#/privacidade">{t('Política de privacidade')}</a>
+        <p className="small center privacy-link"><a className="link" href="/sobre/">{t('Sobre o PIU Stats')}</a> · <a className="link" href="#/privacidade">{t('Política de privacidade')}</a></p>
         <div className="login-links">
           {mode !== 'in' && <button className="link" onClick={() => setMode('in')}>{t('Já tenho conta')}</button>}
           {mode !== 'up' && <button className="link" onClick={() => setMode('up')}>{t('Criar conta')}</button>}
