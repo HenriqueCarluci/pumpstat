@@ -10,14 +10,37 @@ function jwtSub(t) {
   try { return JSON.parse(atob(t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).sub || null; } catch { return null; }
 }
 // a sessão leva user.id (o "sub" do token) para as telas saberem quem está logado
-const withUser = (s) => (s && s.access_token && !s.user?.id ? { ...s, user: { id: jwtSub(s.access_token), email: s.email } } : s);
+// declaração de função (e não const): read() roda na carga do módulo, antes desta linha. Com const, read() caía
+// no try/catch e devolvia null, e o app abria sempre deslogado.
+function withUser(s) {
+  return s && s.access_token && !s.user?.id ? { ...s, user: { id: jwtSub(s.access_token), email: s.email } } : s;
+}
 function read() {
   try { return withUser(JSON.parse(localStorage.getItem(STORE) || 'null')); } catch { return null; }
 }
+// O cache de dados das versões é grande. Se o armazenamento do aparelho encher, a sessão não pode ficar de fora:
+// apaga o cache de dados e grava de novo (sem isso o login sumia ao fechar o app, sobretudo no iPhone).
+function persist(s) {
+  if (!s) { try { localStorage.removeItem(STORE); } catch { /* ignore */ } return; }
+  const text = JSON.stringify(s);
+  try { localStorage.setItem(STORE, text); return; } catch { /* cheio: libera espaço abaixo */ }
+  try {
+    Object.keys(localStorage).filter((k) => k.startsWith('pumpstat:data:') || k.startsWith('pumpstat:prog:')).forEach((k) => localStorage.removeItem(k));
+    localStorage.setItem(STORE, text);
+  } catch { /* sem armazenamento: a sessão fica só na memória */ }
+}
 function save(s) {
   session = s;
-  try { s ? localStorage.setItem(STORE, JSON.stringify(s)) : localStorage.removeItem(STORE); } catch { /* ignore */ }
+  persist(s);
   listeners.forEach((fn) => fn(s));
+}
+// outra aba (ou o app e o site no mesmo aparelho) renovou ou saiu: acompanha, sem gravar de novo
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (e) => {
+    if (e.key !== STORE) return;
+    session = read();
+    listeners.forEach((fn) => fn(session));
+  });
 }
 export const getSession = () => session;
 export const onSession = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
@@ -29,7 +52,11 @@ async function call(path, body) {
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(translate(data.error_description || data.msg || data.message || `Erro ${res.status}`));
+  if (!res.ok) {
+    const err = new Error(translate(data.error_description || data.msg || data.message || `Erro ${res.status}`));
+    err.status = res.status;
+    throw err;
+  }
   return data;
 }
 
@@ -87,9 +114,25 @@ export async function accessToken() {
   if (!session) return null;
   if (session.expires_at - 60 > Date.now() / 1000) return session.access_token;
   if (!refreshing) {
-    refreshing = call('token?grant_type=refresh_token', { refresh_token: session.refresh_token })
+    // outra aba pode já ter renovado (o refresh token só vale uma vez): usa o que estiver gravado, se for mais novo
+    const disk = read();
+    if (disk?.refresh_token && disk.refresh_token !== session.refresh_token && disk.expires_at >= session.expires_at) {
+      session = disk;
+      if (session.expires_at - 60 > Date.now() / 1000) return session.access_token;
+    }
+    const used = session.refresh_token;
+    refreshing = call('token?grant_type=refresh_token', { refresh_token: used })
       .then(store)
-      .catch(() => { save(null); return null; })
+      .catch((e) => {
+        // só sai da conta quando o servidor recusa o token; sem internet (app acordando, rede caindo) mantém o login
+        if (e.status === 400 || e.status === 401 || e.status === 403) {
+          const now = read();
+          if (now?.refresh_token && now.refresh_token !== used) { session = now; return now; }
+          save(null);
+          return null;
+        }
+        return session;
+      })
       .finally(() => { refreshing = null; });
   }
   const s = await refreshing;

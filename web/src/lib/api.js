@@ -24,8 +24,15 @@ export function clearCache() {
 const memo = new Map();
 const CACHE_PREFIX = 'pumpstat:data:';
 
+// Guarda só UMA versão no aparelho (cada uma tem ~1,4 MB de texto; as duas juntas passavam do limite do Safari
+// e tiravam o espaço da sessão de login). Se ainda assim não couber, fica sem cache: os dados vêm da rede.
 function store(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* armazenamento indisponível ou cheio */ }
+  try {
+    Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX) && k !== key).forEach((k) => localStorage.removeItem(k));
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    try { localStorage.removeItem(key); } catch { /* ignora */ }
+  }
 }
 function load(key) {
   try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : null; } catch { return null; }
@@ -43,7 +50,7 @@ export function sessionVersion(version) {
   return raw ? shape(raw) : null;
 }
 
-export async function fetchVersion(version) {
+export async function fetchVersion(version, persist = false) {
   const [raw, community, fresh, ref, tags] = await Promise.all([
     rpc('app_data', { p_version: version }),
     rpc('community_charts', { p_version: version }).catch(() => []),
@@ -56,7 +63,7 @@ export async function fetchVersion(version) {
   raw.ref = ref;
   raw.tags = tags;
   memo.set(version, raw);
-  store(CACHE_PREFIX + version, raw);
+  if (persist) store(CACHE_PREFIX + version, raw);
   return shape(raw);
 }
 

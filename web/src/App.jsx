@@ -142,7 +142,7 @@ function DataApp({ session, ingestKey }) {
 
   const reload = useCallback(async (v = version) => {
     setLoading(true); setError(null);
-    try { setData(await fetchVersion(v)); } catch (e) { setError(e.message); }
+    try { setData(await fetchVersion(v, true)); } catch (e) { setError(e.message); }
     setLoading(false);
   }, [version]);
 
