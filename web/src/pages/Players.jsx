@@ -1,6 +1,6 @@
 import { Flag, useCountries } from '../lib/country.jsx';
 import { SocialLinks } from '../components/Socials.jsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { TeamTag, useTeams } from '../lib/teams.jsx';
 import { useData } from '../App.jsx';
@@ -17,6 +17,7 @@ import PlanLock from '../components/PlanLock.jsx';
 import { entitlements, isOn } from '../lib/plans.js';
 import { chartTagLabel, tagColor } from '../lib/tags.js';
 import LiveBadge from '../components/LiveBadge.jsx';
+import PlayerSearch from '../components/PlayerSearch.jsx';
 import { useLives } from '../lib/lives.js';
 
 export function Avatar({ p, size = 44 }) {
@@ -141,51 +142,13 @@ export default function Players() {
 }
 
 function SearchPlayers({ onChange }) {
-  const [q, setQ] = useState('');
-  const [res, setRes] = useState(null);
-  const [busy, setBusy] = useState(false);
-  const seq = useRef(0);
-  const run = async (term) => {
-    const my = ++seq.current;
-    if (term.length < 2) { setRes(null); setBusy(false); return; }
-    setBusy(true);
-    let r = [];
-    try { r = await rpc('search_players', { p_query: term }); } catch { /* sem resultado */ }
-    if (my === seq.current) { setRes(r); setBusy(false); }
-  };
-  // busca enquanto digita (espera 250 ms entre teclas)
-  useEffect(() => { const h = setTimeout(() => run(q.trim()), 250); return () => clearTimeout(h); }, [q]); // eslint-disable-line
-  const add = async (p) => { await rpc('send_friend_request', { p_user: p.id }); await run(q.trim()); onChange(); };
   const LABEL = { friends: t('Amigos'), pending_out: t('Solicitação enviada') };
   return (
-    <div className="typeahead">
-      <input autoFocus placeholder={t('Digite o nickname da Pump…')} value={q} onChange={(e) => setQ(e.target.value)} autoComplete="off" />
-      {busy && <span className="ta-spin muted small">{t('buscando…')}</span>}
-      {res && (
-        <div className="ta-list">
-          {!res.length && <p className="muted small ta-empty">{t('Ninguém com “{q}”. A pessoa precisa ter conectado a conta da Pump no PIU Stats.', { q: q.trim() })}</p>}
-          {res.map((p) => (
-            <div key={p.id} className="player req">
-              <Avatar p={p} />
-              <span className="pinfo"><span className="ptitle">{p.title}</span><b>{hl(p.nickname, q.trim())}</b></span>
-              <span className="req-actions">
-                {p.relation === 'none' || p.relation === 'pending_in'
-                  ? <button className="btn" onClick={() => add(p)}>{p.relation === 'pending_in' ? t('Aceitar') : t('Adicionar')}</button>
-                  : <span className="tag">{LABEL[p.relation]}</span>}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-      <p className="muted small">{t('A busca mostra só nick, título e avatar. As notas aparecem depois que a pessoa aprovar.')}</p>
-    </div>
+    <PlayerSearch autoFocus hint={t('A busca mostra só nick, título e avatar. As notas aparecem depois que a pessoa aprovar.')}
+      action={(p, { refresh }) => (p.relation === 'none' || p.relation === 'pending_in'
+        ? <button className="btn" onClick={async () => { await rpc('send_friend_request', { p_user: p.id }); await refresh(); onChange(); }}>{p.relation === 'pending_in' ? t('Aceitar') : t('Adicionar')}</button>
+        : <span className="tag">{LABEL[p.relation]}</span>)} />
   );
-}
-
-function hl(name, term) {
-  const i = (name || '').toLowerCase().indexOf(term.toLowerCase());
-  if (i < 0 || !term) return name;
-  return <>{name.slice(0, i)}<mark>{name.slice(i, i + term.length)}</mark>{name.slice(i + term.length)}</>;
 }
 
 /** Perfil de um amigo: informações, estatísticas, as 50 músicas que formam o PUMBILITY e o botão para comparar. */

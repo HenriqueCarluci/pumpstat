@@ -2355,7 +2355,7 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .mt-manage { margin-right: 8px; }
 .adm-team { display: grid; gap: 6px; }
 .adm-team-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.adm-team-add { display: flex; gap: 6px; }
+.adm-team-add { display: grid; gap: 6px; margin-top: 4px; }
 .adm-team-add input { flex: 1; min-width: 0; }
 .mt-manage { align-self: flex-start; width: auto; display: inline-flex; align-items: center; gap: 6px; }
 @media (max-width: 520px) {

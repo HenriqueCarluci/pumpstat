@@ -1,3 +1,4 @@
+import PlayerSearch from '../components/PlayerSearch.jsx';
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ProposalCard } from '../components/TierVote.jsx';
@@ -868,13 +869,12 @@ function TeamAdmins() {
 
 function TeamAdminRow({ team }) {
   const [info, setInfo] = useState(null);
-  const [nick, setNick] = useState('');
   const [err, setErr] = useState('');
   const load = () => rpc('admin_team_members', { p_team: team.id }).then(setInfo).catch((e) => setErr(tErr(e.message)));
   useEffect(() => { load(); }, [team.id]);
   const set = async (args) => {
     setErr('');
-    try { await rpc('admin_set_team_admin', { p_team: team.id, p_nick: null, p_user: null, ...args }); setNick(''); load(); } catch (e) { setErr(tErr(e.message)); }
+    try { await rpc('admin_set_team_admin', { p_team: team.id, p_nick: null, p_user: null, ...args }); load(); } catch (e) { setErr(tErr(e.message)); }
   };
   const admins = (info?.members || []).filter((m) => m.role === 'admin');
   const others = (info?.members || []).filter((m) => m.role !== 'admin');
@@ -883,20 +883,23 @@ function TeamAdminRow({ team }) {
       <div className="adm-team-row"><b>{team.name}</b><span className="muted tiny">{t('{n} membros', { n: info?.members.length ?? team.members })}{info?.requests ? ` · ${t('{n} pedidos', { n: info.requests })}` : ''}</span></div>
       {admins.length ? admins.map((m) => (
         <div key={m.id} className="adm-team-row"><span className="ic-row"><Crown size={12} /> {m.nickname || '—'}</span>
-          <button className="link muted small" onClick={() => set({ p_user: m.id, p_on: false })}>{t('Tirar admin')}</button></div>
+          <button className="btn ghost sm" onClick={() => set({ p_user: m.id, p_on: false })}>{t('Tirar admin')}</button></div>
       )) : <p className="muted tiny">{t('Sem administrador: a entrada é livre.')}</p>}
       {others.length > 0 && (
         <details>
           <summary className="muted tiny">{t('Participantes')}</summary>
           {others.map((m) => (
             <div key={m.id} className="adm-team-row"><span>{m.nickname || '—'}</span>
-              <button className="link small" onClick={() => set({ p_user: m.id, p_on: true })}>{t('Tornar admin')}</button></div>
+              <button className="btn ghost sm" onClick={() => set({ p_user: m.id, p_on: true })}><Crown size={12} /> {t('Tornar admin')}</button></div>
           ))}
         </details>
       )}
       <div className="adm-team-add">
-        <input value={nick} onChange={(e) => setNick(e.target.value)} placeholder={t('Nick do jogador (ex.: NICK #1234)')} />
-        <button className="btn sm" disabled={!nick.trim()} onClick={() => set({ p_nick: nick, p_on: true })}>{t('Adicionar admin')}</button>
+        <PlayerSearch placeholder={t('Buscar jogador para ser admin…')}
+          action={(p, { clear }) => (admins.some((m) => m.id === p.id)
+            ? <span className="tag team-admin-tag"><Crown size={11} /> {t('admin')}</span>
+            : <button className="btn sm" onClick={async () => { await set({ p_user: p.id, p_on: true }); clear(); }}><Crown size={13} /> {t('Tornar admin')}</button>)} />
+        {(info?.members || []).length > 0 && <p className="muted tiny">{t('Se a pessoa estiver em outro time, ela passa para este.')}</p>}
       </div>
       {err && <div className="form-err">{err}</div>}
     </div>
