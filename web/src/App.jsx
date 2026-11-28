@@ -5,7 +5,7 @@ import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
 import { initNative, isNative } from './lib/native.js';
-import { addImageUrls, downloadJackets, jacketMode } from './lib/jacketCache.js';
+import { addImageUrls, downloadJackets, jacketMode, onCellular } from './lib/jacketCache.js';
 import { initImgStore } from './lib/imgStore.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
@@ -219,11 +219,14 @@ function DataApp({ session, ingestKey }) {
     return () => clearTimeout(h);
   }, []);
 
-  // no app, quem escolheu "baixar todas as capas" completa o que faltar em segundo plano (as novas também)
+  // no app, quem escolheu "baixar todas" completa o que faltar em segundo plano (as novas também),
+  // só fora dos dados móveis; se a internet cair, continua quando ela voltar
   useEffect(() => {
     if (!isNative || !warm || !data || jacketMode() !== 'all') return undefined;
-    const h = setTimeout(() => downloadJackets(data), 4000);
-    return () => clearTimeout(h);
+    const go = () => { if (jacketMode() === 'all' && !onCellular()) downloadJackets(data); };
+    const h = setTimeout(go, 4000);
+    window.addEventListener('online', go);
+    return () => { clearTimeout(h); window.removeEventListener('online', go); };
   }, [warm, data]);
 
   const setVersion = (v) => {

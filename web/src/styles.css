@@ -2564,3 +2564,11 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .jcache-prog { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .jcache-bar { height: 6px; border-radius: 99px; background: var(--line); overflow: hidden; }
 .jcache-bar span { display: block; height: 100%; background: var(--neon); transition: width .3s ease; }
+.jcache-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.jcache-msg { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+.jcache-msg.ok { color: var(--neon); }
+.jcache-prog small svg { vertical-align: -2px; }
+.jcache .linkish { background: none; border: 0; padding: 0; color: var(--neon); font: inherit; text-decoration: underline; cursor: pointer; }
+.jcache-confirm { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 75, 75, .35); background: rgba(255, 75, 75, .06); }
+.jcache-confirm .card-actions { margin: 0; }
+.jcache > .btn.ghost, .jcache-prog > .btn.ghost { align-self: flex-start; }

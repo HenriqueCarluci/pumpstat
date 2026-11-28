@@ -9,7 +9,7 @@ const native = Capacitor.isNativePlatform();
 const DIR = 'img';
 let base = null;            // endereço local da pasta, já convertido para o WebView
 let fs = null;              // { Filesystem, Directory }
-const stored = new Set();   // nomes dos arquivos que já estão no aparelho
+const stored = new Map();   // nome do arquivo -> tamanho (bytes) do que já está no aparelho
 let ready = null;
 
 /** Nome do arquivo para uma URL: hash estável + extensão. */
@@ -36,7 +36,7 @@ export function initImgStore() {
       const { Filesystem, Directory } = fs;
       try {
         const { files } = await Filesystem.readdir({ path: DIR, directory: Directory.Data });
-        files.forEach((f) => { if ((f.size ?? 1) > 0) stored.add(f.name); });
+        files.forEach((f) => { if ((f.size ?? 1) > 0) stored.set(f.name, f.size || 0); });
       } catch { /* pasta ainda não existe */ }
       const { uri } = await Filesystem.getUri({ path: DIR, directory: Directory.Data });
       base = `${Capacitor.convertFileSrc(uri).replace(/\/$/, '')}/`;
@@ -47,12 +47,24 @@ export function initImgStore() {
 
 export const isStored = (u) => !!u && stored.has(nameOf(u));
 export const storedCount = () => stored.size;
+export const storedBytes = () => { let b = 0; stored.forEach((v) => { b += v; }); return b; };
+
+/** Apaga todas as imagens salvas (Ajustes → Imagens do app → Apagar). */
+export async function clearImgStore() {
+  if (!native) return;
+  await initImgStore();
+  if (fs) { try { await fs.Filesystem.rmdir({ path: DIR, directory: fs.Directory.Data, recursive: true }); } catch { /* já vazia */ } }
+  stored.clear();
+}
 const remoteOk = (u) => typeof u === 'string' && /^https:\/\//.test(u);
 
 // O piugame.com não envia o certificado intermediário e o Android recusa a conexão
 // ("Trust anchor for certification path not found"). No app, as imagens dele passam pelo repasse da nossa API.
 const PIU = /^https:\/\/([a-z0-9-]+\.)*piugame\.com\//i;
-export const remoteImg = (u) => (native && remoteOk(u) && PIU.test(u) ? `${API_URL}/api/img?u=${encodeURIComponent(u)}` : u);
+// As capas originais têm ~330 KB; o app pede a versão de 480 px em WebP (~30 KB), que já sobra para as telas.
+const JACKET = /\/data\/song_img/i;
+export const remoteImg = (u) => (native && remoteOk(u) && PIU.test(u)
+  ? `${API_URL}/api/img?u=${encodeURIComponent(u)}${JACKET.test(u) ? '&w=480' : ''}` : u);
 
 /** Salva uma imagem no aparelho. Devolve true se ficou salva. */
 export async function saveImg(u) {
@@ -68,7 +80,7 @@ export async function saveImg(u) {
   // só guarda se for mesmo imagem (PNG, JPEG, GIF ou WebP), nunca uma página de erro
   if (!/^(iVBORw0KGgo|\/9j\/|R0lGOD|UklGR)/.test(data)) throw new Error('não é imagem');
   await fs.Filesystem.writeFile({ path: `${DIR}/${n}`, data, directory: fs.Directory.Data, recursive: true });
-  stored.add(n);
+  stored.set(n, Math.round((data.length * 3) / 4));
   return true;
 }
 

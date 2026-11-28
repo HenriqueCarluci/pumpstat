@@ -6,6 +6,7 @@ export {
   Flag, Ban, Trash2, Lock, TrendingUp, Plus, ThumbsUp, ThumbsDown, Vote, Clock, Flame, Trophy, CalendarCheck, Gift, ToggleRight,
   Dumbbell, BookmarkPlus, BookmarkCheck, Search, Zap, Shuffle, Sparkles, Star, Minus, AtSign, Copy, ExternalLink, Send, Shield, ChevronLeft, ChartColumn as BarChart3, Heart,
   ImagePlus, Award, Map, FlaskConical, Megaphone, Eye, Upload, House, UserPlus, LogOut, ArrowLeftRight, Smartphone,
+  Wifi, WifiOff, Pause,
 } from 'lucide-react';
 
 /** Marca do PIU Stats: a seta do pad (estilo LX) em verde, sobre o fundo escuro. */

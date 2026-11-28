@@ -9,6 +9,7 @@ import { normNick, parseAccounts, switchTo } from './piu-accounts.js';
 import { resolveVideo, searchUrl } from './videos.js';
 import { refreshCatalog } from './catalog.js';
 import { queuePush } from './push.js';
+import sharp from 'sharp';
 
 const PORT = process.env.PORT || 10000;
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://jujbkgzkenktjuurrwvo.supabase.co';
@@ -263,15 +264,18 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
 // ---------- repasse de imagens (capas) ----------
 const IMG_HOSTS = new Set(['piugame.com', 'phoenix.piugame.com', 'www.piugame.com', 'piuimages.arroweclip.se']);
 const imgCache = new Map(); // url -> { type, buf, at }
-async function proxyImage(raw) {
+// ?w=: devolve a imagem reduzida (WebP) para o app gastar menos dados e espaço (as capas originais têm ~330 KB)
+async function proxyImage(raw, wRaw) {
+  const w = Math.max(0, Math.min(960, Math.round(Number(wRaw) || 0)));
   let u;
   try { u = new URL(String(raw || '')); } catch { return [400, { 'Content-Type': 'text/plain' }, 'url inválida']; }
   if (u.protocol !== 'https:' || !IMG_HOSTS.has(u.hostname)) return [403, { 'Content-Type': 'text/plain' }, 'host não permitido'];
-  const key = u.toString();
+  const src = u.toString();
+  const key = w >= 48 ? `${src}#w${w}` : src;
   let hit = imgCache.get(key);
   if (!hit) {
     const dispatcher = u.hostname.endsWith('piugame.com') ? await getDispatcher().catch(() => undefined) : undefined;
-    const r = await fetch(key, {
+    const r = await fetch(src, {
       dispatcher,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36',
@@ -284,9 +288,16 @@ async function proxyImage(raw) {
       if (r) console.warn('img fail', key, r.status, type);
       return [502, { 'Content-Type': 'text/plain' }, 'imagem indisponível'];
     }
-    const buf = Buffer.from(await r.arrayBuffer());
+    let buf = Buffer.from(await r.arrayBuffer());
     if (buf.length > 3_000_000) return [413, { 'Content-Type': 'text/plain' }, 'imagem grande demais'];
-    hit = { type, buf };
+    let outType = type;
+    if (w >= 48 && /^image\/(png|jpe?g|webp)$/.test(type)) {
+      try {
+        buf = await sharp(buf).resize({ width: w, withoutEnlargement: true }).webp({ quality: 78, effort: 4 }).toBuffer();
+        outType = 'image/webp';
+      } catch (e) { console.warn('img resize', src, e?.message); }
+    }
+    hit = { type: outType, buf };
     imgCache.set(key, hit);
     if (imgCache.size > 600) imgCache.delete(imgCache.keys().next().value);
   }
@@ -372,7 +383,7 @@ const server = http.createServer(async (req, res) => {
     }
     // capas e grades da Pump para o app desenhar no canvas (imagem do dia): só destes servidores, com CORS liberado
     if (req.method === 'GET' && url.pathname === '/api/img') {
-      const [code, headers, body] = await proxyImage(url.searchParams.get('u'));
+      const [code, headers, body] = await proxyImage(url.searchParams.get('u'), url.searchParams.get('w'));
       res.writeHead(code, headers);
       return res.end(body);
     }
