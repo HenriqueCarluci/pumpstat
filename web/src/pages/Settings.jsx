@@ -61,15 +61,20 @@ export default function Settings() {
           {plan?.view_as ? <p className="muted small">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p> : <>
           {linked && <QuickSync onDone={() => reload()} />}
           {linked && <AutoSync />}
-          {linked ? (
-            <details className="other-login">
-              <summary className="small">{t('Entrar com outra conta AM.PASS')}</summary>
-              <PiuConnect compact onDone={() => reload()} />
-            </details>
-          ) : <PiuConnect compact onDone={() => reload()} />}
-          {linked && <UnlinkPump />}
+          {!linked && <PiuConnect compact onDone={() => reload()} />}
           </>}
         </section>
+        {linked && !plan?.view_as && (
+          <section className="card pump-acct">
+            <h3>{t('Conta da Pump (AM.PASS)')}</h3>
+            {data?.profile?.nickname && <p className="small">{t('Conectada como {n}', { n: data.profile.nickname })}</p>}
+            <details className="other-login">
+              <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
+              <PiuConnect compact onDone={() => reload()} />
+            </details>
+            <UnlinkPump />
+          </section>
+        )}
       </Group>
 
       <Group id="perfil" title="Seu perfil">

@@ -1722,3 +1722,6 @@ Apagar as {n} imagens salvas? Elas voltam a ser baixadas quando aparecerem. | De
 Apagar imagens | Delete images | Borrar imágenes | 이미지 삭제 | 画像を削除 | Supprimer les images | Elimina immagini
 Último download: {n} imagens em {d}. | Last download: {n} images in {d}. | Última descarga: {n} imágenes en {d}. | 마지막 다운로드: {d} 동안 이미지 {n}개. | 前回のダウンロード:{d}で{n}件。 | Dernier téléchargement : {n} images en {d}. | Ultimo download: {n} immagini in {d}.
 Ok | OK | Ok | 확인 | OK | OK | Ok
+Conta da Pump (AM.PASS) | Pump account (AM.PASS) | Cuenta de Pump (AM.PASS) | Pump 계정(AM.PASS) | Pumpアカウント(AM.PASS) | Compte Pump (AM.PASS) | Account Pump (AM.PASS)
+Conectada como {n} | Connected as {n} | Conectada como {n} | {n}(으)로 연결됨 | {n}として接続中 | Connecté en tant que {n} | Collegato come {n}
+Trocar de conta AM.PASS | Switch AM.PASS account | Cambiar de cuenta AM.PASS | AM.PASS 계정 변경 | AM.PASSアカウントを切り替え | Changer de compte AM.PASS | Cambia account AM.PASS
