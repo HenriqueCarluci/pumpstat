@@ -2703,3 +2703,7 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .atest-tag.wait { border-color: rgba(255, 190, 60, .5); color: #ffcf6b; }
 .pump-acct { display: flex; flex-direction: column; gap: 10px; } .pump-acct h3, .pump-acct p { margin: 0; }
 .pump-acct .unlink-pump { margin-top: 0; padding-top: 0; border-top: 0; }
+.pump-acct-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
+.pump-acct-actions > .btn, .pump-acct-actions > .unlink-pump { flex: 1 1 160px; }
+.pump-acct-actions .unlink-pump > .btn { width: 100%; }
+.pump-acct-actions:empty { display: none; }

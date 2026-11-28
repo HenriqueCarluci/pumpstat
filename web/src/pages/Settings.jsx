@@ -116,8 +116,10 @@ function AccountSection() {
             <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
             <PiuConnect compact onDone={() => reload()} />
           </details>
-          <SavedLogin />
-          {plan?.admin_role === 'owner' && <UnlinkPump />}
+          <div className="pump-acct-actions">
+            <SavedLogin />
+            {plan?.admin_role === 'owner' && <UnlinkPump />}
+          </div>
         </section>
       )}
       {!plan?.view_as && <TwoFactorCard />}
@@ -536,5 +538,5 @@ function SavedLogin() {
     try { await rpc('forget_piu_cred'); setSt({ ...st, has_cred: false }); } catch { /* segue */ }
     setBusy(false);
   };
-  return <button type="button" className="btn ghost wide" disabled={busy} onClick={forget}>{t('Esquecer login')}</button>;
+  return <button type="button" className="btn ghost" disabled={busy} onClick={forget}>{t('Esquecer login')}</button>;
 }
