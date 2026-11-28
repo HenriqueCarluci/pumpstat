@@ -67,7 +67,7 @@ export default function AndroidTestersAdmin() {
   };
   return (
     <Panel id="admin-android-testers" title={<span className="ic-row"><Smartphone size={16} /> {t('Testadores do app Android')} <span className="muted">({added}/{GOAL})</span></span>} defaultOpen={pending.length > 0}>
-      <p className="muted small">{t('Na lista do Play Console: {a}. Pedidos novos: {p}. O teste fechado precisa de pelo menos {g} testadores por 14 dias.', { a: added, p: pending.length, g: GOAL })}</p>
+      <p className="muted small">{t('Na lista do Play Console: {a}. Pedidos novos: {p}. O teste fechado precisa de pelo menos {g} testadores por 14 dias.', { a: added, p: pending.length, g: GOAL })} {t('Quem você inclui entra na lista da Play em até 1 hora e recebe o link de instalação.')}</p>
       {pending.length > 0 && (
         <div className="card-actions">
           <button className="btn" onClick={() => copy(pending)}><Copy size={15} /> {t('Copiar e-mails novos')}</button>
@@ -95,8 +95,8 @@ export default function AndroidTestersAdmin() {
               <Bell size={12} /> {x.notify ? t('avisos ligados') : t('avisos desligados')}
             </button>
             {x.added
-              ? <button className="atest-tag ok" title={t('Tirar a marca')} onClick={() => mark([x], false)}>{t('na lista')}</button>
-              : <button className="atest-tag" onClick={() => mark([x], true)}>{t('marcar adicionado')}</button>}
+              ? <button className={`atest-tag ${x.play_at ? 'ok' : 'wait'}`} title={x.play_at ? t('Tirar a marca') : t('Incluído: entra na lista da Play em até 1 hora.')} onClick={() => mark([x], false)}>{x.play_at ? t('na Play') : t('entrando na Play')}</button>
+              : <button className="atest-tag" onClick={() => mark([x], true)}>{t('incluir no teste')}</button>}
           </div>
         ))}
         {!list.length && <p className="empty small">{t('Ninguém pediu ainda.')}</p>}
