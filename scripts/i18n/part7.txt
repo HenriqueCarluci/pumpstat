@@ -1930,3 +1930,26 @@ Avisar todos os usuários sobre esta novidade? Cada pessoa recebe uma notificaç
 Avisar todos | Notify everyone | Avisar a todos | 모두에게 알리기 | 全員に通知 | Prévenir tout le monde | Avvisa tutti
 Novidade no PIU Stats: {t} | New on PIU Stats: {t} | Novedad en PIU Stats: {t} | PIU Stats 새 소식: {t} | PIU Statsの新着：{t} | Nouveau sur PIU Stats : {t} | Novità su PIU Stats: {t}
 publique a novidade como lançada antes de avisar | publish the update as released before notifying | publica la novedad como lanzada antes de avisar | 알리기 전에 소식을 출시됨으로 게시하세요 | 通知する前にリリース済みとして公開してください | publiez la nouveauté comme lancée avant de prévenir | pubblica la novità come rilasciata prima di avvisare
+Conta e sincronização | Account and sync | Cuenta y sincronización | 계정 및 동기화 | アカウントと同期 | Compte et synchronisation | Account e sincronizzazione
+Perfil | Profile | Perfil | 프로필 | プロフィール | Profil | Profilo
+App e dados | App and data | App y datos | 앱 및 데이터 | アプリとデータ | App et données | App e dati
+Ajuda e novidades | Help and updates | Ayuda y novedades | 도움말 및 새 소식 | ヘルプと新着 | Aide et nouveautés | Aiuto e novità
+Pump (AM.PASS), sincronização e segurança | Pump (AM.PASS), sync and security | Pump (AM.PASS), sincronización y seguridad | Pump(AM.PASS), 동기화 및 보안 | Pump（AM.PASS）、同期とセキュリティ | Pump (AM.PASS), synchronisation et sécurité | Pump (AM.PASS), sincronizzazione e sicurezza
+Push, o que avisar, horário de silêncio e avisos na tela | Push, what to notify, quiet hours and on-screen alerts | Push, qué avisar, horario de silencio y avisos en pantalla | 푸시, 알림 종류, 방해 금지 시간, 화면 알림 | プッシュ、通知の種類、おやすみ時間、画面の通知 | Push, quoi notifier, heures de silence et alertes à l'écran | Push, cosa notificare, orario di silenzio e avvisi a schermo
+Estilo de jogo, país, time e redes sociais | Play style, country, team and social media | Estilo de juego, país, equipo y redes sociales | 플레이 스타일, 국가, 팀, 소셜 미디어 | プレイスタイル、国、チーム、SNS | Style de jeu, pays, équipe et réseaux sociaux | Stile di gioco, paese, squadra e social
+Idioma, tamanho das capas e notas, recordes legados | Language, jacket and grade size, legacy records | Idioma, tamaño de portadas y notas, récords heredados | 언어, 재킷·등급 크기, 레거시 기록 | 言語、ジャケットと評価のサイズ、旧記録 | Langue, taille des jaquettes et notes, records hérités | Lingua, dimensione di copertine e voti, record legacy
+Imagens no aparelho, app Android e treino em casa | Images on the device, Android app and home training | Imágenes en el dispositivo, app de Android y entrenamiento en casa | 기기 이미지, Android 앱, 홈 트레이닝 | 端末の画像、Androidアプリ、自宅トレーニング | Images sur l'appareil, app Android et entraînement à la maison | Immagini sul dispositivo, app Android e allenamento a casa
+Suporte, meus chamados, tutorial e novidades | Support, my tickets, tutorial and updates | Soporte, mis tickets, tutorial y novedades | 지원, 내 요청, 튜토리얼, 새 소식 | サポート、マイチケット、チュートリアル、新着 | Support, mes tickets, tutoriel et nouveautés | Supporto, i miei ticket, tutorial e novità
+Perfil privado, bloqueados e exclusão de conta | Private profile, blocked players and account deletion | Perfil privado, bloqueados y eliminación de cuenta | 비공개 프로필, 차단, 계정 삭제 | 非公開プロフィール、ブロック、アカウント削除 | Profil privé, joueurs bloqués et suppression du compte | Profilo privato, bloccati ed eliminazione dell'account
+Painel, modo de teste e novos usuários | Panel, test mode and new users | Panel, modo de prueba y nuevos usuarios | 관리 패널, 테스트 모드, 신규 사용자 | 管理パネル、テストモード、新規ユーザー | Panneau, mode test et nouveaux utilisateurs | Pannello, modalità test e nuovi utenti
+Avisos dentro do app | In-app alerts | Avisos dentro de la app | 앱 내 알림 | アプリ内の通知 | Alertes dans l'app | Avvisi nell'app
+Tela de Tier | Tier screen | Pantalla de Tier | 티어 화면 | ティア画面 | Écran Tier | Schermata Tier
+Dados do app | App data | Datos de la app | 앱 데이터 | アプリのデータ | Données de l'app | Dati dell'app
+Busca de novo suas notas, amigos e ajustes no servidor. | Fetches your scores, friends and settings from the server again. | Vuelve a buscar tus notas, amigos y ajustes en el servidor. | 서버에서 점수, 친구, 설정을 다시 불러와요. | サーバーからスコア、フレンド、設定を再取得します。 | Récupère à nouveau vos scores, amis et réglages sur le serveur. | Recupera di nuovo dal server punteggi, amici e impostazioni.
+Recarregar | Reload | Recargar | 새로고침 | 再読み込み | Recharger | Ricarica
+Painel de administração | Admin panel | Panel de administración | 관리자 패널 | 管理パネル | Panneau d'administration | Pannello di amministrazione
+Usuários, suporte, backlog, novidades, planos e o restante da gestão do app. | Users, support, backlog, updates, plans and the rest of app management. | Usuarios, soporte, backlog, novedades, planes y el resto de la gestión de la app. | 사용자, 지원, 백로그, 새 소식, 요금제 등 앱 관리 전체. | ユーザー、サポート、バックログ、新着、プランなどアプリの管理全般。 | Utilisateurs, support, backlog, nouveautés, offres et le reste de la gestion de l'app. | Utenti, supporto, backlog, novità, piani e il resto della gestione dell'app.
+Abrir administração | Open admin | Abrir administración | 관리자 열기 | 管理画面を開く | Ouvrir l'administration | Apri amministrazione
+App Android {v} | Android app {v} | App Android {v} | Android 앱 {v} | Androidアプリ {v} | App Android {v} | App Android {v}
+Versão web | Web version | Versión web | 웹 버전 | ウェブ版 | Version web | Versione web
+publicada em {d} | published {d} | publicada el {d} | {d} 배포 | {d} 公開 | publiée le {d} | pubblicata il {d}

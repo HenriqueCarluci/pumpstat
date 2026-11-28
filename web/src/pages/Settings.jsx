@@ -7,8 +7,10 @@ import { usePrefs } from '../lib/prefs.js';
 import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { timeAgo } from '../components/ui.jsx';
-import { Link } from 'react-router-dom';
-import { ChevronRight, Crown, Heart, LifeBuoy, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Bell, ChevronRight, Crown, Eye, Heart, LifeBuoy, Lock, Logo, RefreshCw, ShieldCheck, Smartphone, Sparkles, Trash2, UserIcon } from '../components/Icons.jsx';
+import { isNative } from '../lib/native.js';
+import { BUILD } from '../lib/errors.js';
 import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
@@ -28,154 +30,266 @@ import { img } from '../lib/imgStore.js';
 import PushPrefsCard from '../components/PushPrefsCard.jsx';
 import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
 
-const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
+// Seções dos Ajustes, por tipo de assunto. Cada uma abre sozinha (?aba=...), sem a página longa de antes.
+const SECTIONS = [
+  ['conta', 'Conta e sincronização', 'Pump (AM.PASS), sincronização e segurança', RefreshCw],
+  ['notificacoes', 'Notificações', 'Push, o que avisar, horário de silêncio e avisos na tela', Bell],
+  ['perfil', 'Perfil', 'Estilo de jogo, país, time e redes sociais', UserIcon],
+  ['exibicao', 'Idioma e exibição', 'Idioma, tamanho das capas e notas, recordes legados', Eye],
+  ['app', 'App e dados', 'Imagens no aparelho, app Android e treino em casa', Smartphone],
+  ['ajuda', 'Ajuda e novidades', 'Suporte, meus chamados, tutorial e novidades', LifeBuoy],
+  ['privacidade', 'Privacidade', 'Perfil privado, bloqueados e exclusão de conta', Lock],
+  ['admin', 'Administração', 'Painel, modo de teste e novos usuários', ShieldCheck],
+];
+const ALIASES = { redes: 'perfil', sync: 'conta', seguranca: 'conta', notif: 'notificacoes', suporte: 'ajuda' };
 
-function Group({ id, title, children }) {
+function SectionHead({ id }) {
+  const s = SECTIONS.find((x) => x[0] === id);
   return (
-    <div className="set-group" id={`set-${id}`}>
-      <h2 className="set-group-title">{t(title)}</h2>
-      {children}
-    </div>
+    <header className="set-head">
+      <h2>{t(s[1])}</h2>
+      <p className="muted small">{t(s[2])}</p>
+    </header>
   );
 }
 
 export default function Settings() {
-  const { data, version, reload, session, plan } = useData();
-  const linked = !!data?.profile || (data?.charts || []).some((c) => c.score != null);
-  const [prefs, setPrefs] = usePrefs();
-  const go = (id) => document.getElementById(`set-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+  const { plan } = useData();
+  const [params, setParams] = useSearchParams();
+  const list = SECTIONS.filter(([id]) => id !== 'admin' || plan?.admin);
+  const raw = params.get('aba') || ALIASES[params.get('s')] || 'conta';
+  const tab = list.some(([id]) => id === (ALIASES[raw] || raw)) ? (ALIASES[raw] || raw) : 'conta';
+  const pick = (id) => {
+    setParams(id === 'conta' ? {} : { aba: id }, { replace: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('.content')?.scrollTo?.({ top: 0, behavior: 'smooth' });
+  };
   return (
     <div className="page settings">
       <AccountCard />
-      {canAdmin(plan, 'users') && <NewUsersCard />}
+      <div className="set-layout">
+        <nav className="set-menu" aria-label={t('Seções dos ajustes')}>
+          {list.map(([id, l, , Icon]) => (
+            <button key={id} type="button" className={tab === id ? 'on' : ''} aria-current={tab === id ? 'page' : undefined} onClick={() => pick(id)}>
+              <Icon size={16} /> <span>{t(l)}</span>
+            </button>
+          ))}
+        </nav>
+        <div className="set-body">
+          <SectionHead id={tab} />
+          {tab === 'conta' && <AccountSection />}
+          {tab === 'notificacoes' && <NotifSection />}
+          {tab === 'perfil' && <ProfileSection />}
+          {tab === 'exibicao' && <DisplaySection />}
+          {tab === 'app' && <AppSection />}
+          {tab === 'ajuda' && <HelpSection />}
+          {tab === 'privacidade' && <PrivacySection />}
+          {tab === 'admin' && plan?.admin && <AdminSection />}
+        </div>
+      </div>
+      <SettingsFooter />
+    </div>
+  );
+}
 
-      <nav className="set-nav" aria-label={t('Seções dos ajustes')}>
-        {GROUPS.map(([id, l]) => <button key={id} type="button" onClick={() => go(id)}>{t(l)}</button>)}
-      </nav>
-
-      <Group id="sync" title="Sincronização">
-        <section className="card">
-          <h3>{t('Sincronizar com a Pump It Up')}</h3>
-          {linked
-            ? <p className="muted small">{t('Última sincronização da {v}: {when}', { v: VERSIONS[version].name, when: timeAgo(data.lastSync) })}</p>
-            : <p className="muted small">{t('Nenhuma conta da Pump (AM.PASS) conectada.')}</p>}
-          {plan?.view_as ? <p className="muted small">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p> : <>
+function AccountSection() {
+  const { data, version, reload, plan } = useData();
+  const linked = !!data?.profile || (data?.charts || []).some((c) => c.score != null);
+  return (
+    <>
+      <section className="card">
+        <h3>{t('Sincronizar com a Pump It Up')}</h3>
+        {linked
+          ? <p className="muted small">{t('Última sincronização da {v}: {when}', { v: VERSIONS[version].name, when: timeAgo(data.lastSync) })}</p>
+          : <p className="muted small">{t('Nenhuma conta da Pump (AM.PASS) conectada.')}</p>}
+        {plan?.view_as ? <p className="muted small">{t('Sincronização desativada enquanto você vê o app como outra pessoa.')}</p> : <>
           {linked && <QuickSync onDone={() => reload()} />}
           {linked && <AutoSync />}
           {!linked && <PiuConnect compact onDone={() => reload()} />}
-          </>}
+        </>}
+      </section>
+      {linked && !plan?.view_as && (
+        <section className="card pump-acct">
+          <h3>{t('Conta da Pump (AM.PASS)')}</h3>
+          {data?.profile?.nickname && <p className="small">{t('Conectada como {n}', { n: data.profile.nickname })}</p>}
+          <details className="other-login">
+            <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
+            <PiuConnect compact onDone={() => reload()} />
+          </details>
+          {plan?.admin_role === 'owner' && <UnlinkPump />}
         </section>
-        {linked && !plan?.view_as && (
-          <section className="card pump-acct">
-            <h3>{t('Conta da Pump (AM.PASS)')}</h3>
-            {data?.profile?.nickname && <p className="small">{t('Conectada como {n}', { n: data.profile.nickname })}</p>}
-            <details className="other-login">
-              <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
-              <PiuConnect compact onDone={() => reload()} />
-            </details>
-            {plan?.admin_role === 'owner' && <UnlinkPump />}
-          </section>
-        )}
-      </Group>
-
-      <Group id="perfil" title="Seu perfil">
-        <QuizCard />
-        <CountryPicker />
-        {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
-        <SocialsEditor />
-      </Group>
-
-      <Group id="app" title="App">
-        <NotesCard />
-        {!plan?.view_as && <PushPrefsCard />}
-        {!plan?.view_as && <AndroidTestCard where="settings" />}
-        <JacketCacheCard />
-        <section className="card">
-          <h3>{t('Idioma e exibição')}</h3>
-          <LangPicker compact />
-          <p className="muted small set-sub">{t('Tamanho da nota sobre a capa da música na tela de Tier')}</p>
-          <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
-            options={[['sm', t('Pequena')], ['md', t('Média')], ['lg', t('Grande')]]} />
-          <p className="muted small">{t('Tamanho das capas no Tier: menor mostra mais músicas por linha')}</p>
-          <Chips value={prefs.tierSize || 'md'} onChange={(v) => setPrefs({ tierSize: v })}
-            options={[['sm', t('Pequenas')], ['md', t('Médias')], ['lg', t('Grandes')]]} />
-          <label className="check legacy-pref">
-            <input type="checkbox" checked={!!prefs.legacyP1} onChange={(e) => setPrefs({ legacyP1: e.target.checked })} />
-            <span>
-              <b>{t('Mostrar recordes legados da Phoenix na Phoenix 2')}</b><br />
-              <small className="muted">{t('Nos charts que você ainda não jogou na Phoenix 2, mostra a nota da Phoenix marcada como P1. Ela não entra nas contagens, filtros de grade nem no PUMBILITY da Phoenix 2.')}</small>
-            </span>
-          </label>
-          <label className="check legacy-pref">
-            <input type="checkbox" checked={prefs.friendOnline !== false} onChange={(e) => setPrefs({ friendOnline: e.target.checked })} />
-            <span>
-              <b>{t('Avisar quando um amigo ficar online')}</b><br />
-              <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o PIU Stats enquanto você está com ele aberto.')}</small>
-            </span>
-          </label>
-          <label className="check legacy-pref">
-            <input type="checkbox" checked={prefs.notifPopup !== false} onChange={(e) => setPrefs({ notifPopup: e.target.checked })} />
-            <span>
-              <b>{t('Mostrar notificações em pop-up')}</b><br />
-              <small className="muted">{t('Passes e recordes dos amigos, PUMBILITY subindo, lives na Twitch e outras novidades aparecem no topo da tela quando chegam.')}</small>
-            </span>
-          </label>
-        </section>
-      </Group>
-
-      {isOn(plan, 'home_import') && (
-        <Group id="treino-casa" title="Treino em casa">
-          <HomeTrainingCard />
-        </Group>
       )}
+      {!plan?.view_as && <TwoFactorCard />}
+    </>
+  );
+}
 
-      {!plan?.view_as && (
-        <Group id="seguranca" title="Segurança">
-          <TwoFactorCard />
-        </Group>
-      )}
+function NotifSection() {
+  const { plan } = useData();
+  const [prefs, setPrefs] = usePrefs();
+  return (
+    <>
+      {!plan?.view_as && <PushPrefsCard />}
+      <section className="card">
+        <h3>{t('Avisos dentro do app')}</h3>
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={prefs.notifPopup !== false} onChange={(e) => setPrefs({ notifPopup: e.target.checked })} />
+          <span>
+            <b>{t('Mostrar notificações em pop-up')}</b><br />
+            <small className="muted">{t('Passes e recordes dos amigos, PUMBILITY subindo, lives na Twitch e outras novidades aparecem no topo da tela quando chegam.')}</small>
+          </span>
+        </label>
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={prefs.friendOnline !== false} onChange={(e) => setPrefs({ friendOnline: e.target.checked })} />
+          <span>
+            <b>{t('Avisar quando um amigo ficar online')}</b><br />
+            <small className="muted">{t('Um aviso sobe no canto da tela quando um amigo abre o PIU Stats enquanto você está com ele aberto.')}</small>
+          </span>
+        </label>
+      </section>
+    </>
+  );
+}
 
-      <Group id="ajuda" title="Ajuda">
-        <section className="card">
-          <h3>{t('Ajuda e feedback')}</h3>
-          <p className="muted small">{t('Encontrou um problema, tem uma dúvida ou uma ideia? Mande para o suporte.')}</p>
-          <Feedback />
-          {session && (
-            <div className="set-row">
-              <span><b className="ic-row"><LifeBuoy size={15} /> {t('Meus chamados')}</b><small className="muted">{t('Acompanhe o andamento e as respostas do suporte.')}</small></span>
-              <Link className="btn ghost" to="/suporte">{t('Abrir')}</Link>
-            </div>
-          )}
+function ProfileSection() {
+  const { session, plan } = useData();
+  return (
+    <>
+      <QuizCard />
+      <CountryPicker />
+      {isOn(plan, 'teams') && <TeamPicker userId={session?.user?.id} />}
+      <SocialsEditor />
+    </>
+  );
+}
+
+function DisplaySection() {
+  const [prefs, setPrefs] = usePrefs();
+  return (
+    <>
+      <section className="card">
+        <h3>{t('Idioma')}</h3>
+        <LangPicker compact />
+      </section>
+      <section className="card">
+        <h3>{t('Tela de Tier')}</h3>
+        <p className="muted small">{t('Tamanho da nota sobre a capa da música na tela de Tier')}</p>
+        <Chips value={prefs.tierGrade} onChange={(v) => setPrefs({ tierGrade: v })}
+          options={[['sm', t('Pequena')], ['md', t('Média')], ['lg', t('Grande')]]} />
+        <p className="muted small set-sub">{t('Tamanho das capas no Tier: menor mostra mais músicas por linha')}</p>
+        <Chips value={prefs.tierSize || 'md'} onChange={(v) => setPrefs({ tierSize: v })}
+          options={[['sm', t('Pequenas')], ['md', t('Médias')], ['lg', t('Grandes')]]} />
+      </section>
+      <section className="card">
+        <h3>{t('Recordes')}</h3>
+        <label className="check legacy-pref">
+          <input type="checkbox" checked={!!prefs.legacyP1} onChange={(e) => setPrefs({ legacyP1: e.target.checked })} />
+          <span>
+            <b>{t('Mostrar recordes legados da Phoenix na Phoenix 2')}</b><br />
+            <small className="muted">{t('Nos charts que você ainda não jogou na Phoenix 2, mostra a nota da Phoenix marcada como P1. Ela não entra nas contagens, filtros de grade nem no PUMBILITY da Phoenix 2.')}</small>
+          </span>
+        </label>
+      </section>
+    </>
+  );
+}
+
+function AppSection() {
+  const { plan, reload } = useData();
+  return (
+    <>
+      <JacketCacheCard />
+      {!plan?.view_as && <AndroidTestCard where="settings" />}
+      {isOn(plan, 'home_import') && <HomeTrainingCard />}
+      <section className="card">
+        <h3>{t('Dados do app')}</h3>
+        <div className="set-row set-row-first">
+          <span><b>{t('Recarregar dados')}</b><small className="muted">{t('Busca de novo suas notas, amigos e ajustes no servidor.')}</small></span>
+          <button type="button" className="btn ghost" onClick={() => reload()}>{t('Recarregar')}</button>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function HelpSection() {
+  const { session } = useData();
+  return (
+    <>
+      <section className="card">
+        <h3 className="ic-row"><LifeBuoy size={17} /> {t('Suporte')}</h3>
+        <p className="muted small">{t('Encontrou um problema, tem uma dúvida ou uma ideia? Mande para o suporte.')}</p>
+        <Feedback />
+        {session && (
           <div className="set-row">
-            <span><b className="ic-row"><Sparkles size={15} /> {t('Tutorial guiado')}</b><small className="muted">{t('Um tour rápido pelas telas principais do app.')}</small></span>
-            <button type="button" className="btn ghost" onClick={startTour}>{t('Ver tutorial')}</button>
+            <span><b>{t('Meus chamados')}</b><small className="muted">{t('Acompanhe o andamento e as respostas do suporte.')}</small></span>
+            <Link className="btn ghost" to="/suporte">{t('Abrir')} <ChevronRight size={14} /></Link>
           </div>
-        </section>
-      </Group>
+        )}
+        <div className="set-row">
+          <span><b className="ic-row"><Sparkles size={15} /> {t('Tutorial guiado')}</b><small className="muted">{t('Um tour rápido pelas telas principais do app.')}</small></span>
+          <button type="button" className="btn ghost" onClick={startTour}>{t('Ver tutorial')}</button>
+        </div>
+      </section>
+      <NotesCard />
+    </>
+  );
+}
 
-      <Group id="privacidade" title="Privacidade">
-        <PrivateStats />
-        <BlockedUsers />
-        <section className="card">
-          <h3>{t('Privacidade e dados')}</h3>
-          <div className="card-actions">
-            <Link className="btn ghost" to="/privacidade"><Lock size={15} /> {t('Política de privacidade')}</Link>
-            <DeleteAccount />
-          </div>
-        </section>
-      </Group>
+function PrivacySection() {
+  return (
+    <>
+      <PrivateStats />
+      <BlockedUsers />
+      <section className="card">
+        <h3>{t('Privacidade e dados')}</h3>
+        <div className="card-actions">
+          <Link className="btn ghost" to="/privacidade"><Lock size={15} /> {t('Política de privacidade')}</Link>
+          <DeleteAccount />
+        </div>
+      </section>
+    </>
+  );
+}
 
+function AdminSection() {
+  const { plan } = useData();
+  return (
+    <>
+      <section className="card">
+        <h3 className="ic-row"><ShieldCheck size={17} /> {t('Painel de administração')}</h3>
+        <p className="muted small">{t('Usuários, suporte, backlog, novidades, planos e o restante da gestão do app.')}</p>
+        <div className="card-actions"><Link className="btn" to="/admin">{t('Abrir administração')} <ChevronRight size={14} /></Link></div>
+      </section>
+      <TestMode compact />
+      {canAdmin(plan, 'users') && <NewUsersCard />}
+    </>
+  );
+}
+
+/** Rodapé: marca, versão do app (Android) ou do site e a data da publicação. */
+function SettingsFooter() {
+  const [ver, setVer] = useState(null);
+  useEffect(() => {
+    if (!isNative) return;
+    import('@capacitor/app').then(({ App }) => App.getInfo()).then((i) => setVer(i.version)).catch(() => {});
+  }, []);
+  const built = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(BUILD) ? new Date(`${BUILD.replace(' ', 'T')}:00Z`) : null;
+  const when = built ? built.toLocaleString(locale(), { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : BUILD;
+  return (
+    <>
       <p className="muted tiny legal-note">{t('Pump It Up é marca da Andamiro. Projeto independente, sem vínculo com a Andamiro.')}</p>
-
       <footer className="signature">
         <Logo size={22} />
         <div>
           <b>PIU Stats</b>
           <span>{t('Desenvolvido por')} <b className="sig-name">Carluci</b> <Heart size={12} className="sig-heart" aria-hidden="true" /></span>
+          <small className="muted sig-ver">
+            {isNative ? t('App Android {v}', { v: ver || '…' }) : t('Versão web')}{' · '}{t('publicada em {d}', { d: when })}
+          </small>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
 
@@ -220,7 +334,7 @@ const daysLeft = (iso) => Math.max(0, Math.ceil((new Date(iso) - new Date()) / 8
 
 /** Topo dos ajustes: quem está logado, o plano (com o teste grátis em destaque) e as ações da conta. */
 function AccountCard() {
-  const { data, reload, session, plan } = useData();
+  const { data, session, plan } = useData();
   const ent = entitlements(plan);
   const p = data.profile;
   const paid = plan?.plan && plan.plan !== 'free';
@@ -254,10 +368,8 @@ function AccountCard() {
       <div className="card-actions set-actions">
         {ent.showPlans && <Link className="btn ghost" to={paid ? '/assinatura' : '/planos'}><Crown size={15} /> {paid ? t('Minha assinatura') : t('Ver planos')}</Link>}
         {plan?.admin && <Link className="btn ghost" to="/admin"><ShieldCheck size={15} /> {t('Administração')}</Link>}
-        <button className="btn ghost" onClick={() => reload()}>{t('Recarregar dados')}</button>
         <button className="btn ghost" onClick={() => window.confirm(t('Sair da sua conta neste aparelho?')) && signOut()}>{t('Sair')}</button>
       </div>
-      {plan?.admin && <TestMode compact />}
     </section>
   );
 }
