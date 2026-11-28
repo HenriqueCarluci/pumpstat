@@ -3,7 +3,6 @@ import { useData } from '../App.jsx';
 import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { disablePush, enablePush, pushStatus, refreshPush } from '../lib/push.js';
-import { nativePushAvailable, nativePushStatus, enableNativePush } from '../lib/nativePush.js';
 import { Bell } from './Icons.jsx';
 
 // categorias (iguais às do banco: push_category)
@@ -27,9 +26,9 @@ export default function PushPrefsCard() {
   const [err, setErr] = useState('');
   const [saved, setSaved] = useState(false);
 
-  const status = async () => (nativePushAvailable() ? nativePushStatus() : pushStatus());
+  const status = pushStatus;
   useEffect(() => {
-    status().then((v) => { setSt(v); if (v === 'on' && !nativePushAvailable()) refreshPush(); }).catch(() => setSt('unsupported'));
+    status().then((v) => { setSt(v); if (v === 'on') refreshPush(); }).catch(() => setSt('unsupported'));
     if (session) rpc('push_prefs_get').then(setPrefs).catch(() => setPrefs(null));
   }, [session?.user?.id]); // eslint-disable-line
   if (!session || !st) return null;
@@ -50,8 +49,7 @@ export default function PushPrefsCard() {
   const turn = async () => {
     setBusy(true); setErr('');
     try {
-      if (nativePushAvailable()) await enableNativePush();
-      else if (st === 'on') await disablePush();
+      if (st === 'on') await disablePush();
       else await enablePush();
       setSt(await status());
     } catch (e) { setErr(tErr(e.message)); setSt(await status().catch(() => st)); }
@@ -65,7 +63,7 @@ export default function PushPrefsCard() {
       <div className="push-dev">
         <div className="small">
           {st === 'on' ? <b className="ok">{t('Ligadas neste aparelho')}</b>
-            : st === 'native' ? t('No app Android os avisos chegam em breve. Enquanto isso, ative pelo site no navegador do celular.')
+            : st === 'native' ? t('Atualize o app para receber os avisos no Android.')
               : st === 'ios-install' ? t('No iPhone, os avisos só funcionam com o PIU Stats na Tela de Início: toque em Compartilhar → Adicionar à Tela de Início e ative por lá.')
                 : st === 'denied' ? t('As notificações estão bloqueadas para o PIU Stats. Libere nas configurações do aparelho ou do navegador.')
                   : st === 'unsupported' ? t('Este navegador não recebe notificações.')

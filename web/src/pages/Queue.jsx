@@ -169,7 +169,7 @@ function PushToggle({ entries }) {
     return (
       <section className="card q-push">
         <div className="q-push-row"><Bell size={18} /><div className="small muted">
-          {st === 'native' ? t('Os avisos de "sua vez" ainda não chegam pelo app Android. Por enquanto, abra a fila pelo navegador (piustats.com.br) para ativar.')
+          {st === 'native' ? t('Atualize o app para receber o aviso da sua vez no Android.')
             : st === 'ios-install' ? t('No iPhone, os avisos só funcionam com o PIU Stats na Tela de Início: toque em Compartilhar → Adicionar à Tela de Início e abra a fila por lá.')
               : t('As notificações estão bloqueadas para o PIU Stats. Libere nas configurações do navegador para receber o aviso da sua vez.')}
         </div></div>

@@ -3,10 +3,30 @@
   "appName": "PIU Stats",
   "webDir": "dist",
   "backgroundColor": "#141518",
-  "android": { "allowMixedContent": false },
-  "ios": { "contentInset": "never", "backgroundColor": "#141518" },
+  "android": {
+    "allowMixedContent": false
+  },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#141518"
+  },
   "plugins": {
-    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#141518", "showSpinner": false },
-    "StatusBar": { "style": "DARK", "backgroundColor": "#141518", "overlaysWebView": false }
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#141518",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#141518",
+      "overlaysWebView": false
+    },
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
   }
 }

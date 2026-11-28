@@ -5,6 +5,7 @@ import { homeBest, withHome } from './lib/homeScores.js';
 import { API_URL } from './lib/config.js';
 import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSessionEnded, updatePassword } from './lib/auth.js';
 import { initNative, isNative } from './lib/native.js';
+import { syncNativePush } from './lib/nativePush.js';
 import { addImageUrls, downloadJackets, jacketMode, onCellular } from './lib/jacketCache.js';
 import { initImgStore } from './lib/imgStore.js';
 import './lib/keyboard.js';
@@ -78,6 +79,7 @@ export default function App() {
 
   useEffect(() => onSession((s) => { setSession(s); if (!s) { setIngestKey(''); clearCache(); } }), []);
   // app nativo: barra de status, botão voltar e volta do login com Google
+  useEffect(() => { if (isNative && session !== undefined) syncNativePush(!!session?.user?.id); }, [session?.user?.id]); // eslint-disable-line
   useEffect(() => { initNative({ onAuthHash: (h) => { const r = sessionFromHash(h); if (r?.type === 'recovery') setRecovery(true); } }); }, []);
   // sem login, trocar de #/ para #/fila precisa redesenhar (a fila é pública)
   const [, setHash] = useState(window.location.hash);

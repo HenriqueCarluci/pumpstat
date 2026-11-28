@@ -3,13 +3,14 @@ import { rpc } from './api.js';
 import { API_URL } from './config.js';
 import { isNative } from './native.js';
 import { deviceToken } from './queue.js';
+import { disableNativePush, enableNativePush, nativePushAvailable, nativePushStatus, syncNativePush } from './nativePush.js';
 
 const isIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const standalone = () => window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true;
 
 /** 'native' | 'ios-install' | 'unsupported' | 'denied' | 'on' | 'off' */
 export async function pushStatus() {
-  if (isNative) return 'native';
+  if (isNative) return nativePushAvailable() ? nativePushStatus() : 'native';
   const ok = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
   if (!ok) return isIOS() && !standalone() ? 'ios-install' : 'unsupported';
   if (Notification.permission === 'denied') return 'denied';
@@ -24,6 +25,7 @@ function b64ToBytes(s) {
 }
 
 export async function enablePush() {
+  if (isNative) return enableNativePush();
   const perm = await Notification.requestPermission();
   if (perm !== 'granted') throw new Error(perm === 'denied'
     ? 'As notificações estão bloqueadas para o PIU Stats. Libere nas configurações do navegador.'
@@ -41,6 +43,7 @@ export async function enablePush() {
 }
 
 export async function disablePush() {
+  if (isNative) return disableNativePush();
   const reg = await navigator.serviceWorker.getRegistration('./');
   const sub = reg && await reg.pushManager.getSubscription();
   if (!sub) return;
@@ -50,6 +53,7 @@ export async function disablePush() {
 
 /** Mantém a inscrição ligada à conta atual (quem ativou sem login e depois entrou, por exemplo). */
 export async function refreshPush() {
+  if (isNative) return syncNativePush(true);
   try {
     if ((await pushStatus()) !== 'on') return;
     const reg = await navigator.serviceWorker.getRegistration('./');
