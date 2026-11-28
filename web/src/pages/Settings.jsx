@@ -116,6 +116,7 @@ function AccountSection() {
             <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
             <PiuConnect compact onDone={() => reload()} />
           </details>
+          <SavedLogin />
           {plan?.admin_role === 'owner' && <UnlinkPump />}
         </section>
       )}
@@ -520,6 +521,26 @@ function UnlinkPump() {
       <UnlinkConfirm busy={busy} onConfirm={go} />
       <p className="muted tiny">{t('Amigos, time e ajustes ficam na sua conta do PIU Stats; a conta da Pump só traz as notas.')}</p>
       {err && <div className="form-err">{err}</div>}
+    </div>
+  );
+}
+
+/** Login AM.PASS guardado (criptografado) para atualizar sozinho quando a sessão do piugame expira; dá para esquecer. */
+function SavedLogin() {
+  const [st, setSt] = useState(null);
+  const [busy, setBusy] = useState(false);
+  useEffect(() => { rpc('my_auto_sync').then((r) => setSt(r || false)).catch(() => setSt(false)); }, []);
+  if (!st?.has_cred) return null;
+  const forget = async () => {
+    if (!window.confirm(t('Esquecer o login AM.PASS guardado? Quando a sessão do piugame expirar, você vai precisar entrar com a senha de novo para sincronizar.'))) return;
+    setBusy(true);
+    try { await rpc('forget_piu_cred'); setSt({ ...st, has_cred: false }); } catch { /* segue */ }
+    setBusy(false);
+  };
+  return (
+    <div className="set-row">
+      <span><b className="ic-row"><Lock size={15} /> {t('Login guardado com criptografia')}</b><small className="muted">{t('Usado só para atualizar suas notas quando a sessão do piugame expira.')}</small></span>
+      <button type="button" className="btn ghost" disabled={busy} onClick={forget}>{t('Esquecer')}</button>
     </div>
   );
 }

@@ -20,7 +20,7 @@ const ALLOWED_ORIGINS = [...new Set([
 ].map((o) => o.trim()).filter(Boolean))];
 const SITES = { phoenix2: 'https://piugame.com', phoenix: 'https://phoenix.piugame.com' };
 const PAGE_DELAY_MS = 250;
-// chave para criptografar a sessão do piugame guardada no Supabase (nunca a senha)
+// chave para criptografar a sessão do piugame e o login AM.PASS guardados no Supabase (AES-256-GCM; a chave só existe aqui)
 const SESSION_KEY = process.env.SESSION_SECRET ? Buffer.from(process.env.SESSION_SECRET, 'base64') : null;
 
 function seal(obj) {
@@ -119,6 +119,7 @@ const userWriter = (token) => ({
   scores: (payload) => ingestMe(token, payload),
   titles: (version, titles) => rpcAsUser(token, 'ingest_titles_me', { p_version: version, p_titles: titles }),
   session: (blob) => rpcAsUser(token, 'save_piu_session', { p_blob: blob }),
+  cred: (blob) => rpcAsUser(token, 'save_piu_cred', { p_blob: blob }),
 });
 const serverWriter = (userId) => ({
   scores: (payload) => rpcAsServer('ingest_auto', { p_user: userId, p_payload: payload }),
@@ -216,7 +217,18 @@ async function checkLink(job, nickname) {
   job.linkChecked = true;
 }
 
-async function runJob(job, { login, password, versions, token, saved, partial = false, writer = userWriter(token) }) {
+// login guardado (cifrado): entra de novo quando a sessão expirou; senha recusada → o login guardado é apagado
+async function credLogin(job, cred) {
+  job.message = 'Entrando no piugame.com…';
+  if (!job.account && cred.account) job.account = cred.account;
+  try { return await piuLogin(cred.login, cred.password); } catch (e) {
+    if (/^piugame:|incorretos/i.test(e.message || '')) job.credBad = true;
+    job.needLogin = true;
+    throw e;
+  }
+}
+
+async function runJob(job, { login, password, versions, token, saved, cred, partial = false, writer = userWriter(token) }) {
   try {
     let session;
     if (saved) {
@@ -224,12 +236,21 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
       session = PiuSession.fromJSON(saved);
       session.base = SITES.phoenix2;
       if (!(await isSessionAlive(session))) {
-        job.needLogin = true;
-        throw new Error('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.');
+        if (!cred) {
+          job.needLogin = true;
+          throw new Error('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.');
+        }
+        session = await credLogin(job, cred);
+        partial = false;
       }
-    } else {
+    } else if (login) {
       job.message = 'Entrando no piugame.com…';
       session = await piuLogin(login, password);
+    } else if (cred) {
+      session = await credLogin(job, cred);
+    } else {
+      job.needLogin = true;
+      throw new Error('Entre com a sua conta AM.PASS para sincronizar.');
     }
     for (const version of versions) {
       const label = version === 'phoenix' ? 'Phoenix' : 'Phoenix 2';
@@ -248,6 +269,10 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
     job.session = session;
     if (SESSION_KEY && writer.session) {
       try { session.base = SITES.phoenix2; await writer.session(seal(session.toJSON())); } catch { /* opcional */ }
+    }
+    // login digitado agora: guarda cifrado para entrar de novo quando a sessão expirar (política de privacidade)
+    if (SESSION_KEY && writer.cred && login && password) {
+      try { await writer.cred(seal({ login, password, account: job.account || null })); } catch { /* opcional */ }
     }
     job.state = 'done';
     job.message = 'Pronto!';
@@ -399,13 +424,18 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && url.pathname === '/api/piu/sync') {
       const { login, password, versions, useSaved, partial, account } = await readJson(req);
       let saved = null;
+      let cred = null;
       if (useSaved) {
         if (!SESSION_KEY) return send(res, 400, { error: 'Sincronização rápida indisponível.', needLogin: true }, origin);
         try {
           const blob = await rpcAsUser(token, 'my_piu_session', {});
           if (blob) saved = unseal(blob);
         } catch { /* sem sessão */ }
-        if (!saved) return send(res, 401, { error: 'Entre com a sua conta AM.PASS uma vez para ativar a sincronização rápida.', needLogin: true }, origin);
+        try {
+          const cb = process.env.INGEST_KEY ? await rpcAsServer('piu_cred_get', { p_user: user.id }) : null;
+          if (cb) cred = unseal(cb);
+        } catch { /* sem login guardado */ }
+        if (!saved && !cred) return send(res, 401, { error: 'Entre com a sua conta AM.PASS uma vez para ativar a sincronização rápida.', needLogin: true }, origin);
       } else if (!login || !password) return send(res, 400, { error: 'Informe o login e a senha da Pump It Up.' }, origin);
       const vs = (Array.isArray(versions) && versions.length ? versions : ['phoenix2', 'phoenix']).filter((v) => SITES[v]);
       // limites: 1 sincronização a cada 2 min por conta e no máximo 5 tentativas por 15 min (evita bloquear a conta AM.PASS)
@@ -418,9 +448,10 @@ const server = http.createServer(async (req, res) => {
       const running = [...jobs.values()].find((j) => j.userId === user.id && j.state === 'running');
       if (running) return send(res, 409, { error: 'Já existe uma sincronização em andamento.', jobId: running.id }, origin);
       const job = { id: randomUUID(), userId: user.id, state: 'running', message: 'Começando…', progress: 0, results: {}, at: Date.now(),
-        interactive: !saved, account: account ? String(account).slice(0, 40) : (saved?.account || null) };
+        interactive: !saved && !cred, account: account ? String(account).slice(0, 40) : (saved?.account || null) };
       jobs.set(job.id, job);
-      runJob(job, { login: String(login || '').trim(), password: String(password || ''), versions: vs, token, saved, partial: !!partial && !!saved });
+      runJob(job, { login: useSaved ? '' : String(login || '').trim(), password: useSaved ? '' : String(password || ''), versions: vs, token, saved, cred, partial: !!partial && !!saved })
+        .then(() => { if (job.credBad) rpcAsServer('piu_cred_drop', { p_user: user.id }).catch(() => {}); });
       return send(res, 202, { jobId: job.id }, origin);
     }
 
@@ -529,19 +560,24 @@ const server = http.createServer(async (req, res) => {
 // e a fila do admin (Admin → Atualizar notas), que usa a mesma sessão salva. Um de cada vez, devagar com o piugame.
 let autoBusy = false;
 
-/** Atualiza as notas de uma pessoa com a sessão salva. Devolve null (ok) ou o erro. */
-async function syncSaved(userId, blob) {
+/** Atualiza as notas de uma pessoa com a sessão salva ou, se ela expirou, com o login guardado. Devolve null (ok) ou o erro. */
+async function syncSaved(userId, blob, credBlob) {
   let saved = null;
-  try { saved = unseal(blob); } catch {
+  let cred = null;
+  if (blob) { try { saved = unseal(blob); } catch { /* sessão ilegível */ } }
+  if (credBlob) { try { cred = unseal(credBlob); } catch { await rpcAsServer('piu_cred_drop', { p_user: userId }).catch(() => {}); } }
+  if (!saved && !cred) {
     await rpcAsServer('auto_sync_done', { p_user: userId, p_blob: null, p_error: 'session_expired' }).catch(() => {});
     return 'session_expired';
   }
-  const job = { id: `auto-${userId}`, userId, state: 'running', message: '', progress: 0, results: {}, at: Date.now(), account: saved.account || null };
-  await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, writer: serverWriter(userId) });
-  let out = null;
-  if (job.state === 'done' && job.session) { try { job.session.base = SITES.phoenix2; out = seal(job.session.toJSON()); } catch { /* ignora */ } }
+  const job = { id: `auto-${userId}`, userId, state: 'running', message: '', progress: 0, results: {}, at: Date.now(), account: saved?.account || cred?.account || null };
+  await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, cred, writer: serverWriter(userId) });
+  if (job.credBad) await rpcAsServer('piu_cred_drop', { p_user: userId }).catch(() => {});
+  if (job.state === 'done' && job.session) {
+    try { job.session.base = SITES.phoenix2; await rpcAsServer('piu_session_store', { p_user: userId, p_blob: seal(job.session.toJSON()) }); } catch { /* ignora */ }
+  }
   const error = job.state === 'done' ? null : (job.needLogin ? 'session_expired' : job.error);
-  await rpcAsServer('auto_sync_done', { p_user: userId, p_blob: out, p_error: error }).catch(() => {});
+  await rpcAsServer('auto_sync_done', { p_user: userId, p_blob: null, p_error: error }).catch(() => {});
   return error;
 }
 
@@ -555,8 +591,8 @@ async function autoSyncTick() {
       if (!reqs.length) break;
       for (const r of reqs) {
         let error = null;
-        if (!r.blob) error = 'sem sessão salva';
-        else { try { error = await syncSaved(r.user, r.blob); } catch (e) { error = e.message; } }
+        if (!r.blob && !r.cred) error = 'sem sessão salva';
+        else { try { error = await syncSaved(r.user, r.blob, r.cred); } catch (e) { error = e.message; } }
         await rpcAsServer('admin_sync_finish', { p_id: r.id, p_error: error }).catch(() => {});
         console.log('admin-sync', r.user.slice(0, 8), error || 'ok');
         await sleep(4000);
@@ -564,7 +600,7 @@ async function autoSyncTick() {
     }
     const list = await rpcAsServer('auto_sync_candidates', { p_limit: 4, p_hours: 6 });
     for (const c of list) {
-      const error = await syncSaved(c.user, c.blob).catch((e) => e.message);
+      const error = await syncSaved(c.user, c.blob, c.cred).catch((e) => e.message);
       console.log('auto-sync', c.user.slice(0, 8), error || 'ok');
       await sleep(5000); // devagar com o piugame
     }
