@@ -26,6 +26,7 @@ import JacketCacheCard from '../components/JacketCacheCard.jsx';
 import { clearUserCaches, TestMode } from '../components/PlanLock.jsx';
 import { img } from '../lib/imgStore.js';
 import PushPrefsCard from '../components/PushPrefsCard.jsx';
+import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
 
@@ -388,7 +389,6 @@ function UnlinkPump() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   const go = async () => {
-    if (!window.confirm(t('Desconectar a conta da Pump (AM.PASS)?\n\nAs notas importadas saem do PIU Stats. Seus amigos, time, ajustes e lista de treino continuam. Depois você pode conectar esta ou outra conta da Pump.'))) return;
     setBusy(true); setErr('');
     try {
       await rpc('unlink_my_piu');
@@ -399,7 +399,7 @@ function UnlinkPump() {
   };
   return (
     <div className="unlink-pump">
-      <button type="button" className="btn ghost danger-text" disabled={busy} onClick={go}>{busy ? t('Aguarde…') : t('Desconectar conta da Pump')}</button>
+      <UnlinkConfirm busy={busy} onConfirm={go} />
       <p className="muted tiny">{t('Amigos, time e ajustes ficam na sua conta do PIU Stats; a conta da Pump só traz as notas.')}</p>
       {err && <div className="form-err">{err}</div>}
     </div>

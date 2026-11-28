@@ -2590,3 +2590,7 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .push-prefs .check { display: flex; gap: 8px; align-items: flex-start; }
 .push-hours { display: flex; align-items: center; gap: 8px; margin: 6px 0 4px 26px; }
 .push-hours select { padding: 6px 8px; border-radius: 8px; background: var(--panel2); color: var(--text); border: 1px solid var(--line); }
+.unlink-confirm { flex-basis: 100%; display: grid; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 75, 75, .4); background: rgba(255, 75, 75, .07); }
+.unlink-confirm p { margin: 0; }
+.unlink-confirm .card-actions { margin: 0; }
+.unlink-confirm input { letter-spacing: .08em; }

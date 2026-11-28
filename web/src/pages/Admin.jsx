@@ -20,6 +20,7 @@ import MissionsAdmin from './MissionsAdmin.jsx';
 import AdminHealth from './AdminHealth.jsx';
 import AndroidTestersAdmin from '../components/AndroidTestersAdmin.jsx';
 import { img } from '../lib/imgStore.js';
+import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -348,10 +349,7 @@ function UserRow({ u, open, onToggle, onChange }) {
               : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
             {canAdmin(plan, 'ban') && u.linked && (
-              <button className="btn ghost danger" disabled={busy}
-                onClick={() => run('admin_unlink_piu', { p_user: u.id }, t('Desconectar a conta da Pump (AM.PASS) de {n}?\n\nAs notas importadas saem; a conta, amigos, time e ajustes continuam. Fica registrado.', { n: u.nickname || u.email }))}>
-                {t('Desconectar conta da Pump')}
-              </button>
+              <UnlinkConfirm who={u.nickname || u.email} busy={busy} onConfirm={() => run('admin_unlink_piu', { p_user: u.id })} />
             )}
             {canAdmin(plan, 'view_as') && u.admin_role !== 'owner' && (
               <button className="btn ghost" disabled={busy} onClick={async () => {

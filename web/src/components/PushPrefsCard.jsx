@@ -30,7 +30,7 @@ export default function PushPrefsCard() {
   const status = async () => (nativePushAvailable() ? nativePushStatus() : pushStatus());
   useEffect(() => {
     status().then((v) => { setSt(v); if (v === 'on' && !nativePushAvailable()) refreshPush(); }).catch(() => setSt('unsupported'));
-    if (session) rpc('push_prefs_get').then(setPrefs).catch(() => setPrefs({ off: ['friends_activity'], quiet: false, quiet_from: 0, quiet_to: 8 }));
+    if (session) rpc('push_prefs_get').then(setPrefs).catch(() => setPrefs(null));
   }, [session?.user?.id]); // eslint-disable-line
   if (!session || !st) return null;
 
