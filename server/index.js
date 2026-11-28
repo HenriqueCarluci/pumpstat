@@ -262,7 +262,7 @@ async function runJob(job, { login, password, versions, token, saved, partial = 
 
 
 // ---------- repasse de imagens (capas) ----------
-const IMG_HOSTS = new Set(['piugame.com', 'phoenix.piugame.com', 'www.piugame.com', 'piuimages.arroweclip.se']);
+const IMG_HOSTS = new Set(['piugame.com', 'phoenix.piugame.com', 'www.piugame.com', 'piuimages.arroweclip.se', 'piustats.com.br']);
 const imgCache = new Map(); // url -> { type, buf, at }
 // ?w=: devolve a imagem reduzida (WebP) para o app gastar menos dados e espaço (as capas originais têm ~330 KB)
 async function proxyImage(raw, wRaw) {
