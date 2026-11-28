@@ -7,6 +7,7 @@ import { getSession, onSession, sessionFromHash, sessionFromUrl, signOut, takeSe
 import { initNative, isNative } from './lib/native.js';
 import { addImageUrls, downloadJackets, jacketMode, onCellular } from './lib/jacketCache.js';
 import { initImgStore } from './lib/imgStore.js';
+import './lib/keyboard.js';
 import { hasHint, listFactors, rememberHint, sessionAal, verifiedFactor } from './lib/mfa.js';
 import { MfaInvite, MfaLogin } from './components/TwoFactor.jsx';
 import './lib/topbar.js';

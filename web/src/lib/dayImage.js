@@ -363,6 +363,7 @@ const toBase64 = (blob) => new Promise((ok, fail) => {
   r.readAsDataURL(blob);
 });
 
+let shareImagesPlugin = null;
 /** Compartilha uma ou mais imagens: no app, pela folha de compartilhar do Android; no navegador, Web Share ou download. */
 export async function shareImage(blobs, filename, text) {
   const list = Array.isArray(blobs) ? blobs : [blobs];
@@ -374,7 +375,15 @@ export async function shareImage(blobs, filename, text) {
       const { uri } = await Filesystem.writeFile({ path: names[i], data: await toBase64(list[i]), directory: Directory.Cache });
       uris.push(uri);
     }
-    await Share.share({ title: filename, text, files: uris, dialogTitle: t('Compartilhar') });
+    // plugin próprio (ShareImagesPlugin.java): o @capacitor/share só entregava o texto com várias imagens;
+    // se o app instalado ainda não tiver o plugin, cai no Share normal
+    try {
+      if (!shareImagesPlugin) { const { registerPlugin } = await import('@capacitor/core'); shareImagesPlugin = registerPlugin('ShareImages'); }
+      await shareImagesPlugin.share({ files: uris, text, title: t('Compartilhar') });
+    } catch (e) {
+      if (!/not implemented|UNIMPLEMENTED/i.test(`${e?.code} ${e?.message}`)) throw e;
+      await Share.share({ title: filename, text, files: uris, dialogTitle: t('Compartilhar') });
+    }
     return 'shared';
   }
   const files = list.map((b, i) => new File([b], names[i], { type: 'image/png' }));

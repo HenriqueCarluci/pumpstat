@@ -2575,3 +2575,6 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .jcache-confirm { display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 75, 75, .35); background: rgba(255, 75, 75, .06); }
 .jcache-confirm .card-actions { margin: 0; }
 .jcache > .btn.ghost, .jcache-prog > .btn.ghost { align-self: flex-start; }
+/* teclado aberto (celular): some a barra de abas para não cobrir o campo (lib/keyboard.js) */
+.kb-open .tabbar { display: none; }
+.kb-open .app { padding-bottom: 12px; }
