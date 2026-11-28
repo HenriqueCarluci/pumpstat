@@ -83,6 +83,8 @@ export function describe(n) {
         : n.status === 'need_info'
           ? t('Sobre seu report #{id}: precisamos de mais detalhes. {r}', { id: n.id, r: n.reply || '' }).trim()
           : t('Resposta ao seu chamado #{id}: {r}', { id: n.id, r: n.reply || '' });
+    case 'sync_expired':
+      return t('Sua conexão com a Pump expirou. Sincronize de novo para as notas continuarem atualizando sozinhas.');
     case 'release_note':
       return t('Novidade no PIU Stats: {t}', { t: (n.titles && (n.titles[getLang()] || n.titles.pt)) || n.title || '' });
     case 'app_update':
@@ -114,6 +116,7 @@ export function linkFor(n) {
     case 'badge': return '/';
     case 'feedback_reply': return n.id ? `/suporte?id=${n.id}` : '/suporte';
     case 'release_note': return '/novidades';
+    case 'sync_expired': return '/ajustes';
     case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     case 'admin_new_user': return '/admin?tab=users';
