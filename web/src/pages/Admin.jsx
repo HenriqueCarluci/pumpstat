@@ -347,6 +347,12 @@ function UserRow({ u, open, onToggle, onChange }) {
               ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: false })}><UserCheck size={15} /> {t('Desbloquear')}</button>
               : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
+            {canAdmin(plan, 'ban') && u.linked && (
+              <button className="btn ghost danger" disabled={busy}
+                onClick={() => run('admin_unlink_piu', { p_user: u.id }, t('Desconectar a conta da Pump (AM.PASS) de {n}?\n\nAs notas importadas saem; a conta, amigos, time e ajustes continuam. Fica registrado.', { n: u.nickname || u.email }))}>
+                {t('Desconectar conta da Pump')}
+              </button>
+            )}
             {canAdmin(plan, 'view_as') && u.admin_role !== 'owner' && (
               <button className="btn ghost" disabled={busy} onClick={async () => {
                 if (!window.confirm(t('Ver o app como {n} por 30 minutos? É só leitura: nada pode ser alterado, e conversas e notificações dessa pessoa ficam ocultas. O acesso fica registrado.', { n: u.nickname || u.email }))) return;
