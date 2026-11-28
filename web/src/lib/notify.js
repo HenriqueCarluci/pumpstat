@@ -112,6 +112,18 @@ export const twitchUrl = (login) => `https://www.twitch.tv/${encodeURIComponent(
 export const canAlert = () => typeof window !== 'undefined' && 'Notification' in window;
 
 /** Busca as notificações a cada 2 min e avisa no aparelho (se permitido) quando chega algo novo. */
+// Alerta do sistema com a marca do PIU Stats (ícone da plataforma + silhueta no badge) e, se houver,
+// a capa da música ou a foto do jogador como imagem. No Android o Chrome só aceita pelo service worker.
+const asset = (p) => new URL(p, document.baseURI).href;
+export async function showAlert(body, tag, picture) {
+  const opts = { body, tag, icon: asset('icons/icon-192.png'), badge: asset('icons/badge-96.png'), ...(picture ? { image: picture } : {}) };
+  try {
+    const reg = await navigator.serviceWorker?.getRegistration?.('./');
+    if (reg) { await reg.showNotification('PIU Stats', { ...opts, data: { url: location.href } }); return; }
+  } catch { /* cai no Notification direto */ }
+  try { new Notification('PIU Stats', opts); } catch { /* sem suporte */ }
+}
+
 export function useNotifications(enabled) {
   const [state, setState] = useState({ items: [], unread: 0, loaded: false });
   const seen = useRef(null);
@@ -122,7 +134,7 @@ export function useNotifications(enabled) {
       const fresh = r.items.filter((n) => n.unread);
       if (seen.current && canAlert() && Notification.permission === 'granted') {
         for (const n of fresh.filter((x) => !seen.current.has(key(x))).slice(0, 3)) {
-          try { new Notification('PIU Stats', { body: describe(n), icon: n.jacket || '/icon.svg', tag: key(n) }); } catch { /* sem suporte */ }
+          showAlert(describe(n), key(n), n.jacket || n.avatar);
         }
       }
       seen.current = new Set(r.items.map(key));

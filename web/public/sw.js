@@ -8,8 +8,10 @@ self.addEventListener('push', (e) => {
   const base = self.registration.scope;
   e.waitUntil(self.registration.showNotification(d.title || 'PIU Stats', {
     body: d.body || '',
+    // ícone da plataforma; o badge (barra de status do Android) precisa ser só a silhueta branca
     icon: new URL('icons/icon-192.png', base).href,
-    badge: new URL('icons/icon-192.png', base).href,
+    badge: new URL('icons/badge-96.png', base).href,
+    ...(d.image ? { image: d.image } : {}),
     tag: d.tag || 'piustats',
     renotify: true,
     requireInteraction: true,

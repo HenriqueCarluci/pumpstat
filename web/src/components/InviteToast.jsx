@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { isOn } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
-import { canAlert } from '../lib/notify.js';
+import { canAlert, showAlert } from '../lib/notify.js';
 import { t } from '../lib/i18n.js';
 import { CircleCheck, Gamepad2, MapPin, MessageCircle } from './Icons.jsx';
 
@@ -25,7 +25,7 @@ export default function InviteToast() {
       if (alerted.current.has(i.invite)) continue;
       alerted.current.add(i.invite);
       if (canAlert() && Notification.permission === 'granted' && document.hidden) {
-        try { new Notification('PIU Stats', { body: `${who(i)}: ${i.message || t('Bora jogar?')}`, icon: '/icon.svg', tag: `inv${i.invite}` }); } catch { /* sem suporte */ }
+        showAlert(`${who(i)}: ${i.message || t('Bora jogar?')}`, `inv${i.invite}`, i.avatar);
       }
     }
   }, [presence.invites]);
