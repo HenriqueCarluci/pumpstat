@@ -3,6 +3,7 @@
 // na pasta do app (Directory.Data/img) e as telas passam a usar o arquivo local.
 // O download é nativo (CapacitorHttp), então não depende de CORS nem do cache do WebView.
 import { Capacitor, CapacitorHttp } from '@capacitor/core';
+import { API_URL } from './config.js';
 
 const native = Capacitor.isNativePlatform();
 const DIR = 'img';
@@ -48,6 +49,11 @@ export const isStored = (u) => !!u && stored.has(nameOf(u));
 export const storedCount = () => stored.size;
 const remoteOk = (u) => typeof u === 'string' && /^https:\/\//.test(u);
 
+// O piugame.com não envia o certificado intermediário e o Android recusa a conexão
+// ("Trust anchor for certification path not found"). No app, as imagens dele passam pelo repasse da nossa API.
+const PIU = /^https:\/\/([a-z0-9-]+\.)*piugame\.com\//i;
+export const remoteImg = (u) => (native && remoteOk(u) && PIU.test(u) ? `${API_URL}/api/img?u=${encodeURIComponent(u)}` : u);
+
 /** Salva uma imagem no aparelho. Devolve true se ficou salva. */
 export async function saveImg(u) {
   if (!native || !remoteOk(u)) return false;
@@ -55,7 +61,7 @@ export async function saveImg(u) {
   if (!fs || !base) return false;
   const n = nameOf(u);
   if (stored.has(n)) return true;
-  const r = await CapacitorHttp.request({ url: u, method: 'GET', responseType: 'blob', connectTimeout: 15000, readTimeout: 20000 });
+  const r = await CapacitorHttp.request({ url: remoteImg(u), method: 'GET', responseType: 'blob', connectTimeout: 15000, readTimeout: 20000 });
   if (r.status < 200 || r.status >= 300) throw new Error(`HTTP ${r.status}`);
   const data = typeof r.data === 'string' ? r.data.replace(/^data:[^,]*,/, '') : '';
   if (data.length < 40) throw new Error('vazio');
@@ -83,11 +89,12 @@ function enqueue(u) {
   setTimeout(pump, 1500);
 }
 
-/** URL para usar em <img>/background: o arquivo local se já foi baixado; senão a da Pump (e salva em segundo plano). */
+/** URL para usar em <img>/background: o arquivo local se já foi baixado; senão a da Pump pelo repasse (e salva em segundo plano). */
 export function img(u) {
-  if (!u || !native || !base || !remoteOk(u)) return u;
+  if (!u || !native || !remoteOk(u)) return u;
+  if (!base) return remoteImg(u);
   const n = nameOf(u);
   if (stored.has(n)) return base + n;
   enqueue(u);
-  return u;
+  return remoteImg(u);
 }

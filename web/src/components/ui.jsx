@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { chartLabel, fmtBpm, fmtScore, gradeTier, PLATES } from '../lib/piu.js';
 import { locale, t } from '../lib/i18n.js';
-import { img } from '../lib/imgStore.js';
+import { img, remoteImg } from '../lib/imgStore.js';
 
 // Imagens oficiais do site da Phoenix 2 (carregadas direto do piugame.com).
 const IMG = 'https://piugame.com/l_img/p2';
@@ -69,7 +69,8 @@ export function Jacket({ song, width = 96, className = '' }) {
   const [st, setSt] = useState(0);
   const [retry, setRetry] = useState(0);
   // 1ª tentativa: arquivo salvo no aparelho (se houver); se falhar, a imagem da Pump
-  const src = song.jacket && (retry ? `${song.jacket}${song.jacket.includes('?') ? '&' : '?'}r=${retry}` : img(song.jacket));
+  const remote = remoteImg(song.jacket);
+  const src = song.jacket && (retry ? `${remote}${remote.includes('?') ? '&' : '?'}r=${retry}` : img(song.jacket));
   const fail = () => { if (retry < 1) setTimeout(() => setRetry((r) => r + 1), 1200); else setSt(2); };
   return (
     <div className={`jacket ${className} ${src && st === 0 ? 'loading' : ''}`} style={{ width, '--hue': hue }}>
