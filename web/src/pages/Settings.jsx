@@ -25,6 +25,7 @@ import AndroidTestCard from '../components/AndroidTestCard.jsx';
 import JacketCacheCard from '../components/JacketCacheCard.jsx';
 import { clearUserCaches, TestMode } from '../components/PlanLock.jsx';
 import { img } from '../lib/imgStore.js';
+import PushPrefsCard from '../components/PushPrefsCard.jsx';
 
 const GROUPS = [['sync', 'Sincronização'], ['perfil', 'Seu perfil'], ['app', 'App'], ['seguranca', 'Segurança'], ['ajuda', 'Ajuda'], ['privacidade', 'Privacidade']];
 
@@ -86,6 +87,7 @@ export default function Settings() {
 
       <Group id="app" title="App">
         <NotesCard />
+        {!plan?.view_as && <PushPrefsCard />}
         {!plan?.view_as && <AndroidTestCard where="settings" />}
         <JacketCacheCard />
         <section className="card">

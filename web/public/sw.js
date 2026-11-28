@@ -1,4 +1,4 @@
-// Service worker só para os avisos (Web Push). Não guarda cache: o app continua sempre atualizado.
+// Service worker só para os avisos (Web Push): fila, mensagens, convites, amigos, time, app. Não guarda cache: o app continua sempre atualizado.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
 
@@ -14,8 +14,9 @@ self.addEventListener('push', (e) => {
     ...(d.image ? { image: d.image } : {}),
     tag: d.tag || 'piustats',
     renotify: true,
-    requireInteraction: true,
-    vibrate: [300, 120, 300, 120, 300],
+    // a fila precisa chamar atenção; os outros avisos são normais
+    requireInteraction: d.tag === 'fila',
+    vibrate: d.tag === 'fila' ? [300, 120, 300, 120, 300] : [120, 60, 120],
     data: { url: new URL(String(d.url || '').replace(/^\//, ''), base).href },
   }));
 });
