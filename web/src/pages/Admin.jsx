@@ -6,7 +6,7 @@ import { useData } from '../App.jsx';
 import { DEFAULT_PRODUCTS } from '../lib/billing.js';
 import { rpc } from '../lib/api.js';
 import { fmtDate, timeAgo } from '../components/ui.jsx';
-import { fmtNum, t, tErr } from '../lib/i18n.js';
+import { fmtNum, locale, t, tErr } from '../lib/i18n.js';
 import { Check, Crown, Eye, ShieldCheck, UserX, UserCheck, X } from '../components/Icons.jsx';
 import { FEATURES, PLAN_LABEL } from '../lib/plans.js';
 import { startViewAs, TestMode } from '../components/PlanLock.jsx';
@@ -22,6 +22,8 @@ import AndroidTestersAdmin from '../components/AndroidTestersAdmin.jsx';
 import { img } from '../lib/imgStore.js';
 import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
 import AdminBacklog from '../components/AdminBacklog.jsx';
+import TicketActions from '../components/TicketActions.jsx';
+import { ticketStatus } from '../lib/tickets.js';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -482,60 +484,56 @@ function GrantsSheet({ userId, userPlan, name, list, onClose, onSaved }) {
 
 const KIND = { question: 'Dúvida', bug: 'Problema', idea: 'Sugestão', other: 'Outro' };
 
-function FeedbackList() {
-  const [status, setStatus] = useState('open');
+export function FeedbackList() {
   const [list, setList] = useState(null);
-  const load = () => rpc('admin_feedback', { p_status: status }).then(setList).catch(() => setList([]));
-  useEffect(() => { setList(null); load(); }, [status]); // eslint-disable-line
-  const mark = async (id, s) => { await rpc('admin_feedback_status', { p_id: id, p_status: s }); load(); };
-  const [note, setNote] = useState({});
-  const decide = async (id, d) => {
-    if (d === 'rejected' && !window.confirm(t('Recusar este item? Quem enviou recebe o aviso com a sua observação.'))) return;
-    await rpc('admin_feedback_decide', { p_id: id, p_decision: d, p_note: note[id] || null }); load();
+  const [view, setView] = useState('new');
+  const [kind, setKind] = useState('all');
+  const load = () => rpc('admin_feedback', { p_status: 'all' }).then(setList).catch(() => setList([]));
+  useEffect(() => { load(); }, []);
+  const VIEW = {
+    new: (f) => f.status === 'open',
+    doing: (f) => f.status === 'approved' || f.status === 'need_info',
+    closed: (f) => !['open', 'approved', 'need_info'].includes(f.status),
+    all: () => true,
   };
+  const KINDF = { all: () => true, bug: (f) => f.kind === 'bug', idea: (f) => f.kind === 'idea', question: (f) => f.kind === 'question' || f.kind === 'other' };
+  const all = list || [];
+  const count = (v) => all.filter(VIEW[v]).length;
+  const shown = all.filter(VIEW[view]).filter(KINDF[kind]);
   return (
     <>
-      <p className="muted small">{t('Tudo passa pela sua aprovação: problema aprovado entra na fila de correção diária; melhoria aprovada entra na fila da próxima versão semanal.')}</p>
-      <Chips wrap value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['bugs', t('Problemas')], ['ideas', t('Sugestões (backlog)')], ['approved', t('Aprovados')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
-      {list && !list.length && <p className="empty">{t('Nenhuma mensagem aqui.')}</p>}
+      <p className="muted small">{t('Novos esperam você: problema aprovado vai para a correção diária, sugestão aprovada para a versão semanal, dúvida você responde aqui. A resposta aparece no app de quem abriu.')}</p>
+      <Chips wrap value={view} onChange={setView} options={[['new', `${t('Novos')} (${count('new')})`], ['doing', `${t('Em andamento')} (${count('doing')})`], ['closed', t('Encerrados')], ['all', t('Todos')]]} />
+      <Chips wrap value={kind} onChange={setKind} options={[['all', t('Todos os tipos')], ['bug', t('Problemas')], ['idea', t('Sugestões')], ['question', t('Dúvidas')]]} />
+      {!list && <p className="muted small">{t('Carregando…')}</p>}
+      {list && !shown.length && <p className="empty">{t('Nenhum chamado aqui.')}</p>}
       <div className="admin-feedback">
-        {(list || []).map((f) => (
-          <div key={f.id} className={`card fb ${f.status}`}>
-            <div className="row-between">
-              <span className="tag">{t(KIND[f.kind] || f.kind)} #{f.id}</span>
-              <small className="muted">{fmtDate(f.at)}</small>
-            </div>
-            <p className="fb-msg">{f.message}</p>
-            {f.shot && <a href={f.shot} target="_blank" rel="noopener noreferrer"><img className="fb-shot-img" src={f.shot} alt={t('Print do problema')} /></a>}
-            {f.reply && <p className="small fb-reply"><b>{f.status === 'fixed' ? t('Corrigido') : t('Resposta')}{f.fixed_in ? ` (${f.fixed_in})` : ''}:</b> {f.reply}</p>}
-            <small className="muted">
-              {f.nickname || f.email}{f.contact && f.contact !== f.email ? ` · ${t('responder para')} ${f.contact}` : ''}
-              {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}{f.meta?.app ? ` · app ${f.meta.app}` : ''}
-            </small>
-            {(f.kind === 'idea' || f.kind === 'bug') && f.status === 'open' && (
-              <div className="fb-decide">
-                <input value={note[f.id] || ''} onChange={(e) => setNote((n) => ({ ...n, [f.id]: e.target.value }))} maxLength={300}
-                  placeholder={t('Observação para quem enviou (opcional)')} />
-                <div className="bm-row">
-                  <button className="btn" onClick={() => decide(f.id, 'approved')}><Check size={15} /> {f.kind === 'bug' ? t('Aprovar para correção') : t('Aprovar para a versão semanal')}</button>
-                  <button className="btn ghost danger" onClick={() => decide(f.id, 'rejected')}>{t('Recusar')}</button>
-                </div>
-              </div>
-            )}
-            {(f.kind === 'idea' || f.kind === 'bug') && f.status === 'approved' && (
-              <div className="bm-row"><span className="tag ok">{f.kind === 'bug' ? t('Aprovado: na fila de correção diária') : t('Aprovada: entra na próxima versão semanal')}</span>
-                <button className="btn ghost sm" onClick={() => decide(f.id, 'open')}>{t('Devolver para decidir')}</button></div>
-            )}
-            <div className="bm-row">
-              {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`PIU Stats #${f.id}`)}`}>{t('Responder por e-mail')}</a>}
-              {f.kind !== 'idea' && f.kind !== 'bug' && (f.status === 'open'
-                ? <button className="btn" onClick={() => mark(f.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
-                : <button className="btn ghost" onClick={() => mark(f.id, 'open')}>{t('Reabrir')}</button>)}
-            </div>
-          </div>
-        ))}
+        {shown.map((f) => <AdminTicket key={f.id} f={f} onChange={load} />)}
       </div>
     </>
+  );
+}
+
+/** Um chamado na visão do admin: o que é, quem mandou, situação, resposta enviada e as ações numa barra só. */
+function AdminTicket({ f, onChange }) {
+  const [more, setMore] = useState(false);
+  const long = f.message.length > 280;
+  const [label, tone] = ticketStatus(f);
+  return (
+    <div className={`card fb tk-admin k-${f.kind}`}>
+      <div className="tk-admin-head">
+        <span className="tk-meta"><span className="tag">{t(KIND[f.kind] || f.kind)} #{f.id}</span><span className={`tag tk-st ${tone}`}>{label}</span></span>
+        <small className="muted tk-date">{new Date(f.at).toLocaleString(locale(), { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}</small>
+      </div>
+      <p className="fb-msg">{more || !long ? f.message : `${f.message.slice(0, 280)}…`}{long && <button type="button" className="linkish" onClick={() => setMore(!more)}>{more ? t('menos') : t('mais')}</button>}</p>
+      {f.shot && <a href={f.shot} target="_blank" rel="noopener noreferrer"><img className="fb-shot-img" src={f.shot} alt={t('Print do problema')} /></a>}
+      {f.reply && <div className="tk-reply small"><b>{t('Resposta enviada')}{f.fixed_in ? ` · ${f.fixed_in}` : ''}</b><p>{f.reply}</p></div>}
+      <small className="muted tk-who">
+        {f.nickname || f.email}{f.contact && f.contact !== f.email ? ` · ${t('responder para')} ${f.contact}` : ''}
+        {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.app ? ` · app ${f.meta.app}` : ''}{f.meta?.platform ? ` · ${f.meta.platform}` : ''}
+      </small>
+      <TicketActions x={f} onChange={onChange} />
+    </div>
   );
 }
 

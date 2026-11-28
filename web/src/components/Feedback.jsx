@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { rpc, SUPABASE_KEY, SUPABASE_URL } from '../lib/api.js';
 import { isNative } from '../lib/native.js';
@@ -40,7 +41,7 @@ async function appVersion() {
  * Formulário de ajuda e feedback. Salva no Supabase e a API manda o e-mail para o suporte.
  * "Problema" pode levar um print; uma tarefa diária lê os problemas novos, corrige e avisa por notificação.
  */
-export default function Feedback() {
+export default function Feedback({ onSent } = {}) {
   const { session, version } = useData();
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState('question');
@@ -74,7 +75,7 @@ export default function Feedback() {
           body: JSON.stringify({ id, kind, message, contact, meta }),
         });
       } catch { /* ignora */ }
-      setDone(kind); setMessage(''); setShot(null);
+      setDone(kind); setMessage(''); setShot(null); onSent?.();
     } catch (ex) { setErr(tErr(ex.message)); }
     setBusy(false);
   };
@@ -94,7 +95,8 @@ export default function Feedback() {
           <b>{t('Mensagem enviada')}</b>
           <p className="muted small">{done === 'bug'
             ? t('Obrigado! Os problemas são analisados todo dia. Quando este for corrigido, você recebe um aviso aqui no app.')
-            : t('Obrigado! Vamos responder no e-mail informado.')}</p>
+            : t('Obrigado! A resposta aparece em Meus chamados e você recebe um aviso no app.')}</p>
+          {session && !onSent && <Link className="small" to="/suporte">{t('Acompanhar em Meus chamados')}</Link>}
         </div>
         <button className="btn ghost" onClick={() => { setDone(false); setOpen(false); }}>{t('Fechar')}</button>
       </div>

@@ -8,7 +8,7 @@ import { Chips } from './Songs.jsx';
 import PiuConnect, { QuickSync } from '../components/PiuConnect.jsx';
 import { timeAgo } from '../components/ui.jsx';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Crown, Heart, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
+import { ChevronRight, Crown, Heart, LifeBuoy, Lock, Logo, ShieldCheck, Sparkles, Trash2 } from '../components/Icons.jsx';
 import { entitlements, isOn, PLAN_LABEL } from '../lib/plans.js';
 import { rpc } from '../lib/api.js';
 import { useEffect, useState } from 'react';
@@ -141,6 +141,12 @@ export default function Settings() {
           <h3>{t('Ajuda e feedback')}</h3>
           <p className="muted small">{t('Encontrou um problema, tem uma dúvida ou uma ideia? Mande para o suporte.')}</p>
           <Feedback />
+          {session && (
+            <div className="set-row">
+              <span><b className="ic-row"><LifeBuoy size={15} /> {t('Meus chamados')}</b><small className="muted">{t('Acompanhe o andamento e as respostas do suporte.')}</small></span>
+              <Link className="btn ghost" to="/suporte">{t('Abrir')}</Link>
+            </div>
+          )}
           <div className="set-row">
             <span><b className="ic-row"><Sparkles size={15} /> {t('Tutorial guiado')}</b><small className="muted">{t('Um tour rápido pelas telas principais do app.')}</small></span>
             <button type="button" className="btn ghost" onClick={startTour}>{t('Ver tutorial')}</button>

@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import AdminPage from './pages/Admin.jsx';
 import AdminBacklog from './components/AdminBacklog.jsx';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import SupportP from './pages/Support.jsx';
+import { FeedbackList } from './pages/Admin.jsx';
 import TeamPicker from './components/TeamPicker.jsx';
 import DayReport from './pages/DayReport.jsx';
 import NotifToast from './components/NotifToast.jsx';
@@ -54,6 +56,18 @@ import { asPreviewUser } from './lib/plans.js';
 // respostas falsas do servidor para conferir telas que dependem de rpc
 const FAKE = {
   android_tester_status: { joined: !!window.__AT, added: window.__AT === 2, email: 'eu@gmail.com', link: 'https://play.google.com/apps/internaltest/1' },
+  my_feedback: [
+    { id: 12, kind: 'bug', status: 'need_info', message: 'A imagem do meu dia não leva as fotos quando compartilho.', reply: 'Em qual app você compartilhou (WhatsApp, Instagram)? Aparece algum erro?', at: new Date().toISOString(), decided_at: new Date().toISOString() },
+    { id: 11, kind: 'idea', status: 'approved', message: 'Poderia ter metas semanais com aviso quando eu bater.', at: new Date().toISOString(), decided_at: new Date().toISOString() },
+    { id: 10, kind: 'question', status: 'open', message: 'Como conecto minha conta da Pump?', at: new Date().toISOString() },
+    { id: 7, kind: 'bug', status: 'fixed', message: 'O teclado cobria a caixa de mensagem.', reply: 'Agora a tela sobe junto com o teclado.', fixed_in: '1.0.120', at: new Date().toISOString(), decided_at: new Date().toISOString(), resolved_at: new Date().toISOString() },
+  ],
+  admin_feedback: [
+    { id: 12, kind: 'bug', status: 'need_info', message: 'A imagem do meu dia não leva as fotos quando compartilho.', reply: 'Em qual app você compartilhou?', nickname: 'AMIGO #0002', email: 'amigo@exemplo.com', user: 'u2', meta: { page: '#/dia', app: '1.0.128 (128)', platform: 'android' }, at: new Date().toISOString(), decided_at: new Date().toISOString() },
+    { id: 13, kind: 'question', status: 'open', message: 'Como conecto minha conta da Pump?', nickname: 'NOVO #0003', email: 'novo@exemplo.com', user: 'u3', meta: { page: '#/ajustes' }, at: new Date().toISOString() },
+    { id: 14, kind: 'bug', status: 'open', message: 'Na página da música, a parte de Amigos está duplicada.', nickname: 'JOGADOR #0001', email: 'j1@exemplo.com', user: 'u1', meta: { page: '#/musica/1', app: '1.0.132 (132)', platform: 'android' }, at: new Date().toISOString() },
+    { id: 15, kind: 'idea', status: 'open', message: 'Modo escuro mais escuro para jogar à noite.', nickname: 'AMIGO #0002', email: 'amigo@exemplo.com', user: 'u2', meta: {}, at: new Date().toISOString() },
+  ],
   admin_backlog: { errors_24h: 3, items: [
     { id: 1, kind: 'bug', status: 'open', message: 'Na página da música, a parte de Amigos está confusa e duplicada.', priority: 2, nickname: 'JOGADOR #0001', at: new Date().toISOString(), page: '#/musica/1', app: '1.0.128 (128)' },
     { id: 3, kind: 'idea', status: 'approved', title: 'Fila vira Check-in / Encontrar uma Pump', message: 'Renomear a Fila para Check-in e permitir adicionar várias pessoas.', priority: 1, origin: 'admin', at: new Date().toISOString(), decided_at: new Date().toISOString() },
@@ -220,7 +234,7 @@ function HShell({ children }) {
 
 createRoot(document.getElementById('root')).render(
   <DataCtx.Provider value={ctx}>
-    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/boot" element={<BootScreen />} /><Route path="/backlog" element={<div className="page"><AdminBacklog /></div>} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/teststyle" element={<TestStyle />} /><Route path="/testdonut" element={<TestDonut />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
+    <HashRouter><HShell><main className="content"><Routes><Route path="/" element={<HomeP />} /><Route path="/boot" element={<BootScreen />} /><Route path="/backlog" element={<div className="page"><AdminBacklog /></div>} /><Route path="/musicas" element={<SongsP />} /><Route path="/recentes" element={<RecentP />} /><Route path="/ajustes" element={<SettingsP />} /><Route path="/fila" element={<VenuesP />} /><Route path="/fila/:slug" element={<QueueP />} /><Route path="/titulos" element={<TitlesP />} /><Route path="/jogadores" element={<PlayersP />} /><Route path="/votacoes" element={<VotesP />} /><Route path="/progresso" element={<ProgressP />} /><Route path="/notificacoes" element={<NotificationsP />} /><Route path="/online" element={<OnlineP />} /><Route path="/planos" element={<PlansP />} /><Route path="/assinatura" element={<SubscriptionP />} /><Route path="/treino" element={<TrainingP />} /><Route path="/desafios" element={<ChallengesP />} /><Route path="/musica/:id" element={<Song />} /><Route path="/tier" element={<Tier />} /><Route path="/matriz" element={<M />} /><Route path="/tentativas" element={<A />} /><Route path="/flags" element={<F />} /><Route path="/time" element={<MyTeam />} /><Route path="/pedido" element={<TeamPicker userId="eu" />} /><Route path="/dia" element={<DayReport />} /><Route path="/dia/:day" element={<DayReport />} /><Route path="/plano" element={<P />} /><Route path="/recomendacoes" element={<Recommend />} /><Route path="/chart/:id" element={<ChartPage />} /><Route path="/admin" element={<AdminPage />} /><Route path="/novidades" element={<ReleaseNotesP />} /><Route path="/suporte" element={<SupportP />} /><Route path="/suporte-admin" element={<div className="page"><FeedbackList /></div>} /><Route path="/teststyle" element={<TestStyle />} /><Route path="/testdonut" element={<TestDonut />} /><Route path="/jogador/:id" element={<PlayerProfile />} /><Route path="/jogador/:id/vs" element={<ComparePlayer />} /></Routes></main></HShell></HashRouter>
   </DataCtx.Provider>,
 );
 

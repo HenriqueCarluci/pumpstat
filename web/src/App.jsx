@@ -55,6 +55,7 @@ import { QuizPrompt } from './components/QuizModal.jsx';
 import { initBilling } from './lib/billing.js';
 import Privacy from './pages/Privacy.jsx';
 import ReleaseNotes from './pages/ReleaseNotes.jsx';
+import Support from './pages/Support.jsx';
 import GuestApp from './components/GuestApp.jsx';
 import { isGuest } from './lib/guest.js';
 import { t, tErr } from './lib/i18n.js';
@@ -374,6 +375,7 @@ function Shell() {
             <Route path="/dia" element={<DayReport />} />
             <Route path="/dia/:day" element={<DayReport />} />
             <Route path="/novidades" element={<ReleaseNotes />} />
+            <Route path="/suporte" element={<Support />} />
             <Route path="/privacidade" element={<Privacy />} />
             <Route path="/excluir-conta" element={<DeleteInfo />} />
             <Route path="*" element={<Home />} />

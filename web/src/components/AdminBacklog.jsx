@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { rpc } from '../lib/api.js';
 import { locale, t, tErr } from '../lib/i18n.js';
-import { Check, Plus } from './Icons.jsx';
+import { Plus } from './Icons.jsx';
+import TicketActions from './TicketActions.jsx';
 import { Chips } from '../pages/Songs.jsx';
+import { ticketStatus } from '../lib/tickets.js';
 
 // Quando as tarefas automáticas rodam (horário de Brasília): correção diária 18:51; versão semanal segunda 16:43.
 function nextRuns() {
@@ -46,7 +48,8 @@ function Item({ x, children, prio, onPrio }) {
         {x.origin === 'admin' ? t('Seu item') : x.origin === 'backlog do produto' ? t('Backlog do produto') : x.nickname}
         {' · '}{fmtDay(x.at)}{x.page ? ` · ${x.page}` : ''}{x.app ? ` · app ${x.app}` : ''}
       </small>
-      {x.reply && <p className="small bl-reply">{x.reply}</p>}
+      <span className={`tag tk-st ${ticketStatus(x)[1]}`}>{ticketStatus(x)[0]}</span>
+      {x.reply && <p className="small bl-reply"><b>{t('Resposta')}:</b> {x.reply}</p>}
       {children}
     </div>
   );
@@ -60,7 +63,6 @@ export default function AdminBacklog() {
   const [data, setData] = useState(null);
   const [err, setErr] = useState('');
   const [view, setView] = useState('decide');
-  const [note, setNote] = useState({});
   const [add, setAdd] = useState({ kind: 'idea', title: '', message: '', approved: true, priority: 2 });
   const [busy, setBusy] = useState(false);
   const load = () => rpc('admin_backlog').then(setData).catch((e) => setErr(tErr(e.message)));
@@ -79,7 +81,6 @@ export default function AdminBacklog() {
   const runs = nextRuns();
 
   const act = async (fn) => { setErr(''); try { await fn(); await load(); } catch (e) { setErr(tErr(e.message)); } };
-  const decide = (id, d) => act(() => rpc('admin_feedback_decide', { p_id: id, p_decision: d, p_note: note[id] || null }));
   const prio = (id, p) => act(() => rpc('admin_backlog_priority', { p_id: id, p_priority: p }));
   const submit = async (e) => {
     e.preventDefault(); setBusy(true);
@@ -107,12 +108,7 @@ export default function AdminBacklog() {
           {!toDecide.length && <p className="empty small">{t('Nada esperando decisão.')}</p>}
           {toDecide.map((x) => (
             <Item key={x.id} x={x} prio onPrio={prio}>
-              <input className="bl-note" value={note[x.id] || ''} onChange={(e) => setNote((n) => ({ ...n, [x.id]: e.target.value }))} maxLength={300}
-                placeholder={t('Observação ou detalhe para o desenvolvimento (opcional)')} />
-              <div className="bm-row">
-                <button className="btn sm" onClick={() => decide(x.id, 'approved')}><Check size={14} /> {x.kind === 'bug' ? t('Aprovar para correção') : t('Aprovar para a semanal')}</button>
-                <button className="btn ghost sm danger-text" onClick={() => { if (window.confirm(t('Recusar este item?'))) decide(x.id, 'rejected'); }}>{t('Recusar')}</button>
-              </div>
+              <TicketActions x={x} onChange={load} />
             </Item>
           ))}
           {rejected.length > 0 && <p className="muted tiny">{t('{n} recusados nos últimos 45 dias.', { n: rejected.length })}</p>}
@@ -125,10 +121,8 @@ export default function AdminBacklog() {
           {!approved.length && <p className="empty small">{t('Nenhum item aprovado.')}</p>}
           {approved.map((x, i) => (
             <Item key={x.id} x={x} prio onPrio={prio}>
-              <div className="bm-row">
-                <span className={`tag ${i < 4 ? 'ok' : ''}`}>{i < 4 ? t('Entra na próxima semanal') : t('Fica para a seguinte')}</span>
-                <button className="btn ghost sm" onClick={() => decide(x.id, 'open')}>{t('Devolver para decidir')}</button>
-              </div>
+              <span className={`tag ${i < 4 ? 'ok' : ''}`}>{i < 4 ? t('Entra na próxima semanal') : t('Fica para a seguinte')}</span>
+              <TicketActions x={x} onChange={load} />
             </Item>
           ))}
         </>
@@ -140,13 +134,11 @@ export default function AdminBacklog() {
           {!bugsQueue.length && !bugsWait.length && <p className="empty small">{t('Nenhum problema na fila de correção.')}</p>}
           {bugsQueue.map((x, i) => (
             <Item key={x.id} x={x} prio onPrio={prio}>
-              <div className="bm-row">
-                <span className={`tag ${i < 5 ? 'ok' : ''}`}>{i < 5 ? t('Entra na próxima correção') : t('Fica para a seguinte')}</span>
-                <button className="btn ghost sm" onClick={() => decide(x.id, 'open')}>{t('Devolver para decidir')}</button>
-              </div>
+              <span className={`tag ${i < 5 ? 'ok' : ''}`}>{i < 5 ? t('Entra na próxima correção') : t('Fica para a seguinte')}</span>
+              <TicketActions x={x} onChange={load} />
             </Item>
           ))}
-          {bugsWait.map((x) => <Item key={x.id} x={x}><span className="tag">{t('Esperando detalhes de quem reportou')}</span></Item>)}
+          {bugsWait.map((x) => <Item key={x.id} x={x}><TicketActions x={x} onChange={load} /></Item>)}
           {bugsDone.length > 0 && <div className="rv-label">{t('Resolvidos (45 dias)')}</div>}
           {bugsDone.map((x) => (
             <Item key={x.id} x={x}>
