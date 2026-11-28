@@ -2594,3 +2594,10 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .unlink-confirm p { margin: 0; }
 .unlink-confirm .card-actions { margin: 0; }
 .unlink-confirm input { letter-spacing: .08em; }
+.atest-item { flex-wrap: wrap; }
+.atest-tag svg { vertical-align: -1px; }
+.atest-add { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.atest-search { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); }
+.atest-cands { display: grid; gap: 6px; max-height: 260px; overflow: auto; }
+.atest-cand { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
+.atest-add > .btn { justify-self: start; }

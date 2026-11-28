@@ -7,3 +7,6 @@ export const androidTestLeave = () => rpc('android_tester_leave');
 export const adminAndroidTesters = () => rpc('admin_android_testers');
 export const adminAndroidTestersMark = (users, added) => rpc('admin_android_testers_mark', { p_users: users, p_added: added });
 export const adminNotifyAndroidTesters = (version) => rpc('admin_notify_android_testers', { p_version: version });
+export const adminAndroidTestersNotify = (users, on) => rpc('admin_android_testers_notify', { p_users: users, p_on: on });
+export const adminAndroidCandidates = (q) => rpc('admin_android_candidates', { p_q: q || '' });
+export const adminAndroidTestersAdd = (users) => rpc('admin_android_testers_add', { p_users: users });
