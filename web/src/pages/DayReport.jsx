@@ -142,7 +142,7 @@ export default function DayReport() {
   const rep = useMemo(() => (raw ? buildDay(raw, data.byId) : null), [raw, data.byId]);
 
   if (!isOn(plan, 'day_report')) return <div className="page"><p className="empty">{t('Este recurso está desligado no momento.')}</p></div>;
-  if (!entitlements(plan).can('day_report')) return <div className="page"><h2>{t('Dia de jogo')}</h2><PlanLock feature="day_report" title={t('O relatório do dia')} compact /></div>;
+  if (!entitlements(plan).can('day_report')) return <div className="page"><h2>{t('Diário de Treino')}</h2><PlanLock feature="day_report" title={t('O relatório do dia')} compact /></div>;
 
   const days = raw?.days || [];
   const idx = rep ? days.findIndex(([d]) => d === rep.day) : -1;
@@ -156,7 +156,7 @@ export default function DayReport() {
   const head = (
     <>
       <div className="row-between dr-top">
-        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Dia de jogo')}</h2>
+        <h2 className="ic-row"><CalendarCheck size={20} /> {t('Diário de Treino')}</h2>
         {syncBtn}
       </div>
       {running && <small className="muted">{tMsg(job?.message)}</small>}
@@ -220,7 +220,7 @@ export default function DayReport() {
             : t('{n} passes deste dia não têm registro anterior. Sincronize seus scores para o app começar a separar primeiro passe de upscore.', { n: rep.unknownPrev })}
         </p>
       )}
-      {pv && <p className="muted tiny dr-vs">{t('Setas: comparação com o dia de jogo anterior ({day}).', { day: dayLabelOf(pv.day) })}</p>}
+      {pv && <p className="muted tiny dr-vs">{t('Setas: comparação com o treino anterior ({day}).', { day: dayLabelOf(pv.day) })}</p>}
 
       {(() => { const hl = highlights(rep, 3); return hl.length > 0 && (
         <section className="card dr-hls">

@@ -184,7 +184,7 @@ export async function drawDayImage({ rep, nickname, versionName, dayLabel, list,
   if (logo) { ctx.save(); rr(ctx, M, 56, 84, 84, 22); ctx.clip(); ctx.drawImage(logo, M, 56, 84, 84); ctx.restore(); }
   ctx.textBaseline = 'alphabetic';
   ctx.fillStyle = NEON; ctx.font = `800 24px ${SANS}`;
-  ctx.fillText(t('Dia de jogo').toUpperCase(), M + 104, 88);
+  ctx.fillText(t('Diário de Treino').toUpperCase(), M + 104, 88);
   ctx.fillStyle = TXT; ctx.font = `800 44px ${SANS}`;
   ctx.fillText(fit(ctx, nickname || 'PIU Stats', W - M * 2 - 104 - 300), M + 104, 136);
   ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `600 24px ${SANS}`;
@@ -315,7 +315,7 @@ async function drawListPage({ rows, nickname, dayLabel, format, page, pages, log
 
   if (logo) { ctx.save(); rr(ctx, M, 50, 64, 64, 18); ctx.clip(); ctx.drawImage(logo, M, 50, 64, 64); ctx.restore(); }
   ctx.fillStyle = NEON; ctx.font = `800 22px ${SANS}`;
-  ctx.fillText(`${t('Dia de jogo').toUpperCase()} · ${t('Todos os passes')}`, M + 84, 76);
+  ctx.fillText(`${t('Diário de Treino').toUpperCase()} · ${t('Todos os passes')}`, M + 84, 76);
   ctx.fillStyle = TXT; ctx.font = `800 36px ${SANS}`;
   ctx.fillText(fit(ctx, nickname || 'PIU Stats', W - M * 2 - 84 - 260), M + 84, 114);
   ctx.textAlign = 'right'; ctx.fillStyle = MUTED; ctx.font = `600 24px ${SANS}`;

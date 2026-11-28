@@ -1972,3 +1972,7 @@ Nunca sincronizou | Never synced | Nunca sincronizó | 동기화한 적 없음 |
 sem sessão salva | no saved session | sin sesión guardada | 저장된 세션 없음 | 保存されたセッションなし | pas de session enregistrée | nessuna sessione salvata
 automática ligada | auto sync on | automática activada | 자동 동기화 켜짐 | 自動同期オン | synchro auto activée | automatica attiva
 Ninguém aqui. | No one here. | Nadie aquí. | 아무도 없어요. | 誰もいません。 | Personne ici. | Nessuno qui.
+Diário de Treino | Training Diary | Diario de entrenamiento | 트레이닝 일지 | トレーニング日誌 | Journal d'entraînement | Diario di allenamento
+Diário de Treino (relatório do dia) | Training Diary (day report) | Diario de entrenamiento (informe del día) | 트레이닝 일지 (일일 리포트) | トレーニング日誌（1日のレポート） | Journal d'entraînement (rapport du jour) | Diario di allenamento (report del giorno)
+Relatório do Diário de Treino | Training Diary report | Informe del Diario de entrenamiento | 트레이닝 일지 리포트 | トレーニング日誌のレポート | Rapport du journal d'entraînement | Resoconto del Diario di allenamento
+Setas: comparação com o treino anterior ({day}). | Arrows: compared with the previous session ({day}). | Flechas: comparación con el entrenamiento anterior ({day}). | 화살표: 이전 트레이닝({day})과 비교. | 矢印：前回のトレーニング（{day}）との比較。 | Flèches : comparaison avec la séance précédente ({day}). | Frecce: confronto con l'allenamento precedente ({day}).

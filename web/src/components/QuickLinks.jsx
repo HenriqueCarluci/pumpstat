@@ -36,7 +36,7 @@ export default function QuickLinks() {
     { id: 'progress', g: 'evo', to: '/progresso', label: 'Progresso', icon: <TrendingUp size={18} />, f: 'player_stats' },
     { id: 'recs', g: 'evo', to: '/recomendacoes', label: 'Recomendadas', icon: <Target size={18} />, f: 'recommendations_all' },
     isOn(plan, 'challenges') && { id: 'challenges', g: 'evo', to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },
-    isOn(plan, 'day_report') && { id: 'day', g: 'game', to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} />, f: 'day_report' },
+    isOn(plan, 'day_report') && { id: 'day', g: 'game', to: '/dia', label: 'Diário de Treino', icon: <CalendarCheck size={18} />, f: 'day_report' },
     { id: 'recent', g: 'game', to: '/recentes', label: 'Recentes', icon: <History size={18} /> },
     { id: 'titles', g: 'game', to: '/titulos', label: 'Títulos', icon: <Tag size={18} /> },
   ].filter(Boolean), [plan, presence?.online]);

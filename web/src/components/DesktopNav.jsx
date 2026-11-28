@@ -30,7 +30,7 @@ export function useSections() {
       isOn(plan, 'challenges') && { to: '/desafios', label: 'Desafios', icon: <Trophy size={18} /> },
     ].filter(Boolean) },
     { g: 'Seu jogo', items: [
-      isOn(plan, 'day_report') && { to: '/dia', label: 'Dia de jogo', icon: <CalendarCheck size={18} />, f: 'day_report' },
+      isOn(plan, 'day_report') && { to: '/dia', label: 'Diário de Treino', icon: <CalendarCheck size={18} />, f: 'day_report' },
       { to: '/recentes', label: 'Recentes', icon: <History size={18} /> },
       { to: '/titulos', label: 'Títulos', icon: <Tag size={18} /> },
     ].filter(Boolean) },
