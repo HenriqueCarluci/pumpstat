@@ -16,13 +16,16 @@ const ls = {
 export const nativePushAvailable = () => Capacitor.getPlatform() === 'android' && Capacitor.isPluginAvailable('PushNotifications');
 
 let ready = null;
+let PN = null; // o plugin não pode sair de função async (o proxy do Capacitor responde a .then)
 let waiting = [];
 
 /** Canais, listeners do token e do toque no aviso. Roda uma vez por abertura do app. */
 function setup() {
   if (ready) return ready;
   ready = (async () => {
-    const { PushNotifications } = await import('@capacitor/push-notifications');
+    const mod = await import('@capacitor/push-notifications');
+    PN = mod.PushNotifications;
+    const PushNotifications = PN;
     await PushNotifications.createChannel({ id: 'avisos', name: 'Avisos', description: 'Mensagens, convites, amigos e novidades', importance: 4, visibility: 1, lights: true, lightColor: '#8CFF3A', vibration: true }).catch(() => {});
     await PushNotifications.createChannel({ id: 'fila', name: 'Fila e check-in', description: 'Quando você é o próximo e quando chega a sua vez', importance: 5, visibility: 1, lights: true, lightColor: '#8CFF3A', vibration: true }).catch(() => {});
     await PushNotifications.addListener('registration', async ({ value }) => {
@@ -39,12 +42,12 @@ function setup() {
       const i = url.indexOf('#/');
       if (i >= 0) window.location.hash = url.slice(i + 1);
     });
-    return PushNotifications;
   })();
+  ready.catch(() => { ready = null; });
   return ready;
 }
 
-function register(PN) {
+function register() {
   return new Promise((ok, fail) => {
     waiting.push({ ok, fail });
     PN.register().catch(fail);
@@ -54,7 +57,7 @@ function register(PN) {
 
 /** 'on' | 'off' | 'denied' */
 export async function nativePushStatus() {
-  const PN = await setup();
+  await setup();
   const p = await PN.checkPermissions();
   if (p.receive === 'denied') return 'denied';
   if (p.receive !== 'granted' || ls.get(OFF_KEY) === '1') return 'off';
@@ -62,18 +65,18 @@ export async function nativePushStatus() {
 }
 
 export async function enableNativePush() {
-  const PN = await setup();
+  await setup();
   let p = await PN.checkPermissions();
   if (p.receive !== 'granted') p = await PN.requestPermissions();
   if (p.receive !== 'granted') throw new Error('As notificações estão bloqueadas para o PIU Stats. Libere nas configurações do aparelho.');
   ls.set(OFF_KEY, null);
   ls.set(ASKED_KEY, '1');
-  const tok = await register(PN);
+  const tok = await register();
   await rpc('push_fcm_register', { p_token: tok });
 }
 
 export async function disableNativePush() {
-  const PN = await setup();
+  await setup();
   const tok = ls.get(TOKEN_KEY);
   ls.set(OFF_KEY, '1');
   if (tok) await rpc('push_fcm_unregister', { p_token: tok }).catch(() => {});
@@ -88,10 +91,10 @@ export async function disableNativePush() {
 export async function syncNativePush(loggedIn) {
   if (!nativePushAvailable()) return;
   try {
-    const PN = await setup();
+    await setup();
     if (!loggedIn || ls.get(OFF_KEY) === '1') return;
     const p = await PN.checkPermissions();
-    if (p.receive === 'granted') { await register(PN).catch(() => {}); return; }
+    if (p.receive === 'granted') { await register().catch(() => {}); return; }
     if (p.receive !== 'denied' && !ls.get(ASKED_KEY)) {
       ls.set(ASKED_KEY, '1');
       await enableNativePush().catch(() => {});
