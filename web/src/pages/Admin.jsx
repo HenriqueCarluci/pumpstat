@@ -493,9 +493,11 @@ function FeedbackList() {
               <small className="muted">{fmtDate(f.at)}</small>
             </div>
             <p className="fb-msg">{f.message}</p>
+            {f.shot && <a href={f.shot} target="_blank" rel="noopener noreferrer"><img className="fb-shot-img" src={f.shot} alt={t('Print do problema')} /></a>}
+            {f.reply && <p className="small fb-reply"><b>{f.status === 'fixed' ? t('Corrigido') : t('Resposta')}{f.fixed_in ? ` (${f.fixed_in})` : ''}:</b> {f.reply}</p>}
             <small className="muted">
               {f.nickname || f.email}{f.contact && f.contact !== f.email ? ` · ${t('responder para')} ${f.contact}` : ''}
-              {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}
+              {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}{f.meta?.app ? ` · app ${f.meta.app}` : ''}
             </small>
             <div className="bm-row">
               {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`PIU Stats #${f.id}`)}`}>{t('Responder por e-mail')}</a>}

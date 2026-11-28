@@ -73,6 +73,12 @@ export function describe(n) {
       return t('Você ganhou no desafio {name}!', { name: n.title }) + (n.prize ? ` ${t('Prêmio')}: ${n.prize}` : '');
     case 'admin_new_user':
       return t('Novo usuário no PIU Stats: {email}', { email: n.email || '—' }) + (n.provider && n.provider !== 'email' ? ` (${n.provider === 'google' ? 'Google' : n.provider})` : '');
+    case 'feedback_reply':
+      return n.status === 'fixed'
+        ? t('Seu report #{id} foi corrigido{v}. {r}', { id: n.id, v: n.fixed_in ? ` ${t('na versão {v}', { v: n.fixed_in })}` : '', r: n.reply || '' }).trim()
+        : n.status === 'need_info'
+          ? t('Sobre seu report #{id}: precisamos de mais detalhes. {r}', { id: n.id, r: n.reply || '' }).trim()
+          : t('Resposta ao seu report #{id}: {r}', { id: n.id, r: n.reply || '' });
     case 'app_update':
       return t('Nova versão do app Android para teste ({v}). Toque para atualizar pela Play Store.', { v: n.version || '' });
     case 'badge':
@@ -100,6 +106,7 @@ export function linkFor(n) {
     case 'team_rejected': case 'team_join_rejected': case 'piu_link_moved': return '/ajustes';
     case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'badge': return '/';
+    case 'feedback_reply': return '/ajustes';
     case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     case 'admin_new_user': return '/admin?tab=users';

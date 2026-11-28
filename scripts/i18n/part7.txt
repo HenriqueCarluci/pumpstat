@@ -1725,3 +1725,15 @@ Ok | OK | Ok | 확인 | OK | OK | Ok
 Conta da Pump (AM.PASS) | Pump account (AM.PASS) | Cuenta de Pump (AM.PASS) | Pump 계정(AM.PASS) | Pumpアカウント(AM.PASS) | Compte Pump (AM.PASS) | Account Pump (AM.PASS)
 Conectada como {n} | Connected as {n} | Conectada como {n} | {n}(으)로 연결됨 | {n}として接続中 | Connecté en tant que {n} | Collegato come {n}
 Trocar de conta AM.PASS | Switch AM.PASS account | Cambiar de cuenta AM.PASS | AM.PASS 계정 변경 | AM.PASSアカウントを切り替え | Changer de compte AM.PASS | Cambia account AM.PASS
+Anexar print da tela (opcional) | Attach a screenshot (optional) | Adjuntar captura de pantalla (opcional) | 화면 캡처 첨부(선택) | スクリーンショットを添付(任意) | Joindre une capture d'écran (facultatif) | Allega uno screenshot (facoltativo)
+Print do problema | Screenshot of the problem | Captura del problema | 문제 화면 캡처 | 問題のスクリーンショット | Capture du problème | Screenshot del problema
+Tirar print | Remove screenshot | Quitar captura | 캡처 삭제 | スクリーンショットを外す | Retirer la capture | Rimuovi screenshot
+Obrigado! Os problemas são analisados todo dia. Quando este for corrigido, você recebe um aviso aqui no app. | Thanks! Problems are reviewed every day. When this one is fixed, you'll get a notice here in the app. | ¡Gracias! Los problemas se revisan todos los días. Cuando este se corrija, recibirás un aviso aquí en la app. | 감사합니다! 문제는 매일 확인합니다. 해결되면 앱에서 알려 드립니다. | ありがとうございます!問題は毎日確認しています。修正されたらアプリでお知らせします。 | Merci ! Les problèmes sont analysés chaque jour. Quand celui-ci sera corrigé, vous recevrez un avis ici dans l'app. | Grazie! I problemi vengono analizzati ogni giorno. Quando questo sarà risolto, riceverai un avviso qui nell'app.
+Seu report #{id} foi corrigido{v}. {r} | Your report #{id} was fixed{v}. {r} | Tu reporte #{id} fue corregido{v}. {r} | 신고 #{id}이(가) 해결되었습니다{v}. {r} | レポート#{id}は修正されました{v}。{r} | Votre signalement n°{id} a été corrigé{v}. {r} | La tua segnalazione #{id} è stata risolta{v}. {r}
+na versão {v} | in version {v} | en la versión {v} | (버전 {v}) | (バージョン{v}) | dans la version {v} | nella versione {v}
+Sobre seu report #{id}: precisamos de mais detalhes. {r} | About your report #{id}: we need more details. {r} | Sobre tu reporte #{id}: necesitamos más detalles. {r} | 신고 #{id}: 자세한 내용이 더 필요합니다. {r} | レポート#{id}について:詳細を教えてください。{r} | À propos de votre signalement n°{id} : nous avons besoin de plus de détails. {r} | Sulla tua segnalazione #{id}: ci servono più dettagli. {r}
+Resposta ao seu report #{id}: {r} | Reply to your report #{id}: {r} | Respuesta a tu reporte #{id}: {r} | 신고 #{id}에 대한 답변: {r} | レポート#{id}への返信:{r} | Réponse à votre signalement n°{id} : {r} | Risposta alla tua segnalazione #{id}: {r}
+status inválido | invalid status | estado no válido | 잘못된 상태 | 無効なステータス | statut invalide | stato non valido
+report não encontrado | report not found | reporte no encontrado | 신고를 찾을 수 없습니다 | レポートが見つかりません | signalement introuvable | segnalazione non trovata
+Corrigido | Fixed | Corregido | 해결됨 | 修正済み | Corrigé | Risolto
+Resposta | Reply | Respuesta | 답변 | 返信 | Réponse | Risposta
