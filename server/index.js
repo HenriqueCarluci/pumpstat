@@ -574,37 +574,6 @@ async function autoSyncTick() {
     autoBusy = false;
   }
 }
-// mantém viva a sessão do piugame de quem deixou salva: um acesso leve a cada ~20 min (sem baixar notas)
-let keepBusy = false;
-async function keepAliveTick() {
-  if (keepBusy || !process.env.INGEST_KEY || !SESSION_KEY) return;
-  keepBusy = true;
-  try {
-    const list = await rpcAsServer('piu_sessions_stale', { p_minutes: 20, p_limit: 40 });
-    for (const c of list) {
-      try {
-        const session = PiuSession.fromJSON(unseal(c.blob));
-        session.base = SITES.phoenix2;
-        if (await isSessionAlive(session)) {
-          await rpcAsServer('piu_session_touch', { p_user: c.user, p_blob: seal(session.toJSON()) });
-        } else {
-          await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: null, p_error: 'session_expired' });
-          console.log('keepalive', c.user.slice(0, 8), 'expirou');
-        }
-      } catch (e) {
-        console.log('keepalive', c.user.slice(0, 8), e.message);
-      }
-      await sleep(1500);
-    }
-  } catch (e) {
-    console.error('keepalive:', e.message);
-  } finally {
-    keepBusy = false;
-  }
-}
-setTimeout(keepAliveTick, 30_000).unref();
-setInterval(keepAliveTick, 10 * 60_000).unref();
-
 setTimeout(autoSyncTick, 60_000).unref();
 setInterval(autoSyncTick, 15 * 60_000).unref();
 // a fila do admin começa na hora: o app chama /api/sync/tick depois de pedir
