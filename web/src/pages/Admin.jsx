@@ -21,13 +21,14 @@ import AdminHealth from './AdminHealth.jsx';
 import AndroidTestersAdmin from '../components/AndroidTestersAdmin.jsx';
 import { img } from '../lib/imgStore.js';
 import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
+import AdminBacklog from '../components/AdminBacklog.jsx';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
   const { plan } = useData();
   const [params] = useSearchParams();
   const tabs = [['health', 'Monitoramento', 'health'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
-    ['reports', 'Denúncias', 'reports'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
+    ['reports', 'Denúncias', 'reports'], ['backlog', 'Backlog', 'feedback'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
     ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['notes', 'Novidades', 'config'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
   if (!plan?.admin) return <div className="page"><p className="empty">{t('só administradores')}</p></div>;
@@ -49,6 +50,7 @@ export default function Admin() {
       {shown === 'curation' && <><CommunityConfig /><p className="muted small">{t('O tier do clube, os gimmicks, o R!SE e os vídeos são ajustados direto na página de cada música e chart.')}</p></>}
       {shown === 'approvals' && <Approvals />}
       {shown === 'reports' && <Reports />}
+      {shown === 'backlog' && <AdminBacklog />}
       {shown === 'feedback' && <FeedbackList />}
       {shown === 'plans' && <PlansConfig />}
       {shown === 'ads' && <AdsConfig />}

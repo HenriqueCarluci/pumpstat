@@ -1800,3 +1800,55 @@ Sua sugestão #{id} foi aprovada e entra na próxima versão semanal. | Your sug
 Sua sugestão #{id} já está no app{v}. {r} | Your suggestion #{id} is now in the app{v}. {r} | Tu sugerencia #{id} ya está en la app{v}. {r} | 제안 #{id}이(가) 앱에 반영되었습니다{v}. {r} | 提案#{id}がアプリに反映されました{v}。{r} | Votre suggestion n°{id} est dans l'app{v}. {r} | Il tuo suggerimento #{id} è ora nell'app{v}. {r}
 Sobre sua sugestão #{id}: por enquanto ela não entra no app. {r} | About your suggestion #{id}: it won't go into the app for now. {r} | Sobre tu sugerencia #{id}: por ahora no entra en la app. {r} | 제안 #{id}: 지금은 앱에 반영되지 않습니다. {r} | 提案#{id}について:今回はアプリに入りません。{r} | À propos de votre suggestion n°{id} : elle n'entre pas dans l'app pour l'instant. {r} | Sul tuo suggerimento #{id}: per ora non entra nell'app. {r}
 sugestão não encontrada | suggestion not found | sugerencia no encontrada | 제안을 찾을 수 없습니다 | 提案が見つかりません | suggestion introuvable | suggerimento non trovato
+Backlog | Backlog | Backlog | 백로그 | バックログ | Backlog | Backlog
+Alta | High | Alta | 높음 | 高 | Haute | Alta
+Média | Medium | Media | 보통 | 中 | Moyenne | Media
+Baixa | Low | Baja | 낮음 | 低 | Basse | Bassa
+Prioridade | Priority | Prioridad | 우선순위 | 優先度 | Priorité | Priorità
+Corrigido | Fixed | Corregido | 해결됨 | 修正済み | Corrigé | Risolto
+Não será corrigido | Won't be fixed | No se corregirá | 수정하지 않음 | 修正しません | Ne sera pas corrigé | Non verrà risolto
+Respondido | Answered | Respondido | 답변함 | 回答済み | Répondu | Risposto
+Resolvido | Resolved | Resuelto | 해결 | 解決済み | Résolu | Risolto
+Esperando detalhes | Waiting for details | Esperando detalles | 세부 정보 대기 | 詳細待ち | En attente de détails | In attesa di dettagli
+menos | less | menos | 접기 | 閉じる | moins | meno
+mais | more | más | 더보기 | もっと見る | plus | altro
+Seu item | Your item | Tu ítem | 내 항목 | あなたの項目 | Votre élément | Tuo elemento
+Backlog do produto | Product backlog | Backlog del producto | 제품 백로그 | プロダクトバックログ | Backlog produit | Backlog del prodotto
+Bugs na fila de hoje | Bugs in today's queue | Bugs en la fila de hoy | 오늘 처리할 버그 | 今日の修正待ちバグ | Bugs dans la file du jour | Bug nella coda di oggi
+Correção diária: {d} | Daily fix: {d} | Corrección diaria: {d} | 매일 수정: {d} | 毎日の修正:{d} | Correction quotidienne : {d} | Correzione giornaliera: {d}
+Esperando sua decisão | Waiting for your decision | Esperando tu decisión | 결정 대기 | 判断待ち | En attente de votre décision | In attesa della tua decisione
+Sugestões e backlog | Suggestions and backlog | Sugerencias y backlog | 제안과 백로그 | 提案とバックログ | Suggestions et backlog | Suggerimenti e backlog
+Próxima versão semanal: {d} | Next weekly release: {d} | Próxima versión semanal: {d} | 다음 주간 배포: {d} | 次の週次リリース:{d} | Prochaine version hebdo : {d} | Prossima versione settimanale: {d}
+Erros no app (24 h) | App errors (24 h) | Errores en la app (24 h) | 앱 오류(24시간) | アプリのエラー(24時間) | Erreurs de l'app (24 h) | Errori dell'app (24 h)
+Registrados automaticamente | Logged automatically | Registrados automáticamente | 자동 기록 | 自動で記録 | Enregistrées automatiquement | Registrati automaticamente
+Para decidir | To decide | Para decidir | 결정할 항목 | 判断待ち | À décider | Da decidere
+Semanal | Weekly | Semanal | 주간 | 週次 | Hebdo | Settimanale
+Bugs | Bugs | Bugs | 버그 | バグ | Bugs | Bug
+Entregues | Delivered | Entregados | 배포됨 | 提供済み | Livrés | Consegnati
+Adicionar item | Add item | Añadir ítem | 항목 추가 | 項目を追加 | Ajouter un élément | Aggiungi elemento
+Aprovar coloca o item na próxima versão semanal (no máximo 4 por semana, por prioridade). Quem sugeriu recebe o aviso. | Approving puts the item in the next weekly release (up to 4 a week, by priority). Whoever suggested it gets notified. | Aprobar pone el ítem en la próxima versión semanal (máximo 4 por semana, por prioridad). Quien lo sugirió recibe el aviso. | 승인하면 다음 주간 배포에 들어갑니다(우선순위순, 주 최대 4개). 제안자에게 알림이 갑니다. | 承認すると次の週次リリースに入ります(優先度順、週最大4件)。提案者に通知されます。 | Approuver met l'élément dans la prochaine version hebdo (4 max par semaine, par priorité). La personne est prévenue. | Approvare mette l'elemento nella prossima versione settimanale (max 4 a settimana, per priorità). Chi l'ha proposto riceve l'avviso.
+Nada esperando decisão. | Nothing waiting for a decision. | Nada esperando decisión. | 결정할 항목이 없습니다. | 判断待ちはありません。 | Rien en attente de décision. | Niente in attesa di decisione.
+Observação ou detalhe para o desenvolvimento (opcional) | Note or detail for development (optional) | Observación o detalle para el desarrollo (opcional) | 개발 참고 메모(선택) | 開発へのメモ(任意) | Remarque ou détail pour le développement (facultatif) | Nota o dettaglio per lo sviluppo (facoltativo)
+Aprovar para a semanal | Approve for the weekly | Aprobar para la semanal | 주간 배포로 승인 | 週次に承認 | Approuver pour l'hebdo | Approva per la settimanale
+Recusar este item? | Reject this item? | ¿Rechazar este ítem? | 이 항목을 거절할까요? | この項目を却下しますか? | Refuser cet élément ? | Rifiutare questo elemento?
+{n} recusados nos últimos 45 dias. | {n} rejected in the last 45 days. | {n} rechazados en los últimos 45 días. | 최근 45일간 거절 {n}개. | 過去45日で却下{n}件。 | {n} refusés ces 45 derniers jours. | {n} rifiutati negli ultimi 45 giorni.
+Ordem da próxima versão semanal: prioridade alta primeiro, depois a data em que foi aprovado. Itens grandes ou que precisam de decisão sua voltam no resumo da tarefa. | Order for the next weekly release: high priority first, then approval date. Big items or ones that need your decision come back in the task summary. | Orden de la próxima versión semanal: prioridad alta primero, luego la fecha de aprobación. Ítems grandes o que necesitan tu decisión vuelven en el resumen de la tarea. | 다음 주간 배포 순서: 높은 우선순위 먼저, 그다음 승인 날짜순. 큰 항목이나 결정이 필요한 항목은 작업 요약에 다시 나옵니다. | 次の週次リリースの順番:優先度の高いものから、次に承認日順。大きな項目や判断が必要な項目はタスクの要約で戻ります。 | Ordre de la prochaine version hebdo : priorité haute d'abord, puis date d'approbation. Les gros éléments ou ceux qui demandent votre décision reviennent dans le résumé. | Ordine della prossima versione settimanale: prima priorità alta, poi data di approvazione. Gli elementi grandi o che richiedono una tua decisione tornano nel riepilogo.
+Nenhum item aprovado. | No approved items. | Ningún ítem aprobado. | 승인된 항목이 없습니다. | 承認済みの項目はありません。 | Aucun élément approuvé. | Nessun elemento approvato.
+Entra na próxima semanal | In the next weekly | Entra en la próxima semanal | 다음 주간 배포에 포함 | 次の週次に入ります | Dans la prochaine hebdo | Nella prossima settimanale
+Fica para a seguinte | Goes to the one after | Queda para la siguiente | 그다음 배포로 | その次に回ります | Pour la suivante | Slitta alla successiva
+Devolver para decidir | Back to decide | Devolver para decidir | 결정 대기로 되돌리기 | 判断待ちに戻す | Remettre à décider | Rimetti da decidere
+Bugs reportados pelo app entram sozinhos aqui. A correção diária trata até 5 por dia e publica tudo numa versão só. | Bugs reported in the app show up here on their own. The daily fix handles up to 5 a day and ships them all in one release. | Los bugs reportados en la app entran aquí solos. La corrección diaria trata hasta 5 por día y publica todo en una sola versión. | 앱에서 신고된 버그가 자동으로 들어옵니다. 매일 수정에서 하루 최대 5개를 처리해 한 번에 배포합니다. | アプリから報告されたバグは自動でここに入ります。毎日の修正で1日最大5件を扱い、まとめて1つのリリースで出します。 | Les bugs signalés dans l'app arrivent ici tout seuls. La correction quotidienne en traite jusqu'à 5 par jour et publie tout en une version. | I bug segnalati nell'app arrivano qui da soli. La correzione giornaliera ne gestisce fino a 5 al giorno e pubblica tutto in una versione.
+Nenhum bug em aberto. | No open bugs. | Ningún bug abierto. | 열린 버그가 없습니다. | 未解決のバグはありません。 | Aucun bug ouvert. | Nessun bug aperto.
+Na fila da correção diária | In the daily fix queue | En la fila de la corrección diaria | 매일 수정 대기 중 | 毎日の修正待ち | Dans la file de la correction quotidienne | Nella coda della correzione giornaliera
+Esperando detalhes de quem reportou | Waiting for details from the reporter | Esperando detalles de quien reportó | 신고자의 세부 정보 대기 | 報告者の詳細待ち | En attente de détails de la personne | In attesa di dettagli da chi ha segnalato
+Resolvidos (45 dias) | Resolved (45 days) | Resueltos (45 días) | 해결됨(45일) | 解決済み(45日) | Résolus (45 jours) | Risolti (45 giorni)
+Nada entregue nos últimos 45 dias. | Nothing delivered in the last 45 days. | Nada entregado en los últimos 45 días. | 최근 45일간 배포된 항목이 없습니다. | 過去45日で提供された項目はありません。 | Rien livré ces 45 derniers jours. | Niente consegnato negli ultimi 45 giorni.
+Entregue | Delivered | Entregado | 배포됨 | 提供済み | Livré | Consegnato
+Melhoria | Improvement | Mejora | 개선 | 改善 | Amélioration | Miglioramento
+Bug | Bug | Bug | 버그 | バグ | Bug | Bug
+Título curto | Short title | Título corto | 짧은 제목 | 短いタイトル | Titre court | Titolo breve
+O que acontece, em qual tela e o que deveria acontecer. | What happens, on which screen, and what should happen. | Qué pasa, en qué pantalla y qué debería pasar. | 어떤 화면에서 무슨 일이 일어나고 어떻게 되어야 하는지. | どの画面で何が起き、本来どうなるべきか。 | Ce qui se passe, sur quel écran et ce qui devrait se passer. | Cosa succede, in quale schermata e cosa dovrebbe succedere.
+O que você quer no app, para quem e como deveria funcionar. | What you want in the app, for whom and how it should work. | Qué quieres en la app, para quién y cómo debería funcionar. | 앱에 원하는 것, 대상, 동작 방식. | アプリに欲しいもの、対象、どう動くべきか。 | Ce que vous voulez dans l'app, pour qui et comment ça devrait marcher. | Cosa vuoi nell'app, per chi e come dovrebbe funzionare.
+Já aprovar para a versão semanal | Approve for the weekly release now | Aprobar ya para la versión semanal | 바로 주간 배포로 승인 | すぐ週次リリースに承認 | Approuver tout de suite pour la version hebdo | Approva subito per la versione settimanale
+Entra na correção diária de hoje. | Goes into today's daily fix. | Entra en la corrección diaria de hoy. | 오늘 매일 수정에 들어갑니다. | 今日の毎日の修正に入ります。 | Entre dans la correction quotidienne du jour. | Entra nella correzione giornaliera di oggi.
+Adicionar | Add | Añadir | 추가 | 追加 | Ajouter | Aggiungi
