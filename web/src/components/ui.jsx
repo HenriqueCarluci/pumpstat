@@ -18,8 +18,8 @@ export function staticImageUrls() {
     ...Object.keys(PLATES).map((p) => `${IMG}/plate/${p.toLowerCase()}.png`),
     ...['s', 'd', 'hd', 'c'].flatMap((k) => [`${IMG}/stepball/full/${k}_bg.png`, `${IMG}/stepball/full/${k}_text.png`]),
     ...[...'0123456789'].map((d) => `${IMG}/stepball/full/s_num_${d}.png`),
-    // ícones de faixa da PUMBILITY (8 faixas × 5 LVs)
-    ...Array.from({ length: 40 }, (_, i) => `https://piugame.com/l_img/pumbility/pumbility_${i + 1}.png`),
+    // ícones de faixa da PUMBILITY (no site da Pump existem do 10 ao 38)
+    ...Array.from({ length: 29 }, (_, i) => `https://piugame.com/l_img/pumbility/pumbility_${i + 10}.png`).filter((u) => !u.endsWith('_37.png')),
   ];
 }
 export const plateImgUrl = (plate) => (plate ? `${IMG}/plate/${plate.toLowerCase()}.png` : null);
