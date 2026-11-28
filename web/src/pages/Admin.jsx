@@ -23,13 +23,14 @@ import { img } from '../lib/imgStore.js';
 import UnlinkConfirm from '../components/UnlinkConfirm.jsx';
 import AdminBacklog from '../components/AdminBacklog.jsx';
 import TicketActions from '../components/TicketActions.jsx';
+import AdminSync from '../components/AdminSync.jsx';
 import { ticketStatus } from '../lib/tickets.js';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
   const { plan } = useData();
   const [params] = useSearchParams();
-  const tabs = [['health', 'Monitoramento', 'health'], ['users', 'Usuários', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
+  const tabs = [['health', 'Monitoramento', 'health'], ['users', 'Usuários', 'users'], ['sync', 'Atualizar notas', 'users'], ['team', 'Equipe', 'users'], ['approvals', 'Aprovações', 'venues'], ['curation', 'Curadoria', 'charts'],
     ['reports', 'Denúncias', 'reports'], ['backlog', 'Backlog', 'feedback'], ['feedback', 'Suporte', 'feedback'], ['plans', 'Planos', 'plans'], ['ads', 'Anúncios', 'ads'],
     ['challenges', 'Desafios', 'events'], ['missions', 'Missões', 'events'], ['notes', 'Novidades', 'config'], ['features', 'Recursos', 'config']].filter(([, , p]) => canAdmin(plan, p));
   const [tab, setTab] = useState(params.get('tab') || tabs[0]?.[0]);
@@ -48,6 +49,7 @@ export default function Admin() {
       {canAdmin(plan, 'stats') && shown !== 'health' && <Stats />}
       {shown === 'health' && <AdminHealth />}
       {shown === 'users' && <><AndroidTestersAdmin /><Users /></>}
+      {shown === 'sync' && <AdminSync />}
       {shown === 'team' && <Team />}
       {shown === 'curation' && <><CommunityConfig /><p className="muted small">{t('O tier do clube, os gimmicks, o R!SE e os vídeos são ajustados direto na página de cada música e chart.')}</p></>}
       {shown === 'approvals' && <Approvals />}

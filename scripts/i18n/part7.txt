@@ -1953,3 +1953,22 @@ Abrir administração | Open admin | Abrir administración | 관리자 열기 | 
 App Android {v} | Android app {v} | App Android {v} | Android 앱 {v} | Androidアプリ {v} | App Android {v} | App Android {v}
 Versão web | Web version | Versión web | 웹 버전 | ウェブ版 | Version web | Versione web
 publicada em {d} | published {d} | publicada el {d} | {d} 배포 | {d} 公開 | publiée le {d} | pubblicata il {d}
+Na fila | Queued | En la cola | 대기 중 | 待機中 | En file | In coda
+Atualizado {when} | Updated {when} | Actualizado {when} | {when} 업데이트됨 | {when} 更新 | Mis à jour {when} | Aggiornato {when}
+Sessão expirada | Session expired | Sesión expirada | 세션 만료 | セッション切れ | Session expirée | Sessione scaduta
+Falhou | Failed | Falló | 실패 | 失敗 | Échec | Non riuscito
+Atualizar as notas de todas as {n} pessoas com sessão salva? Pode levar alguns minutos. | Update scores for all {n} people with a saved session? It may take a few minutes. | ¿Actualizar las notas de las {n} personas con sesión guardada? Puede tardar unos minutos. | 세션이 저장된 {n}명의 점수를 모두 업데이트할까요? 몇 분 걸릴 수 있어요. | セッション保存済みの{n}人全員のスコアを更新しますか？数分かかることがあります。 | Mettre à jour les scores des {n} personnes avec une session enregistrée ? Cela peut prendre quelques minutes. | Aggiornare i punteggi di tutte le {n} persone con sessione salvata? Può richiedere qualche minuto.
+{q} na fila. {s} sem sessão salva ficaram de fora. | {q} queued. {s} without a saved session were left out. | {q} en la cola. {s} sin sesión guardada quedaron fuera. | {q}명 대기 중. 세션이 없는 {s}명은 제외됐어요. | {q}人を待機列に追加。セッションのない{s}人は対象外です。 | {q} en file. {s} sans session enregistrée ont été exclus. | {q} in coda. {s} senza sessione salvata sono stati esclusi.
+Atualizar notas | Update scores | Actualizar notas | 점수 업데이트 | スコアを更新 | Mettre à jour les scores | Aggiorna punteggi
+Roda agora a sincronização com a Pump para as pessoas escolhidas, usando a sessão do piugame que elas já deixaram salva. Quem não tem sessão salva precisa sincronizar uma vez com a senha AM.PASS. | Runs the Pump sync now for the chosen people, using the piugame session they already saved. Anyone without a saved session needs to sync once with their AM.PASS password. | Ejecuta ahora la sincronización con Pump para las personas elegidas, usando la sesión de piugame que ya guardaron. Quien no tiene sesión guardada debe sincronizar una vez con su contraseña AM.PASS. | 선택한 사람들이 저장해 둔 piugame 세션으로 지금 Pump 동기화를 실행해요. 세션이 없는 사람은 AM.PASS 비밀번호로 한 번 동기화해야 해요. | 選んだ人が保存したpiugameセッションで、今すぐPump同期を実行します。セッションがない人はAM.PASSのパスワードで一度同期が必要です。 | Lance maintenant la synchronisation Pump pour les personnes choisies, avec la session piugame qu'elles ont enregistrée. Sans session enregistrée, il faut synchroniser une fois avec le mot de passe AM.PASS. | Avvia ora la sincronizzazione con Pump per le persone scelte, usando la sessione piugame già salvata. Chi non ha una sessione salvata deve sincronizzare una volta con la password AM.PASS.
+Atualizar todos ({n}) | Update all ({n}) | Actualizar todos ({n}) | 모두 업데이트 ({n}) | すべて更新（{n}） | Tout mettre à jour ({n}) | Aggiorna tutti ({n})
+Atualizar selecionados ({n}) | Update selected ({n}) | Actualizar seleccionados ({n}) | 선택 항목 업데이트 ({n}) | 選択したものを更新（{n}） | Mettre à jour la sélection ({n}) | Aggiorna selezionati ({n})
+Buscar jogador | Search player | Buscar jugador | 플레이어 검색 | プレイヤーを検索 | Chercher un joueur | Cerca giocatore
+Com sessão | With session | Con sesión | 세션 있음 | セッションあり | Avec session | Con sessione
+Sem sessão | Without session | Sin sesión | 세션 없음 | セッションなし | Sans session | Senza sessione
+Selecionar todos da lista | Select everyone in the list | Seleccionar todos de la lista | 목록 전체 선택 | リストの全員を選択 | Tout sélectionner dans la liste | Seleziona tutti nell'elenco
+Última sincronização {when} | Last sync {when} | Última sincronización {when} | 마지막 동기화 {when} | 最終同期 {when} | Dernière synchro {when} | Ultima sincronizzazione {when}
+Nunca sincronizou | Never synced | Nunca sincronizó | 동기화한 적 없음 | 未同期 | Jamais synchronisé | Mai sincronizzato
+sem sessão salva | no saved session | sin sesión guardada | 저장된 세션 없음 | 保存されたセッションなし | pas de session enregistrée | nessuna sessione salvata
+automática ligada | auto sync on | automática activada | 자동 동기화 켜짐 | 自動同期オン | synchro auto activée | automatica attiva
+Ninguém aqui. | No one here. | Nadie aquí. | 아무도 없어요. | 誰もいません。 | Personne ici. | Nessuno qui.

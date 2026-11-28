@@ -365,6 +365,7 @@ const server = http.createServer(async (req, res) => {
     // a fila mudou (aviso do banco) ou o app pediu: manda os avisos de "sua vez"; não recebe dados
     if (req.method === 'POST' && url.pathname === '/api/push/queue-tick') { push.tick(); return send(res, 202, { ok: true }, origin); }
     if (url.pathname === '/api/catalog/tick') { catalogTick(); autoSyncTick(); return send(res, 202, { ok: true }, origin); }
+    if (req.method === 'POST' && url.pathname === '/api/sync/tick') { autoSyncTick(); return send(res, 202, { ok: true }, origin); }
     // link do YouTube: abre direto o vídeo do chart (c) ou da música (s); público, para funcionar num link comum
     const vm = url.pathname.match(/^\/api\/video\/([cs])\/(\d{1,9})$/);
     if (req.method === 'GET' && vm) {
@@ -525,22 +526,46 @@ const server = http.createServer(async (req, res) => {
 });
 
 // ---------- sincronização automática (quem tem sessão salva; Pro quando a cobrança estiver ativa) ----------
+// e a fila do admin (Admin → Atualizar notas), que usa a mesma sessão salva. Um de cada vez, devagar com o piugame.
 let autoBusy = false;
+
+/** Atualiza as notas de uma pessoa com a sessão salva. Devolve null (ok) ou o erro. */
+async function syncSaved(userId, blob) {
+  let saved = null;
+  try { saved = unseal(blob); } catch {
+    await rpcAsServer('auto_sync_done', { p_user: userId, p_blob: null, p_error: 'session_expired' }).catch(() => {});
+    return 'session_expired';
+  }
+  const job = { id: `auto-${userId}`, userId, state: 'running', message: '', progress: 0, results: {}, at: Date.now(), account: saved.account || null };
+  await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, writer: serverWriter(userId) });
+  let out = null;
+  if (job.state === 'done' && job.session) { try { job.session.base = SITES.phoenix2; out = seal(job.session.toJSON()); } catch { /* ignora */ } }
+  const error = job.state === 'done' ? null : (job.needLogin ? 'session_expired' : job.error);
+  await rpcAsServer('auto_sync_done', { p_user: userId, p_blob: out, p_error: error }).catch(() => {});
+  return error;
+}
+
 async function autoSyncTick() {
   if (autoBusy || !process.env.INGEST_KEY || !SESSION_KEY) return;
   autoBusy = true;
   try {
+    // primeiro a fila do admin, até esvaziar
+    for (let round = 0; round < 50; round++) {
+      const reqs = await rpcAsServer('admin_sync_take', { p_limit: 3 });
+      if (!reqs.length) break;
+      for (const r of reqs) {
+        let error = null;
+        if (!r.blob) error = 'sem sessão salva';
+        else { try { error = await syncSaved(r.user, r.blob); } catch (e) { error = e.message; } }
+        await rpcAsServer('admin_sync_finish', { p_id: r.id, p_error: error }).catch(() => {});
+        console.log('admin-sync', r.user.slice(0, 8), error || 'ok');
+        await sleep(4000);
+      }
+    }
     const list = await rpcAsServer('auto_sync_candidates', { p_limit: 4, p_hours: 6 });
     for (const c of list) {
-      let saved = null;
-      try { saved = unseal(c.blob); } catch { await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: null, p_error: 'session_expired' }).catch(() => {}); continue; }
-      const job = { id: `auto-${c.user}`, userId: c.user, state: 'running', message: '', progress: 0, results: {}, at: Date.now(), account: saved.account || null };
-      await runJob(job, { versions: ['phoenix2', 'phoenix'], saved, writer: serverWriter(c.user) });
-      let blob = null;
-      if (job.state === 'done' && job.session) { try { job.session.base = SITES.phoenix2; blob = seal(job.session.toJSON()); } catch { /* ignora */ } }
-      const error = job.state === 'done' ? null : (job.needLogin ? 'session_expired' : job.error);
-      await rpcAsServer('auto_sync_done', { p_user: c.user, p_blob: blob, p_error: error }).catch(() => {});
-      console.log('auto-sync', c.user.slice(0, 8), job.state, error || '');
+      const error = await syncSaved(c.user, c.blob).catch((e) => e.message);
+      console.log('auto-sync', c.user.slice(0, 8), error || 'ok');
       await sleep(5000); // devagar com o piugame
     }
   } catch (e) {
@@ -551,6 +576,7 @@ async function autoSyncTick() {
 }
 setTimeout(autoSyncTick, 60_000).unref();
 setInterval(autoSyncTick, 15 * 60_000).unref();
+// a fila do admin começa na hora: o app chama /api/sync/tick depois de pedir
 
 const push = queuePush(rpcAsServer);
 setTimeout(push.tick, 20_000).unref();
