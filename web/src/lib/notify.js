@@ -2,7 +2,7 @@
 // pedidos de fliperama e de time, votações de tier e, para o admin, pedidos esperando aprovação.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { rpc } from './api.js';
-import { fmtNum, t } from './i18n.js';
+import { fmtNum, getLang, t } from './i18n.js';
 import { TIER_VOTES } from './piu.js';
 
 const tierName = (v) => t((TIER_VOTES.find(([x]) => x === Number(v)) || [, '?'])[1]);
@@ -83,6 +83,8 @@ export function describe(n) {
         : n.status === 'need_info'
           ? t('Sobre seu report #{id}: precisamos de mais detalhes. {r}', { id: n.id, r: n.reply || '' }).trim()
           : t('Resposta ao seu chamado #{id}: {r}', { id: n.id, r: n.reply || '' });
+    case 'release_note':
+      return t('Novidade no PIU Stats: {t}', { t: (n.titles && (n.titles[getLang()] || n.titles.pt)) || n.title || '' });
     case 'app_update':
       return t('Nova versão do app Android para teste ({v}). Toque para atualizar pela Play Store.', { v: n.version || '' });
     case 'badge':
@@ -111,6 +113,7 @@ export function linkFor(n) {
     case 'challenge_new': case 'challenge_won': return '/desafios';
     case 'badge': return '/';
     case 'feedback_reply': return n.id ? `/suporte?id=${n.id}` : '/suporte';
+    case 'release_note': return '/novidades';
     case 'friend_pumbility': case 'friend_live': return n.user ? `/jogador/${n.user}` : '/';
     case 'admin_venue_request': case 'admin_venue_removal': case 'admin_team_request': return '/admin?tab=approvals';
     case 'admin_new_user': return '/admin?tab=users';

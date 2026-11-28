@@ -4,7 +4,7 @@ import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { fmtDay, fmtEta, NOTE_TAGS, reloadNotes } from '../components/ReleaseNotes.jsx';
 import { Chips } from './Songs.jsx';
-import { Plus, Trash2 } from '../components/Icons.jsx';
+import { Bell, Plus, Trash2 } from '../components/Icons.jsx';
 
 const LANG_TABS = [['pt', 'Português'], ['en', 'English'], ['es', 'Español']];
 const EMPTY = { status: 'released', tag: 'new', released_on: '', eta: '', eta_precision: 'month', title: {}, body: {}, published: true, sort: 0 };
@@ -61,6 +61,13 @@ function NoteForm({ note, onCancel, onSaved }) {
     try { await rpc('admin_save_release_note', { p: { ...n, id: n.id || null } }); await onSaved(); } catch (e) { setErr(tErr(e.message)); }
     setBusy(false);
   };
+  const [sent, setSent] = useState('');
+  const notifyAll = async () => {
+    if (!window.confirm(t('Avisar todos os usuários sobre esta novidade? Cada pessoa recebe uma notificação (e o push, se tiver ligado). Só dá para avisar uma vez por novidade.'))) return;
+    setBusy(true); setErr('');
+    try { const c = await rpc('admin_notify_release', { p_id: n.id }); setSent(t('{n} pessoas avisadas.', { n: c ?? 0 })); } catch (e) { setErr(tErr(e.message)); }
+    setBusy(false);
+  };
   const del = async () => {
     if (!window.confirm(t('Apagar esta novidade? Não dá para desfazer.'))) return;
     setBusy(true);
@@ -88,8 +95,10 @@ function NoteForm({ note, onCancel, onSaved }) {
       <div className="bm-row">
         <button type="button" className="btn" disabled={busy || !n.title.pt?.trim()} onClick={save}>{t('Salvar')}</button>
         <button type="button" className="btn ghost" disabled={busy} onClick={onCancel}>{t('Cancelar')}</button>
+        {n.id && note.published && note.status === 'released' && <button type="button" className="btn ghost" disabled={busy} onClick={notifyAll}><Bell size={15} /> {t('Avisar todos')}</button>}
         {n.id && <button type="button" className="btn ghost danger" disabled={busy} onClick={del}><Trash2 size={15} /> {t('Apagar')}</button>}
       </div>
+      {sent && <p className="ok small">{sent}</p>}
     </div>
   );
 }
