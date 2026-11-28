@@ -19,6 +19,7 @@ import { TeamSocialLinks } from '../components/TeamRequestForm.jsx';
 import MissionsAdmin from './MissionsAdmin.jsx';
 import AdminHealth from './AdminHealth.jsx';
 import AndroidTestersAdmin from '../components/AndroidTestersAdmin.jsx';
+import { img } from '../lib/imgStore.js';
 
 /** Painel do administrador: resumo, usuários (planos, bloqueio, admin) e mensagens do suporte. */
 export default function Admin() {
@@ -103,7 +104,7 @@ function Team() {
       {!list && !err && <p className="empty">{t('Carregando…')}</p>}
       {(list || []).map((m) => (
         <div key={m.id} className="admin-user team-row">
-          <span className="q-avatar" style={{ width: 36, height: 36 }}>{m.avatar ? <img src={m.avatar} alt="" referrerPolicy="no-referrer" /> : (m.nickname || m.email || '?').slice(0, 2)}</span>
+          <span className="q-avatar" style={{ width: 36, height: 36 }}>{m.avatar ? <img src={img(m.avatar)} alt="" referrerPolicy="no-referrer" /> : (m.nickname || m.email || '?').slice(0, 2)}</span>
           <span className="admin-user-info"><b>{m.nickname || m.email}</b><small className="muted">{m.email} · {t('desde {d}', { d: fmtDate(m.since) })}</small></span>
           {edit && m.id !== me
             ? <select value={m.role} onChange={(e) => setRole(m, e.target.value)}>
@@ -293,7 +294,7 @@ function UserRow({ u, open, onToggle, onChange }) {
   return (
     <div className={`admin-user ${u.banned ? 'banned' : ''}`}>
       <button className="admin-user-head" onClick={onToggle}>
-        <span className="q-avatar" style={{ width: 40, height: 40 }}>{u.avatar ? <img src={u.avatar} alt="" referrerPolicy="no-referrer" /> : (u.nickname || u.email || '?').slice(0, 2)}</span>
+        <span className="q-avatar" style={{ width: 40, height: 40 }}>{u.avatar ? <img src={img(u.avatar)} alt="" referrerPolicy="no-referrer" /> : (u.nickname || u.email || '?').slice(0, 2)}</span>
         <span className="admin-user-info">
           <b>{u.nickname || t('Sem conta da Pump')}</b>
           <small className="muted">{u.email} · {u.provider}</small>

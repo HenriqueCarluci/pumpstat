@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useData } from '../App.jsx';
 import { syncAdOn } from '../lib/ads.js';
 import AdSlot from './AdSlot.jsx';
+import { img } from '../lib/imgStore.js';
 
 /** Plano grátis: a sincronização sempre mostra um anúncio enquanto roda (Plus e Pro sincronizam sem anúncio). */
 export function SyncAd({ running }) {
@@ -128,7 +129,7 @@ function AccountChooser({ job, onChoose }) {
       <div className="acc-cards">
         {(job.accounts || []).map((a) => (
           <button key={a.nickname} type="button" className={`acc-card${a.current ? ' on' : ''}`} onClick={() => onChoose(a.nickname)}>
-            {a.avatar ? <img src={piuImg(a.avatar)} alt="" referrerPolicy="no-referrer" /> : <span className="acc-ph" />}
+            {a.avatar ? <img src={img(piuImg(a.avatar))} alt="" referrerPolicy="no-referrer" /> : <span className="acc-ph" />}
             {a.title && <small className="acc-title">{a.title}</small>}
             <b>{a.nickname}</b>
             {a.current && <small className="muted">{t('ativa agora no site')}</small>}
@@ -192,7 +193,7 @@ export default function PiuConnect({ onDone, compact }) {
     <form className="piu-connect" onSubmit={submit} autoComplete="on">
       {!compact && (
         <div className="piu-head">
-          <img src="https://piugame.com/l_img/logo.png" alt="" referrerPolicy="no-referrer" />
+          <img src={img('https://piugame.com/l_img/logo.png')} alt="" referrerPolicy="no-referrer" />
           <div>
             <h3>{t('Entrar com a conta Pump It Up')}</h3>
             <p className="muted small">{t('O mesmo login do piugame.com (AM.PASS). Importamos Phoenix 2 e Phoenix.')}</p>

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { rpc } from './api.js';
 import { useData } from '../App.jsx';
 import { isOn } from './plans.js';
+import { img } from './imgStore.js';
 
 const cache = new Map(); // userId -> { id, name, tag } | null
 let pending = null;
@@ -37,7 +38,7 @@ export const forgetTeam = (id) => cache.delete(id);
 
 export function TeamLogo({ team, size = 16 }) {
   if (!team?.logo) return null;
-  return <img className="team-logo" src={team.logo} alt="" width={size} height={size} loading="lazy" />;
+  return <img className="team-logo" src={img(team.logo)} alt="" width={size} height={size} loading="lazy" />;
 }
 
 export function TeamTag({ team }) {
