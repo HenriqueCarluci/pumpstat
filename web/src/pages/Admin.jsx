@@ -486,9 +486,15 @@ function FeedbackList() {
   const load = () => rpc('admin_feedback', { p_status: status }).then(setList).catch(() => setList([]));
   useEffect(() => { setList(null); load(); }, [status]); // eslint-disable-line
   const mark = async (id, s) => { await rpc('admin_feedback_status', { p_id: id, p_status: s }); load(); };
+  const [note, setNote] = useState({});
+  const decide = async (id, d) => {
+    if (d === 'rejected' && !window.confirm(t('Recusar esta sugestão? Quem sugeriu recebe o aviso com a sua observação.'))) return;
+    await rpc('admin_feedback_decide', { p_id: id, p_decision: d, p_note: note[id] || null }); load();
+  };
   return (
     <>
-      <Chips value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
+      <p className="muted small">{t('Problemas entram na correção diária (uma versão por dia). Sugestões ficam no backlog e só entram na versão semanal depois que você aprovar.')}</p>
+      <Chips wrap value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['bugs', t('Problemas')], ['ideas', t('Sugestões (backlog)')], ['approved', t('Aprovadas para a semanal')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
       {list && !list.length && <p className="empty">{t('Nenhuma mensagem aqui.')}</p>}
       <div className="admin-feedback">
         {(list || []).map((f) => (
@@ -504,11 +510,25 @@ function FeedbackList() {
               {f.nickname || f.email}{f.contact && f.contact !== f.email ? ` · ${t('responder para')} ${f.contact}` : ''}
               {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}{f.meta?.app ? ` · app ${f.meta.app}` : ''}
             </small>
+            {f.kind === 'idea' && f.status === 'open' && (
+              <div className="fb-decide">
+                <input value={note[f.id] || ''} onChange={(e) => setNote((n) => ({ ...n, [f.id]: e.target.value }))} maxLength={300}
+                  placeholder={t('Observação para quem sugeriu (opcional)')} />
+                <div className="bm-row">
+                  <button className="btn" onClick={() => decide(f.id, 'approved')}><Check size={15} /> {t('Aprovar para a versão semanal')}</button>
+                  <button className="btn ghost danger" onClick={() => decide(f.id, 'rejected')}>{t('Recusar')}</button>
+                </div>
+              </div>
+            )}
+            {f.kind === 'idea' && f.status === 'approved' && (
+              <div className="bm-row"><span className="tag ok">{t('Aprovada: entra na próxima versão semanal')}</span>
+                <button className="btn ghost sm" onClick={() => decide(f.id, 'open')}>{t('Devolver ao backlog')}</button></div>
+            )}
             <div className="bm-row">
               {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`PIU Stats #${f.id}`)}`}>{t('Responder por e-mail')}</a>}
-              {f.status === 'open'
+              {f.kind !== 'idea' && (f.status === 'open'
                 ? <button className="btn" onClick={() => mark(f.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
-                : <button className="btn ghost" onClick={() => mark(f.id, 'open')}>{t('Reabrir')}</button>}
+                : <button className="btn ghost" onClick={() => mark(f.id, 'open')}>{t('Reabrir')}</button>)}
             </div>
           </div>
         ))}

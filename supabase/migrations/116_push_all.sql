@@ -118,8 +118,12 @@ begin
     when 'team_admin' then body := 'Você agora é admin do time ' || coalesce(p->>'name', ''); url := '/#/time';
     when 'app_update' then body := 'Versão nova do app para teste (' || coalesce(p->>'version', '') || '). Toque para atualizar.';
       url := coalesce(p->>'link', '/#/');
-    when 'feedback_reply' then body := case when p->>'status' = 'fixed' then 'Seu report #' || (p->>'id') || ' foi corrigido'
-                                          else 'Resposta ao seu report #' || (p->>'id') end
+    when 'feedback_reply' then body := case p->>'status'
+                                            when 'fixed' then 'Seu report #' || (p->>'id') || ' foi corrigido'
+                                            when 'approved' then 'Sua sugestão #' || (p->>'id') || ' foi aprovada para a próxima versão semanal'
+                                            when 'implemented' then 'Sua sugestão #' || (p->>'id') || ' já está no app'
+                                            when 'rejected' then 'Sobre sua sugestão #' || (p->>'id')
+                                            else 'Resposta ao seu report #' || (p->>'id') end
                                      || coalesce(': ' || left(p->>'reply', 140), ''); url := '/#/ajustes';
     when 'tier_vote_result' then body := 'Votação do tier encerrada: ' || coalesce(p->>'title', ''); url := '/#/tier';
     when 'admin_new_user' then body := 'Novo usuário no PIU Stats'; url := '/#/admin?tab=users'; pic := null;

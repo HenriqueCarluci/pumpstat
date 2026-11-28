@@ -2601,3 +2601,5 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .atest-cands { display: grid; gap: 6px; max-height: 260px; overflow: auto; }
 .atest-cand { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; }
 .atest-add > .btn { justify-self: start; }
+.fb-decide { display: grid; gap: 8px; margin: 6px 0 8px; }
+.fb-decide input { padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); }
