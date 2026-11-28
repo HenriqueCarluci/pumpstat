@@ -4,6 +4,45 @@ import { rpc } from '../lib/api.js';
 import { t, tErr } from '../lib/i18n.js';
 import { disablePush, enablePush, pushStatus, refreshPush } from '../lib/push.js';
 import { Bell } from './Icons.jsx';
+import { backgroundStatus, openBatterySettings, openNotificationSettings } from '../lib/nativePush.js';
+
+/**
+ * Só no app Android: avisos com o app fechado. Os avisos chegam pelo Firebase mesmo com o app fechado,
+ * mas a economia de bateria de alguns aparelhos (Xiaomi, Samsung, Motorola…) segura ou atrasa. Mostra a
+ * situação e leva às telas do sistema para liberar o PIU Stats.
+ */
+function BackgroundCard() {
+  const [bg, setBg] = useState(null);
+  const [err, setErr] = useState('');
+  useEffect(() => {
+    const check = () => backgroundStatus().then(setBg);
+    check();
+    const f = () => { if (document.visibilityState === 'visible') check(); };
+    document.addEventListener('visibilitychange', f);
+    return () => document.removeEventListener('visibilitychange', f);
+  }, []);
+  if (!bg) return null;
+  const free = bg.batteryFree && !bg.restricted;
+  const open = async (fn) => { setErr(''); try { await fn(); } catch (e) { setErr(tErr(e.message)); } };
+  return (
+    <div className="push-bg">
+      <div className="rv-label">{t('Com o app fechado')}</div>
+      <p className="small">
+        {!bg.notifications ? <b className="warn-text">{t('As notificações do PIU Stats estão desligadas no Android.')}</b>
+          : free ? <b className="ok">{t('Liberado: os avisos chegam mesmo com o app fechado.')}</b>
+            : <b className="warn-text">{t('A economia de bateria pode atrasar ou segurar os avisos quando o app está fechado.')}</b>}
+      </p>
+      {!free && bg.notifications && (
+        <p className="muted tiny">{t('Toque em Liberar em segundo plano, abra Bateria e escolha Sem restrições (ou Não otimizar). Não use Forçar parada: ela bloqueia os avisos até você abrir o app de novo.')}</p>
+      )}
+      <div className="bm-row">
+        {!free && <button type="button" className="btn sm" onClick={() => open(openBatterySettings)}>{t('Liberar em segundo plano')}</button>}
+        <button type="button" className="btn ghost sm" onClick={() => open(openNotificationSettings)}>{t('Sons e alertas do Android')}</button>
+      </div>
+      {err && <div className="form-err">{err}</div>}
+    </div>
+  );
+}
 
 // categorias (iguais às do banco: push_category)
 const CATS = [
@@ -76,6 +115,7 @@ export default function PushPrefsCard() {
         )}
       </div>
       <p className="muted tiny">{t('A fila sempre avisa quando você é o próximo e quando chega a sua vez.')}</p>
+      {st === 'on' && <BackgroundCard />}
 
       {prefs && (
         <>

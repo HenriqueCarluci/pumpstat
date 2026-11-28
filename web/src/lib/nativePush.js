@@ -1,6 +1,6 @@
 // Push no app Android (Firebase Cloud Messaging via @capacitor/push-notifications).
 // O token do aparelho vai para push_fcm (ligado à conta); o servidor manda os avisos pelo FCM.
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { rpc } from './api.js';
 import { API_URL } from './config.js';
 
@@ -101,3 +101,17 @@ export async function syncNativePush(loggedIn) {
     }
   } catch { /* sem aviso, sem problema */ }
 }
+
+// ---- com o app fechado (economia de bateria do Android) ----
+const AppBackground = registerPlugin('AppBackground');
+
+/** { batteryFree, restricted, notifications, manufacturer } ou null fora do app / em versão antiga do app. */
+export async function backgroundStatus() {
+  if (!nativePushAvailable()) return null;
+  try {
+    const r = await AppBackground.status();
+    return { batteryFree: !!r.batteryFree, restricted: !!r.restricted, notifications: r.notifications !== false, manufacturer: r.manufacturer || '' };
+  } catch { return null; }
+}
+export const openBatterySettings = () => AppBackground.openBattery();
+export const openNotificationSettings = () => AppBackground.openNotifications();
