@@ -217,7 +217,6 @@ export default function PiuConnect({ onDone, compact }) {
           <a href={AMPASS_RECOVER} target="_blank" rel="noreferrer">am-pass.net <ChevronRight size={14} /></a>
         </p>
       )}
-      <p className="muted small">{t('Seu login AM.PASS fica guardado criptografado e é usado só para atualizar suas notas no piugame.')} <a href="#/privacidade">{t('Política de privacidade')}</a></p>
     </form>
   );
 }
