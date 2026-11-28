@@ -462,7 +462,7 @@ function AutoSync() {
           <b>{t('Sincronização automática')}</b>{!allowed && <> · <Crown size={12} /> Pro</>}<br />
           <small className="muted">
             {!st.has_session ? t('Faça uma sincronização com a senha AM.PASS para ativar.')
-              : st.error === 'session_expired' ? t('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.')
+              : st.error === 'session_expired' && !st.has_cred ? t('A sessão do piugame expirou. Entre de novo com a sua senha AM.PASS.')
                 : t('O PIU Stats atualiza suas notas sozinho algumas vezes por dia.')}
             {st.last && <> · {t('última tentativa {when}', { when: timeAgo(st.last) })}</>}
           </small>
