@@ -85,6 +85,9 @@ h3 { font-size: 15px; letter-spacing: 0.02em; }
 .ball .ball-text { width: 62%; margin-top: -2px; }
 .ball .ball-num { display: flex; align-items: center; justify-content: center; height: 42%; }
 .ball .ball-num img { height: 100%; width: auto; margin: 0 -1px; }
+.ball, .ball .ball-num { gap: 0 !important; overflow: visible !important; white-space: nowrap; }
+.ball { flex-direction: column !important; }
+.ball .ball-num { flex-direction: row !important; }
 .ball .ball-x { font: 800 13px var(--num); color: #fff; margin-right: 1px; text-shadow: 0 1px 2px #000; }
 .ball.sm { width: 40px; height: 40px; }
 .ball.lg { width: 84px; height: 84px; }
@@ -1080,7 +1083,7 @@ a.q-city:hover { color: var(--text); }
 .train-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; margin: 10px 0; }
 .ts-box { background: var(--panel); border: 1px solid var(--panel2); border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .ts-box small { color: var(--muted); }
-.ts-box a, .ts-box span { color: var(--text); text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ts-box > a, .ts-box > span { color: var(--text); text-decoration: none; font-weight: 700; display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ts-box b { font: 800 18px var(--num); }
 .ts-box.good b { color: var(--neon); } .ts-box.bad b { color: var(--single); }
 .train-tip { margin-top: -2px; }
