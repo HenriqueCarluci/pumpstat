@@ -59,6 +59,7 @@ const FAKE = {
     { id: 3, kind: 'idea', status: 'approved', title: 'Fila vira Check-in / Encontrar uma Pump', message: 'Renomear a Fila para Check-in e permitir adicionar várias pessoas.', priority: 1, origin: 'admin', at: new Date().toISOString(), decided_at: new Date().toISOString() },
     { id: 4, kind: 'idea', status: 'open', title: 'Metas e aviso de recorde', message: 'Metas do jogador (ex.: SSS em todos os D20) com progresso, e notificação quando um recorde melhora.', priority: 2, origin: 'backlog do produto', at: new Date().toISOString() },
     { id: 9, kind: 'idea', status: 'open', message: 'Poderia ter modo escuro mais escuro ainda para jogar de noite no fliperama sem incomodar ninguém que está do lado', priority: 2, nickname: 'AMIGO #0002', at: new Date().toISOString() },
+    { id: 10, kind: 'bug', status: 'approved', message: 'O teclado cobre a caixa de mensagem ao responder.', priority: 1, nickname: 'AMIGO #0002', at: new Date().toISOString(), decided_at: new Date().toISOString() },
   ] },
   admin_android_testers: [{ user_id: 'a', email: 'novo.jogador@gmail.com', added: false, nick: 'NOVO #0001', at: new Date().toISOString() }, { user_id: 'b', email: 'amigo.antigo@gmail.com', added: true, nick: 'AMIGO #0002', at: new Date().toISOString() }],
   venue_data: { venue: { slug: 'laqua', name: "L'Aqua Liberdade", city: 'São Paulo', address: 'R. Galvão Bueno, 100', radius_m: 150, latitude: -23.56, longitude: -46.63 }, machines: [{ id: 1, name: 'Phoenix', avg_turn_sec: 1080 }], is_admin: false },

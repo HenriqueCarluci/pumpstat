@@ -74,6 +74,7 @@ export function describe(n) {
     case 'admin_new_user':
       return t('Novo usuário no PIU Stats: {email}', { email: n.email || '—' }) + (n.provider && n.provider !== 'email' ? ` (${n.provider === 'google' ? 'Google' : n.provider})` : '');
     case 'feedback_reply':
+      if (n.status === 'bug_approved') return t('Seu report #{id} entrou na fila de correção.', { id: n.id });
       if (n.status === 'approved') return t('Sua sugestão #{id} foi aprovada e entra na próxima versão semanal.', { id: n.id });
       if (n.status === 'implemented') return t('Sua sugestão #{id} já está no app{v}. {r}', { id: n.id, v: n.fixed_in ? ` ${t('na versão {v}', { v: n.fixed_in })}` : '', r: n.reply || '' }).trim();
       if (n.status === 'rejected') return t('Sobre sua sugestão #{id}: por enquanto ela não entra no app. {r}', { id: n.id, r: n.reply || '' }).trim();

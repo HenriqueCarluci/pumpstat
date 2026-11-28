@@ -350,7 +350,7 @@ function UserRow({ u, open, onToggle, onChange }) {
               ? <button className="btn ghost" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: false })}><UserCheck size={15} /> {t('Desbloquear')}</button>
               : <button className="btn ghost danger" disabled={busy} onClick={() => run('admin_set_banned', { p_user: u.id, p_banned: true }, t('Bloquear esta conta? A pessoa sai do app e não consegue entrar de novo.'))}><UserX size={15} /> {t('Bloquear')}</button>)}
             {u.linked && <Link className="btn ghost" to={`/jogador/${u.id}`}>{t('Ver perfil')}</Link>}
-            {canAdmin(plan, 'ban') && u.linked && (
+            {plan?.admin_role === 'owner' && u.linked && (
               <UnlinkConfirm who={u.nickname || u.email} busy={busy} onConfirm={() => run('admin_unlink_piu', { p_user: u.id })} />
             )}
             {canAdmin(plan, 'view_as') && u.admin_role !== 'owner' && (
@@ -490,13 +490,13 @@ function FeedbackList() {
   const mark = async (id, s) => { await rpc('admin_feedback_status', { p_id: id, p_status: s }); load(); };
   const [note, setNote] = useState({});
   const decide = async (id, d) => {
-    if (d === 'rejected' && !window.confirm(t('Recusar esta sugestão? Quem sugeriu recebe o aviso com a sua observação.'))) return;
+    if (d === 'rejected' && !window.confirm(t('Recusar este item? Quem enviou recebe o aviso com a sua observação.'))) return;
     await rpc('admin_feedback_decide', { p_id: id, p_decision: d, p_note: note[id] || null }); load();
   };
   return (
     <>
-      <p className="muted small">{t('Problemas entram na correção diária (uma versão por dia). Sugestões ficam no backlog e só entram na versão semanal depois que você aprovar.')}</p>
-      <Chips wrap value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['bugs', t('Problemas')], ['ideas', t('Sugestões (backlog)')], ['approved', t('Aprovadas para a semanal')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
+      <p className="muted small">{t('Tudo passa pela sua aprovação: problema aprovado entra na fila de correção diária; melhoria aprovada entra na fila da próxima versão semanal.')}</p>
+      <Chips wrap value={status} onChange={setStatus} options={[['open', t('Em aberto')], ['bugs', t('Problemas')], ['ideas', t('Sugestões (backlog)')], ['approved', t('Aprovados')], ['done', t('Resolvidas')], ['all', t('Todas')]]} />
       {list && !list.length && <p className="empty">{t('Nenhuma mensagem aqui.')}</p>}
       <div className="admin-feedback">
         {(list || []).map((f) => (
@@ -512,23 +512,23 @@ function FeedbackList() {
               {f.nickname || f.email}{f.contact && f.contact !== f.email ? ` · ${t('responder para')} ${f.contact}` : ''}
               {f.meta?.page ? ` · ${f.meta.page}` : ''}{f.meta?.lang ? ` · ${f.meta.lang}` : ''}{f.meta?.app ? ` · app ${f.meta.app}` : ''}
             </small>
-            {f.kind === 'idea' && f.status === 'open' && (
+            {(f.kind === 'idea' || f.kind === 'bug') && f.status === 'open' && (
               <div className="fb-decide">
                 <input value={note[f.id] || ''} onChange={(e) => setNote((n) => ({ ...n, [f.id]: e.target.value }))} maxLength={300}
-                  placeholder={t('Observação para quem sugeriu (opcional)')} />
+                  placeholder={t('Observação para quem enviou (opcional)')} />
                 <div className="bm-row">
-                  <button className="btn" onClick={() => decide(f.id, 'approved')}><Check size={15} /> {t('Aprovar para a versão semanal')}</button>
+                  <button className="btn" onClick={() => decide(f.id, 'approved')}><Check size={15} /> {f.kind === 'bug' ? t('Aprovar para correção') : t('Aprovar para a versão semanal')}</button>
                   <button className="btn ghost danger" onClick={() => decide(f.id, 'rejected')}>{t('Recusar')}</button>
                 </div>
               </div>
             )}
-            {f.kind === 'idea' && f.status === 'approved' && (
-              <div className="bm-row"><span className="tag ok">{t('Aprovada: entra na próxima versão semanal')}</span>
-                <button className="btn ghost sm" onClick={() => decide(f.id, 'open')}>{t('Devolver ao backlog')}</button></div>
+            {(f.kind === 'idea' || f.kind === 'bug') && f.status === 'approved' && (
+              <div className="bm-row"><span className="tag ok">{f.kind === 'bug' ? t('Aprovado: na fila de correção diária') : t('Aprovada: entra na próxima versão semanal')}</span>
+                <button className="btn ghost sm" onClick={() => decide(f.id, 'open')}>{t('Devolver para decidir')}</button></div>
             )}
             <div className="bm-row">
               {(f.contact || f.email) && <a className="btn ghost" href={`mailto:${f.contact || f.email}?subject=${encodeURIComponent(`PIU Stats #${f.id}`)}`}>{t('Responder por e-mail')}</a>}
-              {f.kind !== 'idea' && (f.status === 'open'
+              {f.kind !== 'idea' && f.kind !== 'bug' && (f.status === 'open'
                 ? <button className="btn" onClick={() => mark(f.id, 'done')}><Check size={15} /> {t('Marcar como resolvida')}</button>
                 : <button className="btn ghost" onClick={() => mark(f.id, 'open')}>{t('Reabrir')}</button>)}
             </div>

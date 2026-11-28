@@ -29,6 +29,7 @@ function Item({ x, children, prio, onPrio }) {
       <div className="row-between">
         <span className="bl-head">
           <span className="tag">#{x.id}</span>
+          <span className={`tag bl-kind ${x.kind}`}>{x.kind === 'bug' ? t('Problema') : t('Melhoria')}</span>
           <b>{x.title || (x.message.length > 90 ? `${x.message.slice(0, 90)}…` : x.message)}</b>
         </span>
         {prio && (
@@ -52,8 +53,8 @@ function Item({ x, children, prio, onPrio }) {
 }
 
 /**
- * Admin → Backlog: bugs (fila de correção diária) e melhorias (backlog → aprovação → versão semanal).
- * As tarefas automáticas leem daqui: bugs em aberto todo dia; melhorias aprovadas toda segunda, por prioridade.
+ * Admin → Backlog: tudo passa pela aprovação do admin. Problema aprovado → fila de correção diária;
+ * melhoria aprovada → fila da versão semanal. As tarefas automáticas só pegam o que está aprovado, por prioridade.
  */
 export default function AdminBacklog() {
   const [data, setData] = useState(null);
@@ -67,11 +68,12 @@ export default function AdminBacklog() {
   if (!data) return err ? <div className="form-err">{err}</div> : <p className="muted small">{t('Carregando…')}</p>;
 
   const items = data.items || [];
-  const bugsOpen = items.filter((x) => x.kind === 'bug' && x.status === 'open');
+  const byPrio = (a, b) => a.priority - b.priority || String(a.decided_at).localeCompare(String(b.decided_at));
+  const bugsQueue = items.filter((x) => x.kind === 'bug' && x.status === 'approved').sort(byPrio);
   const bugsWait = items.filter((x) => x.kind === 'bug' && x.status === 'need_info');
-  const bugsDone = items.filter((x) => x.kind === 'bug' && !['open', 'need_info'].includes(x.status));
-  const toDecide = items.filter((x) => x.kind === 'idea' && x.status === 'open');
-  const approved = items.filter((x) => x.kind === 'idea' && x.status === 'approved').sort((a, b) => a.priority - b.priority || String(a.decided_at).localeCompare(String(b.decided_at)));
+  const bugsDone = items.filter((x) => x.kind === 'bug' && !['open', 'approved', 'need_info'].includes(x.status));
+  const toDecide = items.filter((x) => x.status === 'open').sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'bug' ? -1 : 1));
+  const approved = items.filter((x) => x.kind === 'idea' && x.status === 'approved').sort(byPrio);
   const delivered = items.filter((x) => x.kind === 'idea' && x.status === 'implemented');
   const rejected = items.filter((x) => x.kind === 'idea' && x.status === 'rejected');
   const runs = nextRuns();
@@ -88,27 +90,27 @@ export default function AdminBacklog() {
   return (
     <div className="admin-backlog">
       <div className="bl-stats">
-        <div className="card bl-stat"><b>{bugsOpen.length}</b><small>{t('Bugs na fila de hoje')}</small><span className="muted tiny">{t('Correção diária: {d}', { d: runs.daily })}</span></div>
-        <div className="card bl-stat"><b>{toDecide.length}</b><small>{t('Esperando sua decisão')}</small><span className="muted tiny">{t('Sugestões e backlog')}</span></div>
+        <div className="card bl-stat"><b>{bugsQueue.length}</b><small>{t('Problemas na fila de correção')}</small><span className="muted tiny">{t('Correção diária: {d}', { d: runs.daily })}</span></div>
+        <div className="card bl-stat"><b>{toDecide.length}</b><small>{t('Esperando sua decisão')}</small><span className="muted tiny">{t('Problemas e melhorias')}</span></div>
         <div className="card bl-stat"><b>{approved.length}</b><small>{t('Aprovadas para a semanal')}</small><span className="muted tiny">{t('Próxima versão semanal: {d}', { d: runs.weekly })}</span></div>
         <div className="card bl-stat"><b>{data.errors_24h ?? 0}</b><small>{t('Erros no app (24 h)')}</small><span className="muted tiny">{t('Registrados automaticamente')}</span></div>
       </div>
 
       <Chips wrap value={view} onChange={setView} options={[
         ['decide', `${t('Para decidir')} (${toDecide.length})`], ['approved', `${t('Semanal')} (${approved.length})`],
-        ['bugs', `${t('Bugs')} (${bugsOpen.length + bugsWait.length})`], ['done', t('Entregues')], ['new', t('Adicionar item')]]} />
+        ['bugs', `${t('Correção')} (${bugsQueue.length + bugsWait.length})`], ['done', t('Entregues')], ['new', t('Adicionar item')]]} />
       {err && <div className="form-err">{err}</div>}
 
       {view === 'decide' && (
         <>
-          <p className="muted small">{t('Aprovar coloca o item na próxima versão semanal (no máximo 4 por semana, por prioridade). Quem sugeriu recebe o aviso.')}</p>
+          <p className="muted small">{t('Aprovar um problema coloca o ticket na fila de correção diária. Aprovar uma melhoria coloca o item na próxima versão semanal (no máximo 4 por semana, por prioridade). Quem reportou recebe o aviso.')}</p>
           {!toDecide.length && <p className="empty small">{t('Nada esperando decisão.')}</p>}
           {toDecide.map((x) => (
             <Item key={x.id} x={x} prio onPrio={prio}>
               <input className="bl-note" value={note[x.id] || ''} onChange={(e) => setNote((n) => ({ ...n, [x.id]: e.target.value }))} maxLength={300}
                 placeholder={t('Observação ou detalhe para o desenvolvimento (opcional)')} />
               <div className="bm-row">
-                <button className="btn sm" onClick={() => decide(x.id, 'approved')}><Check size={14} /> {t('Aprovar para a semanal')}</button>
+                <button className="btn sm" onClick={() => decide(x.id, 'approved')}><Check size={14} /> {x.kind === 'bug' ? t('Aprovar para correção') : t('Aprovar para a semanal')}</button>
                 <button className="btn ghost sm danger-text" onClick={() => { if (window.confirm(t('Recusar este item?'))) decide(x.id, 'rejected'); }}>{t('Recusar')}</button>
               </div>
             </Item>
@@ -134,9 +136,16 @@ export default function AdminBacklog() {
 
       {view === 'bugs' && (
         <>
-          <p className="muted small">{t('Bugs reportados pelo app entram sozinhos aqui. A correção diária trata até 5 por dia e publica tudo numa versão só.')}</p>
-          {!bugsOpen.length && !bugsWait.length && <p className="empty small">{t('Nenhum bug em aberto.')}</p>}
-          {bugsOpen.map((x) => <Item key={x.id} x={x}><span className="tag">{t('Na fila da correção diária')}</span></Item>)}
+          <p className="muted small">{t('Problemas que você aprovou. A correção diária trata até 5 por dia, por prioridade, e publica tudo numa versão só.')}</p>
+          {!bugsQueue.length && !bugsWait.length && <p className="empty small">{t('Nenhum problema na fila de correção.')}</p>}
+          {bugsQueue.map((x, i) => (
+            <Item key={x.id} x={x} prio onPrio={prio}>
+              <div className="bm-row">
+                <span className={`tag ${i < 5 ? 'ok' : ''}`}>{i < 5 ? t('Entra na próxima correção') : t('Fica para a seguinte')}</span>
+                <button className="btn ghost sm" onClick={() => decide(x.id, 'open')}>{t('Devolver para decidir')}</button>
+              </div>
+            </Item>
+          ))}
           {bugsWait.map((x) => <Item key={x.id} x={x}><span className="tag">{t('Esperando detalhes de quem reportou')}</span></Item>)}
           {bugsDone.length > 0 && <div className="rv-label">{t('Resolvidos (45 dias)')}</div>}
           {bugsDone.map((x) => (
@@ -162,15 +171,10 @@ export default function AdminBacklog() {
           <input value={add.title} onChange={(e) => setAdd((a) => ({ ...a, title: e.target.value }))} maxLength={120} placeholder={t('Título curto')} />
           <textarea rows={5} required minLength={3} maxLength={2000} value={add.message} onChange={(e) => setAdd((a) => ({ ...a, message: e.target.value }))}
             placeholder={add.kind === 'bug' ? t('O que acontece, em qual tela e o que deveria acontecer.') : t('O que você quer no app, para quem e como deveria funcionar.')} />
-          {add.kind === 'idea' && (
-            <>
-              <label className="check"><input type="checkbox" checked={add.approved} onChange={(e) => setAdd((a) => ({ ...a, approved: e.target.checked }))} />
-                <span>{t('Já aprovar para a versão semanal')}</span></label>
-              <div className="bm-row"><span className="small">{t('Prioridade')}</span>
-                <Chips value={add.priority} onChange={(p) => setAdd((a) => ({ ...a, priority: p }))} options={PRIO.map(([v, l]) => [v, t(l)])} /></div>
-            </>
-          )}
-          {add.kind === 'bug' && <p className="muted tiny">{t('Entra na correção diária de hoje.')}</p>}
+          <label className="check"><input type="checkbox" checked={add.approved} onChange={(e) => setAdd((a) => ({ ...a, approved: e.target.checked }))} />
+            <span>{add.kind === 'bug' ? t('Já aprovar para a correção diária') : t('Já aprovar para a versão semanal')}</span></label>
+          <div className="bm-row"><span className="small">{t('Prioridade')}</span>
+            <Chips value={add.priority} onChange={(p) => setAdd((a) => ({ ...a, priority: p }))} options={PRIO.map(([v, l]) => [v, t(l)])} /></div>
           <button className="btn" disabled={busy}><Plus size={15} /> {t('Adicionar')}</button>
         </form>
       )}

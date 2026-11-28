@@ -2619,3 +2619,5 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .bl-note, .bl-new input, .bl-new textarea { width: 100%; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg2); color: var(--text); font: inherit; }
 .bl-new { display: grid; gap: 10px; padding: 14px; }
 .bl-new .btn { justify-self: start; }
+.bl-kind.bug { background: rgba(255, 92, 92, .14); color: #ff8a8a; }
+.bl-kind.idea { background: rgba(140, 255, 58, .12); color: var(--neon); }

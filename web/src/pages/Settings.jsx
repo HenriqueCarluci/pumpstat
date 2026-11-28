@@ -74,7 +74,7 @@ export default function Settings() {
               <summary className="small">{t('Trocar de conta AM.PASS')}</summary>
               <PiuConnect compact onDone={() => reload()} />
             </details>
-            <UnlinkPump />
+            {plan?.admin_role === 'owner' && <UnlinkPump />}
           </section>
         )}
       </Group>
