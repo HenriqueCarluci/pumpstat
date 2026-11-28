@@ -4,8 +4,8 @@
 #   ANDROID_KEYSTORE_BASE64 e ANDROID_KEYSTORE_PASSWORD (obrigatórios).
 #   ANDROID_KEY_ALIAS (padrão: upload) e ANDROID_KEY_PASSWORD (padrão: a mesma senha do keystore) são opcionais.
 #   PLAY_SERVICE_ACCOUNT_JSON: chave da conta de serviço com acesso ao app no Play Console. Sem ela, só gera o .aab.
-# Variáveis (opcionais): PLAY_TRACK (padrão: internal) e PLAY_STATUS (padrão: draft; mude para completed
-#   depois que o app for aprovado, para a versão sair direto para os testadores).
+# Variáveis (opcionais): PLAY_TRACK (padrão: internal) e PLAY_STATUS (padrão: completed, já libera para os testadores; use draft
+#   para revisar antes no Play Console).
 name: Android (Play Store)
 
 on:
@@ -83,13 +83,36 @@ jobs:
           path: android/app/build/outputs/bundle/release/*.aab
           retention-days: 30
 
-      - name: Publicar na Google Play
+      - name: Notas da versão (título do commit)
         if: ${{ env.HAS_PLAY == 'true' }}
+        run: |
+          mkdir -p whatsnew
+          git log -1 --format=%s | cut -c1-480 > whatsnew/whatsnew-pt-BR
+          cat whatsnew/whatsnew-pt-BR
+
+      - name: Publicar na Google Play
+        id: play
+        if: ${{ env.HAS_PLAY == 'true' }}
+        continue-on-error: true
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: com.henriquecarluci.stepclub
           releaseFiles: android/app/build/outputs/bundle/release/*.aab
           track: ${{ vars.PLAY_TRACK || 'internal' }}
-          status: ${{ vars.PLAY_STATUS || 'draft' }}
+          status: ${{ vars.PLAY_STATUS || 'completed' }}
           releaseName: ${{ format('1.0.{0}', github.run_number) }}
+          whatsNewDirectory: whatsnew
+
+      # enquanto o app é "rascunho" na Play (antes da primeira revisão), ela só aceita versão em rascunho
+      - name: Publicar na Google Play (rascunho)
+        if: ${{ env.HAS_PLAY == 'true' && steps.play.outcome == 'failure' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.henriquecarluci.stepclub
+          releaseFiles: android/app/build/outputs/bundle/release/*.aab
+          track: ${{ vars.PLAY_TRACK || 'internal' }}
+          status: draft
+          releaseName: ${{ format('1.0.{0}', github.run_number) }}
+          whatsNewDirectory: whatsnew
