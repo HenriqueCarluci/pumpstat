@@ -2701,3 +2701,5 @@ kbd { font: 600 10.5px var(--num); padding: 2px 5px; border-radius: 5px; border:
 .as-who { display: flex; flex-direction: column; min-width: 0; }
 .as-list .tk-st { flex: none; }
 .atest-tag.wait { border-color: rgba(255, 190, 60, .5); color: #ffcf6b; }
+.pump-acct { display: flex; flex-direction: column; gap: 10px; } .pump-acct h3, .pump-acct p { margin: 0; }
+.pump-acct .unlink-pump { margin-top: 0; padding-top: 0; border-top: 0; }
